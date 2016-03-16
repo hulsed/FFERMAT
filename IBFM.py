@@ -9,42 +9,6 @@ resetClock()
 
 printWarnings = False
 
-class Condition(object):
-  def __init__(self,function,delay=0):
-    self.out_bond = function.out_bond
-    self.in_bond = function.in_bond
-    self.delay = delay
-    self.reset()
-    self.test = self.behavior().test
-  def reset(self):
-    self.countdown = inf
-    self.time = clock
-  def time_remaining(self):
-    if last_clock != self.time:
-      self.countdown = inf
-    self.time = clock
-    if self.test():
-      self.countdown = min(self.countdown,self.delay)-(clock-last_clock)
-    else:
-      self.countdown = inf
-    return self.countdown
-
-class HighCurrent(Condition):
-  def behavior(self):
-    return HighFlow(out_bond=self.out_bond[Electrical])
-
-class HighestCurrent(Condition):
-  def behavior(self):
-    return HighestFlow(out_bond=self.out_bond[Electrical])
-
-class OnSignal(Condition):
-  def behavior(self):
-    return NominalEffort(in_bond=self.in_bond[Signal])
-
-class OffSignal(Condition):
-  def behavior(self):
-    return ZeroEffort(in_bond=self.in_bond[Signal])
-
 class State(float):
   def __new__(cls,value=None):
     if cls is State:
@@ -57,81 +21,20 @@ class State(float):
     return self.__class__.__name__
   def __str__(self):
     return self.__class__.__name__
+
+#############################  States  #######################################
 class Negative(State):
   value = -1
 class Zero(State):
   value = 0
 class Low(State):
-  value = .5
-class Nominal(State):
   value = 1
-class High(State):
+class Nominal(State):
   value = 2
-class Highest(State):
+class High(State):
   value = 3
-
-class ModeHealth(object):
-  pass
-class Operational(ModeHealth):
-  pass
-class Degraded(ModeHealth):
-  pass
-class Failed(ModeHealth):
-  pass
-
-class Mode(object):
-  def __init__(self,function,health):
-    self.out_bond = function.out_bond
-    self.in_bond = function.in_bond
-    self.health = health
-  def __repr__(self):
-    return self.__class__.__name__
-  def __eq__(self,other):
-    return self.__class__ == other.__class__ and self.health == other.health
-  def __hash__(self):
-    return hash((self.__class__,self.health))
-  def reset(self):
-    pass
-
-class OpenCircuit(Mode):
-  def behaviors(self):
-    try:
-      yield ZeroEffort(out_bond=self.out_bond[Electrical])
-    except KeyError:
-      pass
-    try:
-      yield ZeroFlow(in_bond=self.in_bond[Electrical])
-    except KeyError:
-      pass
-class ClosedCircuit(Mode):
-  def behaviors(self):
-    yield EqualEffort(self.in_bond[Electrical],self.out_bond[Electrical])
-    yield EqualFlow(self.in_bond[Electrical],self.out_bond[Electrical])
-class ShortCircuit(Mode):
-  def behaviors(self):
-    yield FreeFlow(self.in_bond[Electrical])
-    try:
-      yield ZeroEffort(out_bond = self.out_bond[Electrical])
-    except KeyError:
-      pass
-class NominalVoltageSource(Mode):
-  def behaviors(self):
-    yield NominalEffort(out_bond=self.out_bond[Electrical])
-class LowVoltageSource(Mode):
-  def behaviors(self):
-    yield LowEffort(out_bond=self.out_bond[Electrical])
-class HighVoltageSource(Mode):
-  def behaviors(self):
-    yield HighEffort(out_bond=self.out_bond[Electrical])
-class ResistiveLoad(Mode):
-  def behaviors(self):
-    yield ReflectiveFlow(in_bond=self.in_bond[Electrical])
-class NominalSignalSource(Mode):
-  def behaviors(self):
-    yield NominalEffort(out_bond=self.out_bond[Signal])
-class ZeroSignalSource(Mode):
-  def behaviors(self):
-    yield ZeroEffort(out_bond=self.out_bond[Signal])
+class Highest(State):
+  value = 4
 
 class Behavior(object):
   def __init__(self,in_bond=None,out_bond=None):
@@ -151,64 +54,42 @@ class Behavior(object):
     return (self.__class__ == other.__class__ and self.in_bond is other.in_bond
             and self.out_bond is other.out_bond)
 
+class ModeHealth(object):
+  pass
 
-class ZeroEffort(Behavior):
-  def apply(self):
-    self.out_bond.setEffort(Zero())
-  def test(self):
-    return self.in_bond.effort == Zero()
+class Mode(object):
+  def __init__(self,function,health):
+    self.out_bond = function.out_bond
+    self.in_bond = function.in_bond
+    self.health = health
+  def __repr__(self):
+    return self.__class__.__name__
+  def __eq__(self,other):
+    return self.__class__ == other.__class__ and self.health == other.health
+  def __hash__(self):
+    return hash((self.__class__,self.health))
+  def reset(self):
+    pass
 
-class ZeroFlow(Behavior):
-  def apply(self):
-    self.in_bond.setFlow(Zero())
-  def test(self):
-    return self.out_bond.flow == Zero()
-
-class LowEffort(Behavior):
-  def apply(self):
-    self.out_bond.setEffort(Low())
-
-class NominalEffort(Behavior):
-  def apply(self):
-    self.out_bond.setEffort(Nominal())
-  def test(self):
-    return self.in_bond.effort == Nominal()
-
-class NominalFlow(Behavior):
-  def test(self):
-    return self.out_bond.flow == Nominal()
-
-class HighEffort(Behavior):
-  def apply(self):
-    self.out_bond.setEffort(High())
-
-class HighFlow(Behavior):
-  def test(self):
-    return self.out_bond.flow >= High()
-
-class HighestFlow(Behavior):
-  def test(self):
-    return self.out_bond.flow >= Highest()
-
-class EqualEffort(Behavior):
-  def apply(self):
-    self.out_bond.setEffort(self.in_bond.effort)
-
-class EqualFlow(Behavior):
-  def apply(self):
-    self.in_bond.setFlow(self.out_bond.flow)
-
-class ReflectiveFlow(Behavior):
-  def apply(self):
-    self.in_bond.setFlow(self.in_bond.effort)
-
-class FreeFlow(Behavior):
-  def apply(self):
-    if self.in_bond.effort:
-      self.in_bond.setFlow(Highest())
+class Condition(object):
+  def __init__(self,function,delay=0):
+    self.out_bond = function.out_bond
+    self.in_bond = function.in_bond
+    self.delay = delay
+    self.reset()
+    self.test = self.behavior().test
+  def reset(self):
+    self.countdown = inf
+    self.time = clock
+  def time_remaining(self):
+    if last_clock != self.time:
+      self.countdown = inf
+    self.time = clock
+    if self.test():
+      self.countdown = min(self.countdown,self.delay)-(clock-last_clock)
     else:
-      self.in_bond.setFlow(Zero())
-
+      self.countdown = inf
+    return self.countdown
 
 class Function(object):
   names = []
@@ -316,12 +197,6 @@ class Bond(object):
     self.flow = self.flow_queue
     self.effort_queue = self.flow_queue = None
 
-class Electrical(Bond):
-  pass
-
-class Signal(Bond):
-  pass
-
 class Model(object):
   def __init__(self):
     self.graph = nx.MultiDiGraph()
@@ -424,49 +299,6 @@ class Model(object):
     for i in range(len(self.states)):
       self.printState(i,bonds)
 
-class ImportElectricalEnergy(Function):
-  def construct(self):
-    self.addMode(Operational,NominalVoltageSource)
-    self.addMode(Degraded,LowVoltageSource)
-    self.addMode(Degraded,HighVoltageSource)
-    self.addMode(Failed,OpenCircuit)
-class ExportElectricalEnergy(Function):
-  def construct(self):
-    self.addMode(Operational,ResistiveLoad)
-    self.addMode(Failed,ShortCircuit)
-    self.addMode(Failed,OpenCircuit)
-class ImportBinarySignal(Function):
-  def construct(self):
-    self.addMode(Operational,NominalSignalSource)
-    self.addMode(Failed,ZeroSignalSource)
-class ProtectElectricalEnergy(Function):
-  def construct(self):
-    self.addMode(Operational,ClosedCircuit,default=True)
-    self.addMode(Operational,OpenCircuit)
-    self.addMode(Failed,ClosedCircuit)
-    self.addMode(Failed,OpenCircuit)
-    self.addMode(Failed,ShortCircuit)
-    self.addCondition((Operational,ClosedCircuit),
-                      HighCurrent,(Operational,OpenCircuit),delay=10)
-    self.addCondition((Operational,ClosedCircuit),
-                      HighestCurrent,(Operational,OpenCircuit))
-    self.addCondition([(Failed,ClosedCircuit),(Failed,ShortCircuit)],
-                      HighestCurrent,(Failed,OpenCircuit),delay=1)
-class ActuateElectricalEnergy(Function):
-  def construct(self):
-    self.addMode(Operational,ClosedCircuit)
-    self.addMode(Operational,OpenCircuit,default=True)
-    self.addMode(Failed,ClosedCircuit)
-    self.addMode(Failed,OpenCircuit)
-    self.addMode(Failed,ShortCircuit)
-    self.addCondition((Operational,OpenCircuit),
-                      OnSignal,(Operational,ClosedCircuit))
-    self.addCondition((Operational,ClosedCircuit),
-                      OffSignal,(Operational,OpenCircuit))
-    self.addCondition([(Operational,ClosedCircuit),(Failed,ClosedCircuit),
-                       (Failed,ShortCircuit)],
-                      HighestCurrent,(Failed,OpenCircuit),delay=1)
-
 class Experiment(object):
   def __init__(self,model):
     self.scenarios = []
@@ -526,6 +358,203 @@ class Experiment(object):
 #    print(str(int(len(self.unique)))+' health states or '+
 #      str(int(len(self.unique)*100/len(self.results)))+" percent unique")
 
+
+#############################  Behaviors  ####################################
+class ZeroEffort(Behavior):
+  def apply(self):
+    self.out_bond.setEffort(Zero())
+  def test(self):
+    return self.in_bond.effort == Zero()
+
+class ZeroFlow(Behavior):
+  def apply(self):
+    self.in_bond.setFlow(Zero())
+  def test(self):
+    return self.out_bond.flow == Zero()
+
+class LowEffort(Behavior):
+  def apply(self):
+    self.out_bond.setEffort(Low())
+
+class NominalEffort(Behavior):
+  def apply(self):
+    self.out_bond.setEffort(Nominal())
+  def test(self):
+    return self.in_bond.effort == Nominal()
+
+class NominalFlow(Behavior):
+  def test(self):
+    return self.out_bond.flow == Nominal()
+
+class HighEffort(Behavior):
+  def apply(self):
+    self.out_bond.setEffort(High())
+
+class HighFlow(Behavior):
+  def test(self):
+    return self.out_bond.flow >= High()
+
+class HighestFlow(Behavior):
+  def test(self):
+    return self.out_bond.flow >= Highest()
+
+class EqualEffort(Behavior):
+  def apply(self):
+    self.out_bond.setEffort(self.in_bond.effort)
+
+class EqualFlow(Behavior):
+  def apply(self):
+    self.in_bond.setFlow(self.out_bond.flow)
+
+class ReflectiveFlow(Behavior):
+  def apply(self):
+    self.in_bond.setFlow(self.in_bond.effort)
+
+class LessReflectiveFlow(Behavior):
+  def apply(self):
+    self.in_bond.setFlow(State(self.in_bond.effort-1))
+
+class FreeFlow(Behavior):
+  def apply(self):
+    if self.in_bond.effort:
+      self.in_bond.setFlow(Highest())
+    else:
+      self.in_bond.setFlow(Zero())
+
+#############################  Mode Healths  #################################
+class Operational(ModeHealth):
+  pass
+class Degraded(ModeHealth):
+  pass
+class Failed(ModeHealth):
+  pass
+
+#############################  Modes  ########################################
+class OpenCircuit(Mode):
+  def behaviors(self):
+    try:
+      yield ZeroEffort(out_bond=self.out_bond[Electrical])
+    except KeyError:
+      pass
+    try:
+      yield ZeroFlow(in_bond=self.in_bond[Electrical])
+    except KeyError:
+      pass
+class ClosedCircuit(Mode):
+  def behaviors(self):
+    yield EqualEffort(self.in_bond[Electrical],self.out_bond[Electrical])
+    yield EqualFlow(self.in_bond[Electrical],self.out_bond[Electrical])
+class ShortCircuit(Mode):
+  def behaviors(self):
+    yield FreeFlow(self.in_bond[Electrical])
+    try:
+      yield ZeroEffort(out_bond = self.out_bond[Electrical])
+    except KeyError:
+      pass
+class NominalVoltageSource(Mode):
+  def behaviors(self):
+    yield NominalEffort(out_bond=self.out_bond[Electrical])
+class LowVoltageSource(Mode):
+  def behaviors(self):
+    yield LowEffort(out_bond=self.out_bond[Electrical])
+class HighVoltageSource(Mode):
+  def behaviors(self):
+    yield HighEffort(out_bond=self.out_bond[Electrical])
+class ResistiveLoad(Mode):
+  def behaviors(self):
+    yield ReflectiveFlow(in_bond=self.in_bond[Electrical])
+class NominalSignalSource(Mode):
+  def behaviors(self):
+    yield NominalEffort(out_bond=self.out_bond[Signal])
+class NoSignalSource(Mode):
+  def behaviors(self):
+    yield ZeroEffort(out_bond=self.out_bond[Signal])
+class HeatSink(Mode):
+  def behaviors(self):
+    yield ReflectiveFlow(in_bond=self.in_bond[Heat])
+class InsulatedHeatSink(Mode):
+  def behaviors(self):
+    yield LessReflectiveFlow(in_bond=self.in_bond[Heat])
+class NoHeatSink(Mode):
+  def behaviors(self):
+    yield ZeroFlow(in_bond=self.in_bond[Heat])
+
+
+#############################  Conditions  ###################################
+class HighCurrent(Condition):
+  def behavior(self):
+    return HighFlow(out_bond=self.out_bond[Electrical])
+
+class HighestCurrent(Condition):
+  def behavior(self):
+    return HighestFlow(out_bond=self.out_bond[Electrical])
+
+class OnSignal(Condition):
+  def behavior(self):
+    return NominalEffort(in_bond=self.in_bond[Signal])
+
+class OffSignal(Condition):
+  def behavior(self):
+    return ZeroEffort(in_bond=self.in_bond[Signal])
+
+#############################  Functions  ####################################
+class ImportElectricalEnergy(Function):
+  def construct(self):
+    self.addMode(Operational,NominalVoltageSource)
+    self.addMode(Degraded,LowVoltageSource)
+    self.addMode(Degraded,HighVoltageSource)
+    self.addMode(Failed,OpenCircuit)
+class ExportElectricalEnergy(Function):
+  def construct(self):
+    self.addMode(Operational,ResistiveLoad)
+    self.addMode(Failed,ShortCircuit)
+    self.addMode(Failed,OpenCircuit)
+class ImportBinarySignal(Function):
+  def construct(self):
+    self.addMode(Operational,NominalSignalSource)
+    self.addMode(Failed,NoSignalSource)
+class ExportHeatEnergy(Function):
+  def construct(self):
+    self.addMode(Operational,HeatSink)
+    self.addMode(Degraded,InsulatedHeatSink)
+    self.addMode(Failed,NoHeatSink)
+class ProtectElectricalEnergy(Function):
+  def construct(self):
+    self.addMode(Operational,ClosedCircuit,default=True)
+    self.addMode(Operational,OpenCircuit)
+    self.addMode(Failed,ClosedCircuit)
+    self.addMode(Failed,OpenCircuit)
+    self.addMode(Failed,ShortCircuit)
+    self.addCondition((Operational,ClosedCircuit),
+                      HighCurrent,(Operational,OpenCircuit),delay=10)
+    self.addCondition((Operational,ClosedCircuit),
+                      HighestCurrent,(Operational,OpenCircuit))
+    self.addCondition([(Failed,ClosedCircuit),(Failed,ShortCircuit)],
+                      HighestCurrent,(Failed,OpenCircuit),delay=1)
+class ActuateElectricalEnergy(Function):
+  def construct(self):
+    self.addMode(Operational,ClosedCircuit)
+    self.addMode(Operational,OpenCircuit,default=True)
+    self.addMode(Failed,ClosedCircuit)
+    self.addMode(Failed,OpenCircuit)
+    self.addMode(Failed,ShortCircuit)
+    self.addCondition((Operational,OpenCircuit),
+                      OnSignal,(Operational,ClosedCircuit))
+    self.addCondition((Operational,ClosedCircuit),
+                      OffSignal,(Operational,OpenCircuit))
+    self.addCondition([(Operational,ClosedCircuit),(Failed,ClosedCircuit),
+                       (Failed,ShortCircuit)],
+                      HighestCurrent,(Failed,OpenCircuit),delay=1)
+
+#############################  Bonds  ########################################
+class Electrical(Bond):
+  pass
+
+class Heat(Bond):
+  pass
+
+class Signal(Bond):
+  pass
 
 class EPS(Model):
   def construct(self):
