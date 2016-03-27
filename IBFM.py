@@ -55,7 +55,15 @@ class Highest(State):
   value = 4
 
 class Behavior(object):
+  '''Abstract class for bond-independent behavior used by both modes and
+  conditions. Modes require an apply(self) method; conditions require a
+  test(self) method.
+  '''
   def __init__(self,in_bond=None,out_bond=None):
+    '''A Behavior object requires input and/or output bonds to test and apply states
+    to. Args may be single bonds or lists of bonds.  The bonds implicitly
+    decide the bond types of the behavior.
+    '''
     try:
       self.in_bond = in_bond[0]
       self.in_bonds = in_bond
@@ -67,6 +75,8 @@ class Behavior(object):
     except TypeError:
       self.out_bond = out_bond
   def __hash__(self):
+    '''For dictionaries in NetworkX to identify unique Behavior objects
+    '''
     return hash((self.__class__,id(self.in_bond),id(self.out_bond)))
   def __eq__(self,other):
     return (self.__class__ == other.__class__ and self.in_bond is other.in_bond
@@ -76,7 +86,14 @@ class ModeHealth(object):
   pass
 
 class Mode(object):
+  '''Abstract class for operational modes that functions may use. Requires a
+  behaviors(self) generator that yields Behavior objects.
+  '''
   def __init__(self,name,function,health,**attr):
+    '''A Mode object requires a unique name (for easier to read function
+    definitions), the function object it belongs to (for access to its bonds),
+    and the health of the function represented by the mode.
+    '''
     self.name = name
     self.out_bond = function.out_bond
     self.in_bond = function.in_bond
@@ -84,15 +101,31 @@ class Mode(object):
     self.attr = attr
   def __repr__(self):
     return self.__class__.__name__
+  def __hash__(self):
+    '''For dictionaries in NetworkX to identify unique Mode objects
+    '''
+    return hash((self.__class__,self.health))
   def __eq__(self,other):
     return self.__class__ == other.__class__ and self.health == other.health
-  def __hash__(self):
-    return hash((self.__class__,self.health))
   def reset(self):
+    '''Required because Mode objects share NetworkX graphs with Condition
+    objects, which have their timers reset, and this is easier than generating
+    a different iterator for only Condition objects.
+    '''
     pass
 
 class Condition(object):
+  '''Abstract class for conditions that a function must satisfy to advance to
+  another mode. Requires a behavior(self) method that returns a Behavior
+  object.
+  '''
   def __init__(self,function,delay=0,logical_not=False):
+    ''' A Condition object requires the function object it belongs to (for
+    access to its bonds), a time delay if the condition must be met for a
+    significant amount of time before the function advances to the next mode,
+    and a boolean flag indicating whether the condition should be logically
+    negated.
+    '''
     self.out_bond = function.out_bond
     self.in_bond = function.in_bond
     self.delay = delay
@@ -102,19 +135,28 @@ class Condition(object):
     else:
       self.test = self.behavior().test
   def reset(self):
+    '''Resets the timer of the Condition object
+    '''
     self.timer = inf
     self.time = clock
   def time_remaining(self):
+    '''Calculates the time under current conditions before the condition is
+    met. Returns 0 if the condition test has been met for self.delay amount of
+    time, inf if the condition test has not been met, and the remaining time
+    otherwise.
+    '''
     if last_clock != self.time and clock != self.time:
       self.timer = inf
     self.time = clock
-    if self.test():
+    if self.test(): #This is where the actual test method is called.
       self.timer = min(self.timer,self.delay+clock)
     else:
       self.timer = inf
     return self.timer
 
 class Function(object):
+  '''Abstrct class for functions in the functional model.
+  '''
   names = []
   def __init__(self,name=None,allow_faults=True,**attr):
     self.allow_faults = allow_faults
@@ -151,15 +193,18 @@ class Function(object):
     for node in self.condition_graph.nodes_iter():
       node.reset()
   def addOutBond(self,bond):
-    self._addBond(bond,self.out_bond)
+    self._addBond(bond,bond.__class__,self.out_bond)
   def addInBond(self,bond):
-    self._addBond(bond,self.in_bond)
-  def _addBond(self,bond,bonds):
-    previous = bonds.get(bond.__class__)
+    self._addBond(bond,bond.__class__,self.in_bond)
+  def _addBond(self,bond,bond_class,bonds):
+    previous = bonds.get(bond_class)
     if previous:
       previous.append(bond)
     else:
-      bonds[bond.__class__] = [bond]
+      bonds[bond_class] = [bond]
+    if Bond not in bond_class.__bases__:
+      for base in bond_class.__bases__:
+        self._addBond(bond,base,bonds)
   def addMode(self,name,health,mode_class,default=False,**attr):
     mode = mode_class(name,self,health(),**attr)
     self.modes.append(mode)
@@ -696,6 +741,10 @@ class NoTemperatureSensing(Mode):
   def behaviors(self):
     yield from HeatConductor.behaviors(self)
     yield ZeroEffort(out_bond=self.out_bond[Signal])
+class NominalTransportMaterial(Mode):
+  def behaviors(self):
+    yield MaxEffort(self.in_bond[MechanicalEnergy]+self.in_bond[Material],
+                    self.out_bond[Material])
 
 #############################  Conditions  ###################################
 class HighCurrent(Condition):
@@ -813,6 +862,9 @@ class ConvertElectricalToMechanicalEnergy(Function):
     self.addMode(3,Failed,OpenCircuitNoMechanicalEnergyConversion)
     self.addCondition([1,2],Overheating,3,delay=10)
     self.addCondition([1,2],FastOverheating,3,delay=1)
+class TransportMaterial(Function):
+  def construct(self):
+    self.addMode(1,Operational,NominalTransportMaterial)
 class SenseVoltage(Function):
   def construct(self):
     self.addMode(1,Operational,NominalVoltageSensing)
@@ -867,7 +919,10 @@ class Heat(Bond):
 class ChemicalEnergy(Bond):
   pass
 
-class RotationalEnergy(Bond):
+class MechanicalEnergy(Bond):
+  pass
+
+class RotationalEnergy(MechanicalEnergy):
   pass
 
 class Signal(Bond):
