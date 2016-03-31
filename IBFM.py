@@ -2,6 +2,7 @@ from math import inf
 import networkx as nx
 
 def resetClock():
+  '''Reset the global clock variable to zero for a new simulation.'''
   global last_clock,clock
   last_clock = 0
   clock = 0
@@ -10,7 +11,14 @@ resetClock()
 printWarnings = False
 
 class State(float):
+  '''Ordinal type for qualitatively representing bond values'''
   def __new__(cls,value=None):
+    '''Return a new State object.
+
+    Keyword arguments:
+    value=None -- If State() is called, rather than a subclass, value will be
+                  used to determine the appropriate subclass
+    '''
     if cls is State:
       for subclass in State.__subclasses__():
         if subclass.value == value:
@@ -55,14 +63,22 @@ class Highest(State):
   value = 4
 
 class Behavior(object):
-  '''Abstract class for bond-independent behavior used by both modes and
-  conditions. Modes require an apply(self) method; conditions require a
-  test(self) method.
+  '''Abstract class for bond-independent behavior application and testing.
+
+  Required methods:
+  apply(self) -- Assign states to bonds using self.in_bond.setFlow(state) and
+                 self.out_bond.setEffort(state). Used by modes.
+  test(self) -- Return boolean indicating presence of behavior. Used by
+                conditions.
   '''
   def __init__(self,in_bond=None,out_bond=None):
-    '''A Behavior object requires input and/or output bonds to test and apply states
-    to. Args may be single bonds or lists of bonds.  The bonds implicitly
-    decide the bond types of the behavior.
+    '''Return a Behavior object.
+
+    Required arguments:
+    in_bond and/or out_bond -- Bond objects to test states of and apply states
+                               to. Args may be single bonds or lists of bonds.
+                               The bonds implicitly decide the bond types of
+                               the behavior.
     '''
     try:
       self.in_bond = in_bond[0]
@@ -75,10 +91,16 @@ class Behavior(object):
     except TypeError:
       self.out_bond = out_bond
   def __hash__(self):
-    '''For dictionaries in NetworkX to identify unique Behavior objects
+    '''Return hash to identify unique Behavior objects.
+
+    Used by dictionaries in NetworkX.
     '''
     return hash((self.__class__,id(self.in_bond),id(self.out_bond)))
   def __eq__(self,other):
+    '''Return boolean to identify unique Behavior objects.
+
+    Used by dictionaries in NetworkX.
+    '''
     return (self.__class__ == other.__class__ and self.in_bond is other.in_bond
             and self.out_bond is other.out_bond)
 
@@ -86,13 +108,19 @@ class ModeHealth(object):
   pass
 
 class Mode(object):
-  '''Abstract class for operational modes that functions may use. Requires a
-  behaviors(self) generator that yields Behavior objects.
+  '''Abstract class for operational modes that functions may use.
+
+  Required methods:
+  behaviors(self) -- yield Behavior objects.
   '''
   def __init__(self,name,function,health,**attr):
-    '''A Mode object requires a unique name (for easier to read function
-    definitions), the function object it belongs to (for access to its bonds),
-    and the health of the function represented by the mode.
+    '''Return a Mode object.
+
+    Required arguments:
+    name -- a unique name (for easier to read function definitions)
+    function -- the object the mode belongs to (for access to its bonds),
+    health -- a ModeHealth subclass designating the health of the function
+              represented by the mode.
     '''
     self.name = name
     self.out_bond = function.out_bond
@@ -102,29 +130,40 @@ class Mode(object):
   def __repr__(self):
     return self.__class__.__name__
   def __hash__(self):
-    '''For dictionaries in NetworkX to identify unique Mode objects
+    '''Return hash to identify unique Mode objects.
+
+    Used by dictionaries in NetworkX.
     '''
     return hash((self.__class__,self.health))
   def __eq__(self,other):
+    '''Return boolean to identify unique Mode objects.
+
+    Used by dictionaries in NetworkX.
+    '''
     return self.__class__ == other.__class__ and self.health == other.health
   def reset(self):
-    '''Required because Mode objects share NetworkX graphs with Condition
+    '''Reset the Mode object for a new simulation.
+
+    Required because Mode objects share NetworkX graphs with Condition
     objects, which have their timers reset, and this is easier than generating
     a different iterator for only Condition objects.
     '''
     pass
 
 class Condition(object):
-  '''Abstract class for conditions that a function must satisfy to advance to
-  another mode. Requires a behavior(self) method that returns a Behavior
-  object.
+  '''Abstract class for a condition to advance to another mode.
+
+  Required methods:
+  behavior(self) -- Return a Behavior object.
   '''
   def __init__(self,function,delay=0,logical_not=False):
-    ''' A Condition object requires the function object it belongs to (for
-    access to its bonds), a time delay if the condition must be met for a
-    significant amount of time before the function advances to the next mode,
-    and a boolean flag indicating whether the condition should be logically
-    negated.
+    '''Return a Condition object
+
+    Required arguments:
+    function -- the object it belongs to (for access to its bonds)
+    delay -- the amound of time the condition must be met for a mode change.
+    logical_not -- boolean flag indicating whether the condition should be
+                   logically negated.
     '''
     self.out_bond = function.out_bond
     self.in_bond = function.in_bond
@@ -135,12 +174,14 @@ class Condition(object):
     else:
       self.test = self.behavior().test
   def reset(self):
-    '''Resets the timer of the Condition object
+    '''Resets the delay timer.
     '''
     self.timer = inf
     self.time = clock
   def time_remaining(self):
-    '''Calculates the time under current conditions before the condition is
+    '''Returns the time remaining before mode change.
+
+    Calculates the time under current conditions before the condition is
     met. Returns 0 if the condition test has been met for self.delay amount of
     time, inf if the condition test has not been met, and the remaining time
     otherwise.
@@ -156,13 +197,30 @@ class Condition(object):
 
 class Function(object):
   '''Abstrct class for functions in the functional model.
+
+  Required methods:
+  construct(self) -- call self.addMode(name,health,mode_class,default=False) and
+                     self.addCondition(source_modes,condition,next_mode,delay=0)
+                     repeatedly to specify all of the modes and conditions
+                     attainable by the function. The default default is the
+                     first given mode with health=Operational.
   '''
-  names = []
+  names = [] #Program-level list of function names to avoid conflicts
   def __init__(self,name=None,allow_faults=True,**attr):
+    '''Return a Function object
+
+    Required arguments:
+    name -- a unique name for use in defining bonds
+    allow_faults -- a flag to allow degraded and failure modes to be tested in
+                    experiments. If False, off-nominal modes may still be
+                    entered conditionally during simulation.
+    '''
     self.allow_faults = allow_faults
     self.attr = attr
     self.default = None
+    #The graph containing the conditional relationships between the modes
     self.condition_graph = nx.DiGraph()
+    #The graph containing the behaviors enacted by each mode
     self.behavior_graph = nx.DiGraph()
     self.in_bond = {}
     self.out_bond = {}
@@ -185,18 +243,34 @@ class Function(object):
   def __repr__(self):
     return self.name
   def __hash__(self):
+    '''Return hash to identify unique Function objects.
+
+    Used by dictionaries in NetworkX.
+    '''
     return hash(self.name)
   def __eq__(self,other):
+    '''Return boolean to identify unique Function objects.
+
+    Used by dictionaries in NetworkX.
+    '''
     return repr(self) == repr(other) or self.name == str(other)
   def reset(self):
+    '''Reset all modes and set mode to default.'''
     self.mode = self.default
     for node in self.condition_graph.nodes_iter():
       node.reset()
   def addOutBond(self,bond):
+    '''Attach an outflow bond to the function.'''
     self._addBond(bond,bond.__class__,self.out_bond)
   def addInBond(self,bond):
+    '''Attach an inflow bond to the function.'''
     self._addBond(bond,bond.__class__,self.in_bond)
   def _addBond(self,bond,bond_class,bonds):
+    '''Add a bond to the bonds dictionary (recursively).
+
+    Makes sure the bond is reachable by its class or any of its superclasses
+    as the key.
+    '''
     previous = bonds.get(bond_class)
     if previous:
       previous.append(bond)
@@ -206,6 +280,17 @@ class Function(object):
       for base in bond_class.__bases__:
         self._addBond(bond,base,bonds)
   def addMode(self,name,health,mode_class,default=False,**attr):
+    '''Add a mode to the function.
+
+    Required arguments:
+    name -- a unique identifier for the mode to be used in calls to
+            self.addCondition()
+    health -- a ModeHealth subclass designating the health of the function
+              when represented by the mode.
+    mode_class -- the Mode subclass representing the mode being added
+    default -- whether the mode should be the default for the function. The
+               default default is the first given mode with health=Operational.
+    '''
     mode = mode_class(name,self,health(),**attr)
     self.modes.append(mode)
     if default or (self.default == None and health == Operational):
@@ -217,19 +302,35 @@ class Function(object):
     except KeyError as error:
       raise Exception("{0} missing {1} bond.".format(self,error.args[0]))
   def getMode(self,name):
+    '''Return the function mode with the given name, if it exists.'''
     for mode in self.modes:
       if mode.name == name:
         return mode
-  def addCondition(self,sourceModes,condition,nextMode,delay=0):
+  def addCondition(self,source_modes,condition,next_mode,delay=0):
+    '''Add a conditional change to the function from one mode to another.
+
+    Required arguments:
+    source_modes -- a list of names of modes from which the condition is applied.
+    condition -- the Condition subclass representing the condition being added.
+    next_mode -- the name of the mode assigned to the function should be
+                condition be satisfied.
+    '''
     condition = condition(self,delay)
-    if type(sourceModes) is not list:
-      sourceModes = [sourceModes]
-    nextMode = self.getMode(nextMode)
-    self.condition_graph.add_edge(condition,nextMode)
-    for sourceMode in sourceModes:
+    if type(source_modes) is not list:
+      source_modes = [source_modes]
+    next_mode = self.getMode(next_mode)
+    self.condition_graph.add_edge(condition,next_mode)
+    for sourceMode in source_modes:
       sourceMode = self.getMode(sourceMode)
       self.condition_graph.add_edge(sourceMode,condition)
   def step(self):
+    '''Evaluate the function.
+
+    Test each condition reachable from the current mode.  If there is only one,
+    advance to its child mode.  If there is more than one, fork the simulation,
+    advancing to each mode in a different fork. <------------------------------ IMPLEMENT THIS!
+    In any case, finish by applying the behavior defined by the current mode.
+    '''
     transition = False
     minimum_timer = inf
     for condition in self.condition_graph.successors_iter(self.mode):
@@ -247,24 +348,29 @@ class Function(object):
     return minimum_timer
 
 class Bond(object):
+  '''Superclass for bonds in the functional model.'''
   def __init__(self):
     self.reset()
   def __repr__(self):
     return self.__class__.__name__
   def reset(self,effort=Zero(),flow=Zero()):
+    '''Set the effort and flow of the bond to Zero() unless otherwise specified.'''
     self.effort = effort
     self.flow = flow
     self.effort_queue = None
     self.flow_queue = None
   def setEffort(self,value):
+    '''Set the effort of the bond to value. Queued until step(self) is called.'''
     if printWarnings and not self.effort_queue is None:
       print('Warning! Competing causality in '+self.name+' effort.')
     self.effort_queue = value
   def setFlow(self,value):
+    '''Set the flow of the bond to value. Queued until step(self) is called.'''
     if printWarnings and not self.flow_queue is None:
       print('Warning! Competing causality in '+self.name+' flow.')
     self.flow_queue = value
   def step(self):
+    '''Resolve the effort and flow values in the bond.'''
     if self.effort != self.effort_queue:
       self.effort = self.effort_queue
       if printWarnings and self.flow != self.flow_queue:
@@ -273,15 +379,30 @@ class Bond(object):
     self.effort_queue = self.flow_queue = None
 
 class Model(object):
+  '''Abstract class for functional models.
+
+  Required methods:
+  construct(self) -- Call self.addFunction(function) and
+                     self.addBond(in_function_name,out_function_name) repeatedly
+                     to describe the functions and bonds that make up the
+                     functional model.
+  '''
   def __init__(self):
+    '''Construct the model and run it under nominal conditions.'''
+    #This graph contains all of the functions as nodes and bonds as edges.
     self.graph = nx.MultiDiGraph()
-    self.functions = self.graph.nodes_iter
+    self.functions = self.graph.nodes_iter #for code readability
     self.construct()
     self.connect()
     self.reset()
     self.run()
     self.nominal_state = self.getState()
   def bonds(self,functions=False):
+    '''Generate bonds for iterating.
+
+    NetworkX does not allow edges to be arbitrary objects; objects must be
+    stored as edge attributes.
+    '''
     if functions:
       for in_function,out_function,attr in self.graph.edges_iter(data=True):
         yield (attr[Bond],in_function,out_function)
@@ -289,50 +410,79 @@ class Model(object):
       for _,_,attr in self.graph.edges_iter(data=True):
         yield attr[Bond]
   def reset(self):
+    '''Reset the clock, all functions, and all bonds.'''
     resetClock()
     for function in self.functions():
       function.reset()
     for bond in self.bonds():
       bond.reset()
   def connect(self):
+    '''Finish initialization of each function.
+
+    Give each function handles to every bond connected to it, then run each
+    function's construct method to initialize its modes and conditions.
+    '''
     for bond,in_function,out_function in self.bonds(functions=True):
       in_function.addOutBond(bond)
       out_function.addInBond(bond)
     for function in self.functions():
       function.construct()
   def addFunction(self,function):
+    '''Add function to the graph of the functional model.'''
     self.graph.add_node(function)
   def addBond(self,bond,in_function_name,out_function_name):
+    '''Add bond to the graph of the functional model.
+
+    Required arguments:
+    bond -- the bond to be added
+    in_function_name -- the id of the function that supplies effort to the bond
+    out_function_name -- the id of the function that accepts flow from the bond
+    '''
     bond.name = in_function_name+'_'+out_function_name
     self.graph.add_edge(self.getFunction(in_function_name),
       self.getFunction(out_function_name),attr_dict={Bond:bond})
   def getFunction(self,name):
+    '''Return the function with the given id.'''
     for function in self.functions():
       if function.name == name:
         return function
   def step(self):
+    '''Perform one iteration of the functional model as a state machine.'''
     self.stepFunctions()
     self.resolveBonds()
   def resolveBonds(self):
+    '''Resolve the effort and flow values in each bond.'''
     for bond in self.bonds():
 #      print(bond.name+'\t'+str(bond.effort)+' '+str(bond.flow))
       bond.step()
   def stepFunctions(self):
+    '''Evaluate each function.'''
     self.minimum_timer = inf
     for function in self.functions():
 #      print(function.name+'\t'+str(function.mode))
       timer = function.step()
       self.minimum_timer = min(self.minimum_timer,timer)
   def run(self,lifetime=inf):
+    '''Simulate the functional model as a state machine with pseudotime.
+
+    Required arguments:
+    lifetime=inf -- the time at which the simulation should stop, regardless of
+                    whether the model has reached steady state.
+    '''
     global last_clock, clock
     resetClock()
     self.states = [self.getState()]
     self.timings = [clock]
     while clock < lifetime:
-      self.runTimeless()
+      self.runTimeless() #This can update self.minimum_timer
       last_clock = clock
       clock = self.minimum_timer
   def runTimeless(self):
+    '''Simulate the functional model as a timeless state machine.
+
+    Iterates the simulation without advancing the clock until steady state is
+    reached.
+    '''
     finished = False
     i = 0
     while not finished:
@@ -345,6 +495,15 @@ class Model(object):
         finished = True
 #        print("Iteration "+str(i)+" same as "+str(i-1))
   def loadState(self,state):
+    '''Set state as the current state of the model.
+
+    Required arguments:
+    state -- a dictionary of values for functions and bonds. Keys are function
+             and bond objects, function values are mode objects, and bond values
+             are two-element lists containing an effort value and a flow value.
+             Overwrites current state, so any functions or bonds not included in
+             the argument are left alone.
+    '''
     for function in self.functions():
       if state.get(function) != None:
         function.mode = state[function]
@@ -353,8 +512,15 @@ class Model(object):
         bond.effort = state[bond][0]
         bond.flow = state[bond][1]
   def loadNominalState(self):
+    '''Set the nominal state as the current state of the model.'''
     self.loadState(self.nominal_state)
   def getState(self):
+    '''Return the current state of the model.
+
+    Return a dictionary of values for functions and bonds. Keys are function and
+    bond objects, function values are mode objects, and bond values are two-
+    element lists containing an effort value and a flow value.
+    '''
     state = {}
     for function in self.functions():
       state[function] = function.mode
@@ -362,6 +528,17 @@ class Model(object):
       state[bond] = [bond.effort,bond.flow]
     return state
   def printState(self,i=None,bonds=False,state=None):
+    '''Print a state of the model to the console.
+
+    Keyword Arguments:
+    i=None -- an integer specifying which iteration of the current simulation
+              to print
+    bonds=False -- a flag whether to print bond values alongside function values.
+    state -- a state dictionary of the current model to print
+
+    If neither i nor state is specified, the current state of the model will be
+    printed.
+    '''
     if state == None:
       try:
         if i==None:
@@ -378,14 +555,33 @@ class Model(object):
         if state.get(bond):
           print(bond.name+'\t'+str(state[bond]))
   def printStates(self,bonds=False):
+    '''Print the entire iteration history of the current simulation.
+
+    Keyword Arguments:
+    bonds=False -- a flag whether to print bond values alongside function values.
+    '''
     for i in range(len(self.states)):
       self.printState(i,bonds)
 
 class Experiment(object):
+  '''Run experiments on a functional model'''
   def __init__(self,model):
+    '''Return an Experiment object.
+
+    Required arguments:
+    model -- the functional model to experiment on
+    '''
     self.scenarios = []
     self.model = model
-  def allScenarios(self,functions,simultaneous_faults,current_scenario={}):
+  def allScenarios(self,functions,simultaneous_faults,_current_scenario={}):
+    '''Create full factorial list of scenarios (recursive).
+
+    Required Arguments:
+    functions -- iterator of functions from which draw faults
+    simultaneous_faults -- the number of simultaneous faults allowed
+
+    The current_scenario argument is only used by the method recursion.
+    '''
     simultaneous_faults -= 1
     for function in functions:
       if function.allow_faults:
@@ -393,21 +589,39 @@ class Experiment(object):
         for mode in function.modes:
           if isinstance(mode.health,Operational):
             continue
-          new_scenario = current_scenario.copy()
+          new_scenario = _current_scenario.copy()
           new_scenario[function] = mode
           self.scenarios.append(new_scenario)
           if simultaneous_faults and len(leftover_functions):
             self.allScenarios(leftover_functions,simultaneous_faults,new_scenario)
-  def setExperiment(self,simultaneous_faults=2,sampling="full"):
+  def setExperiment(self,simultaneous_faults,sampling):
+    '''Create a list of scenarios to as an experiment.
+
+    Required Arguments:
+    simultaneous_faults -- the number of simultaneous faults allowed
+    sampling -- the sampling method used.  Currently, only "full" (full factorial)
+                is available.
+    '''
     self.scenarios = []
     functions = [function for function in self.model.functions()]
     if sampling == "full":
       self.allScenarios(functions,simultaneous_faults)
   def findUniqueResults(self):
+    '''Use self.findUnique to identify scenarios with unique end states.'''
     self.findUnique(self.results)
   def findUniqueHealth(self):
+    '''Use self.findUnique to identify scenarios with unique end health states.'''
     self.findUnique(self.health)
   def findUnique(self,data):
+    '''Identify unique and redundant scenario endings.
+
+    Required Arguments:
+    data -- a list; each element represents one scenario.
+
+    Populates self.unique, a list of lists. Each list represents a unique element
+    in data, and is itself a list of indices corresponding to scenarios that
+    produce that same output in data.
+    '''
     self.unique = []
     for i,r in enumerate(data):
       for group in self.unique:
@@ -417,8 +631,15 @@ class Experiment(object):
       else:
         self.unique.append([i])
   def run(self,simultaneous_faults=2,sampling="full"):
+    '''Setup and run an experiment.
+
+    Keyword Arguments:
+    simultaneous_faults=2 -- the number of simultaneous faults allowed
+    sampling="full" -- the sampling method used.  Currently, only "full" (full
+                       factorial) is available.
+    '''
     self.results = []
-    self.health = []
+    #self.health = []
     #if not len(self.scenarios):
     self.setExperiment(simultaneous_faults,sampling)
     for i,scenario in enumerate(self.scenarios):
@@ -437,6 +658,7 @@ class Experiment(object):
 #    print(str(int(len(self.unique)))+' health states or '+
 #      str(int(len(self.unique)*100/len(self.results)))+" percent unique")
   def reviewScenarios(self):
+    '''Print scenarios to the console one at a time.'''
     for scenario,result in zip(self.scenarios,self.results):
       print('Scenario:')
       self.model.printState(state=scenario)
@@ -948,6 +1170,6 @@ class EPS(Model):
     self.addBond(Signal(),'importBS1','actuateEE1')
 
 eps = Experiment(EPS())
-for i in [2]:
+for i in [2,2]:
   eps.run(i)
 #eps.reviewScenarios()
