@@ -23,5 +23,6 @@ g.add_edge('actuateEE1','exportEE1',bond='Electrical')
 g.add_edge('importBS1','actuateEE1',bond='Signal')
 
 eps = ibfm.Experiment(g)
+#Run with 2 then 3 simultaneous faults
 eps.run(2)
 eps.run(3)
