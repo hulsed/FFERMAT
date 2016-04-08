@@ -474,7 +474,6 @@ class Model(object):
       raise Exception('No defined function names found.')
     for _,_,data in self.imported_graph.edges_iter(data=True):
       for key in data:
-        print(data[key])
         if Bond.getSubclass(data[key]) is not None:
           bond_key = key
           break
