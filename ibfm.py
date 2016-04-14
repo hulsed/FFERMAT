@@ -4,9 +4,14 @@ Inherent Behavior in Functional Models
 Author: Matthew G McIntire
 2016
 '''
+printWarnings = False
+print_iterations = False
+run_parallel = True
 
 from math import inf
+from time import time
 import networkx as nx
+import multiprocessing
 
 def resetClock():
   '''Reset the global clock variable to zero for a new simulation.'''
@@ -23,7 +28,6 @@ def all_subclasses(cls):
   return cls.__subclasses__() + [g for s in cls.__subclasses__()
                                    for g in all_subclasses(s)]
 
-printWarnings = False
 
 class State(float):
   '''Ordinal type for qualitatively representing bond values'''
@@ -398,7 +402,10 @@ class Function(object):
 
 class Bond(object):
   '''Superclass for bonds in the functional model.'''
-  def __init__(self):
+  def __init__(self,source,drain):
+    self.source = source
+    self.drain = drain
+    self.name = source.name+'_'+drain.name
     self.reset()
   def __repr__(self):
     return self.__class__.__name__
@@ -463,6 +470,7 @@ class Model(object):
     '''
     #Find keys
     function_key = None
+    bond_key = None
     for _,data in self.imported_graph.nodes_iter(data=True):
       for key in data:
         if Function.getSubclass(data[key]) is not None:
@@ -488,10 +496,10 @@ class Model(object):
         raise Exception(data[function_key]+' is not a defined function name.')
       self.addFunction(function(node))
     for node1,node2,data in self.imported_graph.edges_iter(data=True):
-      bond = Bond.getSubclass(data[bond_key])
-      if bond is None:
+      bond_class = Bond.getSubclass(data[bond_key])
+      if bond_class is None:
         raise Exception(data[bond_key]+' is not a defined bond name.')
-      self.addBond(bond(),node1,node2)
+      self.addBond(bond_class,node1,node2)
   def bonds(self,functions=False):
     '''Generate bonds for iterating.
 
@@ -525,7 +533,7 @@ class Model(object):
   def addFunction(self,function):
     '''Add function to the graph of the functional model.'''
     self.graph.add_node(function)
-  def addBond(self,bond,in_function_name,out_function_name):
+  def addBond(self,bond_class,in_function_name,out_function_name):
     '''Add bond to the graph of the functional model.
 
     Required arguments:
@@ -533,9 +541,11 @@ class Model(object):
     in_function_name -- the id of the function that supplies effort to the bond
     out_function_name -- the id of the function that accepts flow from the bond
     '''
+    in_function = self.getFunction(in_function_name)
+    out_function = self.getFunction(out_function_name)
+    bond = bond_class(in_function,out_function)
     bond.name = in_function_name+'_'+out_function_name
-    self.graph.add_edge(self.getFunction(in_function_name),
-      self.getFunction(out_function_name),attr_dict={Bond:bond})
+    self.graph.add_edge(in_function,out_function,attr_dict={Bond:bond})
   def getFunction(self,name):
     '''Return the function with the given id.'''
     for function in self.functions():
@@ -548,13 +558,15 @@ class Model(object):
   def resolveBonds(self):
     '''Resolve the effort and flow values in each bond.'''
     for bond in self.bonds():
-#      print(bond.name+'\t'+str(bond.effort)+' '+str(bond.flow))
+      if print_iterations:
+        print(bond.name+'\t'+str(bond.effort)+' '+str(bond.flow))
       bond.step()
   def stepFunctions(self):
     '''Evaluate each function.'''
     self.minimum_timer = inf
     for function in self.functions():
-#      print(function.name+'\t'+str(function.mode))
+      if print_iterations:
+        print(function.name+'\t'+str(function.mode))
       timer = function.step()
       self.minimum_timer = min(self.minimum_timer,timer)
   def run(self,lifetime=inf):
@@ -581,14 +593,16 @@ class Model(object):
     finished = False
     i = 0
     while not finished:
-#      print("Iteration "+str(i))
+      if print_iterations:
+        print("Iteration "+str(i))
       i = i+1
       self.step()
       self.timings.append(clock)
       self.states.append(self.getState())
       if self.states[-1] == self.states[-2]:
         finished = True
-#        print("Iteration "+str(i)+" same as "+str(i-1))
+        if print_iterations:
+          print("Iteration "+str(i)+" same as "+str(i-1))
   def loadState(self,state):
     '''Set state as the current state of the model.
 
@@ -736,18 +750,28 @@ class Experiment(object):
     sampling="full" -- the sampling method used.  Currently, only "full" (full
                        factorial) is available.
     '''
+    t1 = time()
     self.results = []
     #self.health = []
     #if not len(self.scenarios):
     self.setExperiment(simultaneous_faults,sampling)
-    for i,scenario in enumerate(self.scenarios):
-      #print('scenario '+str(i),end="\r")
-      self.model.loadNominalState()
-      self.model.loadState(scenario)
-      self.model.run()
-      self.results.append(self.model.getState())
+    if run_parallel:
+      pool = multiprocessing.Pool(4)
+    t2 = time()
+    print('Experiment created in '+str(t2-t1)+' seconds.')
+    t1 = time()
+    if run_parallel:
+      self.results = list(pool.map(self.runOneScenario,self.scenarios))
+    else:
+      self.results = list(map(self.runOneScenario,self.scenarios))
+#    for scenario in self.scenarios:
+#      self.model.loadNominalState()
+#      self.model.loadState(scenario)
+#      self.model.run()
+#      self.results.append(self.model.getState())
 #      self.health.append(self.model.getHealth())
-    print(str(i+1)+' scenarios simulated')
+    t2 = time()
+    print(str(len(self.scenarios))+' scenarios simulated in '+str(t2-t1)+' seconds.')
     self.findUniqueResults()
     #print(str(self.unique))
     print(str(int(len(self.unique)))+' states or '+
@@ -755,6 +779,11 @@ class Experiment(object):
 #    self.findUniqueHealth()
 #    print(str(int(len(self.unique)))+' health states or '+
 #      str(int(len(self.unique)*100/len(self.results)))+" percent unique")
+  def runOneScenario(self,scenario):
+    self.model.loadNominalState()
+    self.model.loadState(scenario)
+    self.model.run()
+    return self.model.getState()
   def reviewScenarios(self):
     '''Print scenarios to the console one at a time.'''
     for scenario,result in zip(self.scenarios,self.results):
@@ -805,6 +834,8 @@ class NonZeroEffort(Behavior):
 class LowEffort(Behavior):
   def apply(self):
     self.out_bond.setEffort(Low())
+  def test(self):
+    self.in_bond.effort <= Low()
 class NominalEffort(Behavior):
   def apply(self):
     self.out_bond.setEffort(Nominal())
@@ -893,11 +924,11 @@ class InverseFlow(Behavior):
 class TranslateInverseFlowToEffort(Behavior):
   def apply(self):
     if self.out_bonds[0].flow > Nominal():
-      self.out_bonds[1].setFlow(Low())
+      self.out_bonds[1].setEffort(Low())
     elif self.out_bonds[0].flow < Nominal():
-      self.out_bonds[1].setFlow(High())
+      self.out_bonds[1].setEffort(High())
     else:
-      self.out_bonds[1].setFlow(Nominal())
+      self.out_bonds[1].setEffort(Nominal())
 class MinimumEffort(Behavior):
   def apply(self):
     value = max(0,min([bond.effort for bond in self.in_bonds]))
@@ -910,6 +941,18 @@ class MaximumFlow(Behavior):
   def apply(self):
     value = max([bond.flow for bond in self.out_bonds])
     self.in_bond.setFlow(State(value))
+class MaximumEffort(Behavior):
+  def apply(self):
+    value = max([bond.effort for bond in self.in_bonds])
+    self.out_bond.setEffort(State(value))
+class EqualFlowFromMaximumEffort(Behavior):
+  def apply(self):
+    max_effort = max([bond.effort for bond in self.in_bonds])
+    for bond in self.in_bonds:
+      if bond.effort == max_effort:
+        bond.setFlow(self.out_bond.flow)
+      else:
+        bond.setFlow(Zero())
 
 #############################  Mode Healths  #################################
 class Operational(ModeHealth):
@@ -923,11 +966,13 @@ class Failed(ModeHealth):
 class OpenCircuit(Mode):
   def behaviors(self):
     try:
-      yield ZeroEffort(out_bond=self.out_bond[Electrical])
+      for bond in self.out_bond[Electrical]:
+        yield ZeroEffort(out_bond=bond)
     except KeyError:
       pass
     try:
-      yield ZeroFlow(in_bond=self.in_bond[Electrical])
+      for bond in self.in_bond[Electrical]:
+        yield ZeroFlow(in_bond=bond)
     except KeyError:
       pass
 class ClosedCircuit(Mode):
@@ -968,6 +1013,18 @@ class InsulatedHeatSink(Mode):
 class NoHeatSink(Mode):
   def behaviors(self):
     yield ZeroFlow(in_bond=self.in_bond[Heat])
+class NominalMaterialSource(Mode):
+  def behaviors(self):
+    yield NominalEffort(out_bond=self.out_bond[Material])
+class NoMaterialSource(Mode):
+  def behaviors(self):
+    yield ZeroEffort(out_bond=self.out_bond[Material])
+class NominalMaterialSink(Mode):
+  def behaviors(self):
+    yield ReflectiveFlow(in_bond=self.in_bond[Material])
+class NoMaterialSink(Mode):
+  def behaviors(self):
+    yield ZeroFlow(in_bond=self.in_bond[Material])
 class NominalChemicalToElectricalEnergyConversion(Mode):
   def behaviors(self):
     yield TranslateFlowToEffort(out_bond=self.out_bond[Electrical]+
@@ -991,6 +1048,16 @@ class NoChemicalToElectricalEnergyConversion(Mode):
     yield ZeroFlow(self.in_bond[ChemicalEnergy])
     yield ZeroEffort(out_bond=self.out_bond[Heat])
     yield ZeroEffort(out_bond=self.out_bond[Electrical])
+class NominalInvertElectricalEnergy(Mode):
+  def behaviors(self):
+    yield NominalEffort(out_bond=self.out_bond[Electrical])
+    yield NominalEffort(out_bond=self.out_bond[Heat])
+    yield EqualFlow(self.in_bond[Electrical],self.out_bond[Electrical])
+class NoInvertElectricalEnergy(Mode):
+  def behaviors(self):
+    yield ZeroEffort(out_bond=self.out_bond[Electrical])
+    yield ZeroEffort(out_bond=self.out_bond[Heat])
+    yield ZeroFlow(self.in_bond[Electrical])
 class NominalElectricalToMechanicalEnergyConversion(Mode):
   def behaviors(self):
     yield TranslateInverseFlowToEffort(out_bond=self.out_bond[MechanicalEnergy]+
@@ -1008,6 +1075,16 @@ class OpenCircuitNoMechanicalEnergyConversion(Mode):
     yield ZeroFlow(self.in_bond[Electrical])
     yield ZeroEffort(out_bond=self.out_bond[Heat])
     yield ZeroEffort(out_bond=self.out_bond[MechanicalEnergy])
+class NominalElectricalToOpticalEnergyConversion(Mode):
+  def behaviors(self):
+    yield EqualEffort(self.in_bond[Electrical],self.out_bond[OpticalEnergy])
+    yield EqualEffort(self.in_bond[Electrical],self.out_bond[Heat])
+    yield ReflectiveFlow(self.in_bond[Electrical])
+class NoElectricalToOpticalEnergyConversion(Mode):
+  def behaviors(self):
+    yield ZeroEffort(out_bond=self.out_bond[OpticalEnergy])
+    yield ZeroEffort(out_bond=self.out_bond[Heat])
+    yield ZeroFlow(self.in_bond[Electrical])
 class NominalChemicalEffortSource(Mode):
   def behaviors(self):
     yield NominalEffort(out_bond=self.out_bond[ChemicalEnergy])
@@ -1107,9 +1184,16 @@ class BranchOpenCircuit(Mode):
 class NominalCombineElectricalEnergy(Mode):
   def behaviors(self):
     yield MaximumEffort(self.in_bond[Electrical],self.out_bond[Electrical])
-
+    yield EqualFlowFromMaximumEffort(self.in_bond[Electrical],
+                                     self.out_bond[Electrical])
+class NominalExportOpticalEnergy(Mode):
+  def behaviors(self):
+    yield ReflectiveFlow(self.in_bond[OpticalEnergy])
 
 #############################  Conditions  ###################################
+class NominalVoltage(Condition):
+  def behavior(self):
+    return NominalEffort(self.in_bond[Electrical])
 class HighCurrent(Condition):
   def behavior(self):
     return HighFlow(out_bond=self.out_bond[Electrical])
@@ -1121,6 +1205,14 @@ class NonZeroVoltage(Condition):
 class HighestCurrent(Condition):
   def behavior(self):
     return HighestFlow(out_bond=self.out_bond[Electrical])
+
+class LowVoltage(Condition):
+  def behavior(self):
+    return LowEffort(self.in_bond[Electrical])
+
+class HighVoltage(Condition):
+  def behavior(self):
+    return HighEffort(self.in_bond[Electrical])
 
 class BranchHighestCurrent(Condition):
   def behavior(self):
@@ -1192,6 +1284,17 @@ class ExportHeatEnergy(Function):
     self.addMode(1,Operational,HeatSink)
     self.addMode(2,Degraded,InsulatedHeatSink)
     self.addMode(3,Failed,NoHeatSink)
+class ImportMaterial(Function):
+  def construct(self):
+    self.addMode(1,Operational,NominalMaterialSource)
+    self.addMode(2,Failed,NoMaterialSource)
+class ExportMaterial(Function):
+  def construct(self):
+    self.addMode(1,Operational,NominalMaterialSink)
+    self.addMode(2,Failed,NoMaterialSink)
+class ExportOpticalEnergy(Function):
+  def construct(self):
+    self.addMode(1,Operational,NominalExportOpticalEnergy)
 class ProtectElectricalEnergy(Function):
   def construct(self):
     self.addMode(1,Operational,ClosedCircuit,default=True)
@@ -1214,6 +1317,15 @@ class ActuateElectricalEnergy(Function):
     self.addCondition(1,ZeroSignal,2)
     self.addCondition([1,3],HighestCurrent,4,delay=1)
     self.addCondition([5],NonZeroVoltage,4,delay=1)
+class InvertElectricalEnergy(Function):
+  def construct(self):
+    self.addMode(1,Operational,NominalInvertElectricalEnergy)
+    self.addMode(2,Operational,NoInvertElectricalEnergy)
+    self.addMode(3,Failed,NoInvertElectricalEnergy)
+    self.addCondition(1,LowVoltage,2)
+    self.addCondition(1,HighVoltage,2)
+    self.addCondition(2,NominalVoltage,1)
+    self.addCondition(1,HighestCurrent,3)
 class BranchElectricalEnergy(Function):
   def construct(self):
     self.addMode(1,Operational,NominalBranchElectricalEnergy)
@@ -1222,7 +1334,7 @@ class BranchElectricalEnergy(Function):
 class CombineElectricalEnergy(Function):
   def construct(self):
     self.addMode(1,Operational,NominalCombineElectricalEnergy)
-    self.addMode(2,Failed,CombineOpenCircuit)
+    self.addMode(2,Failed,OpenCircuit)
     self.addCondition(1,HighestCurrent,2,delay=2)
 class ConvertChemicalToElectricalEnergy(Function):
   def construct(self):
@@ -1239,6 +1351,11 @@ class ConvertElectricalToMechanicalEnergy(Function):
     self.addMode(3,Failed,OpenCircuitNoMechanicalEnergyConversion)
     self.addCondition([1,2],Overheating,3,delay=10)
     self.addCondition([1,2],FastOverheating,3,delay=1)
+class ConvertElectricalToOpticalEnergy(Function):
+  def construct(self):
+    self.addMode(1,Operational,NominalElectricalToOpticalEnergyConversion)
+    self.addMode(2,Failed,NoElectricalToOpticalEnergyConversion)
+    self.addCondition(1,HighVoltage,2,delay=1)
 class TransportMaterial(Function):
   def construct(self):
     self.addMode(1,Operational,NominalTransportMaterial)
@@ -1307,6 +1424,9 @@ class ChemicalEnergy(Energy):
 class MechanicalEnergy(Energy):
   pass
 
+class OpticalEnergy(Energy):
+  pass
+
 class Signal(Bond):
   pass
 
@@ -1322,12 +1442,12 @@ class Signal(Bond):
 #    self.addFunction(ConvertChemicalToElectricalEnergy('CEtoEE1'))
 #    self.addFunction(ExportElectricalEnergy('exportEE1'))
 #    self.addFunction(ExportHeatEnergy('exportHE1'))
-#    self.addBond(ChemicalEnergy(),'importCE1','CEtoEE1')
-#    self.addBond(Heat(),'CEtoEE1','exportHE1')
-#    self.addBond(Electrical(),'CEtoEE1','protectEE1')
-#    self.addBond(Electrical(),'protectEE1','actuateEE1')
-#    self.addBond(Electrical(),'actuateEE1','exportEE1')
-#    self.addBond(Signal(),'importBS1','actuateEE1')
+#    self.addBond(ChemicalEnergy,'importCE1','CEtoEE1')
+#    self.addBond(Heat,'CEtoEE1','exportHE1')
+#    self.addBond(Electrical,'CEtoEE1','protectEE1')
+#    self.addBond(Electrical,'protectEE1','actuateEE1')
+#    self.addBond(Electrical,'actuateEE1','exportEE1')
+#    self.addBond(Signal,'importBS1','actuateEE1')
 #
 #eps = Experiment(EPS())
 #for i in [2,2]:
