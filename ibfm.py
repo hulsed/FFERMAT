@@ -6,7 +6,8 @@ Author: Matthew G McIntire
 '''
 printWarnings = False
 print_iterations = False
-run_parallel = True
+run_parallel = False
+n_workers = 3
 
 from math import inf
 from time import time
@@ -756,7 +757,7 @@ class Experiment(object):
     #if not len(self.scenarios):
     self.setExperiment(simultaneous_faults,sampling)
     if run_parallel:
-      pool = multiprocessing.Pool(4)
+      pool = multiprocessing.Pool(n_workers)
     t2 = time()
     print('Experiment created in '+str(t2-t1)+' seconds.')
     t1 = time()
