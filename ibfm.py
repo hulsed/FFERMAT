@@ -254,8 +254,7 @@ class Function(object):
                      attainable by the function. The default default is the
                      first given mode with health=Operational.
   '''
-  names = [] #Program-level list of function names to avoid conflicts
-  def __init__(self,name=None,allow_faults=True,**attr):
+  def __init__(self,model,name=None,allow_faults=True,**attr):
     '''Return a Function object
 
     Required arguments:
@@ -275,15 +274,15 @@ class Function(object):
     self.out_bond = {}
     self.modes = []
     if name != None:
-      if name not in Function.names:
-        Function.names.append(name)
+      if name not in model.names:
+        model.names.append(name)
       else:
         raise Exception(name+' already used as a function name.')
     else:
       for n in range(1,10):
         name = self.__class__.__name__+format(n,'01d')
-        if name not in Function.names:
-          Function.names.append(name)
+        if name not in model.names:
+          model.names.append(name)
           break
       else:
         raise Exception('Too many ' +self.__class__.__name__+' functions.  '+
@@ -456,6 +455,7 @@ class Model(object):
     graph -- a NetworkX graph representing the functional model
     '''
     #This graph contains all of the functions as nodes and bonds as edges.
+    self.names = []
     self.imported_graph = graph
     self.graph = nx.MultiDiGraph()
     self.functions = self.graph.nodes_iter #for code readability
@@ -495,7 +495,7 @@ class Model(object):
       function = Function.getSubclass(data[function_key])
       if function is None:
         raise Exception(data[function_key]+' is not a defined function name.')
-      self.addFunction(function(node))
+      self.addFunction(function(self,node))
     for node1,node2,data in self.imported_graph.edges_iter(data=True):
       bond_class = Bond.getSubclass(data[bond_key])
       if bond_class is None:
@@ -573,7 +573,7 @@ class Model(object):
   def run(self,lifetime=inf):
     '''Simulate the functional model as a state machine with pseudotime.
 
-    Required arguments:
+    Keyword arguments:
     lifetime=inf -- the time at which the simulation should stop, regardless of
                     whether the model has reached steady state.
     '''
