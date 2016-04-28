@@ -1434,6 +1434,11 @@ class Signal(Bond):
 ##############################################################################
 #####################      End of IBFM Definitions       #####################
 
+'''Create list of available functions in file function_list.txt'''
+with open('function_list.txt','w') as file:
+  for c in all_subclasses(Function):
+    file.write(c.__name__+'\n')
+
 #class EPS(Model):
 #  def construct(self):
 #    self.addFunction(ProtectElectricalEnergy('protectEE1'))
