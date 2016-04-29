@@ -614,13 +614,14 @@ class Model(object):
              Overwrites current state, so any functions or bonds not included in
              the argument are left alone.
     '''
-    for function in self.functions():
-      if state.get(function) != None:
-        function.mode = state[function]
-    for bond in self.bonds():
-      if state.get(bond) != None:
-        bond.effort = state[bond][0]
-        bond.flow = state[bond][1]
+    for obj in state:
+      if isinstance(obj,Function):
+        obj.mode = state[obj]
+      elif isinstance(obj,Bond):
+        obj.effort = state[obj][0]
+        obj.flow = state[obj][1]
+      else:
+        raise Exception(str(obj)+' is not a function or a bond.')
   def loadNominalState(self):
     '''Set the nominal state as the current state of the model.'''
     self.loadState(self.nominal_state)
