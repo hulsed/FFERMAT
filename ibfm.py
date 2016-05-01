@@ -64,9 +64,9 @@ class State(float):
           raise Exception('Undefined State value')
     return float.__new__(cls,cls.value)
   def __repr__(self):
-    return self.__class__.__name__
+    return self.__class__.__qualname__
   def __str__(self):
-    return self.__class__.__name__
+    return self.__class__.__qualname__
 
 #############################  States  #######################################
 class Negative(State):
@@ -148,7 +148,7 @@ class Mode(object):
     self.health = health
     self.attr = attr
   def __repr__(self):
-    return self.__class__.__name__
+    return self.__class__.__qualname__
   def __hash__(self):
     '''Return hash to identify unique Mode objects.
 
@@ -280,14 +280,16 @@ class Function(object):
         raise Exception(name+' already used as a function name.')
     else:
       for n in range(1,10):
-        name = self.__class__.__name__+format(n,'01d')
+        name = self.__class__.__qualname__+format(n,'01d')
         if name not in model.names:
           model.names.append(name)
           break
       else:
-        raise Exception('Too many ' +self.__class__.__name__+' functions.  '+
+        raise Exception('Too many ' +self.__class__.__qualname__+' functions.  '+
         'Raise the limit.')
     self.name = name
+  def __str__(self):
+    return self.name
   def __repr__(self):
     return self.name
   def __hash__(self):
@@ -296,6 +298,8 @@ class Function(object):
     Used by dictionaries in NetworkX.
     '''
     return hash(self.name)
+  def __lt__(self,other):
+    return str(self)<str(other)
   def __eq__(self,other):
     '''Return boolean to identify unique Function objects.
 
@@ -396,7 +400,7 @@ class Function(object):
     return minimum_timer
   def getSubclass(name):
     for subclass in all_subclasses(Function):
-      if subclass.__name__ == name:
+      if subclass.__qualname__ == name:
         return subclass
     return None
 
@@ -408,7 +412,7 @@ class Bond(object):
     self.name = source.name+'_'+drain.name
     self.reset()
   def __repr__(self):
-    return self.__class__.__name__
+    return self.__class__.__qualname__
   def reset(self,effort=Zero(),flow=Zero()):
     '''Set the effort and flow of the bond to Zero() unless otherwise specified.'''
     self.effort = effort
@@ -435,7 +439,7 @@ class Bond(object):
     self.effort_queue = self.flow_queue = None
   def getSubclass(name):
     for subclass in all_subclasses(Bond):
-      if subclass.__name__ == name:
+      if subclass.__qualname__ == name:
         return subclass
     return None
 
@@ -625,6 +629,13 @@ class Model(object):
   def loadNominalState(self):
     '''Set the nominal state as the current state of the model.'''
     self.loadState(self.nominal_state)
+  def getStringState(self):
+    '''Return the current state of the model as strings
+
+    Return a dictionary of values for functions and bonds. Keys are function and
+    bond string representations, function values are modes, and bond values are
+    two-element lists containing an effort value and a flow value.
+    '''
   def getState(self):
     '''Return the current state of the model.
 
@@ -718,6 +729,7 @@ class Experiment(object):
     '''
     self.scenarios = []
     functions = [function for function in self.model.functions()]
+    functions.sort()
     if sampling == "full":
       self.allScenarios(functions,simultaneous_faults)
   def findUniqueResults(self):
@@ -1437,8 +1449,11 @@ class Signal(Bond):
 
 '''Create list of available functions in file function_list.txt'''
 with open('function_list.txt','w') as file:
+  l = []
   for c in all_subclasses(Function):
-    file.write(c.__name__+'\n')
+    l.append(c.__qualname__)
+  l.sort()
+  file.write('\n'.join(l))
 
 #class EPS(Model):
 #  def construct(self):
