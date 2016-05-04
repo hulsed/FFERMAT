@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 """
@@ -14,7 +13,6 @@ import csv
 def ImportFunctionalModel(path,type='dsm'):
     if type=='dsm':
         componentNames,M = readCFG(path)
-#        type(path)
         systemname = path.split('.')[-1].split('/')[-1]
         G = buildGraph(componentNames,M,systemname)
         return G
@@ -46,15 +44,15 @@ def buildGraph(componentNames,M,systemname=None):
 	
 	#make nodes
 	#Each node has unique ID of component type + dictionary key
-	#componentType property gives component taxonomy type
+	#function property gives component taxonomy type
 	k=0
      
-     #This code will become useful if we want to analyze multiple models at once
 	try:
+         #This code will become useful if we want to analyze multiple models at once
 		for c in componentNames:
 			nodeName = c+'_'+str(componentNamesCounter[c])
 			inverseComponentDict = {v:k for k,v in componentNamesDict.items()}
-			G.add_node(nodeName,componentType=inverseComponentDict[c],order=k,cid=componentNamesCounter[c])
+			G.add_node(nodeName,function=inverseComponentDict[c],order=k,cid=componentNamesCounter[c])
 			componentNamesDictIterable[k]=nodeName
 			componentNamesCounter[c]+=1
 			k+=1
@@ -62,7 +60,7 @@ def buildGraph(componentNames,M,systemname=None):
 		print('componentNamesDict does not exist, using natural names')
 		for c in componentNames:
 			nodeName = c+'_'+str(componentNamesCounter[c])
-			G.add_node(nodeName,componentType=c,order=k,cid=componentNamesCounter[c])
+			G.add_node(nodeName,function=c,order=k,cid=componentNamesCounter[c])
 			componentNamesDictIterable[k]=nodeName
 			componentNamesCounter[c]+=1
 			k+=1
