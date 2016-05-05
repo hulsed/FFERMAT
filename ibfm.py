@@ -4,6 +4,8 @@ Inherent Behavior in Functional Models
 Author: Matthew G McIntire
 2016
 '''
+
+#These flags can be changed in the file or at runtime after import ibfm
 printWarnings = False
 print_iterations = False
 run_parallel = False
