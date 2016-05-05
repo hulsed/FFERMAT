@@ -1,0 +1,8 @@
+,ImportChemicalEnergy,ConvertChemicalToElectricalEnergy,ExportHeatEnergy,ProtectElectricalEnergy,ActuateElectricalEnergy,ExportElectricalEnergy,ImportBinarySignal
+ImportChemicalEnergy,,ChemicalEnergy,,,,,
+ConvertChemicalToElectricalEnergy,,,Heat,Electrical,,,
+ExportHeatEnergy,,,,,,,
+ProtectElectricalEnergy,,,,,Electrical,,
+ActuateElectricalEnergy,,,,,,Electrical,
+ExportElectricalEnergy,,,,,,,
+ImportBinarySignal,,,,,Signal,,
