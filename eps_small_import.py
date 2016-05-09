@@ -8,7 +8,6 @@ sys.path.append('ibfm_utility')
 import ibfm
 import ibfm_utility
 
-
 if __name__ == '__main__':
   filename = 'FunctionalModels/small_eps.csv'
   g = ibfm_utility.ImportFunctionalModel(filename,type='dsm')
