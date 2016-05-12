@@ -57,7 +57,7 @@ def buildGraph(componentNames,M,systemname=None):
             componentNamesCounter[c]+=1
             k+=1
     except:
-        print('componentNamesDict does not exist, using natural names')
+#        print('componentNamesDict does not exist, using natural names')
         for c in componentNames:
             nodeName = c+'_'+str(componentNamesCounter[c])
             G.add_node(nodeName,function=c,order=k,cid=componentNamesCounter[c])
