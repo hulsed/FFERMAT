@@ -28,7 +28,7 @@ if __name__ == '__main__':
   g2=r1.apply(g)
   ibfm_utility.plotPgvGraph(g2,filename='plots/afterRule.svg',
                             promoteNodeLabels='function',
-                            printRelationships='obj')
+                            printRelationships='flowType')
   eps = ibfm.Experiment(g)
   #Run with 2 then 3 simultaneous faults
   eps.run(2)
