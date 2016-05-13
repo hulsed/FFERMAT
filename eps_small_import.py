@@ -14,8 +14,6 @@ if __name__ == '__main__':
   ibfm_utility.plotPgvGraph(g,
                             promoteNodeLabels='function',
                             printRelationships='flowType')
-  print(g.nodes(data=True))
-  print(g.edges(data=True))
   eps = ibfm.Experiment(g)
   #Run with 2 then 3 simultaneous faults
   eps.run(2)
