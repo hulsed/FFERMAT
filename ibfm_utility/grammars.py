@@ -6,6 +6,9 @@ Created on Mon May  9 15:25:55 2016
 
 Machinery for applying simple grammar rules to networkx functional models
 
+The documentation below is more brainstorm than accurate. Expect a rewrite once 
+    I nail down how it should work.
+
 Networkx graphs are created with dummy node names, where attribute "function" 
     contains the useful function information
 
@@ -45,6 +48,7 @@ Rule naming conventions
 
 """
 
+import copy
 import networkx as nx
 import networkx.algorithms.isomorphism as iso
 import ibfm_utility
@@ -58,34 +62,50 @@ class Rule(object):
         rhspath -- path to rhs rule, use to make a Networkx directed right hand side graph
         '''
         self.name = name
-        self.set_lhs(lhspath)
+        self.lhs = self.rule2graph(lhspath)
         self.set_rhs(rhspath)
         self.anchor_nodes = set(self.lhs.nodes()).intersection(self.rhs.nodes())
+        self.anchor_edges = set(self.lhs.edges()).intersection(self.rhs.edges())
         self.nodes_to_add = set(self.rhs.nodes()).difference(self.lhs.nodes())
         self.nodes_to_remove = set(self.lhs.nodes()).difference(self.rhs.nodes())
-    
+        self.edges_to_add = set(self.rhs.edges(keys=True)).difference(self.lhs.edges(keys=True))
+        self.edges_to_remove = set(self.lhs.edges(keys=True)).difference(self.rhs.edges(keys=True))
+        
     def set_lhs(self,path):
         self.lhs = self.rule2graph(path)
     
     def set_rhs(self,path):
         self.rhs = self.rule2graph(path)
+#        for n in self.rhs.nodes():
+#            self.rhs.node
+#        #ensure unique keys for parallel edges on rhs
+#        for n1,n2 in set(self.lhs.edges()).intersection(self.rhs.edges())      
+#        
+#        for n1,n2 in set(self.rhs.edges()):
+#            if (n1,n2) in self.lhs.edges()
+#            for a in N.edge[n1][n2].values():
+#                if a['wid']
+#            
+#            if self.lhs[a['wid'] for a in N.edge[n1][n2].values()]
+#            
+#            
+#            if e['wid'] in self.lhs.edges(data=True):
+        #Do something to set keys according to whether new or old edge/node(?)
         
     def rule2graph(self,path):
         #Get graph
         G = ibfm_utility.ImportFunctionalModel(path,type='dsm')
         #Redo function attributes and uids
         for n,attr in G.nodes_iter(data=True):
-            verb,obj = attr['function'].split('_')
-            verb,verbid = verb.split('-')
-            obj,objid = obj.split('-')
+            verb,obj,fid = attr['function'].split('_')
             G.node[n]['verb'] = verb
             G.node[n]['obj'] = obj
-            G.node[n]['verbid'] = verbid
-            G.node[n]['objid'] = objid
+            G.node[n]['fid'] = fid
+            G.node[n]['function'] = verb+obj
         for e1,e2,key,attr in G.edges_iter(data=True,keys=True):
-            obj,objid = attr['flowType'].split('-')
+            obj,wid = attr['flowType'].split('_')
             G.edge[e1][e2][key]['obj'] = obj
-            G.edge[e1][e2][key]['objid'] = objid
+            G.edge[e1][e2][key]['wid'] = wid
         return G
         
     def recognize(self,graph,matchattr='function'):
@@ -98,24 +118,47 @@ class Rule(object):
         #Create graph matcher between graph and lhs
         GM = iso.DiGraphMatcher(graph,self.lhs,node_match=iso.categorical_node_match([matchattr],['none']))
         #List of dicts that show mappings where key = graph node and value = lhs node
-        mappings = [im for im in GM.subgraph_isomorphisms_iter()]
-        return mappings        
+        self.recognize_mappings = [im for im in GM.subgraph_isomorphisms_iter()]
+#        return mappings        
         
-    def apply(self,graph,mapping,matchattr='function'):
+    def apply(self,graph,location=0,matchattr='function'):
         '''
         Required arguments:
         graph -- a Networkx directed graph
         mapping -- a single Dict where keys are source graph node IDs and 
-            values are rhs node IDs
+            values are lhs node IDs
         '''
+
+#        this_rhs = copy.deepcopy(self.rhs)
+        if len(self.recognize_mappings) > 0:
+            this_rhs = nx.relabel_nodes(self.rhs,{v: k for k, v in self.recognize_mappings[location].items()})
+            combined_graph = nx.compose(graph,this_rhs)              
+        else:
+            raise Exception('Missed condition')
+        
+        for n in self.nodes_to_remove:
+            combined_graph.remove_node(n)
+        
+        return combined_graph
+        
+#        #For all recognized nodes in graph, add new predecessors and succesors
+#        for n in mapping.keys():
+#            if n in self.anchor_nodes:
+#                self.rhs.successors(n)  and self.nodes_to_add
+                
+        
         
         #Create mapping between nodes in source graph and lhs-rhs mapping
-        
-        
+        #First match non-wildcard functions
+        #Second match wildcard functions
+        #Third match non-wildcard flows
+        #Fourth match wildcard flows
+#        for source_node,lhs_node in mapping.items():
+            
         
         #ALIGN: Create mapping between old nodes and new nodes        
-        for n in graph.nodes_iter():
-            for m in self.rhs.nodes_iter():
+#        for n in graph.nodes_iter():
+#            for m in self.rhs.nodes_iter():
                 
         #ADDITIONS
         
