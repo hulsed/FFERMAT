@@ -13,10 +13,10 @@ ImportChemicalEnergy
 ImportElectricalEnergy
 ImportMaterial
 InvertElectricalEnergy
-ProcessSignal.And
-ProcessSignal.IsNominal
-ProcessSignal.Not
-ProcessSignal.Or
+ProcessSignalAnd
+ProcessSignalIsNominal
+ProcessSignalNot
+ProcessSignalOr
 ProtectElectricalEnergy
 SenseCurrent
 SenseTemperature

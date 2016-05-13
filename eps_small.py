@@ -26,4 +26,4 @@ if __name__ == '__main__':
   eps = ibfm.Experiment(g)
   #Run with 2 then 3 simultaneous faults
   eps.run(2)
-  eps.run(3)
+  #eps.run(3)

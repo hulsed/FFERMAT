@@ -1,0 +1,148 @@
+mode OpenCircuit
+    optional behavior AllZeroEffort out Electrical 
+    optional behavior AllZeroFlow in Electrical 
+mode ClosedCircuit
+    behavior EqualEffort in Electrical out Electrical 
+    behavior EqualFlow in Electrical out Electrical 
+mode ShortCircuit
+    behavior FreeFlow in Electrical 
+    optional behavior ZeroEffort out Electrical 
+mode NominalVoltageSource
+    behavior NominalEffort out Electrical 
+mode LowVoltageSource
+    behavior LowEffort out Electrical 
+mode HighVoltageSource
+    behavior HighEffort out Electrical 
+mode ResistiveLoad
+    behavior ReflectiveFlow in Electrical 
+mode NominalSignalSource
+    behavior NominalEffort out Signal 
+mode ZeroSignalSource
+    behavior ZeroEffort out Signal 
+mode HeatSink
+    behavior ReflectiveFlow in Heat 
+mode InsulatedHeatSink
+    behavior LessReflectiveFlow in Heat 
+mode NoHeatSink
+    behavior ZeroFlow in Heat 
+mode NominalMaterialSource
+    behavior NominalEffort out Material 
+mode NoMaterialSource
+    behavior ZeroEffort out Material 
+mode NominalMaterialSink
+    behavior ReflectiveFlow in Material 
+mode NoMaterialSink
+    behavior ZeroFlow in Material 
+mode NominalChemicalToElectricalEnergyConversion
+    behavior TranslateFlowToEffort out Electrical Heat 
+    behavior EqualEffort in ChemicalEnergy out Electrical 
+    behavior EqualFlow in ChemicalEnergy out Electrical 
+mode InefficientChemicalToElectricalEnergyConversion
+    behavior TranslateIncreasedFlowToEffort out Electrical Heat 
+    behavior EqualEffort in ChemicalEnergy out Electrical 
+    behavior IncreasedFlow in ChemicalEnergy out Electrical 
+mode ChemicalEnergyLossNoElectricalConversion
+    behavior FreeFlow in ChemicalEnergy 
+    behavior HighestEffortAmplification in ChemicalEnergy out Heat 
+    behavior ZeroEffort out Electrical 
+mode NoChemicalToElectricalEnergyConversion
+    behavior ZeroFlow in ChemicalEnergy 
+    behavior ZeroEffort out Heat 
+    behavior ZeroEffort out Electrical 
+mode NominalInvertElectricalEnergy
+    behavior NominalEffort out Electrical 
+    behavior NominalEffort out Heat 
+    behavior EqualFlow in Electrical out Electrical 
+mode NoInvertElectricalEnergy
+    behavior ZeroEffort out Electrical 
+    behavior ZeroEffort out Heat 
+    behavior ZeroFlow in Electrical 
+mode NominalElectricalToMechanicalEnergyConversion
+    behavior TranslateInverseFlowToEffort out MechanicalEnergy Heat 
+    behavior EqualEffort in Electrical out MechanicalEnergy 
+    behavior InverseFlow in Electrical out MechanicalEnergy 
+mode ShortCircuitNoMechanicalEnergyConversion
+    behavior FreeFlow in Electrical 
+    behavior HighestEffortAmplification in Electrical out Heat 
+    behavior ZeroEffort out MechanicalEnergy 
+mode OpenCircuitNoMechanicalEnergyConversion
+    behavior ZeroFlow in Electrical 
+    behavior ZeroEffort out Heat 
+    behavior ZeroEffort out MechanicalEnergy 
+mode NominalElectricalToOpticalEnergyConversion
+    behavior EqualEffort in Electrical out OpticalEnergy 
+    behavior EqualEffort in Electrical out Heat 
+    behavior ReflectiveFlow in Electrical 
+mode NoElectricalToOpticalEnergyConversion
+    behavior ZeroEffort out OpticalEnergy 
+    behavior ZeroEffort out Heat 
+    behavior ZeroFlow in Electrical 
+mode NominalChemicalEffortSource
+    behavior NominalEffort out ChemicalEnergy 
+mode LowChemicalEffortSource
+    behavior LowEffort out ChemicalEnergy 
+mode HighChemicalEffortSource
+    behavior HighEffort out ChemicalEnergy 
+mode NoChemicalEffortSource
+    behavior ZeroEffort out ChemicalEnergy 
+mode NominalVoltageSensing
+    behavior from ClosedCircuit
+    behavior EqualEffort in Electrical out Signal 
+mode NominalCurrentSensing
+    behavior from ClosedCircuit
+    behavior TranslateFlowToEffort out Electrical Signal 
+mode DriftingLowVoltageSensing
+    behavior from ClosedCircuit
+    behavior DecreasedEffort in Electrical out Signal 
+mode DriftingLowCurrentSensing
+    behavior from ClosedCircuit
+    behavior TranslateDecreasedFlowToEffort out Electrical Signal 
+mode DriftingHighVoltageSensing
+    behavior from ClosedCircuit
+    behavior IncreasedEffort in Electrical out Signal 
+mode DriftingHighCurrentSensing
+    behavior from ClosedCircuit
+    behavior TranslateIncreasedFlowToEffort out Electrical Signal 
+mode NoVoltageSensing
+    behavior from ClosedCircuit
+    behavior ZeroEffort out Signal 
+mode NoCurrentSensing
+    behavior from NoVoltageSensing
+mode HeatConductor
+    behavior EqualEffort in Heat out Heat 
+    behavior EqualFlow in Heat out Heat 
+mode NominalTemperatureSensing
+    behavior from HeatConductor
+    behavior EqualEffort in Heat out Signal 
+mode DriftingLowTemperatureSensing
+    behavior from HeatConductor
+    behavior DecreasedEffort in Heat out Signal 
+mode DriftingHighTemperatureSensing
+    behavior from HeatConductor
+    behavior IncreasedEffort in Heat out Signal 
+mode NoTemperatureSensing
+    behavior from HeatConductor
+    behavior ZeroEffort out Signal 
+mode NominalTransportMaterial
+    behavior MinimumEffort in Energy Material out Material 
+    behavior EqualFlow in Material out Material 
+    behavior EqualFlow in Energy out Material 
+mode RestrictedTransportMaterial
+    behavior DecreasedMinimumEffort in Energy Material out Material 
+    behavior EqualFlow in Material out Material 
+    behavior EqualFlow in Energy out Material 
+mode BlockedTransportMaterial
+    behavior ZeroEffort out Material 
+    behavior ZeroFlow in Material 
+    behavior ZeroFlow in Energy 
+mode NominalBranchElectricalEnergy
+    behavior BranchEqualEffort in Electrical out Electrical
+    behavior MaximumFlow in Electrical out Electrical 
+mode BranchOpenCircuit
+    behavior AllZeroEffort out Electrical
+    behavior ZeroFlow in Electrical 
+mode NominalCombineElectricalEnergy
+    behavior MaximumEffort in Electrical out Electrical 
+    behavior EqualFlowFromMaximumEffort in Electrical out Electrical 
+mode NominalExportOpticalEnergy
+    behavior ReflectiveFlow in OpticalEnergy 

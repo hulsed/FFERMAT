@@ -1,0 +1,120 @@
+function ImportElectricalEnergy
+	mode 1 Operational NominalVoltageSource
+	mode 2 Degraded LowVoltageSource
+	mode 3 Degraded HighVoltageSource
+	mode 4 Failed OpenCircuit
+function ExportElectricalEnergy
+    mode 1 Operational ResistiveLoad
+    mode 2 Failed ShortCircuit
+    mode 3 Failed OpenCircuit
+function ImportChemicalEnergy
+    mode 1 Operational NominalChemicalEffortSource
+    mode 2 Degraded LowChemicalEffortSource
+    mode 3 Failed NoChemicalEffortSource
+function ImportBinarySignal
+    mode 1 Operational NominalSignalSource
+    mode 2 Failed ZeroSignalSource
+function ExportHeatEnergy
+    mode 1 Operational HeatSink
+    mode 2 Degraded InsulatedHeatSink
+    mode 3 Failed NoHeatSink
+function ImportMaterial
+    mode 1 Operational NominalMaterialSource
+    mode 2 Failed NoMaterialSource
+function ExportMaterial
+    mode 1 Operational NominalMaterialSink
+    mode 2 Failed NoMaterialSink
+function ExportOpticalEnergy
+    mode 1 Operational NominalExportOpticalEnergy
+function ProtectElectricalEnergy
+	mode 1 Operational ClosedCircuit
+	mode 2 Operational OpenCircuit
+	mode 3 Failed ClosedCircuit
+	mode 4 Failed OpenCircuit
+	mode 5 Failed ShortCircuit
+	condition HighCurrent 1 to 2 delay 10
+	condition HighestCurrent 1 to 2
+	condition HighestCurrent 3 to 4 delay 1
+	condition NonZeroVoltage 5 to 4 delay 1
+function ActuateElectricalEnergy
+    mode 1 Operational ClosedCircuit
+    mode 2 Operational OpenCircuit default
+    mode 3 Failed ClosedCircuit
+    mode 4 Failed OpenCircuit
+    mode 5 Failed ShortCircuit
+    condition NonZeroSignal 2 to 1
+    condition ZeroSignal 1 to 2
+    condition HighestCurrent 1 3 to 4 delay 1
+    condition NonZeroVoltage 5 to 4 delay 1
+function InvertElectricalEnergy
+    mode 1 Operational NominalInvertElectricalEnergy
+    mode 2 Operational NoInvertElectricalEnergy
+    mode 3 Failed NoInvertElectricalEnergy
+    condition LowVoltage 1 to 2
+    condition HighVoltage 1 to 2
+    condition NominalVoltage 2 to 1
+    condition HighestCurrent 1 to 3
+function BranchElectricalEnergy
+    mode 1 Operational NominalBranchElectricalEnergy
+    mode 2 Failed BranchOpenCircuit
+    condition BranchHighestCurrent 1 to 2 delay 2
+function CombineElectricalEnergy
+    mode 1 Operational NominalCombineElectricalEnergy
+    mode 2 Failed OpenCircuit
+    condition HighestCurrent 1 to 2 delay 2
+function ConvertChemicalToElectricalEnergy
+    mode 1 Operational NominalChemicalToElectricalEnergyConversion
+    mode 2 Degraded InefficientChemicalToElectricalEnergyConversion
+    mode 3 Failed ChemicalEnergyLossNoElectricalConversion
+    mode 4 Failed NoChemicalToElectricalEnergyConversion
+    condition Overheating 1 2 3 to 4 delay 10
+    condition FastOverheating 1 2 3 to 4 delay 1
+function ConvertElectricalToMechanicalEnergy
+    mode 1 Operational NominalElectricalToMechanicalEnergyConversion
+    mode 2 Failed ShortCircuitNoMechanicalEnergyConversion
+    mode 3 Failed OpenCircuitNoMechanicalEnergyConversion
+    condition Overheating 1 2 to 3 delay 10
+    condition FastOverheating 1 2 to 3 delay 1
+function ConvertElectricalToOpticalEnergy
+    mode 1 Operational NominalElectricalToOpticalEnergyConversion
+    mode 2 Failed NoElectricalToOpticalEnergyConversion
+    condition HighVoltage 1 to 2 delay 1
+function TransportMaterial
+    mode 1 Operational NominalTransportMaterial
+    mode 2 Degraded RestrictedTransportMaterial
+    mode 3 Failed BlockedTransportMaterial
+function SenseVoltage
+    mode 1 Operational NominalVoltageSensing
+    mode 2 Degraded DriftingLowVoltageSensing
+    mode 3 Degraded DriftingHighVoltageSensing
+    mode 4 Failed NoVoltageSensing
+function SenseCurrent
+    mode 1 Operational NominalCurrentSensing
+    mode 2 Degraded DriftingLowCurrentSensing
+    mode 3 Degraded DriftingHighCurrentSensing
+    mode 4 Failed NoCurrentSensing
+function SenseTemperature
+    mode 1 Operational NominalTemperatureSensing
+    mode 2 Degraded DriftingLowTemperatureSensing
+    mode 3 Degraded DriftingHighTemperatureSensing
+    mode 4 Failed NoTemperatureSensing
+function ProcessSignalIsNominal
+    mode 1 Operational ZeroSignalSource
+    mode 2 Operational NominalSignalSource
+    condition NominalSignal 1 to 2
+    condition NonNominalSignal 2 to 1
+function ProcessSignalAnd
+    mode 1 Operational ZeroSignalSource
+    mode 2 Operational NominalSignalSource
+    condition NoZeroSignals 1 to 2
+    condition AnyZeroSignals 2 to 1
+function ProcessSignalOr
+    mode 1 Operational ZeroSignalSource
+    mode 2 Operational NominalSignalSource
+    condition AnyNonZeroSignals 1 to 2
+    condition AllZeroSignals 2 to 1
+function ProcessSignalNot
+    mode 1 Operational ZeroSignalSource
+    mode 2 Operational NominalSignalSource
+    condition ZeroSignal 1 to 2
+    condition NonZeroSignal 2 to 1

@@ -13,6 +13,7 @@ n_workers = 3
 
 from math import inf
 from time import time
+from glob import glob
 import networkx as nx
 import multiprocessing
 
@@ -31,6 +32,11 @@ def all_subclasses(cls):
   return cls.__subclasses__() + [g for s in cls.__subclasses__()
                                    for g in all_subclasses(s)]
 
+def getSubclass(cls,name):
+  '''Return the subclass of cls named name'''
+  for c in all_subclasses(cls):
+    if c.__name__ == name:
+      return c
 
 class State(float):
   '''Ordinal type for qualitatively representing bond values'''
@@ -93,7 +99,7 @@ class Behavior(object):
   test(self) -- Return boolean indicating presence of behavior. Used by
                 conditions.
   '''
-  def __init__(self,in_bond=None,out_bond=None):
+  def __init__(self,in_bond=[],out_bond=[]):
     '''Return a Behavior object.
 
     Required arguments:
@@ -105,12 +111,12 @@ class Behavior(object):
     try:
       self.in_bond = in_bond[0]
       self.in_bonds = in_bond
-    except TypeError:
+    except (TypeError,IndexError):
       self.in_bond = in_bond
     try:
       self.out_bond = out_bond[0]
       self.out_bonds = out_bond
-    except TypeError:
+    except (TypeError,IndexError):
       self.out_bond = out_bond
   def __hash__(self):
     '''Return hash to identify unique Behavior objects.
@@ -135,6 +141,7 @@ class Mode(object):
   Required methods:
   behaviors(self) -- yield Behavior objects.
   '''
+  _subclasses = {}
   def __init__(self,name,function,health,**attr):
     '''Return a Mode object.
 
@@ -163,6 +170,32 @@ class Mode(object):
     Used by dictionaries in NetworkX.
     '''
     return self.__class__ == other.__class__ and self.health == other.health
+  def behaviors(self):
+    for behavior in self.__class__._behaviors:
+      optional = False
+      if 'opt' in behavior[0].lower():
+        optional = True
+        behavior = behavior[1:]
+      elif 'from' in behavior[0].lower():
+        yield from getSubclass(Behavior,behavior[1]).behaviors(self)
+        continue
+      ins = []
+      outs = []
+      cls = getSubclass(Behavior,behavior[0])
+      try:
+        for word in behavior[1:]:
+          if word.lower() in 'inout':
+            entry = word.lower()
+          elif entry == 'in':
+            ins.extend(self.in_bond[getSubclass(Bond,word)])
+          elif entry == 'out':
+            outs.extend(self.out_bond[getSubclass(Bond,word)])
+          else:
+            raise Exception('Looking for keywords in or out, found: '+word)
+        yield cls(ins,outs)
+      except KeyError:
+        if not optional:
+          raise
   def reset(self):
     '''Reset the Mode object for a new simulation.
 
@@ -172,41 +205,13 @@ class Mode(object):
     '''
     pass
 
-class Logical(object):
-  '''Abstract class for a logical operator
-
-  Required methods:
-  test(self) -- return a boolean
-  '''
-  def __init__(self,behaviors):
-    self.behaviors = behaviors
-  def __hash__(self):
-    '''Return hash to identify unique Logical objects.
-
-    Used by dictionaries in NetworkX.
-    '''
-    return hash((self.__class__,*self.behaviors))
-  def __eq__(self,other):
-    '''Return boolean to identify unique Logical objects.
-
-    Used by dictionaries in NetworkX.
-    '''
-    return self.__class__ == other.__class__ and self.behaviors == other.behaviors
-
-class Or(Logical):
-  def test(self):
-    for behavior in self.behaviors:
-      if behavior.test():
-        return True
-    return False
-
-
 class Condition(object):
   '''Abstract class for a condition to advance to another mode.
 
   Required methods:
   behavior(self) -- Return a Behavior object.
   '''
+  _subclasses = {}
   def __init__(self,function,delay=0,logical_not=False):
     '''Return a Condition object
 
@@ -224,6 +229,24 @@ class Condition(object):
       self.test = lambda: not self.behavior().test
     else:
       self.test = self.behavior().test
+  def behavior(self):
+    for behavior in self.__class__._behaviors:
+      if 'from' in behavior[0].lower():
+        return getSubclass(Behavior,behavior[1]).behavior(self)
+        continue
+      ins = []
+      outs = []
+      cls = getSubclass(Behavior,behavior[0])
+      for word in behavior[1:]:
+        if word.lower() in 'inout':
+          entry = word.lower()
+        elif entry == 'in':
+          ins.extend(self.in_bond[getSubclass(Bond,word)])
+        elif entry == 'out':
+          outs.extend(self.out_bond[getSubclass(Bond,word)])
+        else:
+          raise Exception('Looking for keywords in or out, found: '+word)
+      return cls(ins,outs)
   def reset(self):
     '''Resets the delay timer.
     '''
@@ -256,6 +279,7 @@ class Function(object):
                      attainable by the function. The default default is the
                      first given mode with health=Operational.
   '''
+  _subclasses = {}
   def __init__(self,model,name=None,allow_faults=True,**attr):
     '''Return a Function object
 
@@ -308,6 +332,33 @@ class Function(object):
     Used by dictionaries in NetworkX.
     '''
     return repr(self) == repr(other) or self.name == str(other)
+  def construct(self):
+    for mode in self.__class__._modes:
+      ident = mode[0]
+      health = getSubclass(ModeHealth,mode[1])
+      mode_class = getSubclass(Mode,mode[2])
+      if mode_class is None:
+        raise Exception(mode[2]+' is not a defined mode')
+      self.addMode(ident,health,mode_class)
+    for condition in self.__class__._conditions:
+      condition_class = getSubclass(Condition,condition[0])
+      if condition_class is None:
+        raise Exception(condition[0]+' is not a defined mode')
+      entry = None
+      delay = 0
+      source_modes = []
+      for word in condition[1:]:
+        if word.lower() == 'to':
+          entry = 'to'
+        elif word.lower() == 'delay':
+          entry = 'delay'
+        elif entry == 'to':
+          next_mode = word
+        elif entry == 'delay':
+          delay = float(word)
+        else:
+          source_modes.append(word)
+      self.addCondition(source_modes,condition_class,next_mode,delay=delay)
   def reset(self):
     '''Reset all modes and set mode to default.'''
     self.mode = self.default
@@ -400,11 +451,6 @@ class Function(object):
     for behavior in self.behavior_graph.successors_iter(self.mode):
       behavior.apply()
     return minimum_timer
-  def getSubclass(name):
-    for subclass in all_subclasses(Function):
-      if subclass.__qualname__ == name:
-        return subclass
-    return None
 
 class Bond(object):
   '''Superclass for bonds in the functional model.'''
@@ -480,7 +526,7 @@ class Model(object):
     bond_key = None
     for _,data in self.imported_graph.nodes_iter(data=True):
       for key in data:
-        if Function.getSubclass(data[key]) is not None:
+        if Function._subclasses.get(data[key]) is not None:
           function_key = key
           break
       if function_key:
@@ -498,7 +544,7 @@ class Model(object):
       raise Exception('No defined bond names found.')
     #Build model
     for node,data in self.imported_graph.nodes_iter(data=True):
-      function = Function.getSubclass(data[function_key])
+      function = Function._subclasses[data[function_key]]
       if function is None:
         raise Exception(data[function_key]+' is not a defined function name.')
       self.addFunction(function(self,node))
@@ -834,6 +880,9 @@ class NoZeroEffort(Behavior):
         return False
     return True
 class AllZeroEffort(Behavior):
+  def apply(self):
+    for bond in self.out_bonds:
+      bond.setEffort(Zero())
   def test(self):
     for bond in self.in_bonds:
       if bond.effort != Zero():
@@ -844,6 +893,10 @@ class ZeroFlow(Behavior):
     self.in_bond.setFlow(Zero())
   def test(self):
     return self.out_bond.flow == Zero()
+class AllZeroFlow(Behavior):
+  def apply(self):
+    for bond in self.in_bonds:
+      bond.setFlow(Zero())
 class NonZeroEffort(Behavior):
   def test(self):
     return self.in_bond.effort != Zero()
@@ -873,15 +926,32 @@ class HighestEffort(Behavior):
     self.out_bond.setEffort(Highest())
   def test(self):
     return self.in_bond.effort >= Highest()
+class HighEffortOut(Behavior):
+  def test(self):
+    return self.out_bond.effort >= High()
+class HighestEffortOut(Behavior):
+  def test(self):
+    return self.out_bond.effort >= Highest()
+
 class HighFlow(Behavior):
   def test(self):
     return self.out_bond.flow >= High()
 class HighestFlow(Behavior):
   def test(self):
     return self.out_bond.flow >= Highest()
+class AnyHighestFlow(Behavior):
+  def test(self):
+    for bond in self.out_bonds:
+      if bond.flow >= Highest():
+        return True
+    return False
 class EqualEffort(Behavior):
   def apply(self):
     self.out_bond.setEffort(self.in_bond.effort)
+class BranchEqualEffort(Behavior):
+  def apply(self):
+    for bond in self.out_bonds:
+      bond.setEffort(self.in_bond.effort)
 class EqualFlow(Behavior):
   def apply(self):
     self.in_bond.setFlow(self.out_bond.flow)
@@ -978,448 +1048,74 @@ class Degraded(ModeHealth):
 class Failed(ModeHealth):
   pass
 
-#############################  Modes  ########################################
-class OpenCircuit(Mode):
-  def behaviors(self):
-    try:
-      for bond in self.out_bond[Electrical]:
-        yield ZeroEffort(out_bond=bond)
-    except KeyError:
-      pass
-    try:
-      for bond in self.in_bond[Electrical]:
-        yield ZeroFlow(in_bond=bond)
-    except KeyError:
-      pass
-class ClosedCircuit(Mode):
-  def behaviors(self):
-    yield EqualEffort(self.in_bond[Electrical],self.out_bond[Electrical])
-    yield EqualFlow(self.in_bond[Electrical],self.out_bond[Electrical])
-class ShortCircuit(Mode):
-  def behaviors(self):
-    yield FreeFlow(self.in_bond[Electrical])
-    try:
-      yield ZeroEffort(out_bond = self.out_bond[Electrical])
-    except KeyError:
-      pass
-class NominalVoltageSource(Mode):
-  def behaviors(self):
-    yield NominalEffort(out_bond=self.out_bond[Electrical])
-class LowVoltageSource(Mode):
-  def behaviors(self):
-    yield LowEffort(out_bond=self.out_bond[Electrical])
-class HighVoltageSource(Mode):
-  def behaviors(self):
-    yield HighEffort(out_bond=self.out_bond[Electrical])
-class ResistiveLoad(Mode):
-  def behaviors(self):
-    yield ReflectiveFlow(in_bond=self.in_bond[Electrical])
-class NominalSignalSource(Mode):
-  def behaviors(self):
-    yield NominalEffort(out_bond=self.out_bond[Signal])
-class ZeroSignalSource(Mode):
-  def behaviors(self):
-    yield ZeroEffort(out_bond=self.out_bond[Signal])
-class HeatSink(Mode):
-  def behaviors(self):
-    yield ReflectiveFlow(in_bond=self.in_bond[Heat])
-class InsulatedHeatSink(Mode):
-  def behaviors(self):
-    yield LessReflectiveFlow(in_bond=self.in_bond[Heat])
-class NoHeatSink(Mode):
-  def behaviors(self):
-    yield ZeroFlow(in_bond=self.in_bond[Heat])
-class NominalMaterialSource(Mode):
-  def behaviors(self):
-    yield NominalEffort(out_bond=self.out_bond[Material])
-class NoMaterialSource(Mode):
-  def behaviors(self):
-    yield ZeroEffort(out_bond=self.out_bond[Material])
-class NominalMaterialSink(Mode):
-  def behaviors(self):
-    yield ReflectiveFlow(in_bond=self.in_bond[Material])
-class NoMaterialSink(Mode):
-  def behaviors(self):
-    yield ZeroFlow(in_bond=self.in_bond[Material])
-class NominalChemicalToElectricalEnergyConversion(Mode):
-  def behaviors(self):
-    yield TranslateFlowToEffort(out_bond=self.out_bond[Electrical]+
-                                         self.out_bond[Heat])
-    yield EqualEffort(self.in_bond[ChemicalEnergy],self.out_bond[Electrical])
-    yield EqualFlow(self.in_bond[ChemicalEnergy],self.out_bond[Electrical])
-class InefficientChemicalToElectricalEnergyConversion(Mode):
-  def behaviors(self):
-    yield TranslateIncreasedFlowToEffort(out_bond=self.out_bond[Electrical]+
-                                         self.out_bond[Heat])
-    yield EqualEffort(self.in_bond[ChemicalEnergy],self.out_bond[Electrical])
-    yield IncreasedFlow(self.in_bond[ChemicalEnergy],self.out_bond[Electrical])
-class ChemicalEnergyLossNoElectricalConversion(Mode):
-  def behaviors(self):
-    yield FreeFlow(self.in_bond[ChemicalEnergy])
-    yield HighestEffortAmplification(self.in_bond[ChemicalEnergy],
-                                     self.out_bond[Heat])
-    yield ZeroEffort(out_bond=self.out_bond[Electrical])
-class NoChemicalToElectricalEnergyConversion(Mode):
-  def behaviors(self):
-    yield ZeroFlow(self.in_bond[ChemicalEnergy])
-    yield ZeroEffort(out_bond=self.out_bond[Heat])
-    yield ZeroEffort(out_bond=self.out_bond[Electrical])
-class NominalInvertElectricalEnergy(Mode):
-  def behaviors(self):
-    yield NominalEffort(out_bond=self.out_bond[Electrical])
-    yield NominalEffort(out_bond=self.out_bond[Heat])
-    yield EqualFlow(self.in_bond[Electrical],self.out_bond[Electrical])
-class NoInvertElectricalEnergy(Mode):
-  def behaviors(self):
-    yield ZeroEffort(out_bond=self.out_bond[Electrical])
-    yield ZeroEffort(out_bond=self.out_bond[Heat])
-    yield ZeroFlow(self.in_bond[Electrical])
-class NominalElectricalToMechanicalEnergyConversion(Mode):
-  def behaviors(self):
-    yield TranslateInverseFlowToEffort(out_bond=self.out_bond[MechanicalEnergy]+
-                                         self.out_bond[Heat])
-    yield EqualEffort(self.in_bond[Electrical],self.out_bond[MechanicalEnergy])
-    yield InverseFlow(self.in_bond[Electrical],self.out_bond[MechanicalEnergy])
-class ShortCircuitNoMechanicalEnergyConversion(Mode):
-  def behaviors(self):
-    yield FreeFlow(self.in_bond[Electrical])
-    yield HighestEffortAmplification(self.in_bond[Electrical],
-                                     self.out_bond[Heat])
-    yield ZeroEffort(out_bond=self.out_bond[MechanicalEnergy])
-class OpenCircuitNoMechanicalEnergyConversion(Mode):
-  def behaviors(self):
-    yield ZeroFlow(self.in_bond[Electrical])
-    yield ZeroEffort(out_bond=self.out_bond[Heat])
-    yield ZeroEffort(out_bond=self.out_bond[MechanicalEnergy])
-class NominalElectricalToOpticalEnergyConversion(Mode):
-  def behaviors(self):
-    yield EqualEffort(self.in_bond[Electrical],self.out_bond[OpticalEnergy])
-    yield EqualEffort(self.in_bond[Electrical],self.out_bond[Heat])
-    yield ReflectiveFlow(self.in_bond[Electrical])
-class NoElectricalToOpticalEnergyConversion(Mode):
-  def behaviors(self):
-    yield ZeroEffort(out_bond=self.out_bond[OpticalEnergy])
-    yield ZeroEffort(out_bond=self.out_bond[Heat])
-    yield ZeroFlow(self.in_bond[Electrical])
-class NominalChemicalEffortSource(Mode):
-  def behaviors(self):
-    yield NominalEffort(out_bond=self.out_bond[ChemicalEnergy])
-class LowChemicalEffortSource(Mode):
-  def behaviors(self):
-    yield LowEffort(out_bond=self.out_bond[ChemicalEnergy])
-class HighChemicalEffortSource(Mode):
-  def behaviors(self):
-    yield HighEffort(out_bond=self.out_bond[ChemicalEnergy])
-class NoChemicalEffortSource(Mode):
-  def behaviors(self):
-    yield ZeroEffort(out_bond=self.out_bond[ChemicalEnergy])
-class NominalVoltageSensing(Mode):
-  def behaviors(self):
-    yield from ClosedCircuit.behaviors(self)
-    yield EqualEffort(self.in_bond[Electrical],self.out_bond[Signal])
-class NominalCurrentSensing(Mode):
-  def behaviors(self):
-    yield from ClosedCircuit.behaviors(self)
-    yield TranslateFlowToEffort(out_bond=self.out_bond[Electrical]+
-                                self.out_bond[Signal])
-class DriftingLowVoltageSensing(Mode):
-  def behaviors(self):
-    yield from ClosedCircuit.behaviors(self)
-    yield DecreasedEffort(self.in_bond[Electrical],self.out_bond[Signal])
-class DriftingLowCurrentSensing(Mode):
-  def behaviors(self):
-    yield from ClosedCircuit.behaviors(self)
-    yield TranslateDecreasedFlowToEffort(out_bond=self.out_bond[Electrical]+
-                                self.out_bond[Signal])
-class DriftingHighVoltageSensing(Mode):
-  def behaviors(self):
-    yield from ClosedCircuit.behaviors(self)
-    yield IncreasedEffort(self.in_bond[Electrical],self.out_bond[Signal])
-class DriftingHighCurrentSensing(Mode):
-  def behaviors(self):
-    yield from ClosedCircuit.behaviors(self)
-    yield TranslateIncreasedFlowToEffort(out_bond=self.out_bond[Electrical]+
-                                self.out_bond[Signal])
-class NoVoltageSensing(Mode):
-  def behaviors(self):
-    yield from ClosedCircuit.behaviors(self)
-    yield ZeroEffort(out_bond=self.out_bond[Signal])
-class NoCurrentSensing(NoVoltageSensing):
-  pass
-class HeatConductor(Mode):
-  def behaviors(self):
-    yield EqualEffort(self.in_bond[Heat],self.out_bond[Heat])
-    yield EqualFlow(self.in_bond[Heat],self.out_bond[Heat])
-class NominalTemperatureSensing(Mode):
-  def behaviors(self):
-    yield from HeatConductor.behaviors(self)
-    yield EqualEffort(self.in_bond[Heat],self.out_bond[Signal])
-class DriftingLowTemperatureSensing(Mode):
-  def behaviors(self):
-    yield from HeatConductor.behaviors(self)
-    yield DecreasedEffort(self.in_bond[Heat],self.out_bond[Signal])
-class DriftingHighTemperatureSensing(Mode):
-  def behaviors(self):
-    yield from HeatConductor.behaviors(self)
-    yield IncreasedEffort(self.in_bond[Heat],self.out_bond[Signal])
-class NoTemperatureSensing(Mode):
-  def behaviors(self):
-    yield from HeatConductor.behaviors(self)
-    yield ZeroEffort(out_bond=self.out_bond[Signal])
-class NominalTransportMaterial(Mode):
-  def behaviors(self):
-    yield MinimumEffort(self.in_bond[Energy]+self.in_bond[Material],
-                    self.out_bond[Material])
-    yield EqualFlow(self.in_bond[Material],
-                    self.out_bond[Material])
-    yield EqualFlow(self.in_bond[Energy],
-                    self.out_bond[Material])
-class RestrictedTransportMaterial(Mode):
-  def behaviors(self):
-    yield DecreasedMinimumEffort(self.in_bond[Energy]+self.in_bond[Material],
-                    self.out_bond[Material])
-    yield EqualFlow(self.in_bond[Material],
-                    self.out_bond[Material])
-    yield EqualFlow(self.in_bond[Energy],
-                    self.out_bond[Material])
-class BlockedTransportMaterial(Mode):
-  def behaviors(self):
-    yield ZeroEffort(out_bond=self.out_bond[Material])
-    yield ZeroFlow(in_bond=self.in_bond[Material])
-    yield ZeroFlow(in_bond=self.in_bond[Energy])
-class NominalBranchElectricalEnergy(Mode):
-  def behaviors(self):
-    for bond in self.out_bond[Electrical]:
-      yield EqualEffort(self.in_bond[Electrical],bond)
-    yield MaximumFlow(self.in_bond[Electrical],self.out_bond[Electrical])
-class BranchOpenCircuit(Mode):
-  def behaviors(self):
-    for bond in self.out_bond[Electrical]:
-      yield ZeroEffort(out_bond=bond)
-    yield ZeroFlow(self.in_bond[Electrical])
-class NominalCombineElectricalEnergy(Mode):
-  def behaviors(self):
-    yield MaximumEffort(self.in_bond[Electrical],self.out_bond[Electrical])
-    yield EqualFlowFromMaximumEffort(self.in_bond[Electrical],
-                                     self.out_bond[Electrical])
-class NominalExportOpticalEnergy(Mode):
-  def behaviors(self):
-    yield ReflectiveFlow(self.in_bond[OpticalEnergy])
 
 #############################  Conditions  ###################################
-class NominalVoltage(Condition):
-  def behavior(self):
-    return NominalEffort(self.in_bond[Electrical])
-class HighCurrent(Condition):
-  def behavior(self):
-    return HighFlow(out_bond=self.out_bond[Electrical])
-
-class NonZeroVoltage(Condition):
-  def behavior(self):
-    return NonZeroEffort(in_bond=self.in_bond[Electrical])
-
-class HighestCurrent(Condition):
-  def behavior(self):
-    return HighestFlow(out_bond=self.out_bond[Electrical])
-
-class LowVoltage(Condition):
-  def behavior(self):
-    return LowEffort(self.in_bond[Electrical])
-
-class HighVoltage(Condition):
-  def behavior(self):
-    return HighEffort(self.in_bond[Electrical])
-
-class BranchHighestCurrent(Condition):
-  def behavior(self):
-    return Or([HighestFlow(out_bond=bond) for bond in self.out_bond[Electrical]])
-
-class NominalSignal(Condition):
-  def behavior(self):
-    return NominalEffort(in_bond=self.in_bond[Signal])
-
-class NonNominalSignal(Condition):
-  def behavior(self):
-    return NonNominalEffort(in_bond=self.in_bond[Signal])
-
-class ZeroSignal(Condition):
-  def behavior(self):
-    return ZeroEffort(in_bond=self.in_bond[Signal])
-
-class NonZeroSignal(Condition):
-  def behavior(self):
-    return NonZeroEffort(in_bond=self.in_bond[Signal])
-
-class AnyZeroSignals(Condition):
-  def behavior(self):
-    return AnyZeroEffort(in_bond=self.in_bond[Signal])
-
-class NoZeroSignals(Condition):
-  def behavior(self):
-    return NoZeroEffort(in_bond=self.in_bond[Signal])
-
-class AnyNonZeroSignals(Condition):
-  def behavior(self):
-    return AnyNonZeroEffort(in_bond=self.in_bond[Signal])
-
-class AllZeroSignals(Condition):
-  def behavior(self):
-    return AllZeroEffort(in_bond=self.in_bond[Signal])
-
-class Overheating(Condition):
-  def behavior(self):
-    return HighEffort(in_bond=self.out_bond[Heat])
-
-class FastOverheating(Condition):
-  def behavior(self):
-    return HighestEffort(in_bond=self.out_bond[Heat])
-
-#############################  Functions  ####################################
-class ImportElectricalEnergy(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalVoltageSource)
-    self.addMode(2,Degraded,LowVoltageSource)
-    self.addMode(3,Degraded,HighVoltageSource)
-    self.addMode(4,Failed,OpenCircuit)
-class ExportElectricalEnergy(Function):
-  def construct(self):
-    self.addMode(1,Operational,ResistiveLoad)
-    self.addMode(2,Failed,ShortCircuit)
-    self.addMode(3,Failed,OpenCircuit)
-class ImportChemicalEnergy(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalChemicalEffortSource)
-    self.addMode(2,Degraded,LowChemicalEffortSource)
-    self.addMode(3,Failed,NoChemicalEffortSource)
-class ImportBinarySignal(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalSignalSource)
-    self.addMode(2,Failed,ZeroSignalSource)
-class ExportHeatEnergy(Function):
-  def construct(self):
-    self.addMode(1,Operational,HeatSink)
-    self.addMode(2,Degraded,InsulatedHeatSink)
-    self.addMode(3,Failed,NoHeatSink)
-class ImportMaterial(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalMaterialSource)
-    self.addMode(2,Failed,NoMaterialSource)
-class ExportMaterial(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalMaterialSink)
-    self.addMode(2,Failed,NoMaterialSink)
-class ExportOpticalEnergy(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalExportOpticalEnergy)
-class ProtectElectricalEnergy(Function):
-  def construct(self):
-    self.addMode(1,Operational,ClosedCircuit,default=True)
-    self.addMode(2,Operational,OpenCircuit)
-    self.addMode(3,Failed,ClosedCircuit)
-    self.addMode(4,Failed,OpenCircuit)
-    self.addMode(5,Failed,ShortCircuit)
-    self.addCondition(1,HighCurrent,2,delay=10)
-    self.addCondition(1,HighestCurrent,2)
-    self.addCondition([3],HighestCurrent,4,delay=1)
-    self.addCondition([5],NonZeroVoltage,4,delay=1)
-class ActuateElectricalEnergy(Function):
-  def construct(self):
-    self.addMode(1,Operational,ClosedCircuit)
-    self.addMode(2,Operational,OpenCircuit,default=True)
-    self.addMode(3,Failed,ClosedCircuit)
-    self.addMode(4,Failed,OpenCircuit)
-    self.addMode(5,Failed,ShortCircuit)
-    self.addCondition(2,NonZeroSignal,1)
-    self.addCondition(1,ZeroSignal,2)
-    self.addCondition([1,3],HighestCurrent,4,delay=1)
-    self.addCondition([5],NonZeroVoltage,4,delay=1)
-class InvertElectricalEnergy(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalInvertElectricalEnergy)
-    self.addMode(2,Operational,NoInvertElectricalEnergy)
-    self.addMode(3,Failed,NoInvertElectricalEnergy)
-    self.addCondition(1,LowVoltage,2)
-    self.addCondition(1,HighVoltage,2)
-    self.addCondition(2,NominalVoltage,1)
-    self.addCondition(1,HighestCurrent,3)
-class BranchElectricalEnergy(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalBranchElectricalEnergy)
-    self.addMode(2,Failed,BranchOpenCircuit)
-    self.addCondition(1,BranchHighestCurrent,2,delay=2)
-class CombineElectricalEnergy(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalCombineElectricalEnergy)
-    self.addMode(2,Failed,OpenCircuit)
-    self.addCondition(1,HighestCurrent,2,delay=2)
-class ConvertChemicalToElectricalEnergy(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalChemicalToElectricalEnergyConversion)
-    self.addMode(2,Degraded,InefficientChemicalToElectricalEnergyConversion)
-    self.addMode(3,Failed,ChemicalEnergyLossNoElectricalConversion)
-    self.addMode(4,Failed,NoChemicalToElectricalEnergyConversion)
-    self.addCondition([1,2,3],Overheating,4,delay=10)
-    self.addCondition([1,2,3],FastOverheating,4,delay=1)
-class ConvertElectricalToMechanicalEnergy(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalElectricalToMechanicalEnergyConversion)
-    self.addMode(2,Failed,ShortCircuitNoMechanicalEnergyConversion)
-    self.addMode(3,Failed,OpenCircuitNoMechanicalEnergyConversion)
-    self.addCondition([1,2],Overheating,3,delay=10)
-    self.addCondition([1,2],FastOverheating,3,delay=1)
-class ConvertElectricalToOpticalEnergy(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalElectricalToOpticalEnergyConversion)
-    self.addMode(2,Failed,NoElectricalToOpticalEnergyConversion)
-    self.addCondition(1,HighVoltage,2,delay=1)
-class TransportMaterial(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalTransportMaterial)
-    self.addMode(2,Degraded,RestrictedTransportMaterial)
-    self.addMode(3,Failed,BlockedTransportMaterial)
-class SenseVoltage(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalVoltageSensing)
-    self.addMode(2,Degraded,DriftingLowVoltageSensing)
-    self.addMode(3,Degraded,DriftingHighVoltageSensing)
-    self.addMode(4,Failed,NoVoltageSensing)
-class SenseCurrent(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalCurrentSensing)
-    self.addMode(2,Degraded,DriftingLowCurrentSensing)
-    self.addMode(3,Degraded,DriftingHighCurrentSensing)
-    self.addMode(4,Failed,NoCurrentSensing)
-class SenseTemperature(Function):
-  def construct(self):
-    self.addMode(1,Operational,NominalTemperatureSensing)
-    self.addMode(2,Degraded,DriftingLowTemperatureSensing)
-    self.addMode(3,Degraded,DriftingHighTemperatureSensing)
-    self.addMode(4,Failed,NoTemperatureSensing)
-class ProcessSignal(object):
-  class IsNominal(Function):
-    def construct(self):
-      self.addMode(1,Operational,ZeroSignalSource)
-      self.addMode(2,Operational,NominalSignalSource)
-      self.addCondition(1,NominalSignal,2)
-      self.addCondition(2,NonNominalSignal,1)
-  class And(Function):
-    def construct(self):
-      self.addMode(1,Operational,ZeroSignalSource)
-      self.addMode(2,Operational,NominalSignalSource)
-      self.addCondition(1,NoZeroSignals,2)
-      self.addCondition(2,AnyZeroSignals,1)
-  class Or(Function):
-    def construct(self):
-      self.addMode(1,Operational,ZeroSignalSource)
-      self.addMode(2,Operational,NominalSignalSource)
-      self.addCondition(1,AnyNonZeroSignals,2)
-      self.addCondition(2,AllZeroSignals,1)
-  class Not(Function):
-    def construct(self):
-      self.addMode(1,Operational,ZeroSignalSource)
-      self.addMode(2,Operational,NominalSignalSource)
-      self.addCondition(1,ZeroSignal,2)
-      self.addCondition(2,NonZeroSignal,1)
+#class NominalVoltage(Condition):
+#  def behavior(self):
+#    return NominalEffort(self.in_bond[Electrical])
+#class HighCurrent(Condition):
+#  def behavior(self):
+#    return HighFlow(out_bond=self.out_bond[Electrical])
+#
+#class NonZeroVoltage(Condition):
+#  def behavior(self):
+#    return NonZeroEffort(in_bond=self.in_bond[Electrical])
+#
+#class HighestCurrent(Condition):
+#  def behavior(self):
+#    return HighestFlow(out_bond=self.out_bond[Electrical])
+#
+#class LowVoltage(Condition):
+#  def behavior(self):
+#    return LowEffort(self.in_bond[Electrical])
+#
+#class HighVoltage(Condition):
+#  def behavior(self):
+#    return HighEffort(self.in_bond[Electrical])
+#
+#class BranchHighestCurrent(Condition):
+#  def behavior(self):
+#    return AnyHighestFlow(out_bond=self.out_bond[Electrical])
+#
+#class NominalSignal(Condition):
+#  def behavior(self):
+#    return NominalEffort(in_bond=self.in_bond[Signal])
+#
+#class NonNominalSignal(Condition):
+#  def behavior(self):
+#    return NonNominalEffort(in_bond=self.in_bond[Signal])
+#
+#class ZeroSignal(Condition):
+#  def behavior(self):
+#    return ZeroEffort(in_bond=self.in_bond[Signal])
+#
+#class NonZeroSignal(Condition):
+#  def behavior(self):
+#    return NonZeroEffort(in_bond=self.in_bond[Signal])
+#
+#class AnyZeroSignals(Condition):
+#  def behavior(self):
+#    return AnyZeroEffort(in_bond=self.in_bond[Signal])
+#
+#class NoZeroSignals(Condition):
+#  def behavior(self):
+#    return NoZeroEffort(in_bond=self.in_bond[Signal])
+#
+#class AnyNonZeroSignals(Condition):
+#  def behavior(self):
+#    return AnyNonZeroEffort(in_bond=self.in_bond[Signal])
+#
+#class AllZeroSignals(Condition):
+#  def behavior(self):
+#    return AllZeroEffort(in_bond=self.in_bond[Signal])
+#
+#class Overheating(Condition):
+#  def behavior(self):
+#    return HighEffort(in_bond=self.out_bond[Heat])
+#
+#class FastOverheating(Condition):
+#  def behavior(self):
+#    return HighestEffort(in_bond=self.out_bond[Heat])
 
 #############################  Bonds  ########################################
 class Material(Bond):
@@ -1446,9 +1142,54 @@ class OpticalEnergy(Energy):
 class Signal(Bond):
   pass
 
+def load(filename):
+  '''Load function, mode, and condition definitions from a .ibfm file'''
+  with open(filename,'r') as file:
+    current = None
+    for line in file:
+      words = line.split()
+      if not words:
+        current = None
+        continue
+      word = words[0].lower()
+      if word[0] in '%$#//':
+        continue
+      if current:
+        if Function in current.__bases__:
+          if 'mode' in word:
+            current._modes.append(words[1:])
+          elif 'cond' in word:
+            current._conditions.append(words[1:])
+          else:
+            current = None
+        elif Mode in current.__bases__ or Condition in current.__bases__:
+          if 'behav' in word:
+            current._behaviors.append(words[1:])
+          elif 'opt' in word:
+            current._behaviors.append([words[0]]+words[2:])
+          else:
+            current = None
+      if not current:
+        if 'function' in word:
+          current = type(words[1],(Function,),{'_modes':[],'_conditions':[]})
+          Function._subclasses[words[1]] = current
+        elif 'mode' in word:
+          current = type(words[1],(Mode,),{'_behaviors':[]})
+          Mode._subclasses[words[1]] = current
+        elif 'condition' in word:
+          current = type(words[1],(Condition,),{'_behaviors':[]})
+          Condition._subclasses[words[1]] = current
+        else:
+          raise Exception('Unknown keyword: '+words[0])
+
+
+
 ##############################################################################
 #####################      End of IBFM Definitions       #####################
-
+'''load .ibfm files'''
+files = glob('*.ibfm')
+for file in files:
+  load(file)
 '''Create list of available functions in file function_list.txt'''
 with open('function_list.txt','w') as file:
   l = []
