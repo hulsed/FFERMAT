@@ -17,14 +17,16 @@ import ibfm
 import ibfm_utility
 
 if __name__ == '__main__':
-  filename = 'FunctionalModels/small_eps.csv'
+  filename = 'FunctionalModels/small_eps_2.csv'
   g = ibfm_utility.ImportFunctionalModel(filename,type='dsm')
-  ibfm_utility.plotPgvGraph(g,'plots/junk.svg',
+  print('g nodes:',g.nodes(data=True))
+  ibfm_utility.plotPgvGraph(g,'plots/beforeRule.svg',
                             promoteNodeLabels='function',
                             printRelationships='flowType')
-  r1 = ibfm_utility.grammars.Rule('protect','ibfm_utility/rules/AddProtectFunction/lhs.csv','ibfm_utility/rules/AddProtectFunction/rhs.csv')
+  r1 = ibfm_utility.grammars.Rule('protect','ibfm_utility/rules/RemoveBetweenIBS_EEE/lhs.csv','ibfm_utility/rules/RemoveBetweenIBS_EEE/rhs.csv')
   r1.recognize(g)
-  print(r1.recognize_mappings)
+  print('lhs:',r1.lhs.nodes(data=True))
+  print('r1 mappings:',r1.recognize_mappings)
   g2=r1.apply(g)
   ibfm_utility.plotPgvGraph(g2,filename='plots/afterRule.svg',
                             promoteNodeLabels='function',
