@@ -97,31 +97,59 @@ class Rule(object):
         G = ibfm_utility.ImportFunctionalModel(path,type='dsm')
         #Redo function attributes and uids
         for n,attr in G.nodes_iter(data=True):
-            verb,obj,fid = attr['function'].split('_')
+#           verb,obj,localid,universalid = attr['function'].split('_')
+            verb,obj,*attrs = attr['function'].split('_')
+            
             G.node[n]['verb'] = verb
             G.node[n]['obj'] = obj
-            G.node[n]['fid'] = fid
-            G.node[n]['function'] = verb+obj
+            G.node[n]['function'] = verb+'_'+obj
+            if len(attrs)==1:
+                G.node[n]['universalid'] = attrs[0]
+            if len(attrs)==2:
+                G.node[n]['universalid'] = attrs[0]
+                G.node[n]['localid'] = attrs[1]
         for e1,e2,key,attr in G.edges_iter(data=True,keys=True):
-            obj,wid = attr['flowType'].split('_')
+            obj,*attrs = attr['flowType'].split('_')
             G.edge[e1][e2][key]['obj'] = obj
-            G.edge[e1][e2][key]['wid'] = wid
+            if len(attrs)==1:
+                G.edge[e1][e2][key]['universalid'] = attrs[0]
+            if len(attrs)==2:
+                G.edge[e1][e2][key]['universalid'] = attrs[0]
+                G.edge[e1][e2][key]['localid'] = attrs[1]
         return G
         
-    def recognize(self,graph,matchattr='function'):
+    def recognize(self,graph,nodematchattr='function',edgematchattr='flowType'):
         '''
         Return a list of node id tuples that match the rule
         Required arguments:
         graph -- a Networkx directed graph
         matchattr -- attribute to match on
         '''
-        #Create graph matcher between graph and lhs
-        GM = iso.DiGraphMatcher(graph,self.lhs,node_match=iso.categorical_node_match([matchattr],['none']))
-        #List of dicts that show mappings where key = graph node and value = lhs node
-        self.recognize_mappings = [im for im in GM.subgraph_isomorphisms_iter()]
-#        return mappings        
         
-    def apply(self,graph,location=0,matchattr='function'):
+        wildcards = ['*','*_*']
+        self.lhs.withWildcards = self.lhs
+        self.lhs.withoutWildcards = copy.deepcopy(self.lhs)
+        for n in self.lhs.nodes():
+            if self.lhs.withoutWildcards.node[n][nodematchattr] in wildcards:
+                self.lhs.withoutWildcards.remove_node(n)
+        
+        #Find all structural matches
+        GM_structural = iso.DiGraphMatcher(graph,self.lhs)
+        #Find all matches using specified functions only        
+        
+        #Create graph matcher between graph and lhs
+        GM_content = iso.DiGraphMatcher(graph,self.lhs.withoutWildcards,
+                                node_match=iso.categorical_node_match([nodematchattr],[None]),
+                                edge_match=iso.categorical_edge_match([edgematchattr],[None]))
+                                
+        structural_mappings = [im for im in GM_structural.subgraph_isomorphisms_iter()]
+        content_mappings = [im for im in GM_content.subgraph_isomorphisms_iter()]
+
+        #List of dicts that show mappings where key = graph node and value = lhs node
+        self.recognize_mappings = [sm for sm in structural_mappings 
+            for cm in content_mappings if cm.items() <= sm.items()]       
+        
+    def apply(self,graph,location=0,nodematchattr='obj',edgematchattr='flowType'):
         '''
         Required arguments:
         graph -- a Networkx directed graph
@@ -129,56 +157,56 @@ class Rule(object):
             values are lhs node IDs
         '''
 
-#        this_rhs = copy.deepcopy(self.rhs)
         if len(self.recognize_mappings) > 0:
-            this_rhs = nx.relabel_nodes(self.rhs,{v: k for k, v in self.recognize_mappings[location].items()})
-            combined_graph = nx.compose(graph,this_rhs)              
+            reverse_mappings = {v: k for k, v in self.recognize_mappings[location].items()}
+            this_rhs = nx.relabel_nodes(self.rhs,reverse_mappings)
+            combined_graph = nx.compose(this_rhs,graph) #defaulting to attributes in graph
         else:
-            raise Exception('Missed condition')
+            raise Exception('No mappings found')
         
+        print('combined:',combined_graph.nodes(data=True))
+        print('to remove:',self.nodes_to_remove)
+        
+        #Delete nodes omitted from rhs
         for n in self.nodes_to_remove:
-            combined_graph.remove_node(n)
-        
+            
+            if n in combined_graph:
+                #Reconnect edges if they match flows on neighboring functions
+                #This code got messy and horrible somewhere along the way...
+                for p in combined_graph.predecessors(n):
+                    if p not in self.rhs.nodes():
+                        for s in combined_graph.successors(n):
+                            for e in combined_graph.get_edge_data(p,n).values():
+                                if e[edgematchattr] == combined_graph.node[s][nodematchattr]:
+                                    attr = {edgematchattr:e[edgematchattr]}
+                                    combined_graph.add_edge(p,s,attr_dict=attr)
+                combined_graph.remove_node(n)
+                
+            elif n in reverse_mappings.keys():
+                n = reverse_mappings[n]
+                #Reconnect edges if they match flows on neighboring functions
+                #This code got messy and horrible somewhere along the way...
+                for p in combined_graph.predecessors(n):
+                    if p not in self.rhs.nodes():
+                        for s in combined_graph.successors(n):
+                            for e in combined_graph.get_edge_data(p,n).values():
+                                if e[edgematchattr] == combined_graph.node[s][nodematchattr] or e[edgematchattr].endswith('Signal'):
+                                    attr = {edgematchattr:e[edgematchattr]}
+                                    combined_graph.add_edge(p,s,attr_dict=attr)
+                combined_graph.remove_node(n)
+                
         return combined_graph
         
-#        #For all recognized nodes in graph, add new predecessors and succesors
-#        for n in mapping.keys():
-#            if n in self.anchor_nodes:
-#                self.rhs.successors(n)  and self.nodes_to_add
-                
-        
-        
-        #Create mapping between nodes in source graph and lhs-rhs mapping
-        #First match non-wildcard functions
-        #Second match wildcard functions
-        #Third match non-wildcard flows
-        #Fourth match wildcard flows
-#        for source_node,lhs_node in mapping.items():
-            
-        
-        #ALIGN: Create mapping between old nodes and new nodes        
-#        for n in graph.nodes_iter():
-#            for m in self.rhs.nodes_iter():
-                
-        #ADDITIONS
-        
-        
-        #DELETIONS
-        
-        #Create dictionary of wildcard functions and flows from lhs
-#        wildcard = '*'
-#        d = {}
-#        for n,attr in self.lhs.nodes(data=True):
-#            function,flow, = attr[matchattr].split('_')
-#            if wildcard in attr[matchattr]
-#            
-        
-        #Replace entire recognized lhs with rhs
-        #add new subgraph
-        #identify which nodes in new subgraph match those in old subgraph
-        #connect edges
-        #delete old subgraph
+    def categorical_node_match(attr, default):
+        if nx.utils.is_string_like(attr):
+            def match(data1, data2):
+                return data1.get(attr, default) == data2.get(attr, default)
+        else:
+            attrs = list(zip(attr, default)) # Python 3
     
+            def match(data1, data2):
+                return all(data1.get(attr, d) == data2.get(attr, d) for attr, d in attrs)
+        return match  
         
 class Ruleset(object):
     def __init__(self,rules={}):
