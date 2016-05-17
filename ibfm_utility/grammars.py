@@ -9,6 +9,11 @@ Machinery for applying simple grammar rules to networkx functional models
 The documentation below is more brainstorm than accurate. Expect a rewrite once 
     I nail down how it should work.
 
+Right now Function_flow_UniversalID_OptionalLocalID
+OptionalLocalID only needed to match multiple wildcards
+
+[function]_[flow]_[UniversalID]_u[functionid]_l[flowid]
+
 Networkx graphs are created with dummy node names, where attribute "function" 
     contains the useful function information
 
@@ -52,6 +57,7 @@ import copy
 import networkx as nx
 import networkx.algorithms.isomorphism as iso
 import ibfm_utility
+import os
 
 class Rule(object):
     def __init__(self,name,lhspath,rhspath):
@@ -108,6 +114,12 @@ class Rule(object):
             if len(attrs)==2:
                 G.node[n]['universalid'] = attrs[0]
                 G.node[n]['localid'] = attrs[1]
+            if len(attrs)==3:
+                G.node[n]['universalid'] = attrs[0]
+                G.node[n]['localid'] = attrs[1]+attrs[2]
+                G.node[n]['verbid'] = attrs[1]
+                G.node[n]['objid'] = attrs[2]
+                
         for e1,e2,key,attr in G.edges_iter(data=True,keys=True):
             obj,*attrs = attr['flowType'].split('_')
             G.edge[e1][e2][key]['obj'] = obj
@@ -128,26 +140,88 @@ class Rule(object):
         
         wildcards = ['*','*_*']
         self.lhs.withWildcards = self.lhs
-        self.lhs.withoutWildcards = copy.deepcopy(self.lhs)
+        self.lhs.withoutFunctionWildcards = copy.deepcopy(self.lhs)
+#        self.lhs.withoutVerbWildcards = copy.deepcopy(self.lhs)
+        self.lhs.withoutObjWildcards = copy.deepcopy(self.lhs)
+        
         for n in self.lhs.nodes():
-            if self.lhs.withoutWildcards.node[n][nodematchattr] in wildcards:
-                self.lhs.withoutWildcards.remove_node(n)
+            if self.lhs.withoutFunctionWildcards.node[n]['function'] in wildcards:
+                self.lhs.withoutFunctionWildcards.remove_node(n)
+
+
+#Each new unique local id in the lhs defines a pattern in the lhs
+#Need to look at each structural mapping and decide whether it complies with the
+#  the local id pattern 
+#Remove any structural mapping that doesn't comply with all local id patterns
+#Keep all structural mappings that comply with all local id patterns
+        
+
+#content mappings: verb and obj must match
+#verb mappings: verb 
+
+#        for n in self.lhs.nodes():
+#            if self.lhs.withoutVerbWildcards.node[n]['verb'] in wildcards:
+#                self.lhs.withoutVerbWildcards.remove_node(n)
+#        
+        for n in self.lhs.nodes():
+            if self.lhs.withoutObjWildcards.node[n]['obj'] in wildcards:
+                self.lhs.withoutObjWildcards.remove_node(n)
         
         #Find all structural matches
         GM_structural = iso.DiGraphMatcher(graph,self.lhs)
-        #Find all matches using specified functions only        
+        
+        #Find all matches using specified functions only     
+        
         
         #Create graph matcher between graph and lhs
-        GM_content = iso.DiGraphMatcher(graph,self.lhs.withoutWildcards,
-                                node_match=iso.categorical_node_match([nodematchattr],[None]),
+        
+        GM_content = iso.DiGraphMatcher(graph,self.lhs.withoutFunctionWildcards,
+                                node_match=iso.categorical_node_match(['function'],[None]),
+                                edge_match=iso.categorical_edge_match([edgematchattr],[None]))
+        
+#        GM_content_verb = iso.DiGraphMatcher(graph,self.lhs.withoutVerbWildcards,
+#                                node_match=iso.categorical_node_match(['verb'],[None]),
+#                                edge_match=iso.categorical_edge_match([edgematchattr],[None]))
+#                                
+        GM_content_match_obj = iso.DiGraphMatcher(graph,self.lhs.withoutObjWildcards,
+                                node_match=iso.categorical_node_match(['obj'],[None]),
                                 edge_match=iso.categorical_edge_match([edgematchattr],[None]))
                                 
         structural_mappings = [im for im in GM_structural.subgraph_isomorphisms_iter()]
         content_mappings = [im for im in GM_content.subgraph_isomorphisms_iter()]
+       
+#        verb_mappings = [im for im in GM_content_verb.subgraph_isomorphisms_iter()]
+#        obj_mappings = [im for im in GM_content_obj.subgraph_isomorphisms_iter()
+#                        if verb == '*']:
+        obj_mappings = []
+        append_flag = True
+        for im in GM_content_match_obj.subgraph_isomorphisms_iter():
+            print('im:',im)
+            for k,v in im.items():
+                print(v)
+                if self.lhs.node[v]['verb'] != '*':
+                    append_flag = False
+                    break
+            if append_flag == True:
+                obj_mappings.append(im)
+            append_flag = True
+        
+#        for om in object_mappings:
+            
+        
+        
+        print('structural mappings:',structural_mappings)
+        print('content mappings:',content_mappings)
+#        print('verb mappings:',verb_mappings)
+        print('object mappings:',obj_mappings)
+        
+        full_content_mappings = content_mappings + obj_mappings #+ verb_mappings + obj_mappings
+        
+        
 
         #List of dicts that show mappings where key = graph node and value = lhs node
         self.recognize_mappings = [sm for sm in structural_mappings 
-            for cm in content_mappings if cm.items() <= sm.items()]       
+            for fcm in full_content_mappings if fcm.items() <= sm.items()]       
         
     def apply(self,graph,location=0,nodematchattr='obj',edgematchattr='flowType'):
         '''
@@ -168,7 +242,11 @@ class Rule(object):
         print('to remove:',self.nodes_to_remove)
         
         #Delete nodes omitted from rhs
+        print('Nodes to remove:',self.nodes_to_remove)
+        print('Reverse Mappings:',reverse_mappings.keys())
+
         for n in self.nodes_to_remove:
+            print('Node:',n)
             
             if n in combined_graph:
                 #Reconnect edges if they match flows on neighboring functions
@@ -177,7 +255,7 @@ class Rule(object):
                     if p not in self.rhs.nodes():
                         for s in combined_graph.successors(n):
                             for e in combined_graph.get_edge_data(p,n).values():
-                                if e[edgematchattr] == combined_graph.node[s][nodematchattr]:
+                                if e[edgematchattr] == combined_graph.node[s][nodematchattr] or e[edgematchattr].endswith('Signal'):
                                     attr = {edgematchattr:e[edgematchattr]}
                                     combined_graph.add_edge(p,s,attr_dict=attr)
                 combined_graph.remove_node(n)
@@ -197,16 +275,16 @@ class Rule(object):
                 
         return combined_graph
         
-    def categorical_node_match(attr, default):
-        if nx.utils.is_string_like(attr):
-            def match(data1, data2):
-                return data1.get(attr, default) == data2.get(attr, default)
-        else:
-            attrs = list(zip(attr, default)) # Python 3
-    
-            def match(data1, data2):
-                return all(data1.get(attr, d) == data2.get(attr, d) for attr, d in attrs)
-        return match  
+#    def categorical_node_match(attr, default):
+#        if nx.utils.is_string_like(attr):
+#            def match(data1, data2):
+#                return data1.get(attr, default) == data2.get(attr, default)
+#        else:
+#            attrs = list(zip(attr, default)) # Python 3
+#    
+#            def match(data1, data2):
+#                return all(data1.get(attr, d) == data2.get(attr, d) for attr, d in attrs)
+#        return match  
         
 class Ruleset(object):
     def __init__(self,rules={}):
@@ -215,9 +293,9 @@ class Ruleset(object):
         rules -- an iterable List(?) of Rules
         '''
         self.rules = rules
-    def add_rule(self,rule):
-        self.rules[rule.name]['lhs'] = rule.lhs
-        self.rules[rule.name]['rhs'] = rule.rhs
+    def add_rule(self,name,path):
+        self.rules[name]['lhs'] = path+'lhs.csv'
+        self.rules[name]['rhs'] = path+'rhs.csv'
         
     def remove_rule(self,name):
         del self.rules[name]
