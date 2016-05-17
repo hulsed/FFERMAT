@@ -23,7 +23,7 @@ if __name__ == '__main__':
   ibfm_utility.plotPgvGraph(g,'plots/beforeRule.svg',
                             promoteNodeLabels='function',
                             printRelationships='flowType')
-  r1 = ibfm_utility.grammars.Rule('protect','ibfm_utility/rules/RemoveBetweenIBS_EEE/lhs.csv','ibfm_utility/rules/RemoveBetweenIBS_EEE/rhs.csv')
+  r1 = ibfm_utility.grammars.Rule('protect','ibfm_utility/rules/AddParallelAnyElectricalEnergy/lhs.csv','ibfm_utility/rules/AddParallelAnyElectricalEnergy/rhs.csv')
   r1.recognize(g)
   print('lhs:',r1.lhs.nodes(data=True))
   print('r1 mappings:',r1.recognize_mappings)
