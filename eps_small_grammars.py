@@ -15,51 +15,55 @@ sys.path.append('ibfm_utility')
 
 import ibfm
 import ibfm_utility
+import os
+
+def test_rule(rulename,rulepath,g):
+    ibfm_utility.plotPgvGraph(g,'plots/beforeRule.svg',
+                            promoteNodeLabels='function',
+                            printRelationships='flowType')
+    r = ibfm_utility.grammars.Rule(rulename,os.path.join(rulepath,'lhs.csv'),os.path.join(rulepath,'rhs.csv'))
+    r.recognize(g)
+    g = r.apply(g)
+    g2 = r.apply(g,1)
+    print(r.recognize_mappings)
+    ibfm_utility.plotPgvGraph(g2,filename='plots/afterRule.svg',
+                            promoteNodeLabels='function',
+                            printRelationships='flowType')
 
 if __name__ == '__main__':
-  filename = 'FunctionalModels/eps.csv'
-  g = ibfm_utility.ImportFunctionalModel(filename,type='dsm')
-  print('g nodes:',g.nodes(data=True))
-  ibfm_utility.plotPgvGraph(g,'plots/beforeRule.svg',
-                            promoteNodeLabels='function',
-                            printRelationships='flowType')
-  r1 = ibfm_utility.grammars.Rule('AddParallelProtectEE','ibfm_utility/rules/ruleset/AddParallelProtectEE/lhs.csv','ibfm_utility/rules/ruleset/AddParallelProtectEE/rhs.csv')
-  r1.recognize(g)
-  print('lhs:',r1.lhs.nodes(data=True))
-  print('r1 mappings:',r1.recognize_mappings)
-  g2=r1.apply(g)
-  ibfm_utility.plotPgvGraph(g2,filename='plots/afterRule.svg',
-                            promoteNodeLabels='function',
-                            printRelationships='flowType')
-                            
-  rs = ibfm_utility.grammars.Ruleset('/Volumes/SanDisk/Repos/IBFM/ibfm_utility/rules/ruleset/')
-#  pop = rs.build_population_random(g,2,2)
-  pop = rs.build_population_random_stack(g,2,3)
-  print(pop)  
+    #get seed functional model
+    filename = 'FunctionalModels/small_eps_2.csv'
+    g = ibfm_utility.ImportFunctionalModel(filename,type='dsm')
+    
+    #test given rule
+#    rulename = 'AddParallelProtectAny'
+#    rulepath = 'ibfm_utility/ruleset/testRules/AddParallelProtectAny/'
+#    test_rule(rulename,rulepath,g)
+    
+    #create population from ruleset
+    ruleset_path = '/Volumes/SanDisk/Repos/IBFM/ibfm_utility/rules/ruleset/'        
+    rs = ibfm_utility.grammars.Ruleset(ruleset_path)
+    breadth = 2
+    depth = 2
+    pop = rs.build_population_random_stack(g,breadth,depth) 
   
-  for label,rulename,location,graph in rs.get_population(pop):
-      print(label,rulename,location,graph)
-      
-      path = 'plots/graph_population/'
-      extension = '.svg'
-      filename = '-'.join([str(label),rulename,str(location)])
-      ibfm_utility.plotPgvGraph(graph,filename=path+filename+extension,
+    #graph each member of population
+    path = 'plots/graph_population/'
+    extension = '.svg'
+    for f in os.listdir(path): 
+        if f.endswith(extension):
+            os.remove(os.path.join(path,f)) 
+    for label,rulename,location,graph in rs.get_population(pop):
+        print(label,rulename,location,graph)
+        path = 'plots/graph_population/'
+        extension = '.svg'
+        filename = '-'.join([str(label),rulename,str(location)])
+        ibfm_utility.plotPgvGraph(graph,filename=os.path.join(path,filename)+extension,
                             promoteNodeLabels='function',
                             printRelationships='flowType')
-#  print('pop:',pop)
-#  for p in pop:
-#      print('p:',p)
-#      
-#      filename = '-'.join([rule_location[0]+str(rule_location[1]) for rule_location in p[0]])
-#      g = p[1]
-#      ibfm_utility.plotPgvGraph(g,filename=path+filename+extension,
-#                            promoteNodeLabels='function',
-#                            printRelationships='flowType')
-#      print(str(p))
-  #Implement grammar Ruleset class and tree class such that
-  #  a population tree is populated by randomly selecting rules from Ruleset
-  #  Or just glom them all together without tree structure
-  eps = ibfm.Experiment(g)
-  #Run with 2 then 3 simultaneous faults
-  eps.run(2)
-  eps.run(3)
+    
+#    #Create and run experiments (broken until we resolve FunctionFlow vs Function_Flow convention)
+#    eps = ibfm.Experiment(g)
+#    #Run with 2 then 3 simultaneous faults
+#    eps.run(2)
+#    eps.run(3)

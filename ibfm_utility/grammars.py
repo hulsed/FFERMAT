@@ -88,6 +88,18 @@ class Rule(object):
     
     def set_rhs(self,path):
         self.rhs = self.rule2graph(path)
+        
+
+                
+                
+#                for k,v in self.rhs.nodes_iter():
+#                    
+#                localid = self.rhs.node[n]['localid']
+#                
+#                    and self.rhs.node[n3]['localid'] == self.rhs.node[n]['localid']
+#                    matches = [n2 for n2 in this_rhs.nodes() if  and ]
+#                    match = 
+#                    this_rhs.node[n]
 #        for n in self.rhs.nodes():
 #            self.rhs.node
 #        #ensure unique keys for parallel edges on rhs
@@ -142,75 +154,48 @@ class Rule(object):
         graph -- a Networkx directed graph
         matchattr -- attribute to match on
         '''
-        
-        wildcards = ['*','*_*']
-        self.lhs.withWildcards = self.lhs
-        self.lhs.withoutFunctionWildcards = copy.deepcopy(self.lhs)
-        self.lhs.withoutObjWildcards = copy.deepcopy(self.lhs)
-        
-        for n in self.lhs.nodes():
-            if self.lhs.withoutFunctionWildcards.node[n]['function'] in wildcards:
-                self.lhs.withoutFunctionWildcards.remove_node(n)
+        def node_function_match(label1,label2):
+            function1,flow1 = label1.split('_')
+            function2,flow2 = label2.split('_')
+            functionIsWildcard = function1 == '*' or function2 == '*'
+            flowIsWildcard = flow1 == '*' or flow2 == '*'
+            if function1 == function2 and flow1 == flow2:
+                return True
+            elif function1 == function2 and flowIsWildcard:
+                return True
+            elif functionIsWildcard and flow1 == flow2:
+                return True
+            elif functionIsWildcard and flowIsWildcard:
+                return True
+            else:
+                return False
+                
+        def edge_flow_match(label1,label2):
+#            flow1 = label1.split('_')
+#            function2,flow2 = label2.split('_')
+#            functionIsWildcard = function1 == '*' or function2 == '*'
+#            flowIsWildcard = flow1 == '*' or flow2 == '*'
+#            if function1 == function2 and flow1 == flow2:
+#                return True
+#            elif function1 == function2 and flowIsWildcard:
+#                return True
+#            elif functionIsWildcard and flow1 == flow2:
+#                return True
+#            elif functionIsWildcard and flowIsWildcard:
+#                return True
+#            else:
+#                return False
+            return False
 
-
-#Each new unique local id in the lhs defines a pattern in the lhs
-#Need to look at each structural mapping and decide whether it complies with the
-#  the local id pattern 
-#Remove any structural mapping that doesn't comply with all local id patterns
-#Keep all structural mappings that comply with all local id patterns
         
-
-#content mappings: verb and obj must match
-#verb mappings: verb 
-
-#        for n in self.lhs.nodes():
-#            if self.lhs.withoutObjWildcards.node[n]['obj'] in wildcards:
-#                self.lhs.withoutObjWildcards.remove_node(n)
+        GM_content = iso.DiGraphMatcher(graph,self.lhs,
+                                node_match=iso.generic_node_match('function',None,node_function_match),
+                                edge_match=iso.categorical_edge_match(edgematchattr,None))    
+        self.recognize_mappings = [im for im in GM_content.subgraph_isomorphisms_iter()]
         
-        #Find all structural matches
-        GM_structural = iso.DiGraphMatcher(graph,self.lhs)
-        
-        #Create graph matcher between graph and lhs
-        GM_content = iso.DiGraphMatcher(graph,self.lhs.withoutFunctionWildcards,
-                                node_match=iso.categorical_node_match(['function'],[None]),
-                                edge_match=iso.categorical_edge_match([edgematchattr],[None]))
-        
-#        GM_verb_match = iso.DiGraphMatcher(graph,self.lhs.withoutObjWildcards,
-#                                node_match=iso.categorical_node_match(['obj'],[None]),
-#                                edge_match=iso.categorical_edge_match([edgematchattr],[None]))
-                                
-        structural_mappings = [im for im in GM_structural.subgraph_isomorphisms_iter()]
-        content_mappings = [im for im in GM_content.subgraph_isomorphisms_iter()]
-       
-#        obj_mappings = [im for im in GM_verb_match.subgraph_isomorphisms_iter()]
- 
-#       #Keep portions of object mappings that contain wildcard characters for the verb     
-#        obj_mappings = []
-#        append_flag = True
-#        for im in GM_verb_match.subgraph_isomorphisms_iter():
-#            print('im:',im)
-#            for k,v in im.items():
-#                print(v)
-#                if self.lhs.node[v]['verb'] != '*':
-#                    append_flag = False
-#                    break
-#            if append_flag == True:
-#                obj_mappings.append(im)
-#            append_flag = True
-        
-#        for om in object_mappings:
-            
-        
-#        print('structural mappings:',structural_mappings)
-#        print('content mappings:',content_mappings)
-#        print('object mappings:',obj_mappings)
-        
-        full_content_mappings = content_mappings #+ obj_mappings #+ verb_mappings + obj_mappings
-        
-        #List of dicts that show mappings where key = graph node and value = lhs node
-        self.recognize_mappings = [sm for sm in structural_mappings 
-            for fcm in full_content_mappings if fcm.items() <= sm.items()]      
-            
+        #TODO: Capability to recognize wildcards with same localid
+        #eg: find 3 nodes in series that share same function
+        #eg: force wildcard input flow to match a wildcard output flow
         
     def apply(self,graph,location=0,nodematchattr='obj',edgematchattr='flowType'):
         '''
@@ -221,27 +206,56 @@ class Rule(object):
         '''
 
         if len(self.recognize_mappings) > 0:
-            reverse_mappings = {v: k for k, v in self.recognize_mappings[location].items()}
-            this_rhs = nx.relabel_nodes(self.rhs,reverse_mappings)
+            #pull out the single mapping dictionary of interest
+            this_recognize_mapping = self.recognize_mappings[location]
+            
+            #reverse mappings to match expected inputs for nx.relabel_nodes
+            reverse_mappings = {v: k for k, v in this_recognize_mapping.items()}
+#            
+            #update function terms of nodes that contain wildcards
+            this_rhs = copy.deepcopy(self.rhs)
+            print('reverse mapping keys:',reverse_mappings.keys())
+            for n in this_rhs.nodes_iter():
+                if '*' in this_rhs.node[n]['function'] and n in reverse_mappings.keys():
+                    this_rhs.node[n]['function'] = graph.node[reverse_mappings[n]]['function']
+            this_rhs = nx.relabel_nodes(this_rhs,reverse_mappings)
+            print('after:',this_rhs.nodes())            
+            
+            #handle local mapping on rhs
+            #Assign correct function properties to rules that contain local mappings
+            #if any newly added node n contains '^', find its partner p with corresponding localid
+            #set function property of n to that of p
+            #Can probably clean/optimize this
+            for n in this_rhs.nodes_iter():
+                if '^' in this_rhs.node[n]['function']:
+                    if 'localid' not in this_rhs.node[n]:
+                        raise Exception('localid required to perform within-rule mappings using ^')
+                    mapping_nodes = [n2 for n2 in this_rhs.nodes_iter() if this_rhs.node[n]['localid'] == this_rhs.node[n2]['localid'] and n!=n2]
+                    print(mapping_nodes,[this_rhs.node[n]['function'] for n in this_rhs.nodes()])
+                    if len(mapping_nodes) == 1:
+                        mapping_node = mapping_nodes[0]
+                        this_rhs.node[n]['function'] = this_rhs.node[mapping_node]['function']
+                    else:
+                        raise Exception('Each within-rule mapping must be one-to-one. Use unique localid pairs')
+            
             #ensure that new nodes have unique keys
             #important when applying the same grammar more than once
+            
+            #BUG: Newly added nodes sometimes have broken edges
             for n in this_rhs.nodes():
                 if n in graph and n in self.nodes_to_add:
                     n_new = n+''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(16))
                     nx.relabel_nodes(this_rhs,{n:n_new},copy=False)
+            
+            #merge graphs
             combined_graph = nx.compose(this_rhs,graph) #defaulting to attributes in graph
         else:
             raise Exception('No mappings found')
         
-#        print('combined:',combined_graph.nodes(data=True))
-#        print('to remove:',self.nodes_to_remove)
+
         
         #Delete nodes omitted from rhs
-#        print('Nodes to remove:',self.nodes_to_remove)
-#        print('Reverse Mappings:',reverse_mappings.keys())
-
         for n in self.nodes_to_remove:
-#            print('Node:',n)
             
             if n in combined_graph:
                 #Reconnect edges if they match flows on neighboring functions
@@ -269,17 +283,6 @@ class Rule(object):
                 combined_graph.remove_node(n)
                 
         return combined_graph
-        
-#    def categorical_node_match(attr, default):
-#        if nx.utils.is_string_like(attr):
-#            def match(data1, data2):
-#                return data1.get(attr, default) == data2.get(attr, default)
-#        else:
-#            attrs = list(zip(attr, default)) # Python 3
-#    
-#            def match(data1, data2):
-#                return all(data1.get(attr, d) == data2.get(attr, d) for attr, d in attrs)
-#        return match  
         
 class Ruleset(object):
     def __init__(self,path):
@@ -312,41 +315,6 @@ class Ruleset(object):
 #    def set_population_random(self,graph,breadth,depth,rule_history=['root','root','g',[]]):
 #        self.population = build_population_random(self,graph,breadth,depth,rule_history=['root','root','g',[]])
         
-    def build_population_random(self,graph,breadth,depth,rule_history=['root','root','groot',[]]):
-        
-        if depth == 0:
-            return rule_history
-        depth-=1
-        
-        print(rule_history)
-        
-        for b in range(breadth):
-            
-            #select rule                
-#            rule = random.choice(list(self.rules.values()))
-            print([v.name for v in self.rules.values()])
-            rule = [v for v in self.rules.values()][0] #debug
-            print(rule)
-            
-            #recognize rule locations
-            rule.recognize(graph)               
-                            
-            if len(rule.recognize_mappings)>0:
-                #select rule location
-#                location = random.choice(range(len(rule.recognize_mappings)))
-                location = 0 #debug
-                
-                #apply rule
-                g_new = rule.apply(graph,location=location)
-              
-                #Add member to population
-                print(rule_history)
-                rule_history[-1].append(rule.name)
-                rule_history[-1].append(location)
-                rule_history[-1].append(graph)
-                rule_history[-1].append([])
-                self.build_population_random(g_new,breadth,depth,rule_history[-1])
-        return rule_history
  
     def build_population_random_stack(self,graph,breadth,depth):
         pop = Tree()
@@ -374,8 +342,8 @@ class Ruleset(object):
                 this_parent = parent_beam[-1]
                 parent_graph = pop[this_parent]['graph']                      
                 #select rule 
-                rule = random.choice(list(self.rules.values()))
-#                rule = [v for v in self.rules.values()][1] #debug
+#                rule = random.choice(list(self.rules.values()))
+                rule = [v for v in self.rules.values()][1] #debug
                  
                 #recognize rule locations
                 rule.recognize(parent_graph)  
@@ -407,10 +375,6 @@ class Ruleset(object):
                     b = 0            
                 b+=1
                 
-#                #If there are no more parents, escape loop
-#                if len(parent_beam) == 0:
-#                    beamIsNotDone = False
-#                    parent_graph = g_new
         return pop
               
 
