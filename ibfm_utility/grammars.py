@@ -204,48 +204,74 @@ class Rule(object):
         mapping -- a single Dict where keys are source graph node IDs and 
             values are lhs node IDs
         '''
-
+#       TODO: CLEAN
         if len(self.recognize_mappings) > 0:
             #pull out the single mapping dictionary of interest
             this_recognize_mapping = self.recognize_mappings[location]
             
+            this_rhs = copy.deepcopy(self.rhs)              
+            
             #reverse mappings to match expected inputs for nx.relabel_nodes
+            #and add additional mappings for new nodes to add
             reverse_mappings = {v: k for k, v in this_recognize_mapping.items()}
+            for n in self.nodes_to_add:
+                if '^' in this_rhs.node[n]['function']:
+                    if 'localid' not in this_rhs.node[n]:
+                        raise Exception('localid required to perform within-rule mappings using ^')
+                    mapping_nodes = [n2 for n2 in this_rhs.nodes_iter() if this_rhs.node[n]['localid'] == this_rhs.node[n2]['localid'] and n!=n2]
+                    if len(mapping_nodes) == 1:
+                        mapping_node = mapping_nodes[0]
+                        reverse_mappings[n] = reverse_mappings[mapping_node]
+                        this_rhs.node[n]['function'] = graph.node[reverse_mappings[n]]['function']
+                    else:
+                        raise Exception('Each within-rule mapping must be one-to-one. Use unique localid pairs')
+
 #            
             #update function terms of nodes that contain wildcards
-            this_rhs = copy.deepcopy(self.rhs)
-            print('reverse mapping keys:',reverse_mappings.keys())
+#            this_rhs = copy.deepcopy(self.rhs)
             for n in this_rhs.nodes_iter():
                 if '*' in this_rhs.node[n]['function'] and n in reverse_mappings.keys():
+                    reverse_mappings[n]
+                    graph.node[reverse_mappings[n]]['function']
                     this_rhs.node[n]['function'] = graph.node[reverse_mappings[n]]['function']
-            this_rhs = nx.relabel_nodes(this_rhs,reverse_mappings)
-            print('after:',this_rhs.nodes())            
+            
+            #make sure every new node has a unique id, then add them
+            reverse_mapping_ids = copy.deepcopy(reverse_mappings)
+            for k,v in reverse_mappings.items():
+                if '^' in k:
+                    #If you suspect node id collisions, try first line instead
+#                    reverse_mapping_ids[k] = v+''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(16))
+                    reverse_mapping_ids[k] = v+'_'+str(int(this_rhs.node[k]['universalid'])+len(graph.nodes())) 
+
+            this_rhs = nx.relabel_nodes(this_rhs,reverse_mapping_ids)
             
             #handle local mapping on rhs
             #Assign correct function properties to rules that contain local mappings
             #if any newly added node n contains '^', find its partner p with corresponding localid
             #set function property of n to that of p
             #Can probably clean/optimize this
-            for n in this_rhs.nodes_iter():
-                if '^' in this_rhs.node[n]['function']:
-                    if 'localid' not in this_rhs.node[n]:
-                        raise Exception('localid required to perform within-rule mappings using ^')
-                    mapping_nodes = [n2 for n2 in this_rhs.nodes_iter() if this_rhs.node[n]['localid'] == this_rhs.node[n2]['localid'] and n!=n2]
-                    print(mapping_nodes,[this_rhs.node[n]['function'] for n in this_rhs.nodes()])
-                    if len(mapping_nodes) == 1:
-                        mapping_node = mapping_nodes[0]
-                        this_rhs.node[n]['function'] = this_rhs.node[mapping_node]['function']
-                    else:
-                        raise Exception('Each within-rule mapping must be one-to-one. Use unique localid pairs')
+#            for n in this_rhs.nodes_iter():
+#                print('Node:',n,this_rhs.node[n]) 
+#                if '^' in this_rhs.node[n]['function']:
+#                    if 'localid' not in this_rhs.node[n]:
+#                        raise Exception('localid required to perform within-rule mappings using ^')
+#                    mapping_nodes = [n2 for n2 in this_rhs.nodes_iter() if this_rhs.node[n]['localid'] == this_rhs.node[n2]['localid'] and n!=n2]
+#                    print(mapping_nodes,[this_rhs.node[n]['function'] for n in this_rhs.nodes()])
+#                    if len(mapping_nodes) == 1:
+#                        mapping_node = mapping_nodes[0]
+#                        this_rhs.node[n]['function'] = this_rhs.node[mapping_node]['function']
+#                    else:
+#                        raise Exception('Each within-rule mapping must be one-to-one. Use unique localid pairs')
             
             #ensure that new nodes have unique keys
             #important when applying the same grammar more than once
             
-            #BUG: Newly added nodes sometimes have broken edges
-            for n in this_rhs.nodes():
-                if n in graph and n in self.nodes_to_add:
-                    n_new = n+''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(16))
-                    nx.relabel_nodes(this_rhs,{n:n_new},copy=False)
+            #BUG: Newly added nodes sometimes have broken edges (possibly fixed?)
+            #related to using a newly added node in subsequent rule iterations 
+#            for n in this_rhs.nodes():
+#                if n in graph and n in self.nodes_to_add:
+#                    n_new = n+''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(16))
+#                    nx.relabel_nodes(this_rhs,{n:n_new},copy=False)
             
             #merge graphs
             combined_graph = nx.compose(this_rhs,graph) #defaulting to attributes in graph
@@ -351,7 +377,7 @@ class Ruleset(object):
                 if len(rule.recognize_mappings)>0:
                     #select rule location
                     location = random.choice(range(len(rule.recognize_mappings)))
-#                    location = 0 #debug
+#                    location = len(rule.recognize_mappings)-1 #debug
                     
                     #apply rule
                     g_new = rule.apply(parent_graph,location=location)

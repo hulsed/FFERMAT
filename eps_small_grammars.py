@@ -32,7 +32,7 @@ def test_rule(rulename,rulepath,g):
 
 if __name__ == '__main__':
     #get seed functional model
-    filename = 'FunctionalModels/small_eps_2.csv'
+    filename = 'FunctionalModels/eps.csv'
     g = ibfm_utility.ImportFunctionalModel(filename,type='dsm')
     
     #test given rule
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     ruleset_path = '/Volumes/SanDisk/Repos/IBFM/ibfm_utility/rules/ruleset/'        
     rs = ibfm_utility.grammars.Ruleset(ruleset_path)
     breadth = 2
-    depth = 2
+    depth = 3
     pop = rs.build_population_random_stack(g,breadth,depth) 
   
     #graph each member of population
