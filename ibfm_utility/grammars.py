@@ -177,7 +177,6 @@ class Rule(object):
         mapping -- a single Dict where keys are source graph node IDs and 
             values are lhs node IDs
         '''
-#       TODO: CLEAN
         if len(self.recognize_mappings) > 0:
             #pull out the single mapping dictionary of interest
             this_recognize_mapping = self.recognize_mappings[location] 
