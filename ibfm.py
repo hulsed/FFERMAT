@@ -17,6 +17,7 @@ from glob import glob
 import networkx as nx
 import multiprocessing
 
+
 def resetClock():
   '''Reset the global clock variable to zero for a new simulation.'''
   global last_clock,clock
@@ -170,14 +171,21 @@ class Mode(object):
     Used by dictionaries in NetworkX.
     '''
     return self.__class__ == other.__class__ and self.health == other.health
-  def behaviors(self):
-    for behavior in self.__class__._behaviors:
+  def behaviors(self,mode=None):
+    if mode == None:
+      mode = self.__class__
+    for behavior in mode._behaviors:
       optional = False
       if 'opt' in behavior[0].lower():
         optional = True
         behavior = behavior[1:]
       elif 'from' in behavior[0].lower():
-        yield from getSubclass(Behavior,behavior[1]).behaviors(self)
+        from_Mode = getSubclass(Mode,behavior[1])
+        if from_Mode:
+          yield from from_Mode.behaviors(self,from_Mode)
+        else:
+          raise Exception(behavior[1]+' is not a defined mode. '+str(self)+
+            ' tried to use behaviors from it.')
         continue
       ins = []
       outs = []
@@ -1016,6 +1024,7 @@ class TranslateInverseFlowToEffort(Behavior):
     else:
       self.out_bonds[1].setEffort(Nominal())
 class MinimumEffort(Behavior):
+  '''Takes the minimum effort from all in bonds and sets the out bond.'''
   def apply(self):
     value = max(0,min([bond.effort for bond in self.in_bonds]))
     self.out_bond.setEffort(State(value))
@@ -1119,6 +1128,21 @@ class Failed(ModeHealth):
 
 #############################  Bonds  ########################################
 class Material(Bond):
+  pass
+
+class Gas(Material):
+  pass
+
+class InertGas(Gas):
+  pass
+
+class ExpandedGas(Gas):
+  pass
+
+class RegulatedGas(Gas):
+  pass
+
+class ExcessGas(Gas):
   pass
 
 class Energy(Bond):
