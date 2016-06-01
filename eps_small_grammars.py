@@ -24,9 +24,9 @@ def test_rule(rulename,rulepath,g):
     r = ibfm_utility.grammars.Rule(rulename,os.path.join(rulepath,'lhs.csv'),os.path.join(rulepath,'rhs.csv'))
     r.recognize(g)
     g = r.apply(g)
-    g2 = r.apply(g,1)
+#    g = r.apply(g,1)
     print(r.recognize_mappings)
-    ibfm_utility.plotPgvGraph(g2,filename='plots/afterRule.svg',
+    ibfm_utility.plotPgvGraph(g,filename='plots/afterRule.svg',
                             promoteNodeLabels='function',
                             printRelationships='flowType')
 
@@ -36,14 +36,14 @@ if __name__ == '__main__':
     g = ibfm_utility.ImportFunctionalModel(filename,type='dsm')
     
     #test given rule
-#    rulename = 'AddParallelProtectAny'
-#    rulepath = 'ibfm_utility/ruleset/testRules/AddParallelProtectAny/'
+#    rulename = 'AddSeriesAnyElectricalEnergy'
+#    rulepath = 'ibfm_utility/rules/testRules/AddSeriesAnyElectricalEnergy/'
 #    test_rule(rulename,rulepath,g)
     
     #create population from ruleset
-    ruleset_path = '/Volumes/SanDisk/Repos/IBFM/ibfm_utility/rules/ruleset/'        
+    ruleset_path = 'ibfm_utility/rules/ruleset/'        
     rs = ibfm_utility.grammars.Ruleset(ruleset_path)
-    breadth = 2
+    breadth = 3
     depth = 3
     pop = rs.build_population_random_stack(g,breadth,depth) 
   
