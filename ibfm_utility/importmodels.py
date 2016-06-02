@@ -15,6 +15,7 @@ def ImportFunctionalModel(path,type='dsm'):
         componentNames,M = readCFG(path)
         systemname = path.split('.')[-1].split('/')[-1]
         G = buildGraph(componentNames,M,systemname)
+        splitFunctionAttr(G)
         return G
         
 def readCFG(filename):
@@ -57,7 +58,7 @@ def buildGraph(componentNames,M,systemname=None):
             componentNamesCounter[c]+=1
             k+=1
     except:
-        print('componentNamesDict does not exist, using natural names')
+#        print('componentNamesDict does not exist, using natural names')
         for c in componentNames:
             nodeName = c+'_'+str(componentNamesCounter[c])
             G.add_node(nodeName,function=c,order=k,cid=componentNamesCounter[c])
@@ -81,6 +82,12 @@ def buildGraph(componentNames,M,systemname=None):
                 G.add_edge(node1,node2,flowType=c)
         it.iternext()
     return G
+
+def splitFunctionAttr(G):
+    for n,attr in G.nodes_iter(data=True):
+        verb,obj,*_ = attr['function'].split('_')
+        G.node[n]['verb'] = verb
+        G.node[n]['obj'] = obj
  
 def componentNamesList2keys(componentNamesList):
     #creates a canonical dictionary of ids based on the functions or components that we read in
