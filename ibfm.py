@@ -8,6 +8,7 @@ Author: Matthew G McIntire
 #These flags can be changed in the file or at runtime after import ibfm
 printWarnings = False
 print_iterations = False
+print_scenarios = False
 run_parallel = False
 n_workers = 3
 
@@ -190,6 +191,8 @@ class Mode(object):
       ins = []
       outs = []
       cls = getSubclass(Behavior,behavior[0])
+      if not cls:
+        raise Exception(behavior[0]+' is not a defined behavior.')
       try:
         for word in behavior[1:]:
           if word.lower() in 'inout':
@@ -457,7 +460,17 @@ class Function(object):
           self.mode = self.condition_graph.successors(condition)[0]
 
     for behavior in self.behavior_graph.successors_iter(self.mode):
-      behavior.apply()
+      try:
+        behavior.apply()
+      except:
+        print(self)
+        print(self.mode)
+        print(behavior)
+        for bond in behavior.in_bonds:
+          print('in_bond '+str(bond)+' effort '+str(bond.effort))
+        for bond in behavior.out_bonds:
+          print('out_bond '+str(bond)+' flow '+str(bond.flow))
+        raise
     return minimum_timer
 
 class Bond(object):
@@ -620,14 +633,14 @@ class Model(object):
     '''Resolve the effort and flow values in each bond.'''
     for bond in self.bonds():
       if print_iterations:
-        print(bond.name+'\t'+str(bond.effort)+' '+str(bond.flow))
+        print(bond.name.ljust(35)+str(bond.effort).ljust(10)+str(bond.flow).ljust(10))
       bond.step()
   def stepFunctions(self):
     '''Evaluate each function.'''
     self.minimum_timer = inf
     for function in self.functions():
       if print_iterations:
-        print(function.name+'\t'+str(function.mode))
+        print(function.name.ljust(20)+str(function.mode))
       timer = function.step()
       self.minimum_timer = min(self.minimum_timer,timer)
   def run(self,lifetime=inf):
@@ -655,7 +668,7 @@ class Model(object):
     i = 0
     while not finished:
       if print_iterations:
-        print("Iteration "+str(i))
+        print("\nIteration "+str(i))
       i = i+1
       self.step()
       self.timings.append(clock)
@@ -852,6 +865,8 @@ class Experiment(object):
   def runOneScenario(self,scenario):
     self.model.loadNominalState()
     self.model.loadState(scenario)
+    if print_scenarios:
+      print(scenario)
     self.model.run()
     return self.model.getState()
   def reviewScenarios(self):
@@ -918,6 +933,15 @@ class NominalEffort(Behavior):
     self.out_bond.setEffort(Nominal())
   def test(self):
     return self.in_bond.effort == Nominal()
+class AllNominalEffort(Behavior):
+  def apply(self):
+    for bond in self.out_bonds:
+      bond.setEffort(Nominal())
+  def test(self):
+    for bond in self.in_bonds:
+      if bond.effort != Nominal():
+        return False
+    return True
 class NonNominalEffort(Behavior):
   def test(self):
     return self.in_bond.effort != Nominal()
@@ -971,10 +995,10 @@ class DecreasedFlow(Behavior):
     self.in_bond.setFlow(State(max(0,self.out_bond.flow-1)))
 class IncreasedEffort(Behavior):
   def apply(self):
-    self.out_bond.setEffort(State(self.in_bond.flow+1))
+    self.out_bond.setEffort(State(self.in_bond.effort+1))
 class DecreasedEffort(Behavior):
   def apply(self):
-    self.out_bond.setEffort(State(max(0,self.in_bond.flow-1)))
+    self.out_bond.setEffort(State(max(0,self.in_bond.effort-1)))
 class TranslateFlowToEffort(Behavior):
   def apply(self):
     self.out_bonds[1].setEffort(self.out_bonds[0].flow)
@@ -1056,75 +1080,6 @@ class Degraded(ModeHealth):
   pass
 class Failed(ModeHealth):
   pass
-
-
-#############################  Conditions  ###################################
-#class NominalVoltage(Condition):
-#  def behavior(self):
-#    return NominalEffort(self.in_bond[Electrical])
-#class HighCurrent(Condition):
-#  def behavior(self):
-#    return HighFlow(out_bond=self.out_bond[Electrical])
-#
-#class NonZeroVoltage(Condition):
-#  def behavior(self):
-#    return NonZeroEffort(in_bond=self.in_bond[Electrical])
-#
-#class HighestCurrent(Condition):
-#  def behavior(self):
-#    return HighestFlow(out_bond=self.out_bond[Electrical])
-#
-#class LowVoltage(Condition):
-#  def behavior(self):
-#    return LowEffort(self.in_bond[Electrical])
-#
-#class HighVoltage(Condition):
-#  def behavior(self):
-#    return HighEffort(self.in_bond[Electrical])
-#
-#class BranchHighestCurrent(Condition):
-#  def behavior(self):
-#    return AnyHighestFlow(out_bond=self.out_bond[Electrical])
-#
-#class NominalSignal(Condition):
-#  def behavior(self):
-#    return NominalEffort(in_bond=self.in_bond[Signal])
-#
-#class NonNominalSignal(Condition):
-#  def behavior(self):
-#    return NonNominalEffort(in_bond=self.in_bond[Signal])
-#
-#class ZeroSignal(Condition):
-#  def behavior(self):
-#    return ZeroEffort(in_bond=self.in_bond[Signal])
-#
-#class NonZeroSignal(Condition):
-#  def behavior(self):
-#    return NonZeroEffort(in_bond=self.in_bond[Signal])
-#
-#class AnyZeroSignals(Condition):
-#  def behavior(self):
-#    return AnyZeroEffort(in_bond=self.in_bond[Signal])
-#
-#class NoZeroSignals(Condition):
-#  def behavior(self):
-#    return NoZeroEffort(in_bond=self.in_bond[Signal])
-#
-#class AnyNonZeroSignals(Condition):
-#  def behavior(self):
-#    return AnyNonZeroEffort(in_bond=self.in_bond[Signal])
-#
-#class AllZeroSignals(Condition):
-#  def behavior(self):
-#    return AllZeroEffort(in_bond=self.in_bond[Signal])
-#
-#class Overheating(Condition):
-#  def behavior(self):
-#    return HighEffort(in_bond=self.out_bond[Heat])
-#
-#class FastOverheating(Condition):
-#  def behavior(self):
-#    return HighestEffort(in_bond=self.out_bond[Heat])
 
 #############################  Bonds  ########################################
 class Material(Bond):
