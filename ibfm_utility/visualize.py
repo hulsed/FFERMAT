@@ -27,6 +27,7 @@ def plotPgvGraph(G,filename=None,printRelationships='relationship',promoteNodeLa
     
     #draw graph
     thisG = nx.drawing.nx_pydot.to_pydot(G2)
-    filename = 'plots/'+ 'junk' + '.svg'
+    if filename==None:
+        filename = 'plots/'+ 'junk' + '.svg'
     thisG.write(filename,format='svg')
     

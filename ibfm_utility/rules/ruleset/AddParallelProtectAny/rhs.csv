@@ -1,0 +1,5 @@
+,*_*_1_1,*_*_2_2,Protect_*_3_3,Protect_^_4_3
+*_*_1_1,,,ElectricalEnergy,ElectricalEnergy
+*_*_2_2,,,,
+Protect_*_3_3,,ElectricalEnergy,,
+Protect_^_4_3,,ElectricalEnergy,,
