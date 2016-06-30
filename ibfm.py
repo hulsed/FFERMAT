@@ -177,10 +177,10 @@ class Mode(object):
       mode = self.__class__
     for behavior in mode._behaviors:
       optional = False
-      if 'opt' in behavior[0].lower():
+      if 'optional' == behavior[0].lower():
         optional = True
         behavior = behavior[1:]
-      elif 'from' in behavior[0].lower():
+      elif 'from' == behavior[0].lower():
         from_Mode = getSubclass(Mode,behavior[1])
         if from_Mode:
           yield from from_Mode.behaviors(self,from_Mode)
@@ -207,6 +207,27 @@ class Mode(object):
       except KeyError:
         if not optional:
           raise
+          
+  def textBehaviors(self,mode=None):
+    if mode == None:
+#      mode = self.__class__
+        mode = self
+    for behavior in mode._behaviors:
+      optional = 'required'
+      if 'optional' == behavior[0].lower():
+        optional = 'optional'
+        behavior = behavior[1:]
+      elif 'from' == behavior[0].lower():
+        from_Mode = getSubclass(Mode,behavior[1])
+        if from_Mode:
+          yield from from_Mode.textBehaviors(self,from_Mode)
+        else:
+          print(behavior)
+          raise Exception(behavior[1]+' is not a defined mode. '+str(self)+
+            ' tried to use behaviors from it.')
+        continue
+      yield (behavior[0],optional)          
+          
   def reset(self):
     '''Reset the Mode object for a new simulation.
 
@@ -986,6 +1007,14 @@ with open('function_list.txt','w') as file:
     l.append(c.__qualname__)
   l.sort()
   file.write('\n'.join(l))
+
+functions = {}
+for function in Function._subclasses:
+  functions[function] = [mode[2] for mode in getSubclass(Function,function)._modes]
+
+modes = {}
+for mode in Mode._subclasses:    
+    modes[mode] = [m for m in getSubclass(Mode,mode).textBehaviors(getSubclass(Mode,mode))]
 
 #class EPS(Model):
 #  def construct(self):
