@@ -190,7 +190,7 @@ class Mode(object):
         continue
       ins = []
       outs = []
-      cls = getSubclass(Behavior,behavior[0])
+#      cls = getSubclass(Behavior,behavior[0])
       if not cls:
         raise Exception(behavior[0]+' is not a defined behavior.')
       try:
@@ -198,6 +198,8 @@ class Mode(object):
           if word.lower() in 'inout':
             entry = word.lower()
           elif entry == 'in':
+              
+            ins.extend()
             ins.extend(self.in_bond[getSubclass(Bond,word)])
           elif entry == 'out':
             outs.extend(self.out_bond[getSubclass(Bond,word)])
@@ -210,7 +212,6 @@ class Mode(object):
           
   def textBehaviors(self,mode=None):
     if mode == None:
-#      mode = self.__class__
         mode = self
     for behavior in mode._behaviors:
       optional = 'required'
@@ -226,7 +227,62 @@ class Mode(object):
           raise Exception(behavior[1]+' is not a defined mode. '+str(self)+
             ' tried to use behaviors from it.')
         continue
-      yield (behavior[0],optional)          
+      ins = []
+      outs = []
+      cls = getSubclass(Behavior,behavior[0])
+      if not cls:
+        raise Exception(behavior[0]+' is not a defined behavior.')
+      try:
+        for word in behavior[1:]:
+          if word.lower() in 'inout':
+            entry = word.lower()
+          elif entry == 'in':
+            ins.append(word)
+          elif entry == 'out':
+            outs.append(word)
+          else:
+            raise Exception('Looking for keywords in or out, found: '+word)
+        yield (behavior[0],optional,ins,outs)
+      except KeyError:
+        if not optional:
+          raise 
+#      yield (behavior[0],optional)
+
+  def textBehaviors2(self,mode=None):
+   if mode == None:
+      mode = self
+   for behavior in mode._behaviors:
+      optional = False
+      if 'optional' == behavior[0].lower():
+        optional = True
+        behavior = behavior[1:]
+      elif 'from' == behavior[0].lower():
+        from_Mode = getSubclass(Mode,behavior[1])
+        if from_Mode:
+          yield from from_Mode.textBehaviors2(self,from_Mode)
+        else:
+          raise Exception(behavior[1]+' is not a defined mode. '+str(self)+
+            ' tried to use behaviors from it.')
+        continue
+      ins = []
+      outs = []
+      cls = getSubclass(Behavior,behavior[0])
+      if not cls:
+        raise Exception(behavior[0]+' is not a defined behavior.')
+      try:
+        for word in behavior[1:]:
+          if word.lower() in 'inout':
+            entry = word.lower()
+          elif entry == 'in':
+            ins.append(word)
+          elif entry == 'out':
+            outs.append(word)
+          else:
+            raise Exception('Looking for keywords in or out, found: '+word)
+        yield (behavior[0],ins,outs,optional)
+      except KeyError:
+        if not optional:
+          raise             
           
   def reset(self):
     '''Reset the Mode object for a new simulation.
@@ -1015,6 +1071,11 @@ for function in Function._subclasses:
 modes = {}
 for mode in Mode._subclasses:    
     modes[mode] = [m for m in getSubclass(Mode,mode).textBehaviors(getSubclass(Mode,mode))]
+
+#behaviors = {}
+#for mode in Mode._subclasses:  
+#    modes[mode] = [m for m in getSubclass(Mode,mode).textBehaviors2(getSubclass(Mode,mode))]
+#print(behaviors) 
 
 #class EPS(Model):
 #  def construct(self):
