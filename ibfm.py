@@ -198,8 +198,6 @@ class Mode(object):
           if word.lower() in 'inout':
             entry = word.lower()
           elif entry == 'in':
-              
-            ins.extend()
             ins.extend(self.in_bond[getSubclass(Bond,word)])
           elif entry == 'out':
             outs.extend(self.out_bond[getSubclass(Bond,word)])
@@ -209,7 +207,7 @@ class Mode(object):
       except KeyError:
         if not optional:
           raise
-          
+
   def textBehaviors(self,mode=None):
     if mode == None:
         mode = self
@@ -245,8 +243,8 @@ class Mode(object):
         yield (behavior[0],optional,ins,outs)
       except KeyError:
         if not optional:
-          raise       
-          
+          raise
+
   def reset(self):
     '''Reset the Mode object for a new simulation.
 
@@ -387,12 +385,12 @@ class Function(object):
     for mode in self.__class__._modes:
       ident = mode[0]
       health = getSubclass(ModeHealth,mode[1])
-      mode_class = getSubclass(Mode,mode[2])
+      mode_class = Mode._subclasses.get(mode[2])
       if mode_class is None:
         raise Exception(mode[2]+' is not a defined mode')
       self.addMode(ident,health,mode_class)
     for condition in self.__class__._conditions:
-      condition_class = getSubclass(Condition,condition[0])
+      condition_class = Condition._subclasses.get(condition[0])
       if condition_class is None:
         raise Exception(condition[0]+' is not a defined mode')
       entry = None
@@ -561,6 +559,7 @@ class Model(object):
                      to describe the functions and bonds that make up the
                      functional model.
   '''
+  _subclasses = {}
   def __init__(self,graph=None):
     '''Construct the model and run it under nominal conditions.
 
@@ -578,42 +577,53 @@ class Model(object):
     self.run()
     self.nominal_state = self.getState()
   def construct(self):
-    '''Construct a model from an imported graph.
+    '''Construct a model from an imported graph or model defined in a .ibfm file.
 
-    Replace this method when defining models as subclasses.
+    Replace this method when directly defining models as subclasses.
     '''
-    #Find keys
-    function_key = None
-    bond_key = None
-    for _,data in self.imported_graph.nodes_iter(data=True):
-      for key in data:
-        if Function._subclasses.get(data[key]) is not None:
-          function_key = key
+    if self.imported_graph:
+      #Find keys
+      function_key = None
+      bond_key = None
+      for _,data in self.imported_graph.nodes_iter(data=True):
+        for key in data:
+          if Function._subclasses.get(data[key]) is not None:
+            function_key = key
+            break
+        if function_key:
           break
-      if function_key:
-        break
-    else:
-      raise Exception('No defined function names found.')
-    for _,_,data in self.imported_graph.edges_iter(data=True):
-      for key in data:
-        if Bond.getSubclass(data[key]) is not None:
-          bond_key = key
+      else:
+        raise Exception('No defined function names found.')
+      for _,_,data in self.imported_graph.edges_iter(data=True):
+        for key in data:
+          if Bond.getSubclass(data[key]) is not None:
+            bond_key = key
+            break
+        if bond_key:
           break
-      if bond_key:
-        break
-    else:
-      raise Exception('No defined bond names found.')
-    #Build model
-    for node,data in self.imported_graph.nodes_iter(data=True):
-      function = Function._subclasses[data[function_key]]
-      if function is None:
-        raise Exception(data[function_key]+' is not a defined function name.')
-      self.addFunction(function(self,node))
-    for node1,node2,data in self.imported_graph.edges_iter(data=True):
-      bond_class = Bond.getSubclass(data[bond_key])
-      if bond_class is None:
-        raise Exception(data[bond_key]+' is not a defined bond name.')
-      self.addBond(bond_class,node1,node2)
+      else:
+        raise Exception('No defined bond names found.')
+      #Build model
+      for node,data in self.imported_graph.nodes_iter(data=True):
+        function = Function._subclasses[data[function_key]]
+        if function is None:
+          raise Exception(data[function_key]+' is not a defined function name.')
+        self.addFunction(function(self,node))
+      for node1,node2,data in self.imported_graph.edges_iter(data=True):
+        bond_class = Bond.getSubclass(data[bond_key])
+        if bond_class is None:
+          raise Exception(data[bond_key]+' is not a defined bond name.')
+        self.addBond(bond_class,node1,node2)
+    else: #The model was defined in a .ibfm file
+      for words in self.__class__._functions:
+        ident = words[0]
+        function = Function._subclasses[words[1]]
+        self.addFunction(function(self,ident))
+      for words in self.__class__._bonds:
+        ident = words[:2]
+        bond = Bond.getSubclass(words[2])
+        self.addBond(bond,ident[0],ident[1])
+
   def bonds(self,functions=False):
     '''Generate bonds for iterating.
 
@@ -805,6 +815,8 @@ class Experiment(object):
     self.scenarios = []
     if isinstance(model,Model):
       self.model = model
+    elif Model._subclasses.get(model):
+      self.model = Model._subclasses.get(model)()
     else:
       self.model = Model(model)
   def allScenarios(self,functions,simultaneous_faults,_current_scenario={}):
@@ -974,6 +986,7 @@ class Signal(Bond):
 def load(filename):
   '''Load function, mode, and condition definitions from a .ibfm file'''
   with open(filename,'r') as file:
+    #Variable for the class being defined
     current = None
     for line in file:
       words = line.split()
@@ -981,7 +994,7 @@ def load(filename):
         current = None
         continue
       word = words[0].lower()
-      if word[0] in '%$#//':
+      if word[0] in '%$#/':
         continue
       if current:
         if Function in current.__bases__:
@@ -998,18 +1011,31 @@ def load(filename):
             current._behaviors.append([words[0]]+words[2:])
           else:
             current = None
+        elif Model in current.__bases__:
+          if 'function' == word:
+            current._functions.append(words[1:])
+          elif 'flow' == word or 'bond' == word:
+            current._bonds.append(words[1:])
+          else:
+            current = None
+        else:
+          raise Exception('What happened?')
       if not current:
         if 'function' in word:
           current = type(words[1],(Function,),{'_modes':[],'_conditions':[]})
           Function._subclasses[words[1]] = current
-        elif 'mode' in word:
+        elif 'mode' == word:
           current = type(words[1],(Mode,),{'_behaviors':[]})
           Mode._subclasses[words[1]] = current
         elif 'condition' in word:
           current = type(words[1],(Condition,),{'_behaviors':[]})
           Condition._subclasses[words[1]] = current
+        elif 'model' == word:
+          current = type(words[1],(Model,),{'_functions':[],'_bonds':[]})
+          print(current)
+          Model._subclasses[words[1]] = current
         else:
-          raise Exception('Unknown keyword: '+words[0])
+          raise Exception('Unknown keyword: '+words[0]+' in file: ' +filename)
 
 
 
@@ -1032,27 +1058,5 @@ for function in Function._subclasses:
   functions[function] = [(mode[2],mode[1]) for mode in getSubclass(Function,function)._modes]
 
 modes = {}
-for mode in Mode._subclasses:    
+for mode in Mode._subclasses:
     modes[mode] = [m for m in getSubclass(Mode,mode).textBehaviors(getSubclass(Mode,mode))]
-
-
-#class EPS(Model):
-#  def construct(self):
-#    self.addFunction(ProtectElectricalEnergy('protectEE1'))
-#    self.addFunction(ActuateElectricalEnergy('actuateEE1'))
-#    self.addFunction(ImportBinarySignal('importBS1'))
-#    self.addFunction(ImportChemicalEnergy('importCE1'))
-#    self.addFunction(ConvertChemicalToElectricalEnergy('CEtoEE1'))
-#    self.addFunction(ExportElectricalEnergy('exportEE1'))
-#    self.addFunction(ExportHeatEnergy('exportHE1'))
-#    self.addBond(ChemicalEnergy,'importCE1','CEtoEE1')
-#    self.addBond(Heat,'CEtoEE1','exportHE1')
-#    self.addBond(Electrical,'CEtoEE1','protectEE1')
-#    self.addBond(Electrical,'protectEE1','actuateEE1')
-#    self.addBond(Electrical,'actuateEE1','exportEE1')
-#    self.addBond(Signal,'importBS1','actuateEE1')
-#
-#eps = Experiment(EPS())
-#for i in [2,2]:
-#  eps.run(i)
-#eps.reviewScenarios()
