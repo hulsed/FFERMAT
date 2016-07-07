@@ -1029,7 +1029,7 @@ with open('function_list.txt','w') as file:
 
 functions = {}
 for function in Function._subclasses:
-  functions[function] = [mode[2] for mode in getSubclass(Function,function)._modes]
+  functions[function] = [(mode[2],mode[1]) for mode in getSubclass(Function,function)._modes]
 
 modes = {}
 for mode in Mode._subclasses:    
