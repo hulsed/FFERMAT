@@ -1,17 +1,17 @@
 condition NominalVoltage
     behavior NominalEffort in Electrical
 condition HighCurrent
-    behavior HighFlow out Electrical
+    behavior HighRate out Electrical
 condition NonZeroVoltage
     behavior NonZeroEffort in Electrical
 condition HighestCurrent
-    behavior HighestFlow out Electrical
+    behavior HighestRate out Electrical
 condition LowVoltage
     behavior LowEffort in Electrical
 condition HighVoltage
     behavior HighEffort in Electrical
 condition BranchHighestCurrent
-    behavior AnyHighestFlow out Electrical
+    behavior AnyHighestRate out Electrical
 condition NominalSignal
     behavior NominalEffort in Signal
 condition NonNominalSignal

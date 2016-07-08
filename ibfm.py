@@ -41,7 +41,7 @@ def getSubclass(cls,name):
       return c
 
 class State(float):
-  '''Ordinal type for qualitatively representing bond values'''
+  '''Ordinal type for qualitatively representing flow values'''
   def __new__(cls,value=None):
     '''Return a new State object.
 
@@ -93,46 +93,46 @@ class Highest(State):
   value = 4
 
 class Behavior(object):
-  '''Abstract class for bond-independent behavior application and testing.
+  '''Abstract class for flow-independent behavior application and testing.
 
   Required methods:
-  apply(self) -- Assign states to bonds using self.in_bond.setFlow(state) and
-                 self.out_bond.setEffort(state). Used by modes.
+  apply(self) -- Assign states to flows using self.in_flow.setRate(state) and
+                 self.out_flow.setEffort(state). Used by modes.
   test(self) -- Return boolean indicating presence of behavior. Used by
                 conditions.
   '''
-  def __init__(self,in_bond=[],out_bond=[]):
+  def __init__(self,in_flow=[],out_flow=[]):
     '''Return a Behavior object.
 
     Required arguments:
-    in_bond and/or out_bond -- Bond objects to test states of and apply states
-                               to. Args may be single bonds or lists of bonds.
-                               The bonds implicitly decide the bond types of
+    in_flow and/or out_flow -- Flow objects to test states of and apply states
+                               to. Args may be single flows or lists of flows.
+                               The flows implicitly decide the flow types of
                                the behavior.
     '''
     try:
-      self.in_bond = in_bond[0]
-      self.in_bonds = in_bond
+      self.in_flow = in_flow[0]
+      self.in_flows = in_flow
     except (TypeError,IndexError):
-      self.in_bond = in_bond
+      self.in_flow = in_flow
     try:
-      self.out_bond = out_bond[0]
-      self.out_bonds = out_bond
+      self.out_flow = out_flow[0]
+      self.out_flows = out_flow
     except (TypeError,IndexError):
-      self.out_bond = out_bond
+      self.out_flow = out_flow
   def __hash__(self):
     '''Return hash to identify unique Behavior objects.
 
     Used by dictionaries in NetworkX.
     '''
-    return hash((self.__class__,id(self.in_bond),id(self.out_bond)))
+    return hash((self.__class__,id(self.in_flow),id(self.out_flow)))
   def __eq__(self,other):
     '''Return boolean to identify unique Behavior objects.
 
     Used by dictionaries in NetworkX.
     '''
-    return (self.__class__ == other.__class__ and self.in_bond is other.in_bond
-            and self.out_bond is other.out_bond)
+    return (self.__class__ == other.__class__ and self.in_flow is other.in_flow
+            and self.out_flow is other.out_flow)
 
 class ModeHealth(object):
   pass
@@ -149,13 +149,13 @@ class Mode(object):
 
     Required arguments:
     name -- a unique name (for easier to read function definitions)
-    function -- the object the mode belongs to (for access to its bonds),
+    function -- the object the mode belongs to (for access to its flows),
     health -- a ModeHealth subclass designating the health of the function
               represented by the mode.
     '''
     self.name = name
-    self.out_bond = function.out_bond
-    self.in_bond = function.in_bond
+    self.out_flow = function.out_flow
+    self.in_flow = function.in_flow
     self.health = health
     self.attr = attr
   def __repr__(self):
@@ -198,9 +198,9 @@ class Mode(object):
           if word.lower() in 'inout':
             entry = word.lower()
           elif entry == 'in':
-            ins.extend(self.in_bond[getSubclass(Bond,word)])
+            ins.extend(self.in_flow[getSubclass(Flow,word)])
           elif entry == 'out':
-            outs.extend(self.out_bond[getSubclass(Bond,word)])
+            outs.extend(self.out_flow[getSubclass(Flow,word)])
           else:
             raise Exception('Looking for keywords in or out, found: '+word)
         yield cls(ins,outs)
@@ -265,13 +265,13 @@ class Condition(object):
     '''Return a Condition object
 
     Required arguments:
-    function -- the object it belongs to (for access to its bonds)
+    function -- the object it belongs to (for access to its flows)
     delay -- the amound of time the condition must be met for a mode change.
     logical_not -- boolean flag indicating whether the condition should be
                    logically negated.
     '''
-    self.out_bond = function.out_bond
-    self.in_bond = function.in_bond
+    self.out_flow = function.out_flow
+    self.in_flow = function.in_flow
     self.delay = delay
     self.reset()
     if logical_not:
@@ -290,9 +290,9 @@ class Condition(object):
         if word.lower() in 'inout':
           entry = word.lower()
         elif entry == 'in':
-          ins.extend(self.in_bond[getSubclass(Bond,word)])
+          ins.extend(self.in_flow[getSubclass(Flow,word)])
         elif entry == 'out':
-          outs.extend(self.out_bond[getSubclass(Bond,word)])
+          outs.extend(self.out_flow[getSubclass(Flow,word)])
         else:
           raise Exception('Looking for keywords in or out, found: '+word)
       return cls(ins,outs)
@@ -333,7 +333,7 @@ class Function(object):
     '''Return a Function object
 
     Required arguments:
-    name -- a unique name for use in defining bonds
+    name -- a unique name for use in defining flows
     allow_faults -- a flag to allow degraded and failure modes to be tested in
                     experiments. If False, off-nominal modes may still be
                     entered conditionally during simulation.
@@ -345,8 +345,8 @@ class Function(object):
     self.condition_graph = nx.DiGraph()
     #The graph containing the behaviors enacted by each mode
     self.behavior_graph = nx.DiGraph()
-    self.in_bond = {}
-    self.out_bond = {}
+    self.in_flow = {}
+    self.out_flow = {}
     self.modes = []
     if name != None:
       if name not in model.names:
@@ -413,26 +413,26 @@ class Function(object):
     self.mode = self.default
     for node in self.condition_graph.nodes_iter():
       node.reset()
-  def addOutBond(self,bond):
-    '''Attach an outflow bond to the function.'''
-    self._addBond(bond,bond.__class__,self.out_bond)
-  def addInBond(self,bond):
-    '''Attach an inflow bond to the function.'''
-    self._addBond(bond,bond.__class__,self.in_bond)
-  def _addBond(self,bond,bond_class,bonds):
-    '''Add a bond to the bonds dictionary (recursively).
+  def addOutFlow(self,flow):
+    '''Attach an outflow flow to the function.'''
+    self._addFlow(flow,flow.__class__,self.out_flow)
+  def addInFlow(self,flow):
+    '''Attach an inflow flow to the function.'''
+    self._addFlow(flow,flow.__class__,self.in_flow)
+  def _addFlow(self,flow,flow_class,flows):
+    '''Add a flow to the flows dictionary (recursively).
 
-    Makes sure the bond is reachable by its class or any of its superclasses
+    Makes sure the flow is reachable by its class or any of its superclasses
     as the key.
     '''
-    previous = bonds.get(bond_class)
+    previous = flows.get(flow_class)
     if previous:
-      previous.append(bond)
+      previous.append(flow)
     else:
-      bonds[bond_class] = [bond]
-    if Bond not in bond_class.__bases__:
-      for base in bond_class.__bases__:
-        self._addBond(bond,base,bonds)
+      flows[flow_class] = [flow]
+    if Flow not in flow_class.__bases__:
+      for base in flow_class.__bases__:
+        self._addFlow(flow,base,flows)
   def addMode(self,name,health,mode_class,default=False,**attr):
     '''Add a mode to the function.
 
@@ -454,7 +454,7 @@ class Function(object):
       for behavior in mode.behaviors():
         self.behavior_graph.add_edge(mode,behavior)
     except KeyError as error:
-      raise Exception("{0} missing {1} bond.".format(self,error.args[0]))
+      raise Exception("{0} missing {1} flow.".format(self,error.args[0]))
   def getMode(self,name):
     '''Return the function mode with the given name, if it exists.'''
     for mode in self.modes:
@@ -504,15 +504,15 @@ class Function(object):
         print(self)
         print(self.mode)
         print(behavior)
-        for bond in behavior.in_bonds:
-          print('in_bond '+str(bond)+' effort '+str(bond.effort))
-        for bond in behavior.out_bonds:
-          print('out_bond '+str(bond)+' flow '+str(bond.flow))
+        for flow in behavior.in_flows:
+          print('in_flow '+str(flow)+' effort '+str(flow.effort))
+        for flow in behavior.out_flows:
+          print('out_flow '+str(flow)+' rate '+str(flow.rate))
         raise
     return minimum_timer
 
-class Bond(object):
-  '''Superclass for bonds in the functional model.'''
+class Flow(object):
+  '''Superclass for flows in the functional model.'''
   def __init__(self,source,drain):
     self.source = source
     self.drain = drain
@@ -520,32 +520,32 @@ class Bond(object):
     self.reset()
   def __repr__(self):
     return self.__class__.__qualname__
-  def reset(self,effort=Zero(),flow=Zero()):
-    '''Set the effort and flow of the bond to Zero() unless otherwise specified.'''
+  def reset(self,effort=Zero(),rate=Zero()):
+    '''Set the effort and rate of the flow to Zero() unless otherwise specified.'''
     self.effort = effort
-    self.flow = flow
+    self.rate = rate
     self.effort_queue = None
-    self.flow_queue = None
+    self.rate_queue = None
   def setEffort(self,value):
-    '''Set the effort of the bond to value. Queued until step(self) is called.'''
+    '''Set the effort of the flow to value. Queued until step(self) is called.'''
     if printWarnings and not self.effort_queue is None:
       print('Warning! Competing causality in '+self.name+' effort.')
     self.effort_queue = value
-  def setFlow(self,value):
-    '''Set the flow of the bond to value. Queued until step(self) is called.'''
-    if printWarnings and not self.flow_queue is None:
-      print('Warning! Competing causality in '+self.name+' flow.')
-    self.flow_queue = value
+  def setRate(self,value):
+    '''Set the rate of the flow to value. Queued until step(self) is called.'''
+    if printWarnings and not self.rate_queue is None:
+      print('Warning! Competing causality in '+self.name+' rate.')
+    self.rate_queue = value
   def step(self):
-    '''Resolve the effort and flow values in the bond.'''
+    '''Resolve the effort and rate values in the flow.'''
     if self.effort != self.effort_queue:
       self.effort = self.effort_queue
-      if printWarnings and self.flow != self.flow_queue:
+      if printWarnings and self.rate != self.rate_queue:
         print('Warning! Overlapping causality in '+self.name)
-    self.flow = self.flow_queue
-    self.effort_queue = self.flow_queue = None
+    self.rate = self.rate_queue
+    self.effort_queue = self.rate_queue = None
   def getSubclass(name):
-    for subclass in all_subclasses(Bond):
+    for subclass in all_subclasses(Flow):
       if subclass.__qualname__ == name:
         return subclass
     return None
@@ -555,8 +555,8 @@ class Model(object):
 
   Replaceable methods:
   construct(self) -- Call self.addFunction(function) and
-                     self.addBond(in_function_name,out_function_name) repeatedly
-                     to describe the functions and bonds that make up the
+                     self.addFlow(in_function_name,out_function_name) repeatedly
+                     to describe the functions and flows that make up the
                      functional model.
   '''
   _subclasses = {}
@@ -566,7 +566,7 @@ class Model(object):
     Keyword Arguments:
     graph -- a NetworkX graph representing the functional model
     '''
-    #This graph contains all of the functions as nodes and bonds as edges.
+    #This graph contains all of the functions as nodes and flows as edges.
     self.names = []
     self.imported_graph = graph
     self.graph = nx.MultiDiGraph()
@@ -584,7 +584,7 @@ class Model(object):
     if self.imported_graph:
       #Find keys
       function_key = None
-      bond_key = None
+      flow_key = None
       for _,data in self.imported_graph.nodes_iter(data=True):
         for key in data:
           if Function._subclasses.get(data[key]) is not None:
@@ -596,13 +596,13 @@ class Model(object):
         raise Exception('No defined function names found.')
       for _,_,data in self.imported_graph.edges_iter(data=True):
         for key in data:
-          if Bond.getSubclass(data[key]) is not None:
-            bond_key = key
+          if Flow.getSubclass(data[key]) is not None:
+            flow_key = key
             break
-        if bond_key:
+        if flow_key:
           break
       else:
-        raise Exception('No defined bond names found.')
+        raise Exception('No defined flow names found.')
       #Build model
       for node,data in self.imported_graph.nodes_iter(data=True):
         function = Function._subclasses[data[function_key]]
@@ -610,66 +610,66 @@ class Model(object):
           raise Exception(data[function_key]+' is not a defined function name.')
         self.addFunction(function(self,node))
       for node1,node2,data in self.imported_graph.edges_iter(data=True):
-        bond_class = Bond.getSubclass(data[bond_key])
-        if bond_class is None:
-          raise Exception(data[bond_key]+' is not a defined bond name.')
-        self.addBond(bond_class,node1,node2)
+        flow_class = Flow.getSubclass(data[flow_key])
+        if flow_class is None:
+          raise Exception(data[flow_key]+' is not a defined flow name.')
+        self.addFlow(flow_class,node1,node2)
     else: #The model was defined in a .ibfm file
       for words in self.__class__._functions:
         ident = words[0]
         function = Function._subclasses[words[1]]
         self.addFunction(function(self,ident))
-      for words in self.__class__._bonds:
+      for words in self.__class__._flows:
         ident = words[:2]
-        bond = Bond.getSubclass(words[2])
-        self.addBond(bond,ident[0],ident[1])
+        flow = Flow.getSubclass(words[2])
+        self.addFlow(flow,ident[0],ident[1])
 
-  def bonds(self,functions=False):
-    '''Generate bonds for iterating.
+  def flows(self,functions=False):
+    '''Generate flows for iterating.
 
     NetworkX does not allow edges to be arbitrary objects; objects must be
     stored as edge attributes.
     '''
     if functions:
       for in_function,out_function,attr in self.graph.edges_iter(data=True):
-        yield (attr[Bond],in_function,out_function)
+        yield (attr[Flow],in_function,out_function)
     else:
       for _,_,attr in self.graph.edges_iter(data=True):
-        yield attr[Bond]
+        yield attr[Flow]
   def reset(self):
-    '''Reset the clock, all functions, and all bonds.'''
+    '''Reset the clock, all functions, and all flows.'''
     resetClock()
     for function in self.functions():
       function.reset()
-    for bond in self.bonds():
-      bond.reset()
+    for flow in self.flows():
+      flow.reset()
   def connect(self):
     '''Finish initialization of each function.
 
-    Give each function handles to every bond connected to it, then run each
+    Give each function handles to every flow connected to it, then run each
     function's construct method to initialize its modes and conditions.
     '''
-    for bond,in_function,out_function in self.bonds(functions=True):
-      in_function.addOutBond(bond)
-      out_function.addInBond(bond)
+    for flow,in_function,out_function in self.flows(functions=True):
+      in_function.addOutFlow(flow)
+      out_function.addInFlow(flow)
     for function in self.functions():
       function.construct()
   def addFunction(self,function):
     '''Add function to the graph of the functional model.'''
     self.graph.add_node(function)
-  def addBond(self,bond_class,in_function_name,out_function_name):
-    '''Add bond to the graph of the functional model.
+  def addFlow(self,flow_class,in_function_name,out_function_name):
+    '''Add flow to the graph of the functional model.
 
     Required arguments:
-    bond -- the bond to be added
-    in_function_name -- the id of the function that supplies effort to the bond
-    out_function_name -- the id of the function that accepts flow from the bond
+    flow -- the flow to be added
+    in_function_name -- the id of the function that supplies effort to the flow
+    out_function_name -- the id of the function that accepts rate from the flow
     '''
     in_function = self.getFunction(in_function_name)
     out_function = self.getFunction(out_function_name)
-    bond = bond_class(in_function,out_function)
-    bond.name = in_function_name+'_'+out_function_name
-    self.graph.add_edge(in_function,out_function,attr_dict={Bond:bond})
+    flow = flow_class(in_function,out_function)
+    flow.name = in_function_name+'_'+out_function_name
+    self.graph.add_edge(in_function,out_function,attr_dict={Flow:flow})
   def getFunction(self,name):
     '''Return the function with the given id.'''
     for function in self.functions():
@@ -678,13 +678,13 @@ class Model(object):
   def step(self):
     '''Perform one iteration of the functional model as a state machine.'''
     self.stepFunctions()
-    self.resolveBonds()
-  def resolveBonds(self):
-    '''Resolve the effort and flow values in each bond.'''
-    for bond in self.bonds():
+    self.resolveFlows()
+  def resolveFlows(self):
+    '''Resolve the effort and rate values in each flow.'''
+    for flow in self.flows():
       if print_iterations:
-        print(bond.name.ljust(35)+str(bond.effort).ljust(10)+str(bond.flow).ljust(10))
-      bond.step()
+        print(flow.name.ljust(35)+str(flow.effort).ljust(10)+str(flow.rate).ljust(10))
+      flow.step()
   def stepFunctions(self):
     '''Evaluate each function.'''
     self.minimum_timer = inf
@@ -731,50 +731,50 @@ class Model(object):
     '''Set state as the current state of the model.
 
     Required arguments:
-    state -- a dictionary of values for functions and bonds. Keys are function
-             and bond objects, function values are mode objects, and bond values
-             are two-element lists containing an effort value and a flow value.
-             Overwrites current state, so any functions or bonds not included in
+    state -- a dictionary of values for functions and flows. Keys are function
+             and flow objects, function values are mode objects, and flow values
+             are two-element lists containing an effort value and a rate value.
+             Overwrites current state, so any functions or flows not included in
              the argument are left alone.
     '''
     for obj in state:
       if isinstance(obj,Function):
         obj.mode = state[obj]
-      elif isinstance(obj,Bond):
+      elif isinstance(obj,Flow):
         obj.effort = state[obj][0]
-        obj.flow = state[obj][1]
+        obj.rate = state[obj][1]
       else:
-        raise Exception(str(obj)+' is not a function or a bond.')
+        raise Exception(str(obj)+' is not a function or a flow.')
   def loadNominalState(self):
     '''Set the nominal state as the current state of the model.'''
     self.loadState(self.nominal_state)
   def getStringState(self):
     '''Return the current state of the model as strings
 
-    Return a dictionary of values for functions and bonds. Keys are function and
-    bond string representations, function values are modes, and bond values are
-    two-element lists containing an effort value and a flow value.
+    Return a dictionary of values for functions and flows. Keys are function and
+    flow string representations, function values are modes, and flow values are
+    two-element lists containing an effort value and a rate value.
     '''
   def getState(self):
     '''Return the current state of the model.
 
-    Return a dictionary of values for functions and bonds. Keys are function and
-    bond objects, function values are mode objects, and bond values are two-
-    element lists containing an effort value and a flow value.
+    Return a dictionary of values for functions and flows. Keys are function and
+    flow objects, function values are mode objects, and flow values are two-
+    element lists containing an effort value and a rate value.
     '''
     state = {}
     for function in self.functions():
       state[function] = function.mode
-    for bond in self.bonds():
-      state[bond] = [bond.effort,bond.flow]
+    for flow in self.flows():
+      state[flow] = [flow.effort,flow.rate]
     return state
-  def printState(self,i=None,bonds=False,state=None):
+  def printState(self,i=None,flows=False,state=None):
     '''Print a state of the model to the console.
 
     Keyword Arguments:
     i=None -- an integer specifying which iteration of the current simulation
               to print
-    bonds=False -- a flag whether to print bond values alongside function values.
+    flows=False -- a flag whether to print flow values alongside function values.
     state -- a state dictionary of the current model to print
 
     If neither i nor state is specified, the current state of the model will be
@@ -791,18 +791,18 @@ class Model(object):
     for function in self.functions():
       if state.get(function):
         print(function.name+'\t'+str(state[function]))
-    if bonds:
-      for bond in self.bonds():
-        if state.get(bond):
-          print(bond.name+'\t'+str(state[bond]))
-  def printStates(self,bonds=False):
+    if flows:
+      for flow in self.flows():
+        if state.get(flow):
+          print(flow.name+'\t'+str(state[flow]))
+  def printStates(self,flows=False):
     '''Print the entire iteration history of the current simulation.
 
     Keyword Arguments:
-    bonds=False -- a flag whether to print bond values alongside function values.
+    flows=False -- a flag whether to print flow values alongside function values.
     '''
     for i in range(len(self.states)):
-      self.printState(i,bonds)
+      self.printState(i,flows)
 
 class Experiment(object):
   '''Run experiments on a functional model'''
@@ -943,8 +943,8 @@ class Degraded(ModeHealth):
 class Failed(ModeHealth):
   pass
 
-#############################  Bonds  ########################################
-class Material(Bond):
+#############################  Flows  ########################################
+class Material(Flow):
   pass
 
 class Gas(Material):
@@ -962,7 +962,7 @@ class RegulatedGas(Gas):
 class ExcessGas(Gas):
   pass
 
-class Energy(Bond):
+class Energy(Flow):
   pass
 
 class Electrical(Energy):
@@ -980,7 +980,7 @@ class MechanicalEnergy(Energy):
 class OpticalEnergy(Energy):
   pass
 
-class Signal(Bond):
+class Signal(Flow):
   pass
 
 def load(filename):
@@ -998,41 +998,40 @@ def load(filename):
         continue
       if current:
         if Function in current.__bases__:
-          if 'mode' in word:
+          if 'mode' == word:
             current._modes.append(words[1:])
-          elif 'cond' in word:
+          elif 'condition' == word:
             current._conditions.append(words[1:])
           else:
             current = None
         elif Mode in current.__bases__ or Condition in current.__bases__:
-          if 'behav' in word:
+          if 'behavior' == word:
             current._behaviors.append(words[1:])
-          elif 'opt' in word:
+          elif 'optional' == word:
             current._behaviors.append([words[0]]+words[2:])
           else:
             current = None
         elif Model in current.__bases__:
           if 'function' == word:
             current._functions.append(words[1:])
-          elif 'flow' == word or 'bond' == word:
-            current._bonds.append(words[1:])
+          elif 'flow' == word or 'flow' == word:
+            current._flows.append(words[1:])
           else:
             current = None
         else:
           raise Exception('What happened?')
       if not current:
-        if 'function' in word:
+        if 'function' == word:
           current = type(words[1],(Function,),{'_modes':[],'_conditions':[]})
           Function._subclasses[words[1]] = current
         elif 'mode' == word:
           current = type(words[1],(Mode,),{'_behaviors':[]})
           Mode._subclasses[words[1]] = current
-        elif 'condition' in word:
+        elif 'condition' == word:
           current = type(words[1],(Condition,),{'_behaviors':[]})
           Condition._subclasses[words[1]] = current
         elif 'model' == word:
-          current = type(words[1],(Model,),{'_functions':[],'_bonds':[]})
-          print(current)
+          current = type(words[1],(Model,),{'_functions':[],'_flows':[]})
           Model._subclasses[words[1]] = current
         else:
           raise Exception('Unknown keyword: '+words[0]+' in file: ' +filename)
