@@ -181,7 +181,7 @@ class Mode(object):
         optional = True
         behavior = behavior[1:]
       elif 'from' == behavior[0].lower():
-        from_Mode = getSubclass(Mode,behavior[1])
+        from_Mode = Mode._subclasses[behavior[1]]
         if from_Mode:
           yield from from_Mode.behaviors(self,from_Mode)
         else:
@@ -198,9 +198,9 @@ class Mode(object):
           if word.lower() in 'inout':
             entry = word.lower()
           elif entry == 'in':
-            ins.extend(self.in_flow[getSubclass(Flow,word)])
+            ins.extend(self.in_flow[Flow._subclasses[word]])
           elif entry == 'out':
-            outs.extend(self.out_flow[getSubclass(Flow,word)])
+            outs.extend(self.out_flow[Flow._subclasses[word]])
           else:
             raise Exception('Looking for keywords in or out, found: '+word)
         yield cls(ins,outs)
@@ -217,7 +217,7 @@ class Mode(object):
         optional = 'optional'
         behavior = behavior[1:]
       elif 'from' == behavior[0].lower():
-        from_Mode = getSubclass(Mode,behavior[1])
+        from_Mode = Mode._subclasses[behavior[1]]
         if from_Mode:
           yield from from_Mode.textBehaviors(self,from_Mode)
         else:
@@ -290,9 +290,9 @@ class Condition(object):
         if word.lower() in 'inout':
           entry = word.lower()
         elif entry == 'in':
-          ins.extend(self.in_flow[getSubclass(Flow,word)])
+          ins.extend(self.in_flow[Flow._subclasses[word]])
         elif entry == 'out':
-          outs.extend(self.out_flow[getSubclass(Flow,word)])
+          outs.extend(self.out_flow[Flow._subclasses[word]])
         else:
           raise Exception('Looking for keywords in or out, found: '+word)
       return cls(ins,outs)
@@ -513,6 +513,7 @@ class Function(object):
 
 class Flow(object):
   '''Superclass for flows in the functional model.'''
+  _subclasses = {}
   def __init__(self,source,drain):
     self.source = source
     self.drain = drain
@@ -544,11 +545,7 @@ class Flow(object):
         print('Warning! Overlapping causality in '+self.name)
     self.rate = self.rate_queue
     self.effort_queue = self.rate_queue = None
-  def getSubclass(name):
-    for subclass in all_subclasses(Flow):
-      if subclass.__qualname__ == name:
-        return subclass
-    return None
+Flow._subclasses['Flow'] = Flow
 
 class Model(object):
   '''Class for functional models.
@@ -596,7 +593,7 @@ class Model(object):
         raise Exception('No defined function names found.')
       for _,_,data in self.imported_graph.edges_iter(data=True):
         for key in data:
-          if Flow.getSubclass(data[key]) is not None:
+          if Flow._subclasses.get(data[key]) is not None:
             flow_key = key
             break
         if flow_key:
@@ -605,12 +602,12 @@ class Model(object):
         raise Exception('No defined flow names found.')
       #Build model
       for node,data in self.imported_graph.nodes_iter(data=True):
-        function = Function._subclasses[data[function_key]]
+        function = Function._subclasses.get(data[function_key])
         if function is None:
           raise Exception(data[function_key]+' is not a defined function name.')
         self.addFunction(function(self,node))
       for node1,node2,data in self.imported_graph.edges_iter(data=True):
-        flow_class = Flow.getSubclass(data[flow_key])
+        flow_class = Flow._subclasses.get(data[flow_key])
         if flow_class is None:
           raise Exception(data[flow_key]+' is not a defined flow name.')
         self.addFlow(flow_class,node1,node2)
@@ -621,7 +618,7 @@ class Model(object):
         self.addFunction(function(self,ident))
       for words in self.__class__._flows:
         ident = words[:2]
-        flow = Flow.getSubclass(words[2])
+        flow = Flow._subclasses[words[2]]
         self.addFlow(flow,ident[0],ident[1])
 
   def flows(self,functions=False):
@@ -944,63 +941,61 @@ class Failed(ModeHealth):
   pass
 
 #############################  Flows  ########################################
-class Material(Flow):
-  pass
-
-class Gas(Material):
-  pass
-
-class InertGas(Gas):
-  pass
-
-class ExpandedGas(Gas):
-  pass
-
-class RegulatedGas(Gas):
-  pass
-
-class ExcessGas(Gas):
-  pass
-
-class Energy(Flow):
-  pass
-
-class Electrical(Energy):
-  pass
-
-class Heat(Energy):
-  pass
-
-class ChemicalEnergy(Energy):
-  pass
-
-class MechanicalEnergy(Energy):
-  pass
-
-class OpticalEnergy(Energy):
-  pass
-
-class Signal(Flow):
-  pass
+#class Material(Flow):
+#  pass
+#
+#class Gas(Material):
+#  pass
+#
+#class InertGas(Gas):
+#  pass
+#
+#class ExpandedGas(Gas):
+#  pass
+#
+#class RegulatedGas(Gas):
+#  pass
+#
+#class ExcessGas(Gas):
+#  pass
+#
+#class Energy(Flow):
+#  pass
+#
+#class Electrical(Energy):
+#  pass
+#
+#class Heat(Energy):
+#  pass
+#
+#class ChemicalEnergy(Energy):
+#  pass
+#
+#class MechanicalEnergy(Energy):
+#  pass
+#
+#class OpticalEnergy(Energy):
+#  pass
+#
+#class Signal(Flow):
+#  pass
 
 def load(filename):
-  '''Load function, mode, and condition definitions from a .ibfm file'''
+  '''Load model, function, mode, and condition definitions from a .ibfm file'''
   with open(filename,'r') as file:
-    #Variable for the class being defined
-    current = None
-    first_line = False
+    current = None #Variable for the class being defined
+    first_line = False #True after reading the first line of a keyword
     indent = 0
     for i,line in enumerate(file):
       words = line.split()
-      if not words:
-        #current = None
+      if not words: #Ignore blank lines
         continue
       word = words[0].lower()
-      if word[0] in '%$#/':
+      if word[0] in '%$#/': #Allow many comment characters
         continue
       line = line.expandtabs(4)
       line_indent = len(line)-len(line.lstrip())
-      if line_indent < indent:
+      if line_indent < indent: #Test for reduced indentation
         current = None
         indent = line_indent
       if current:
@@ -1018,21 +1013,24 @@ def load(filename):
           elif 'condition' == word:
             current._conditions.append(words[1:])
           else:
-            current = None
+            raise Exception('Unknown function keyword: '+words[0]+' in line '+
+            str(i+1)+' of: ' +filename)
         elif Mode in current.__bases__ or Condition in current.__bases__:
           if 'behavior' == word:
             current._behaviors.append(words[1:])
           elif 'optional' == word:
             current._behaviors.append([words[0]]+words[2:])
           else:
-            current = None
+            raise Exception('Unknown mode/condition keyword: '+words[0]+
+            ' in line '+str(i+1)+' of: ' +filename)
         elif Model in current.__bases__:
           if 'function' == word:
             current._functions.append(words[1:])
           elif 'flow' == word or 'flow' == word:
             current._flows.append(words[1:])
           else:
-            current = None
+            raise Exception('Unknown model keyword: '+words[0]+' in line '+
+            str(i+1)+' of: ' +filename)
         else:
           raise Exception('What happened?')
       if not current:
@@ -1049,6 +1047,8 @@ def load(filename):
         elif 'model' == word:
           current = type(words[1],(Model,),{'_functions':[],'_flows':[]})
           Model._subclasses[words[1]] = current
+        elif 'flow' == word:
+          Flow._subclasses[words[1]] = type(words[1],(Flow._subclasses[words[2]],),{})
         else:
           if first_line:
             pass #This is to get rid of an annoying warning in Spyder.
@@ -1073,8 +1073,8 @@ with open('function_list.txt','w') as file:
 
 functions = {}
 for function in Function._subclasses:
-  functions[function] = [(mode[2],mode[1]) for mode in getSubclass(Function,function)._modes]
+  functions[function] = [(mode[2],mode[1]) for mode in Function._subclasses[function]._modes]
 
 modes = {}
 for mode in Mode._subclasses:
-    modes[mode] = [m for m in getSubclass(Mode,mode).textBehaviors(getSubclass(Mode,mode))]
+    modes[mode] = [m for m in Mode._subclasses[mode].textBehaviors(Mode._subclasses[mode])]

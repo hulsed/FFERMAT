@@ -1,0 +1,25 @@
+flow Material Flow
+
+flow Gas Material
+
+flow InertGas Gas
+
+flow ExpandedGas Gas
+
+flow RegulatedGas Gas
+
+flow ExcessGas Gas
+
+flow Energy Flow
+
+flow Electrical Energy
+
+flow Heat Energy
+
+flow ChemicalEnergy Energy
+
+flow MechanicalEnergy Energy
+
+flow OpticalEnergy Energy
+
+flow Signal Flow
