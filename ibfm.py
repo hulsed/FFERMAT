@@ -988,15 +988,30 @@ def load(filename):
   with open(filename,'r') as file:
     #Variable for the class being defined
     current = None
-    for line in file:
+    first_line = False
+    indent = 0
+    for i,line in enumerate(file):
       words = line.split()
       if not words:
-        current = None
+        #current = None
         continue
       word = words[0].lower()
       if word[0] in '%$#/':
         continue
+      line = line.expandtabs(4)
+      line_indent = len(line)-len(line.lstrip())
+      if line_indent < indent:
+        current = None
+        indent = line_indent
       if current:
+        if first_line:
+          if line_indent == indent:
+            raise Exception('Expected indent in line '+str(i+1)+' of '+filename)
+          indent = line_indent
+          first_line = False
+        else:
+          if line_indent > indent:
+            raise Exception('Unexpected indent in line '+str(i+1)+' of '+filename)
         if Function in current.__bases__:
           if 'mode' == word:
             current._modes.append(words[1:])
@@ -1021,6 +1036,7 @@ def load(filename):
         else:
           raise Exception('What happened?')
       if not current:
+        first_line = True
         if 'function' == word:
           current = type(words[1],(Function,),{'_modes':[],'_conditions':[]})
           Function._subclasses[words[1]] = current
@@ -1034,7 +1050,10 @@ def load(filename):
           current = type(words[1],(Model,),{'_functions':[],'_flows':[]})
           Model._subclasses[words[1]] = current
         else:
-          raise Exception('Unknown keyword: '+words[0]+' in file: ' +filename)
+          if first_line:
+            pass #This is to get rid of an annoying warning in Spyder.
+          raise Exception('Unknown keyword: '+words[0]+' in line '+str(i+1)+
+          ' of: ' +filename)
 
 
 
