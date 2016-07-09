@@ -136,6 +136,12 @@ class Behavior(object):
 
 class ModeHealth(object):
   pass
+class Operational(ModeHealth):
+  pass
+class Degraded(ModeHealth):
+  pass
+class Failed(ModeHealth):
+  pass
 
 class Mode(object):
   '''Abstract class for operational modes that functions may use.
@@ -173,6 +179,11 @@ class Mode(object):
     '''
     return self.__class__ == other.__class__ and self.health == other.health
   def behaviors(self,mode=None):
+    '''Yield Behavior objects specified in self.__class__._behaviors.
+
+    Runs recursively (but in a different subclass) when using the 'from'
+    keyword.
+    '''
     if mode == None:
       mode = self.__class__
     for behavior in mode._behaviors:
@@ -188,7 +199,7 @@ class Mode(object):
           raise Exception(behavior[1]+' is not a defined mode. '+str(self)+
             ' tried to use behaviors from it.')
         continue
-      ins = []
+      ins = [] #The in flows and out flows (connections) to be collected here
       outs = []
       cls = getSubclass(Behavior,behavior[0])
       if not cls:
@@ -382,6 +393,10 @@ class Function(object):
     '''
     return repr(self) == repr(other) or self.name == str(other)
   def construct(self):
+    '''Build the modes and conditions for the function.
+
+    For functions defined in ibfm files.
+    '''
     for mode in self.__class__._modes:
       ident = mode[0]
       health = getSubclass(ModeHealth,mode[1])
@@ -932,56 +947,9 @@ with open('behaviors.py') as f:
     code = compile(f.read(), 'behaviors.py', 'exec')
     exec(code)
 
-#############################  Mode Healths  #################################
-class Operational(ModeHealth):
-  pass
-class Degraded(ModeHealth):
-  pass
-class Failed(ModeHealth):
-  pass
-
-#############################  Flows  ########################################
-#class Material(Flow):
-#  pass
-#
-#class Gas(Material):
-#  pass
-#
-#class InertGas(Gas):
-#  pass
-#
-#class ExpandedGas(Gas):
-#  pass
-#
-#class RegulatedGas(Gas):
-#  pass
-#
-#class ExcessGas(Gas):
-#  pass
-#
-#class Energy(Flow):
-#  pass
-#
-#class Electrical(Energy):
-#  pass
-#
-#class Heat(Energy):
-#  pass
-#
-#class ChemicalEnergy(Energy):
-#  pass
-#
-#class MechanicalEnergy(Energy):
-#  pass
-#
-#class OpticalEnergy(Energy):
-#  pass
-#
-#class Signal(Flow):
-#  pass
 
 def load(filename):
-  '''Load model, function, mode, and condition definitions from a .ibfm file'''
+  '''Load model, function, flow, mode, and condition definitions from a .ibfm file'''
   with open(filename,'r') as file:
     current = None #Variable for the class being defined
     first_line = False #True after reading the first line of a keyword
@@ -1059,7 +1027,7 @@ def load(filename):
 
 ##############################################################################
 #####################      End of IBFM Definitions       #####################
-'''load .ibfm files'''
+'''load all .ibfm files in the path'''
 files = glob('*.ibfm')
 for file in files:
   load(file)
@@ -1071,10 +1039,12 @@ with open('function_list.txt','w') as file:
   l.sort()
   file.write('\n'.join(l))
 
+'''Create a dictionary of all defined functions'''
 functions = {}
 for function in Function._subclasses:
   functions[function] = [(mode[2],mode[1]) for mode in Function._subclasses[function]._modes]
 
+'''Create a dictionary of all defined modes'''
 modes = {}
 for mode in Mode._subclasses:
     modes[mode] = [m for m in Mode._subclasses[mode].textBehaviors(Mode._subclasses[mode])]
