@@ -358,6 +358,7 @@ class Function(object):
     self.behavior_graph = nx.DiGraph()
     self.in_flow = {}
     self.out_flow = {}
+    self.all_flows = []
     self.modes = []
     if name != None:
       if name not in model.names:
@@ -429,16 +430,24 @@ class Function(object):
     for node in self.condition_graph.nodes_iter():
       node.reset()
   def addOutFlow(self,flow):
-    '''Attach an outflow flow to the function.'''
+    '''Attach an outflow flow to the function.
+
+    Also fills out a list of all flows in or out of the function.
+    '''
     self._addFlow(flow,flow.__class__,self.out_flow)
+    self.all_flows.append(flow)
   def addInFlow(self,flow):
-    '''Attach an inflow flow to the function.'''
+    '''Attach an inflow flow to the function.
+
+    Also fills out a list of all flows in or out of the function.
+    '''
     self._addFlow(flow,flow.__class__,self.in_flow)
+    self.all_flows.append(flow)
   def _addFlow(self,flow,flow_class,flows):
     '''Add a flow to the flows dictionary (recursively).
 
     Makes sure the flow is reachable by its class or any of its superclasses
-    as the key.
+    as the key. Also fills out a list of all flows in or out of the function.
     '''
     previous = flows.get(flow_class)
     if previous:
@@ -554,12 +563,17 @@ class Flow(object):
     self.rate_queue = value
   def step(self):
     '''Resolve the effort and rate values in the flow.'''
+    changed = True
     if self.effort != self.effort_queue:
       self.effort = self.effort_queue
+      changed = True
       if printWarnings and self.rate != self.rate_queue:
         print('Warning! Overlapping causality in '+self.name)
-    self.rate = self.rate_queue
+    if self.rate != self.rate_queue:
+      self.rate = self.rate_queue
+      changed =True
     self.effort_queue = self.rate_queue = None
+    return changed
 Flow._subclasses['Flow'] = Flow
 
 class Model(object):
@@ -692,19 +706,33 @@ class Model(object):
     self.stepFunctions()
     self.resolveFlows()
   def resolveFlows(self):
-    '''Resolve the effort and rate values in each flow.'''
-    for flow in self.flows():
+    '''Resolve the effort and rate values in each active flow.'''
+    active_functions = []
+    for flow in self.active_flows:
       if print_iterations:
         print(flow.name.ljust(35)+str(flow.effort).ljust(10)+str(flow.rate).ljust(10))
-      flow.step()
+      changed = flow.step()
+      if changed:
+        active_functions.extend((flow.source,flow.drain))
+    self.active_functions = set(active_functions)
   def stepFunctions(self):
-    '''Evaluate each function.'''
+    '''Evaluate each active function.'''
+    active_flows = []
     self.minimum_timer = inf
-    for function in self.functions():
+    for function in self.active_functions:
       if print_iterations:
         print(function.name.ljust(20)+str(function.mode))
       timer = function.step()
+      if timer == inf or timer > self.minimum_timer:
+        pass
+      elif timer < self.minimum_timer:
+        self.minimum_timer = timer
+        self.minimum_timer_functions = [function]
+      else:
+        self.minimum_timer_functions.append(function)
       self.minimum_timer = min(self.minimum_timer,timer)
+      active_flows.extend(function.all_flows)
+    self.active_flows = set(active_flows)
   def run(self,lifetime=inf):
     '''Simulate the functional model as a state machine with pseudotime.
 
