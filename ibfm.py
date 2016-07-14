@@ -6,6 +6,7 @@ Author: Matthew G McIntire
 '''
 
 #These flags can be changed in the file or at runtime after import ibfm
+track_states = False
 printWarnings = False
 print_iterations = False
 print_scenarios = False
@@ -718,19 +719,11 @@ class Model(object):
   def stepFunctions(self):
     '''Evaluate each active function.'''
     active_flows = []
-    self.minimum_timer = inf
     for function in self.active_functions:
       if print_iterations:
         print(function.name.ljust(20)+str(function.mode))
       timer = function.step()
-      if timer == inf or timer > self.minimum_timer:
-        pass
-      elif timer < self.minimum_timer:
-        self.minimum_timer = timer
-        self.minimum_timer_functions = [function]
-      else:
-        self.minimum_timer_functions.append(function)
-      self.minimum_timer = min(self.minimum_timer,timer)
+      self.timers[function] = timer
       active_flows.extend(function.all_flows)
     self.active_flows = set(active_flows)
   def run(self,lifetime=inf):
@@ -742,18 +735,30 @@ class Model(object):
     '''
     global last_clock, clock
     resetClock()
-    self.states = [self.getState()]
+    if track_states:
+      self.states = [self.getState()]
     self.timings = [clock]
+    self.active_functions = self.functions()
     while clock < lifetime:
       self.runTimeless() #This can update self.minimum_timer
       last_clock = clock
-      clock = self.minimum_timer
+      minimum_timer_functions = []
+      minimum_timer = inf
+      for function, timer in self.timers.items():
+        if timer < minimum_timer:
+          minumum_timer = timer
+          minimum_timer_functions = [function]
+        elif timer == minumum_timer:
+          minimum_timer_functions.append(function)
+      clock = minimum_timer
+      self.active_functions = minimum_timer_functions
   def runTimeless(self):
     '''Simulate the functional model as a timeless state machine.
 
     Iterates the simulation without advancing the clock until steady state is
     reached.
     '''
+    self.timers = {}
     finished = False
     i = 0
     while not finished:
@@ -762,11 +767,10 @@ class Model(object):
       i = i+1
       self.step()
       self.timings.append(clock)
-      self.states.append(self.getState())
-      if self.states[-1] == self.states[-2]:
+      if track_states:
+        self.states.append(self.getState())
+      if not self.active_functions:
         finished = True
-        if print_iterations:
-          print("Iteration "+str(i)+" same as "+str(i-1))
   def loadState(self,state):
     '''Set state as the current state of the model.
 
