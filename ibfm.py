@@ -921,6 +921,16 @@ class Experiment(object):
           break
       else:
         self.unique.append([i])
+  def findResults(self, data):
+    '''Find scenarios that result in data'''
+    function_name = data[0]
+    mode_name = data[1]
+    function = self.model.getFunction(function_name)
+    found = []
+    for i,result in enumerate(self.results):
+      if result[function].__class__.__name__ == mode_name:
+        found.append(i)
+    return found
   def run(self,simultaneous_faults=2,sampling="full"):
     '''Setup and run an experiment.
 
