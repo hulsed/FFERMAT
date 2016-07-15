@@ -2,6 +2,7 @@
 """
 behaviors for use by modes and conditions
 """
+from ibfm import Behavior, State, Zero, Nominal, Low, High, Highest
 
 class ZeroEffort(Behavior):
   def apply(self):
