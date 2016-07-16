@@ -1087,6 +1087,10 @@ def load(filename):
           raise Exception('Unknown keyword: '+words[0]+' in line '+str(i+1)+
           ' of: ' +filename)
 
+def compareResults(filenames):
+  results = []
+  for filename in filenames:
+    results.append(pickle.load(open(filename,'rb')))
 
 
 ##############################################################################
