@@ -11,4 +11,4 @@ if __name__ == '__main__':
   #Run with 2 then 3 simultaneous faults
   eps.run(2)
   #eps.run(3)
-  eps.exportResults('eps_old.pickle')
+  eps.exportScenariosAndResults('eps_old.pickle')
