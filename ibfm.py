@@ -1097,10 +1097,17 @@ def load(filename):
           ' of: ' +filename)
 
 def compareResults(filenames):
-  results = []
+  o = []
   for filename in filenames:
-    results.append(pickle.load(open(filename,'rb')))
-
+    o.append(pickle.load(open(filename,'rb')))
+  for i1,scenario1 in enumerate(o[0][0]):
+    for i2,scenario2 in enumerate(o[1][0]):
+      if scenario1 == scenario2:
+        r1 = o[0][1][i1]
+        r2 = o[1][1][i2]
+        if r1 != r2:
+          print('For scenario:\n'+str(scenario1))
+          print('First result:\n'+str(r1)+'\nSecond result:\n'+str(r2))
 
 ##############################################################################
 #####################      End of IBFM Definitions       #####################
