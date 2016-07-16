@@ -929,6 +929,15 @@ class Experiment(object):
           break
       else:
         self.unique.append([i])
+  def getScenarios(self):
+    '''Return the scenarios in string form rather than ibfm objects'''
+    y = []
+    for scenario in self.scenarios:
+      s = {}
+      for key,value in scenario.items():
+        s[key.name] = [value.name,value.health.__class__.__name__,value.__class__.__name__]
+      y.append(s)
+    return y
   def getResults(self):
     '''Return the results in string form rather than ibfm objects'''
     y = []
@@ -941,8 +950,8 @@ class Experiment(object):
           r[key.name] = [str(value[0]),str(value[1])]
       y.append(r)
     return y
-  def exportResults(self,filename):
-    pickle.dump(self.getResults(),open(filename,'wb'))
+  def exportScenariosAndResults(self,filename):
+    pickle.dump([self.getScenarios(),self.getResults()],open(filename,'wb'))
   def findResults(self, data):
     '''Find scenarios that result in data'''
     function_name = data[0]
