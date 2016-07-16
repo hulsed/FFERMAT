@@ -555,11 +555,12 @@ class Flow(object):
     self.rate_queue = value
   def step(self):
     '''Resolve the effort and rate values in the flow.'''
-    if self.effort != self.effort_queue:
+    if self.effort != self.effort_queue and self.effort_queue != None:
       self.effort = self.effort_queue
       if printWarnings and self.rate != self.rate_queue:
         print('Warning! Overlapping causality in '+self.name)
-    self.rate = self.rate_queue
+    if self.rate_queue != None:
+      self.rate = self.rate_queue
     self.effort_queue = self.rate_queue = None
 Flow._subclasses['Flow'] = Flow
 
