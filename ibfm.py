@@ -17,6 +17,7 @@ from time import time
 from glob import glob
 import networkx as nx
 import multiprocessing
+import pickle
 
 
 def resetClock():
@@ -156,7 +157,7 @@ class Mode(object):
     Required arguments:
     name -- a unique name (for easier to read function definitions)
     function -- the object the mode belongs to (for access to its flows),
-    health -- a ModeHealth subclass designating the health of the function
+    health -- a ModeHealth object designating the health of the function
               represented by the mode.
     '''
     self.name = name
@@ -532,7 +533,7 @@ class Flow(object):
   def __init__(self,source,drain):
     self.source = source
     self.drain = drain
-    self.name = source.name+'_'+drain.name
+    self.name = source.name+'_'+drain.name+'_'+self.__class__.__name__
     self.reset()
   def __repr__(self):
     return self.__class__.__qualname__
@@ -889,6 +890,20 @@ class Experiment(object):
           break
       else:
         self.unique.append([i])
+  def getResults(self):
+    '''Return the results in string form rather than ibfm objects'''
+    y = []
+    for result in self.results:
+      r = {}
+      for key,value in result.items():
+        if isinstance(key,Function):
+          r[key.name] = [value.name,value.health.__class__.__name__,value.__class__.__name__]
+        elif isinstance(key,Flow):
+          r[key.name] = [str(value[0]),str(value[1])]
+      y.append(r)
+    return y
+  def exportResults(self,filename):
+    pickle.dump(self.getResults(),open(filename,'wb'))
   def findResults(self, data):
     '''Find scenarios that result in data'''
     function_name = data[0]
