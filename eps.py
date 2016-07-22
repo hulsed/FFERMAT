@@ -11,3 +11,4 @@ if __name__ == '__main__':
   eps = ibfm.Experiment('eps')
   #Run with 2 simultaneous faults
   eps.run(2)
+  eps.exportScenariosAndResults('eps_old.pickle')
