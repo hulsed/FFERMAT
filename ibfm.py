@@ -741,26 +741,31 @@ class Model(object):
     resetClock()
     if track_states:
       self.states = [self.getState()]
+      self.timings = [clock]
     if print_iterations:
       print('Iteration 0')
       self.printState(flows=True)
-    self.timings = [clock]
     self.active_functions = self.functions()
     self.timers = {}
     i = 0
     while clock < lifetime:
       i = self.runTimeless(i)
       last_clock = clock
-      minimum_timer_functions = []
+      minimum_timer_functions = {}
+      timers_to_keep = {}
       minimum_timer = inf
       for function, timer in self.timers.items():
         if timer < minimum_timer:
+          timers_to_keep.update(minimum_timer_functions)
           minimum_timer = timer
-          minimum_timer_functions = [function]
+          minimum_timer_functions = {function:timer}
         elif timer == minimum_timer:
-          minimum_timer_functions.append(function)
+          minimum_timer_functions[function] = timer
+        else:
+          timers_to_keep[function] = timer
       clock = minimum_timer
       self.active_functions = minimum_timer_functions
+      self.timers = timers_to_keep
       if print_iterations:
         input()
   def runTimeless(self,i=0):
@@ -769,15 +774,14 @@ class Model(object):
     Iterates the simulation without advancing the clock until steady state is
     reached.
     '''
-    self.timers = {}
     finished = False
     while not finished:
       i = i+1
       if print_iterations:
         print("\nIteration "+str(i)+'    Clock: '+str(clock))
       self.step()
-      self.timings.append(clock)
       if track_states:
+        self.timings.append(clock)
         self.states.append(self.getState())
       if not self.active_functions:
         finished = True
