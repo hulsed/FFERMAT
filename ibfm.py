@@ -6,6 +6,7 @@ Author: Matthew G McIntire
 '''
 
 #These flags can be changed in the file or at runtime after import ibfm
+track_states = False
 printWarnings = False
 print_iterations = False
 print_scenarios = False
@@ -359,6 +360,7 @@ class Function(object):
     self.behavior_graph = nx.DiGraph()
     self.in_flow = {}
     self.out_flow = {}
+    self.all_flows = []
     self.modes = []
     if name != None:
       if name not in model.names:
@@ -430,16 +432,24 @@ class Function(object):
     for node in self.condition_graph.nodes_iter():
       node.reset()
   def addOutFlow(self,flow):
-    '''Attach an outflow flow to the function.'''
+    '''Attach an outflow flow to the function.
+
+    Also fills out a list of all flows in or out of the function.
+    '''
     self._addFlow(flow,flow.__class__,self.out_flow)
+    self.all_flows.append(flow)
   def addInFlow(self,flow):
-    '''Attach an inflow flow to the function.'''
+    '''Attach an inflow flow to the function.
+
+    Also fills out a list of all flows in or out of the function.
+    '''
     self._addFlow(flow,flow.__class__,self.in_flow)
+    self.all_flows.append(flow)
   def _addFlow(self,flow,flow_class,flows):
     '''Add a flow to the flows dictionary (recursively).
 
     Makes sure the flow is reachable by its class or any of its superclasses
-    as the key.
+    as the key. Also fills out a list of all flows in or out of the function.
     '''
     previous = flows.get(flow_class)
     if previous:
@@ -555,13 +565,17 @@ class Flow(object):
     self.rate_queue = value
   def step(self):
     '''Resolve the effort and rate values in the flow.'''
+    changed = False
     if self.effort != self.effort_queue and self.effort_queue != None:
       self.effort = self.effort_queue
+      changed = True
       if printWarnings and self.rate != self.rate_queue:
         print('Warning! Overlapping causality in '+self.name)
-    if self.rate_queue != None:
+    if self.rate != self.rate_queue and self.rate_queue != None:
       self.rate = self.rate_queue
+      changed =True
     self.effort_queue = self.rate_queue = None
+    return changed
 Flow._subclasses['Flow'] = Flow
 
 class Model(object):
@@ -694,19 +708,28 @@ class Model(object):
     self.stepFunctions()
     self.resolveFlows()
   def resolveFlows(self):
-    '''Resolve the effort and rate values in each flow.'''
-    for flow in self.flows():
+    '''Resolve the effort and rate values in each active flow.'''
+    active_functions = []
+    for flow in self.active_flows:
+      changed = flow.step()
       if print_iterations:
         print(flow.name.ljust(35)+str(flow.effort).ljust(10)+str(flow.rate).ljust(10))
-      flow.step()
+      if changed:
+        active_functions.extend((flow.source,flow.drain))
+    self.active_functions = set(active_functions)
   def stepFunctions(self):
-    '''Evaluate each function.'''
-    self.minimum_timer = inf
-    for function in self.functions():
+    '''Evaluate each active function.'''
+    active_flows = []
+    for function in self.active_functions:
+      timer = function.step() #This is the evaluation
       if print_iterations:
         print(function.name.ljust(20)+str(function.mode))
-      timer = function.step()
-      self.minimum_timer = min(self.minimum_timer,timer)
+      if timer == inf:
+        self.timers.pop(function,None) #Remove the function from timers
+      else:
+        self.timers[function] = timer #Add/update the function to timers
+      active_flows.extend(function.all_flows)
+    self.active_flows = set(active_flows)
   def run(self,lifetime=inf):
     '''Simulate the functional model as a state machine with pseudotime.
 
@@ -716,31 +739,46 @@ class Model(object):
     '''
     global last_clock, clock
     resetClock()
-    self.states = [self.getState()]
+    if track_states:
+      self.states = [self.getState()]
+    if print_iterations:
+      print('Iteration 0')
+      self.printState(flows=True)
     self.timings = [clock]
+    self.active_functions = self.functions()
+    self.timers = {}
     while clock < lifetime:
-      self.runTimeless() #This can update self.minimum_timer
+      self.runTimeless()
       last_clock = clock
-      clock = self.minimum_timer
+      minimum_timer_functions = []
+      minimum_timer = inf
+      for function, timer in self.timers.items():
+        if timer < minimum_timer:
+          minumum_timer = timer
+          minimum_timer_functions = [function]
+        elif timer == minumum_timer:
+          minimum_timer_functions.append(function)
+      clock = minimum_timer
+      self.active_functions = minimum_timer_functions
   def runTimeless(self):
     '''Simulate the functional model as a timeless state machine.
 
     Iterates the simulation without advancing the clock until steady state is
     reached.
     '''
+    self.timers = {}
     finished = False
     i = 0
     while not finished:
+      i = i+1
       if print_iterations:
         print("\nIteration "+str(i))
-      i = i+1
       self.step()
       self.timings.append(clock)
-      self.states.append(self.getState())
-      if self.states[-1] == self.states[-2]:
+      if track_states:
+        self.states.append(self.getState())
+      if not self.active_functions:
         finished = True
-        if print_iterations:
-          print("Iteration "+str(i)+" same as "+str(i-1))
   def loadState(self,state):
     '''Set state as the current state of the model.
 
@@ -804,11 +842,11 @@ class Model(object):
         state = self.getState()
     for function in self.functions():
       if state.get(function):
-        print(function.name+'\t'+str(state[function]))
+        print(function.name.ljust(20)+str(state[function]))
     if flows:
       for flow in self.flows():
         if state.get(flow):
-          print(flow.name+'\t'+str(state[flow]))
+          print(flow.name.ljust(35)+str(state[flow][0]).ljust(10)+str(state[flow][1]).ljust(10))
   def printStates(self,flows=False):
     '''Print the entire iteration history of the current simulation.
 
@@ -1058,7 +1096,27 @@ def load(filename):
           raise Exception('Unknown keyword: '+words[0]+' in line '+str(i+1)+
           ' of: ' +filename)
 
-
+def compareResults(filenames):
+  n = 0
+  o = []
+  for filename in filenames:
+    o.append(pickle.load(open(filename,'rb')))
+  for i1,scenario1 in enumerate(o[0][0]):
+    for i2,scenario2 in enumerate(o[1][0]):
+      if scenario1 == scenario2:
+        r1 = o[0][1][i1]
+        r2 = o[1][1][i2]
+        if r1 != r2:
+          print('For scenario:')
+          for key,value in scenario1.items():
+            print(key+':'+str(value))
+          print('Results:')
+          for key,value in r1.items():
+            print(key+':'+str(value))
+            if value != r2[key]:
+              print(key+':'+str(r2[key]))
+          n = n+1
+  print(str(n)+' results differ.')
 
 ##############################################################################
 #####################      End of IBFM Definitions       #####################
