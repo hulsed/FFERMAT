@@ -741,44 +741,51 @@ class Model(object):
     resetClock()
     if track_states:
       self.states = [self.getState()]
+      self.timings = [clock]
     if print_iterations:
       print('Iteration 0')
       self.printState(flows=True)
-    self.timings = [clock]
     self.active_functions = self.functions()
     self.timers = {}
+    i = 0
     while clock < lifetime:
-      self.runTimeless()
+      i = self.runTimeless(i)
       last_clock = clock
-      minimum_timer_functions = []
+      minimum_timer_functions = {}
+      timers_to_keep = {}
       minimum_timer = inf
       for function, timer in self.timers.items():
         if timer < minimum_timer:
-          minumum_timer = timer
-          minimum_timer_functions = [function]
-        elif timer == minumum_timer:
-          minimum_timer_functions.append(function)
+          timers_to_keep.update(minimum_timer_functions)
+          minimum_timer = timer
+          minimum_timer_functions = {function:timer}
+        elif timer == minimum_timer:
+          minimum_timer_functions[function] = timer
+        else:
+          timers_to_keep[function] = timer
       clock = minimum_timer
       self.active_functions = minimum_timer_functions
-  def runTimeless(self):
+      self.timers = timers_to_keep
+      if print_iterations:
+        input()
+  def runTimeless(self,i=0):
     '''Simulate the functional model as a timeless state machine.
 
     Iterates the simulation without advancing the clock until steady state is
     reached.
     '''
-    self.timers = {}
     finished = False
-    i = 0
     while not finished:
       i = i+1
       if print_iterations:
-        print("\nIteration "+str(i))
+        print("\nIteration "+str(i)+'    Clock: '+str(clock))
       self.step()
-      self.timings.append(clock)
       if track_states:
+        self.timings.append(clock)
         self.states.append(self.getState())
       if not self.active_functions:
         finished = True
+    return i
   def loadState(self,state):
     '''Set state as the current state of the model.
 
@@ -929,14 +936,16 @@ class Experiment(object):
           break
       else:
         self.unique.append([i])
+  def stringScenario(self,scenario):
+    s = {}
+    for key,value in scenario.items():
+      s[key.name] = [value.name,value.health.__class__.__name__,value.__class__.__name__]
+    return s
   def getScenarios(self):
     '''Return the scenarios in string form rather than ibfm objects'''
     y = []
     for scenario in self.scenarios:
-      s = {}
-      for key,value in scenario.items():
-        s[key.name] = [value.name,value.health.__class__.__name__,value.__class__.__name__]
-      y.append(s)
+      y.append(self.stringScenario(scenario))
     return y
   def getResults(self):
     '''Return the results in string form rather than ibfm objects'''
@@ -1000,6 +1009,8 @@ class Experiment(object):
 #    print(str(int(len(self.unique)))+' health states or '+
 #      str(int(len(self.unique)*100/len(self.results)))+" percent unique")
   def runOneScenario(self,scenario):
+    if print_iterations:
+      print(self.stringScenario(scenario))
     self.model.loadNominalState()
     self.model.loadState(scenario)
     if print_scenarios:
