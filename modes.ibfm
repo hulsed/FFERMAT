@@ -1,70 +1,70 @@
 mode OpenCircuit
-    optional behavior AllZeroEffort out Electrical
-    optional behavior AllZeroRate in Electrical
+    optional all Electrical output effort = Zero
+    optional all Electrical input rate = Zero
 mode ClosedCircuit
-    behavior EqualEffort in Electrical out Electrical
-    behavior EqualRate in Electrical out Electrical
+    Electrical output effort = Electrical input effort
+    Electrical input rate = Electrical output rate
 mode ShortCircuit
-    behavior FreeRate in Electrical
-    optional behavior ZeroEffort out Electrical
+    Electrical input rate = Electrical input effort * Highest
+    optional all Electrical output effort = Zero
 mode NominalVoltageSource
-    behavior NominalEffort out Electrical
+    Electrical output effort = Nominal
 mode LowVoltageSource
-    behavior LowEffort out Electrical
+    Electrical output effort = Low
 mode HighVoltageSource
-    behavior HighEffort out Electrical
+    Electrical output effort = High
 mode ResistiveLoad
-    behavior ReflectiveRate in Electrical
+    Electrical input rate = Electrical input effort
 mode NominalSignalSource
-    behavior NominalEffort out Signal
+    Signal output effort = Nominal
 mode ZeroSignalSource
-    behavior ZeroEffort out Signal
+    Signal output effort = Zero
 mode HeatSink
-    behavior ReflectiveRate in Heat
-mode InsulatedHeatSink
-    behavior LessReflectiveRate in Heat
-mode NoHeatSink
-    behavior ZeroRate in Heat
+    Heat input effort = Nominal
+mode HotHeatSink
+    Heat input effort = High
+mode HottestHeatSink
+    Heat input effort = Highest
 mode NominalMaterialSource
-    behavior NominalEffort out Material
+    Material output effort = Nominal
 mode NoMaterialSource
-    behavior ZeroEffort out Material
+    Material output effort = Zero
 mode NominalMaterialSink
-    behavior ReflectiveRate in Material
+    Material input rate = Material input effort
 mode NoMaterialSink
-    behavior ZeroRate in Material
+    Material input rate = Zero
 mode NominalChemicalToElectricalEnergyConversion
-    behavior TranslateRateToEffort out Electrical Heat
-    behavior EqualEffort in ChemicalEnergy out Electrical
-    behavior EqualRate in ChemicalEnergy out Electrical
+    Heat output rate = Electrical output rate
+    Electrical output effort = Chemical input effort
+    Chemical input rate = Electrical output rate
 mode InefficientChemicalToElectricalEnergyConversion
-    behavior TranslateIncreasedRateToEffort out Electrical Heat
-    behavior EqualEffort in ChemicalEnergy out Electrical
-    behavior IncreasedRate in ChemicalEnergy out Electrical
+    Heat output rate = Electrical output rate ++ to
+    Electrical output effort = ChemicalEnergy input effort
+    ChemicalEnergy input rate = Electrical output rate ++
 mode ChemicalEnergyLossNoElectricalConversion
-    behavior FreeRate in ChemicalEnergy
-    behavior HighestEffortAmplification in ChemicalEnergy out Heat
-    behavior ZeroEffort out Electrical
+    ChemicalEnergy input rate = ChemicalEnergy input effort * Highest
+    Heat output rate = ChemicalEnergy input rate
+    Electrical output effort = Zero
 mode NoChemicalToElectricalEnergyConversion
-    behavior ZeroRate in ChemicalEnergy
-    behavior ZeroEffort out Heat
-    behavior ZeroEffort out Electrical
+    ChemicalEnergy input rate = Zero
+    Heat output rate = Zero
+    Electrical output effort = Zero
 mode NominalInvertElectricalEnergy
-    behavior NominalEffort out Electrical
-    behavior NominalEffort out Heat
-    behavior EqualRate in Electrical out Electrical
+    Electrical output effort = Nominal
+    Heat output rate = Electrical output rate
+    Electrical input rate = Electrical output rate
 mode NoInvertElectricalEnergy
-    behavior ZeroEffort out Electrical
-    behavior ZeroEffort out Heat
-    behavior ZeroRate in Electrical
+    Electrical output effort = Zero
+    Heat output rate = Zero
+    Electrical input rate = Zero
 mode NominalElectricalToMechanicalEnergyConversion
-    behavior TranslateInverseRateToEffort out MechanicalEnergy Heat
-    behavior EqualEffort in Electrical out MechanicalEnergy
-    behavior InverseRate in Electrical out MechanicalEnergy
+    Heat output rate = Electrical input rate
+    MechanicalEnergy output effort = Electrical input effort
+    Electrical input rate = invert MechanicalEnergy rate
 mode ShortCircuitNoMechanicalEnergyConversion
-    behavior FreeRate in Electrical
-    behavior HighestEffortAmplification in Electrical out Heat
-    behavior ZeroEffort out MechanicalEnergy
+    Electrical input rate = Electrical input effort * Highest
+    Heat output rate = Electrical input rate
+    MechanicalEnergy output effort = Zero
 mode OpenCircuitNoMechanicalEnergyConversion
     behavior ZeroRate in Electrical
     behavior ZeroEffort out Heat
