@@ -66,67 +66,67 @@ mode ShortCircuitNoMechanicalEnergyConversion
     Heat output rate = Electrical input rate
     MechanicalEnergy output effort = Zero
 mode OpenCircuitNoMechanicalEnergyConversion
-    behavior ZeroRate in Electrical
-    behavior ZeroEffort out Heat
-    behavior ZeroEffort out MechanicalEnergy
+    Electrical input rate = Zero
+    Heat output rate = Zero
+    MechanicalEnergy output effort = Zero
 mode NominalElectricalToOpticalEnergyConversion
-    behavior EqualEffort in Electrical out OpticalEnergy
-    behavior EqualEffort in Electrical out Heat
-    behavior ReflectiveRate in Electrical
+    OpticalEnergy output rate = Electrical input effort
+    Heat output rate = Electrical input effort
+    Electrical input rate = Electrical input effort
 mode NoElectricalToOpticalEnergyConversion
-    behavior ZeroEffort out OpticalEnergy
-    behavior ZeroEffort out Heat
-    behavior ZeroRate in Electrical
+    Electrical input rate = Zero
+    Heat output rate = Zero
+    OpticalEnergy output rate = Zero
 mode NominalChemicalEffortSource
-    behavior NominalEffort out ChemicalEnergy
+    ChemicalEnergy output effort = Nominal
 mode LowChemicalEffortSource
-    behavior LowEffort out ChemicalEnergy
+    ChemicalEnergy output effort = Low
 mode HighChemicalEffortSource
-    behavior HighEffort out ChemicalEnergy
+    ChemicalEnergy output effort = High
 mode NoChemicalEffortSource
-    behavior ZeroEffort out ChemicalEnergy
+    ChemicalEnergy output effort = Zero
 mode NominalVoltageSensing
     behavior from ClosedCircuit
-    behavior EqualEffort in Electrical out Signal
+    Signal output effort = Electrical input effort
 mode NominalCurrentSensing
     behavior from ClosedCircuit
-    behavior TranslateRateToEffort out Electrical Signal
+    Signal output effort = Electrical output rate
 mode DriftingLowVoltageSensing
     behavior from ClosedCircuit
-    behavior DecreasedEffort in Electrical out Signal
+    Signal output effort = Electrical input effort --
 mode DriftingLowCurrentSensing
     behavior from ClosedCircuit
-    behavior TranslateDecreasedRateToEffort out Electrical Signal
+    Signal output effort = Electrical output rate --
 mode DriftingHighVoltageSensing
     behavior from ClosedCircuit
-    behavior IncreasedEffort in Electrical out Signal
+    Signal output effort = Electrical input effort ++
 mode DriftingHighCurrentSensing
     behavior from ClosedCircuit
-    behavior TranslateIncreasedRateToEffort out Electrical Signal
+    Signal output effort = Electrical output rate ++
 mode NoVoltageSensing
     behavior from ClosedCircuit
-    behavior ZeroEffort out Signal
+    Signal output effort = Zero
 mode NoCurrentSensing
     behavior from NoVoltageSensing
 mode HeatConductor
-    behavior EqualEffort in Heat out Heat
-    behavior EqualRate in Heat out Heat
+    Heat output rate = Heat input rate
+    Heat input effort = Heat output effort
 mode NominalTemperatureSensing
     behavior from HeatConductor
-    behavior EqualEffort in Heat out Signal
+    Signal output effort = Heat output effort
 mode DriftingLowTemperatureSensing
     behavior from HeatConductor
-    behavior DecreasedEffort in Heat out Signal
+    Signal output effort = Heat output effort --
 mode DriftingHighTemperatureSensing
     behavior from HeatConductor
-    behavior IncreasedEffort in Heat out Signal
+    Signal output effort = Heat output effort ++
 mode NoTemperatureSensing
     behavior from HeatConductor
-    behavior ZeroEffort out Signal
+    Signal output effort = Zero
 mode NominalTransportMaterial
-    behavior MinimumEffort in Energy Material out Material
-    behavior EqualRate in Material out Material
-    behavior EqualRate in Energy out Material
+    Material output effort = min Energy input effort Material input effort
+    Material input rate = Material output rate
+    Energy input rate = Material output rate
 mode RestrictedTransportMaterial
     behavior DecreasedMinimumEffort in Energy Material out Material
     behavior EqualRate in Material out Material
