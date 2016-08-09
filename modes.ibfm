@@ -86,42 +86,42 @@ mode HighChemicalEffortSource
 mode NoChemicalEffortSource
     ChemicalEnergy output effort = Zero
 mode NominalVoltageSensing
-    behavior from ClosedCircuit
+    import ClosedCircuit
     Signal output effort = Electrical input effort
 mode NominalCurrentSensing
-    behavior from ClosedCircuit
+    import ClosedCircuit
     Signal output effort = Electrical output rate
 mode DriftingLowVoltageSensing
-    behavior from ClosedCircuit
+    import ClosedCircuit
     Signal output effort = Electrical input effort --
 mode DriftingLowCurrentSensing
-    behavior from ClosedCircuit
+    import ClosedCircuit
     Signal output effort = Electrical output rate --
 mode DriftingHighVoltageSensing
-    behavior from ClosedCircuit
+    import ClosedCircuit
     Signal output effort = Electrical input effort ++
 mode DriftingHighCurrentSensing
-    behavior from ClosedCircuit
+    import ClosedCircuit
     Signal output effort = Electrical output rate ++
 mode NoVoltageSensing
-    behavior from ClosedCircuit
+    import ClosedCircuit
     Signal output effort = Zero
 mode NoCurrentSensing
-    behavior from NoVoltageSensing
+    import NoVoltageSensing
 mode HeatConductor
     Heat output rate = Heat input rate
     Heat input effort = Heat output effort
 mode NominalTemperatureSensing
-    behavior from HeatConductor
+    import HeatConductor
     Signal output effort = Heat output effort
 mode DriftingLowTemperatureSensing
-    behavior from HeatConductor
+    import HeatConductor
     Signal output effort = Heat output effort --
 mode DriftingHighTemperatureSensing
-    behavior from HeatConductor
+    import HeatConductor
     Signal output effort = Heat output effort ++
 mode NoTemperatureSensing
-    behavior from HeatConductor
+    import HeatConductor
     Signal output effort = Zero
 mode NominalTransportMaterial
     Material output effort = min(Energy input effort, Material input effort)

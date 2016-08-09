@@ -17,6 +17,7 @@ from math import inf
 from time import time
 from glob import glob
 import networkx as nx
+import re
 import multiprocessing
 import pickle
 
@@ -183,7 +184,7 @@ class Mode(object):
   def behaviors(self,mode=None):
     '''Yield Behavior objects specified in self.__class__._behaviors.
 
-    Runs recursively (but in a different subclass) when using the 'from'
+    Runs recursively (but in a different subclass) when using the 'import'
     keyword.
     '''
     if mode == None:
@@ -193,7 +194,7 @@ class Mode(object):
       if 'optional' == behavior[0].lower():
         optional = True
         behavior = behavior[1:]
-      elif 'from' == behavior[0].lower():
+      elif 'import' == behavior[0].lower():
         from_Mode = Mode._subclasses[behavior[1]]
         if from_Mode:
           yield from from_Mode.behaviors(self,from_Mode)
@@ -1039,7 +1040,7 @@ def load(filename):
     first_line = False #True after reading the first line of a keyword
     indent = 0
     for i,line in enumerate(file):
-      words = line.split()
+      words = re.findall(r"[\w]+|==|!=|<=|>=|\+\+|--|[*=,()<>]",line)
       if not words: #Ignore blank lines
         continue
       word = words[0].lower()
@@ -1068,13 +1069,7 @@ def load(filename):
             raise Exception('Unknown function keyword: '+words[0]+' in line '+
             str(i+1)+' of: ' +filename)
         elif Mode in current.__bases__ or Condition in current.__bases__:
-          if 'behavior' == word:
-            current._behaviors.append(words[1:])
-          elif 'optional' == word:
-            current._behaviors.append([words[0]]+words[2:])
-          else:
-            raise Exception('Unknown mode/condition keyword: '+words[0]+
-            ' in line '+str(i+1)+' of: ' +filename)
+          current._behaviors.append(words)
         elif Model in current.__bases__:
           if 'function' == word:
             current._functions.append(words[1:])
