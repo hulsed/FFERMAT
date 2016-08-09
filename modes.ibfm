@@ -124,25 +124,23 @@ mode NoTemperatureSensing
     behavior from HeatConductor
     Signal output effort = Zero
 mode NominalTransportMaterial
-    Material output effort = min Energy input effort Material input effort
+    Material output effort = min(Energy input effort, Material input effort)
     Material input rate = Material output rate
     Energy input rate = Material output rate
 mode RestrictedTransportMaterial
-    behavior DecreasedMinimumEffort in Energy Material out Material
-    behavior EqualRate in Material out Material
-    behavior EqualRate in Energy out Material
+    Material output effort = min(Energy input effort, Material input effort) --
+    Material input rate = Material output rate
+    Energy input rate = Material output rate
 mode BlockedTransportMaterial
-    behavior ZeroEffort out Material
-    behavior ZeroRate in Material
-    behavior ZeroRate in Energy
+    Material output effort = Zero
+    Material input rate = Zero
+    Energy input rate = Zero
 mode NominalBranchElectricalEnergy
-    behavior BranchEqualEffort in Electrical out Electrical
-    behavior MaximumRate in Electrical out Electrical
-mode BranchOpenCircuit
-    behavior AllZeroEffort out Electrical
-    behavior ZeroRate in Electrical
+    all Electrical output effort = Electrical input effort
+    Electrical input rate = max all Electrical output rate
 mode NominalCombineElectricalEnergy
-    behavior MaximumEffort in Electrical out Electrical
-    behavior EqualRateFromMaximumEffort in Electrical out Electrical
+    Electrical output effort = max Electrical input effort
+    max(Electrical input effort) rate = Electrical output rate
 mode NominalExportOpticalEnergy
+    OpticalEnergy input rate = OpticalEnergy input effort
     behavior ReflectiveRate in OpticalEnergy

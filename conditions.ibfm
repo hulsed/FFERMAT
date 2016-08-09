@@ -1,34 +1,34 @@
 condition NominalVoltage
-    behavior NominalEffort in Electrical
+    Electrical input effort == Nominal
 condition HighCurrent
-    behavior HighRate out Electrical
+    Electrical output rate > Nominal
 condition NonZeroVoltage
-    behavior NonZeroEffort in Electrical
+    Electrical input effort != Zero
 condition HighestCurrent
-    behavior HighestRate out Electrical
+    Electrical output rate > High
 condition LowVoltage
-    behavior LowEffort in Electrical
+    Electrical input effort < Nominal and Electrical input effort > Zero
 condition HighVoltage
-    behavior HighEffort in Electrical
-condition BranchHighestCurrent
-    behavior AnyHighestRate out Electrical
+    Electrical input effort > Nominal
+condition AnyHighestCurrent
+    any Electrical output rate > High
 condition NominalSignal
-    behavior NominalEffort in Signal
+    Signal input effort == Nominal
 condition NonNominalSignal
-    behavior NonNominalEffort in Signal
+    Signal input effort != Nominal
 condition ZeroSignal
-    behavior ZeroEffort in Signal
+    Signal input effort == Zero
 condition NonZeroSignal
-    behavior NonZeroEffort in Signal
+    Signal input effort != Zero
 condition AnyZeroSignals
-    behavior AnyZeroEffort in Signal
+    any Signal input effort == Zero
 condition NoZeroSignals
-    behavior NoZeroEffort in Signal
+    all Signal input effort != Zero
 condition AnyNonZeroSignals
-    behavior AnyNonZeroEffort in Signal
+    any Signal input effot != Zero
 condition AllZeroSignals
-    behavior AllZeroEffort in Signal
-condition Overheating
-    behavior HighEffortOut out Heat
-condition FastOverheating
-    behavior HighestEffortOut out Heat
+    all Signal input effort == Zero
+condition Hot
+    Heat output effort > Nominal
+condition Hottest
+    Heat output effort > High

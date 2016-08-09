@@ -56,8 +56,8 @@ function InvertElectricalEnergy
     condition HighestCurrent 1 to 3
 function BranchElectricalEnergy
     mode 1 Operational NominalBranchElectricalEnergy
-    mode 2 Failed BranchOpenCircuit
-    condition BranchHighestCurrent 1 to 2 delay 2
+    mode 2 Failed OpenCircuit
+    condition AnyHighestCurrent 1 to 2 delay 2
 function CombineElectricalEnergy
     mode 1 Operational NominalCombineElectricalEnergy
     mode 2 Failed OpenCircuit
@@ -67,14 +67,14 @@ function ConvertChemicalToElectricalEnergy
     mode 2 Degraded InefficientChemicalToElectricalEnergyConversion
     mode 3 Failed ChemicalEnergyLossNoElectricalConversion
     mode 4 Failed NoChemicalToElectricalEnergyConversion
-    condition Overheating 1 2 3 to 4 delay 10
-    condition FastOverheating 1 2 3 to 4 delay 1
+    condition Hot 1 2 3 to 4 delay 10
+    condition Hottest 1 2 3 to 4 delay 1
 function ConvertElectricalToMechanicalEnergy
     mode 1 Operational NominalElectricalToMechanicalEnergyConversion
     mode 2 Failed ShortCircuitNoMechanicalEnergyConversion
     mode 3 Failed OpenCircuitNoMechanicalEnergyConversion
-    condition Overheating 1 2 to 3 delay 10
-    condition FastOverheating 1 2 to 3 delay 1
+    condition Hot 1 2 to 3 delay 10
+    condition Hottest 1 2 to 3 delay 1
 function ConvertElectricalToOpticalEnergy
     mode 1 Operational NominalElectricalToOpticalEnergyConversion
     mode 2 Failed NoElectricalToOpticalEnergyConversion
