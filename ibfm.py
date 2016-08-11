@@ -947,15 +947,15 @@ class Experiment(object):
     for scenario in self.scenarios:
       y.append(self.stringScenario(scenario))
     return y
-  def getResults(self):
+  def getResults(self,return_functions=True,return_flows=True):
     '''Return the results in string form rather than ibfm objects'''
     y = []
     for result in self.results:
       r = {}
       for key,value in result.items():
-        if isinstance(key,Function):
+        if return_functions and isinstance(key,Function):
           r[key.name] = [value.name,value.health.__class__.__name__,value.__class__.__name__]
-        elif isinstance(key,Flow):
+        elif return_flows and isinstance(key,Flow):
           r[key.name] = [str(value[0]),str(value[1])]
       y.append(r)
     return y
