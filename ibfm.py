@@ -229,29 +229,15 @@ class Mode(object):
           raise Exception(behavior[1]+' is not a defined mode. '+str(self)+
             ' tried to use behaviors from it.')
         continue
-      # Separate the left-hand side from the right-hand side of the assignment
-      left = True
-      lhs = []
-      rhs = []
+      # Replace strings with flow objects
       for element in behavior:
-        if left and element != '=':
-          lhs.append(element)
-        elif not left:
-          rhs.append(element)
-        elif element == '=':
-          left = False
+
+      # Separate the left-hand side from the right-hand side of the assignment
+      assignment = behavior.index('=')
+      lhs = behavior[:assignment]
+      rhs = behavior[assignment+1:]
       effort_or_rate = lhs.pop()
       #match the open and closed parentheses
-      for elements in (lhs, rhs):
-        open_parentheses = 0
-        closed_parentheses = []
-        for i, element in enumerate (elements):
-          if element == '(':
-            open_parentheses = open_parentheses + 1
-            closed_parentheses.append(open_parentheses)
-            elements[i] = str(open_parentheses) + '('
-          elif ')' == element:
-            elements [i] = str(closed_parentheses.pop()) + ')'
 
       ins = [] #The in flows and out flows (connections) to be collected here
       outs = []
@@ -635,6 +621,26 @@ class FlowValue(object):
     self.parent = parent
   def make(parents):
     return[FlowValue(parent) for parent in parents]
+  def getUnaryMethod(string):
+    if string == 'effort':
+      return setValueToEffort
+    elif string == 'rate':
+      return setValueToRate
+    elif string == 'max':
+      return maximum
+    elif string == 'min':
+      return minimum
+    elif string == '++':
+      return increment
+    elif string == '--':
+      return decrement
+    elif string == 'inverse':
+      return inverse
+  def getSetMethod(string):
+    if string == 'effort':
+      return setEffort
+    elif string == 'rate':
+      return setRate
   def setValueToEffort(flow_values):
     for flow_value in flow_values:
       flow_value.value = flow_value.parent.effort
@@ -667,7 +673,11 @@ class FlowValue(object):
         flow_value.value = Low()
     return flow_values
   def combine(x1,x2):
-    return
+    return x1.extend(x2)
+  def scalarTimes(flow_values,scalar):
+    for flow_value in flow_values:
+      flow_value.value = flow_value.value * scalar
+    return flow_values
   def setRate(lhs,rhs):
     value = rhs[0].value
     for flow_value in rhs[1:]:
