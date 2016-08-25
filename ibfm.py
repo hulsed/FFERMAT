@@ -21,6 +21,8 @@ import re
 import multiprocessing
 import pickle
 
+class InconsistencyError(Exception):
+  pass
 
 def resetClock():
   '''Reset the global clock variable to zero for a new simulation.'''
@@ -181,6 +183,31 @@ class Mode(object):
     Used by dictionaries in NetworkX.
     '''
     return self.__class__ == other.__class__ and self.health == other.health
+  def restack(self,x):
+    keywords = ['min', 'max', 'invert', '--', '++']
+    for i in [-1,0]:
+      if x[i] in keywords:
+        y = x.pop(i)
+
+    elif x[0] in keywords:
+      y = [x.pop(0)]
+    elif x[-1] == ')':
+      #Find the matching parenthesis
+      i = -1
+      count = 0
+      while True:
+        i = i-1
+        try:
+          if x[i] == ')':
+            count = count + 1
+          elif x[i] == '(':
+            if count == 0:
+
+            count = count - 1
+
+        except IndexError:
+          print('Mismatched parenthesis in ' + self.__class__.__name__)
+          raise
   def behaviors(self,mode=None):
     '''Yield Behavior objects specified in self.__class__._behaviors.
 
@@ -202,6 +229,30 @@ class Mode(object):
           raise Exception(behavior[1]+' is not a defined mode. '+str(self)+
             ' tried to use behaviors from it.')
         continue
+      # Separate the left-hand side from the right-hand side of the assignment
+      left = True
+      lhs = []
+      rhs = []
+      for element in behavior:
+        if left and element != '=':
+          lhs.append(element)
+        elif not left:
+          rhs.append(element)
+        elif element == '=':
+          left = False
+      effort_or_rate = lhs.pop()
+      #match the open and closed parentheses
+      for elements in (lhs, rhs):
+        open_parentheses = 0
+        closed_parentheses = []
+        for i, element in enumerate (elements):
+          if element == '(':
+            open_parentheses = open_parentheses + 1
+            closed_parentheses.append(open_parentheses)
+            elements[i] = str(open_parentheses) + '('
+          elif ')' == element:
+            elements [i] = str(closed_parentheses.pop()) + ')'
+
       ins = [] #The in flows and out flows (connections) to be collected here
       outs = []
       cls = getSubclass(Behavior,behavior[0])
@@ -579,6 +630,62 @@ class Flow(object):
     return changed
 Flow._subclasses['Flow'] = Flow
 
+class FlowValue(object):
+  def __init__(self,parent):
+    self.parent = parent
+  def make(parents):
+    return[FlowValue(parent) for parent in parents]
+  def setValueToEffort(flow_values):
+    for flow_value in flow_values:
+      flow_value.value = flow_value.parent.effort
+    return flow_values
+  def setValueToRate(flow_values):
+    for flow_value in flow_values:
+      flow_value.value = flow_value.parent.rate
+    return flow_values
+  def maximum(flow_values):
+    value = max([flow_value.value for flow_value in flow_values])
+    return [flow_value for flow_value in flow_values if flow_value.value == value]
+  def minimum(flow_values):
+    value = min([flow_value.value for flow_value in flow_values])
+    return [flow_value for flow_value in flow_values if flow_value.value == value]
+  def increment(flow_values):
+    for flow_value in flow_values:
+      flow_value.value = flow_value.value + 1
+    return flow_values
+  def decrement(flow_values):
+    for flow_value in flow_values:
+      flow_value.value = flow_value.value - 1
+    return flow_values
+  def inverse(flow_values):
+    for flow_value in flow_values:
+      if flow_value.value == Zero():
+        flow_value.value = Highest()
+      elif flow_value.value == Low():
+        flow_value.value = High()
+      elif flow_value.value >= High:
+        flow_value.value = Low()
+    return flow_values
+  def combine(x1,x2):
+    return
+  def setRate(lhs,rhs):
+    value = rhs[0].value
+    for flow_value in rhs[1:]:
+      if value != flow_value.value:
+        print(rhs)
+        print([flow_value.value for flow_value in rhs])
+        InconsistencyError()
+    for flow_value in lhs:
+      flow_value.parent.setRate(value)
+  def setEffort(lhs,rhs):
+    value = rhs[0].value
+    for flow_value in rhs[1:]:
+      if value != flow_value.value:
+        print(rhs)
+        print([flow_value.value for flow_value in rhs])
+        InconsistencyError()
+    for flow_value in lhs:
+      flow_value.parent.setEffort(value)
 class Model(object):
   '''Class for functional models.
 

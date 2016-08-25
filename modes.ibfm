@@ -1,12 +1,12 @@
 mode OpenCircuit
-    optional all Electrical output effort = Zero
-    optional all Electrical input rate = Zero
+    optional Electrical output effort = Zero
+    optional Electrical input rate = Zero
 mode ClosedCircuit
     Electrical output effort = Electrical input effort
     Electrical input rate = Electrical output rate
 mode ShortCircuit
     Electrical input rate = Electrical input effort * Highest
-    optional all Electrical output effort = Zero
+    optional Electrical output effort = Zero
 mode NominalVoltageSource
     Electrical output effort = Nominal
 mode LowVoltageSource
@@ -136,11 +136,10 @@ mode BlockedTransportMaterial
     Material input rate = Zero
     Energy input rate = Zero
 mode NominalBranchElectricalEnergy
-    all Electrical output effort = Electrical input effort
+    Electrical output effort = Electrical input effort
     Electrical input rate = max all Electrical output rate
 mode NominalCombineElectricalEnergy
     Electrical output effort = max Electrical input effort
     max(Electrical input effort) rate = Electrical output rate
 mode NominalExportOpticalEnergy
     OpticalEnergy input rate = OpticalEnergy input effort
-    behavior ReflectiveRate in OpticalEnergy
