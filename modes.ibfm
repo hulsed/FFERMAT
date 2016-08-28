@@ -60,7 +60,7 @@ mode NoInvertElectricalEnergy
 mode NominalElectricalToMechanicalEnergyConversion
     Heat output rate = Electrical input rate
     MechanicalEnergy output effort = Electrical input effort
-    Electrical input rate = invert MechanicalEnergy rate
+    Electrical input rate = invert MechanicalEnergy output rate
 mode ShortCircuitNoMechanicalEnergyConversion
     Electrical input rate = Electrical input effort * Highest
     Heat output rate = Electrical input rate

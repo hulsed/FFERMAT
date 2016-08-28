@@ -47,7 +47,7 @@ def getSubclass(cls,name):
 
 class State(float):
   '''Ordinal type for qualitatively representing flow values'''
-  def __new__(cls,value=None):
+  def __new__(cls,value=None,flow=None):
     '''Return a new State object.
 
     Keyword arguments:
@@ -78,10 +78,117 @@ class State(float):
         else:
           raise Exception('Undefined State value')
     return float.__new__(cls,cls.value)
+  def __init__(self,value=None,flow=None):
+    self.flow = flow
   def __repr__(self):
     return self.__class__.__qualname__
   def __str__(self):
     return self.__class__.__qualname__
+  @classmethod
+  def makeList(cls,flows):
+    return[cls(flow) for flow in flows]
+  @staticmethod
+  def getMethod(string):
+    state_class = getSubclass(State,string)
+    try:
+      state = state_class()
+      return lambda: state
+    except TypeError:
+      return None
+  @classmethod
+  def getUnaryMethod(cls,string):
+    if string == 'effort':
+      return cls.setValueToEffort
+    elif string == 'rate':
+      return cls.setValueToRate
+    elif string == 'max':
+      return cls.maximum
+    elif string == 'min':
+      return cls.minimum
+    elif string == '++':
+      return cls.increment
+    elif string == '--':
+      return cls.decrement
+    elif string == 'inverse':
+      return cls.inverse
+    else:
+      return None
+  @classmethod
+  def getSetMethod(cls,string):
+    if string == 'effort':
+      return cls.setEffort
+    elif string == 'rate':
+      return cls.setRate
+  @staticmethod
+  def setValueToEffort(flow_values):
+    for flow_value in flow_values:
+      flow_value.value = flow_value.parent.effort
+    return flow_values
+  @staticmethod
+  def setValueToRate(flow_values):
+    for flow_value in flow_values:
+      flow_value.value = flow_value.parent.rate
+    return flow_values
+  @staticmethod
+  def maximum(flow_values):
+    value = max([flow_value.value for flow_value in flow_values])
+    return [flow_value for flow_value in flow_values if flow_value.value == value]
+  @staticmethod
+  def minimum(flow_values):
+    value = min([flow_value.value for flow_value in flow_values])
+    return [flow_value for flow_value in flow_values if flow_value.value == value]
+  @staticmethod
+  def increment(flow_values):
+    for flow_value in flow_values:
+      flow_value.value = State(flow_value.value + 1)
+    return flow_values
+  @staticmethod
+  def decrement(flow_values):
+    for flow_value in flow_values:
+      flow_value.value = State(flow_value.value - 1)
+    return flow_values
+  @staticmethod
+  def inverse(flow_values):
+    for flow_value in flow_values:
+      if flow_value.value == Zero():
+        flow_value.value = Highest()
+      elif flow_value.value == Low():
+        flow_value.value = High()
+      elif flow_value.value >= High:
+        flow_value.value = Low()
+    return flow_values
+  @staticmethod
+  def combine(x1,x2):
+    return x1+x2
+  @staticmethod
+  def times(x1,x2):
+    if len(x1) == 1:
+      return sca
+  @staticmethod
+  def scalarTimes(flow_values,scalar):
+    for flow_value in flow_values:
+      flow_value.value = flow_value.value * scalar
+    return flow_values
+  @staticmethod
+  def setRate(lhs,rhs):
+    value = rhs[0].value
+    for flow_value in rhs[1:]:
+      if value != flow_value.value:
+        print(rhs)
+        print([flow_value.value for flow_value in rhs])
+        InconsistencyError()
+    for flow_value in lhs:
+      flow_value.parent.setRate(value)
+  @staticmethod
+  def setEffort(lhs,rhs):
+    value = rhs[0].value
+    for flow_value in rhs[1:]:
+      if value != flow_value.value:
+        print(rhs)
+        print([flow_value.value for flow_value in rhs])
+        InconsistencyError()
+    for flow_value in lhs:
+      flow_value.parent.setEffort(value)
 
 #############################  States  #######################################
 class Negative(State):
@@ -183,33 +290,37 @@ class Mode(object):
     Used by dictionaries in NetworkX.
     '''
     return self.__class__ == other.__class__ and self.health == other.health
-  def restack(self,x):
-    keywords = ['min', 'max', 'invert', '--', '++']
+  def stack(self,x):
+    # Check if done
+    if len(x) == 1:
+      if callable(x[0]):
+        return x[0]
+      else:
+        Exception('Unexpected: '+str(x[0])+' in '+self.__class__.__name__)
+    # Stack Unary Operators from both ends
     for i in [-1,0]:
-      if x[i] in keywords:
-        y = x.pop(i)
+      f = State.getUnaryMethod(x[i])
+      if f:
+        x.pop(i)
+        g = stack(x)
+        return lambda: f(g())
+    # Collapse parentheses
+    count = 0
+    for i,element in enumerate(x):
+      if element == '(':
+        count = count + 1
+        if count == 1:
+          i1 = i
+      elif element == ')':
+        count = count - 1
+        if count == 0:
+          return self.stack(x[:i1]+[self.stack(x[i1+1:i])]+x[i+1:])
+    if count:
+      Exception('Mismatched parenthesis in ' + self.__class__.__name__)
+    # Stack binary operators
 
-    elif x[0] in keywords:
-      y = [x.pop(0)]
-    elif x[-1] == ')':
-      #Find the matching parenthesis
-      i = -1
-      count = 0
-      while True:
-        i = i-1
-        try:
-          if x[i] == ')':
-            count = count + 1
-          elif x[i] == '(':
-            if count == 0:
-
-            count = count - 1
-
-        except IndexError:
-          print('Mismatched parenthesis in ' + self.__class__.__name__)
-          raise
   def behaviors(self,mode=None):
-    '''Yield Behavior objects specified in self.__class__._behaviors.
+    '''Yield Behavior methods.
 
     Runs recursively (but in a different subclass) when using the 'import'
     keyword.
@@ -229,35 +340,52 @@ class Mode(object):
           raise Exception(behavior[1]+' is not a defined mode. '+str(self)+
             ' tried to use behaviors from it.')
         continue
-      # Replace strings with flow objects
+      # Replace strings with flow and state object methods
+      with_flows = []
+      flow_class = None
+      flow = None
       for element in behavior:
-
-      # Separate the left-hand side from the right-hand side of the assignment
-      assignment = behavior.index('=')
-      lhs = behavior[:assignment]
-      rhs = behavior[assignment+1:]
-      effort_or_rate = lhs.pop()
-      #match the open and closed parentheses
-
-      ins = [] #The in flows and out flows (connections) to be collected here
-      outs = []
-      cls = getSubclass(Behavior,behavior[0])
-      if not cls:
-        raise Exception(behavior[0]+' is not a defined behavior.')
-      try:
-        for word in behavior[1:]:
-          if word.lower() in 'inout':
-            entry = word.lower()
-          elif entry == 'in':
-            ins.extend(self.in_flow[Flow._subclasses[word]])
-          elif entry == 'out':
-            outs.extend(self.out_flow[Flow._subclasses[word]])
+        if flow_class:
+          try:
+            if element == 'input':
+              flow = self.in_flow[flow_class]
+            elif element == 'output':
+              flow = self.out_flow[flow_class]
+            else:
+              Exception('Expected "input" or "output" following '+
+              flow_class.__name__+' in '+str(self)+' mode definition.')
+            flow_class = None
+          except KeyError:
+            if not optional:
+              raise
+        elif flow:
+          flow_value = State.makeList(flow)
+          flow = None
+          if element == 'effort':
+            f = lambda: State.setValueToEffort(flow_value)
+          elif element == 'rate':
+            f = lambda: State.setValueToRate(flow_value)
           else:
-            raise Exception('Looking for keywords in or out, found: '+word)
-        yield cls(ins,outs)
-      except KeyError:
-        if not optional:
-          raise
+            Exception('Expected "effort" or "rate" following the input/output of '+
+              flow_class.__name__+' in '+str(self)+' mode definition.')
+            with_flows.append(f)
+        else:
+          f = State.getMethod(element)
+          if f:
+            with_flows.append(f)
+          else:
+            flow_class = Flow._subclasses.get(element)
+            if not flow_class:
+              with_flows.append(element)
+      # Separate the left-hand side from the right-hand side of the assignment
+      assignment = with_flows.index('=')
+      lhs = with_flows[:assignment]
+      rhs = with_flows[assignment+1:]
+      # Get value setter method
+      setMethod = State.getSetMethod(lhs.pop())
+      lhs = self.stack(lhs)
+      rhs = self.stack(rhs)
+      yield lambda: setMethod(lhs(),rhs())
 
   def textBehaviors(self,mode=None):
     if mode == None:
@@ -563,15 +691,10 @@ class Function(object):
 
     for behavior in self.behavior_graph.successors_iter(self.mode):
       try:
-        behavior.apply()
+        behavior()
       except:
         print(self)
         print(self.mode)
-        print(behavior)
-        for flow in behavior.in_flows:
-          print('in_flow '+str(flow)+' effort '+str(flow.effort))
-        for flow in behavior.out_flows:
-          print('out_flow '+str(flow)+' rate '+str(flow.rate))
         raise
     return minimum_timer
 
@@ -616,86 +739,6 @@ class Flow(object):
     return changed
 Flow._subclasses['Flow'] = Flow
 
-class FlowValue(object):
-  def __init__(self,parent):
-    self.parent = parent
-  def make(parents):
-    return[FlowValue(parent) for parent in parents]
-  def getUnaryMethod(string):
-    if string == 'effort':
-      return setValueToEffort
-    elif string == 'rate':
-      return setValueToRate
-    elif string == 'max':
-      return maximum
-    elif string == 'min':
-      return minimum
-    elif string == '++':
-      return increment
-    elif string == '--':
-      return decrement
-    elif string == 'inverse':
-      return inverse
-  def getSetMethod(string):
-    if string == 'effort':
-      return setEffort
-    elif string == 'rate':
-      return setRate
-  def setValueToEffort(flow_values):
-    for flow_value in flow_values:
-      flow_value.value = flow_value.parent.effort
-    return flow_values
-  def setValueToRate(flow_values):
-    for flow_value in flow_values:
-      flow_value.value = flow_value.parent.rate
-    return flow_values
-  def maximum(flow_values):
-    value = max([flow_value.value for flow_value in flow_values])
-    return [flow_value for flow_value in flow_values if flow_value.value == value]
-  def minimum(flow_values):
-    value = min([flow_value.value for flow_value in flow_values])
-    return [flow_value for flow_value in flow_values if flow_value.value == value]
-  def increment(flow_values):
-    for flow_value in flow_values:
-      flow_value.value = flow_value.value + 1
-    return flow_values
-  def decrement(flow_values):
-    for flow_value in flow_values:
-      flow_value.value = flow_value.value - 1
-    return flow_values
-  def inverse(flow_values):
-    for flow_value in flow_values:
-      if flow_value.value == Zero():
-        flow_value.value = Highest()
-      elif flow_value.value == Low():
-        flow_value.value = High()
-      elif flow_value.value >= High:
-        flow_value.value = Low()
-    return flow_values
-  def combine(x1,x2):
-    return x1.extend(x2)
-  def scalarTimes(flow_values,scalar):
-    for flow_value in flow_values:
-      flow_value.value = flow_value.value * scalar
-    return flow_values
-  def setRate(lhs,rhs):
-    value = rhs[0].value
-    for flow_value in rhs[1:]:
-      if value != flow_value.value:
-        print(rhs)
-        print([flow_value.value for flow_value in rhs])
-        InconsistencyError()
-    for flow_value in lhs:
-      flow_value.parent.setRate(value)
-  def setEffort(lhs,rhs):
-    value = rhs[0].value
-    for flow_value in rhs[1:]:
-      if value != flow_value.value:
-        print(rhs)
-        print([flow_value.value for flow_value in rhs])
-        InconsistencyError()
-    for flow_value in lhs:
-      flow_value.parent.setEffort(value)
 class Model(object):
   '''Class for functional models.
 
