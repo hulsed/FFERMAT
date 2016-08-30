@@ -120,43 +120,35 @@ class State(float):
     elif string == 'rate':
       return cls.setRate
   @staticmethod
-  def setValueToEffort(flow_values):
-    for flow_value in flow_values:
-      flow_value.value = flow_value.parent.effort
-    return flow_values
+  def setValueToEffort(states):
+    return [State(state.flow.effort,state.flow) for state in states]
   @staticmethod
-  def setValueToRate(flow_values):
-    for flow_value in flow_values:
-      flow_value.value = flow_value.parent.rate
-    return flow_values
+  def setValueToRate(states):
+    return [State(state.flow.rate,state.flow) for state in states]
   @staticmethod
-  def maximum(flow_values):
-    value = max([flow_value.value for flow_value in flow_values])
-    return [flow_value for flow_value in flow_values if flow_value.value == value]
+  def maximum(states):
+    value = max(states)
+    return [state for state in states if state == value]
   @staticmethod
-  def minimum(flow_values):
-    value = min([flow_value.value for flow_value in flow_values])
-    return [flow_value for flow_value in flow_values if flow_value.value == value]
+  def minimum(states):
+    value = min(states)
+    return [state for state in states if state == value]
   @staticmethod
-  def increment(flow_values):
-    for flow_value in flow_values:
-      flow_value.value = State(flow_value.value + 1)
-    return flow_values
+  def increment(states):
+    return [State(state+1,state.flow) for state in states]
   @staticmethod
-  def decrement(flow_values):
-    for flow_value in flow_values:
-      flow_value.value = State(flow_value.value - 1)
-    return flow_values
+  def decrement(states):
+    return [State(state-1,state.flow) for state in states]
   @staticmethod
-  def inverse(flow_values):
-    for flow_value in flow_values:
-      if flow_value.value == Zero():
-        flow_value.value = Highest()
-      elif flow_value.value == Low():
-        flow_value.value = High()
-      elif flow_value.value >= High:
-        flow_value.value = Low()
-    return flow_values
+  def inverse(states):
+    for i,state in enumerate(states):
+      if state == Zero():
+        states[i] = Highest(flow = state.flow)
+      elif state == Low():
+        states[i] = High(flow = state.flow)
+      elif state >= High:
+        states[i] = Low(flow = state.flow)
+    return states
   @staticmethod
   def combine(x1,x2):
     return x1+x2
@@ -165,30 +157,30 @@ class State(float):
     if len(x1) == 1:
       return sca
   @staticmethod
-  def scalarTimes(flow_values,scalar):
-    for flow_value in flow_values:
-      flow_value.value = flow_value.value * scalar
-    return flow_values
+  def scalarTimes(states,scalar):
+    for state in states:
+      state.value = state.value * scalar
+    return states
   @staticmethod
   def setRate(lhs,rhs):
-    value = rhs[0].value
-    for flow_value in rhs[1:]:
-      if value != flow_value.value:
+    value = rhs[0]
+    for state in rhs[1:]:
+      if value != state:
         print(rhs)
-        print([flow_value.value for flow_value in rhs])
+        print([state for state in rhs])
         InconsistencyError()
-    for flow_value in lhs:
-      flow_value.parent.setRate(value)
+    for state in lhs:
+      state.flow.setRate(value)
   @staticmethod
   def setEffort(lhs,rhs):
-    value = rhs[0].value
-    for flow_value in rhs[1:]:
-      if value != flow_value.value:
+    value = rhs[0]
+    for state in rhs[1:]:
+      if value != state:
         print(rhs)
-        print([flow_value.value for flow_value in rhs])
+        print([state for state in rhs])
         InconsistencyError()
-    for flow_value in lhs:
-      flow_value.parent.setEffort(value)
+    for state in lhs:
+      state.flow.setEffort(value)
 
 #############################  States  #######################################
 class Negative(State):
@@ -304,7 +296,7 @@ class Mode(object):
         x.pop(i)
         g = stack(x)
         return lambda: f(g())
-    # Collapse parentheses
+    # Collapse flowheses
     count = 0
     for i,element in enumerate(x):
       if element == '(':
@@ -316,7 +308,7 @@ class Mode(object):
         if count == 0:
           return self.stack(x[:i1]+[self.stack(x[i1+1:i])]+x[i+1:])
     if count:
-      Exception('Mismatched parenthesis in ' + self.__class__.__name__)
+      Exception('Mismatched flowhesis in ' + self.__class__.__name__)
     # Stack binary operators
 
   def behaviors(self,mode=None):
@@ -359,12 +351,12 @@ class Mode(object):
             if not optional:
               raise
         elif flow:
-          flow_value = State.makeList(flow)
+          state = State.makeList(flow)
           flow = None
           if element == 'effort':
-            f = lambda: State.setValueToEffort(flow_value)
+            f = lambda: State.setValueToEffort(state)
           elif element == 'rate':
-            f = lambda: State.setValueToRate(flow_value)
+            f = lambda: State.setValueToRate(state)
           else:
             Exception('Expected "effort" or "rate" following the input/output of '+
               flow_class.__name__+' in '+str(self)+' mode definition.')
