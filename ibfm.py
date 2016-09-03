@@ -99,20 +99,42 @@ class State(float):
   def getUnaryMethod(cls,string):
     if string == 'effort':
       return cls.setValueToEffort
-    elif string == 'rate':
+    if string == 'rate':
       return cls.setValueToRate
-    elif string == 'max':
+    if string == 'max':
       return cls.maximum
-    elif string == 'min':
+    if string == 'min':
       return cls.minimum
-    elif string == '++':
+    if string == '++':
       return cls.increment
-    elif string == '--':
+    if string == '--':
       return cls.decrement
-    elif string == 'inverse':
+    if string == 'inverse':
       return cls.inverse
-    else:
-      return None
+    if string == 'any':
+      return cls.any
+    if string == 'all':
+      return cls.all
+    return None
+  @classmethod
+  def getBinaryMethod(cls,string):
+    if string == ',':
+      return cls.combine
+    if string == '*':
+      return cls.times
+    if string == '==':
+      return cls.eq
+    if string == '!=':
+      return cls.neq
+    if string == '>=':
+      return cls.geq
+    if string == '<=':
+      return cls.leq
+    if string == '<':
+      return cls.lt
+    if string == '>':
+      return cls.gt
+    return None
   @classmethod
   def getSetMethod(cls,string):
     if string == 'effort':
@@ -150,17 +172,85 @@ class State(float):
         states[i] = Low(flow = state.flow)
     return states
   @staticmethod
+  def any(tested):
+    return [any(tested)]
+  @staticmethod
+  def all(tested):
+    return [all(tested)]
+  @staticmethod
   def combine(x1,x2):
     return x1+x2
   @staticmethod
-  def times(x1,x2):
-    if len(x1) == 1:
-      return sca
+  def times(x1s,x2s):
+    if len(x1s) == 1:
+      if x1s[0].flow == None:
+        return [State(x1s[0]*x2,x2.flow) for x2 in x2s]
+      if all([x2.flow == None for x2 in x2s]):
+        return [State(x1s[0]*x2,x1s[0].flow) for x2 in x2s]
+      return [State(x1s[0]*x2) for x2 in x2s]
+    if len(x2s) == 1:
+      if x2s[0].flow == None:
+        return [State(x2s[0]*x1,x1.flow) for x1 in x1s]
+      if all([x1.flow == None for x1 in x1s]):
+        return [State(x2s[0]*x1,x2s[0].flow) for x1 in x1s]
+      return [State(x2s[0]*x1) for x1 in x1s]
+    if len(x1s) == len(x2s):
+      return [State(x1*x2) for x1,x2 in zip(x1s, x2s)]
+    Exception('Unforseen multiplication case!')
   @staticmethod
-  def scalarTimes(states,scalar):
-    for state in states:
-      state.value = state.value * scalar
-    return states
+  def eq(x1s,x2s):
+    if len(x2s) == 1:
+      return [x2s[0] == x1 for x1 in x1s]
+    if len(x1s) == 1:
+      return [x1s[0] == x2 for x2 in x2s]
+    if len(x1s) == len(x2s):
+      return [x1 == x2 for x1,x2 in zip(x1s,x2s)]
+    Exception('Unforseen eq case')
+  @staticmethod
+  def neq(x1s,x2s):
+    if len(x2s) == 1:
+      return [x2s[0] != x1 for x1 in x1s]
+    if len(x1s) == 1:
+      return [x1s[0] != x2 for x2 in x2s]
+    if len(x1s) == len(x2s):
+      return [x1 != x2 for x1,x2 in zip(x1s,x2s)]
+    Exception('Unforseen neq case')
+  @staticmethod
+  def geq(x1s,x2s):
+    if len(x2s) == 1:
+      return [x2s[0] >= x1 for x1 in x1s]
+    if len(x1s) == 1:
+      return [x1s[0] >= x2 for x2 in x2s]
+    if len(x1s) == len(x2s):
+      return [x1 >= x2 for x1,x2 in zip(x1s,x2s)]
+    Exception('Unforseen geq case')
+  @staticmethod
+  def leq(x1s,x2s):
+    if len(x2s) == 1:
+      return [x2s[0] <= x1 for x1 in x1s]
+    if len(x1s) == 1:
+      return [x1s[0] <= x2 for x2 in x2s]
+    if len(x1s) == len(x2s):
+      return [x1 <= x2 for x1,x2 in zip(x1s,x2s)]
+    Exception('Unforseen leq case')
+  @staticmethod
+  def gt(x1s,x2s):
+    if len(x2s) == 1:
+      return [x2s[0] > x1 for x1 in x1s]
+    if len(x1s) == 1:
+      return [x1s[0] > x2 for x2 in x2s]
+    if len(x1s) == len(x2s):
+      return [x1 > x2 for x1,x2 in zip(x1s,x2s)]
+    Exception('Unforseen gt case')
+  @staticmethod
+  def lt(x1s,x2s):
+    if len(x2s) == 1:
+      return [x2s[0] < x1 for x1 in x1s]
+    if len(x1s) == 1:
+      return [x1s[0] < x2 for x2 in x2s]
+    if len(x1s) == len(x2s):
+      return [x1 < x2 for x1,x2 in zip(x1s,x2s)]
+    Exception('Unforseen lt case')
   @staticmethod
   def setRate(lhs,rhs):
     value = rhs[0]
@@ -195,48 +285,6 @@ class High(State):
   value = 3
 class Highest(State):
   value = 4
-
-class Behavior(object):
-  '''Abstract class for flow-independent behavior application and testing.
-
-  Required methods:
-  apply(self) -- Assign states to flows using self.in_flow.setRate(state) and
-                 self.out_flow.setEffort(state). Used by modes.
-  test(self) -- Return boolean indicating presence of behavior. Used by
-                conditions.
-  '''
-  def __init__(self,in_flow=[],out_flow=[]):
-    '''Return a Behavior object.
-
-    Required arguments:
-    in_flow and/or out_flow -- Flow objects to test states of and apply states
-                               to. Args may be single flows or lists of flows.
-                               The flows implicitly decide the flow types of
-                               the behavior.
-    '''
-    try:
-      self.in_flow = in_flow[0]
-      self.in_flows = in_flow
-    except (TypeError,IndexError):
-      self.in_flow = in_flow
-    try:
-      self.out_flow = out_flow[0]
-      self.out_flows = out_flow
-    except (TypeError,IndexError):
-      self.out_flow = out_flow
-  def __hash__(self):
-    '''Return hash to identify unique Behavior objects.
-
-    Used by dictionaries in NetworkX.
-    '''
-    return hash((self.__class__,id(self.in_flow),id(self.out_flow)))
-  def __eq__(self,other):
-    '''Return boolean to identify unique Behavior objects.
-
-    Used by dictionaries in NetworkX.
-    '''
-    return (self.__class__ == other.__class__ and self.in_flow is other.in_flow
-            and self.out_flow is other.out_flow)
 
 class ModeHealth(object):
   pass
@@ -294,7 +342,7 @@ class Mode(object):
       f = State.getUnaryMethod(x[i])
       if f:
         x.pop(i)
-        g = stack(x)
+        g = self.stack(x)
         return lambda: f(g())
     # Collapse flowheses
     count = 0
@@ -310,6 +358,12 @@ class Mode(object):
     if count:
       Exception('Mismatched flowhesis in ' + self.__class__.__name__)
     # Stack binary operators
+    for i in [-2,1]:
+      f = State.getBinaryMethod(x[i])
+      if f:
+        g = self.stack(x[:i])
+        h = self.stack(x[i+1:])
+        return lambda: f(g(),h())
 
   def behaviors(self,mode=None):
     '''Yield Behavior methods.
@@ -1296,6 +1350,6 @@ for function in Function._subclasses:
   functions[function] = [(mode[2],mode[1]) for mode in Function._subclasses[function]._modes]
 
 '''Create a dictionary of all defined modes'''
-modes = {}
-for mode in Mode._subclasses:
-    modes[mode] = [m for m in Mode._subclasses[mode].textBehaviors(Mode._subclasses[mode])]
+#modes = {}
+#for mode in Mode._subclasses:
+#    modes[mode] = [m for m in Mode._subclasses[mode].textBehaviors(Mode._subclasses[mode])]
