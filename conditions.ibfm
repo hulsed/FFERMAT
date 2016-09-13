@@ -7,7 +7,7 @@ condition NonZeroVoltage
 condition HighestCurrent
     Electrical output rate > High
 condition LowVoltage
-    Electrical input effort < Nominal and Electrical input effort > Zero
+    (Electrical input effort < Nominal) and (Electrical input effort > Zero)
 condition HighVoltage
     Electrical input effort > Nominal
 condition AnyHighestCurrent

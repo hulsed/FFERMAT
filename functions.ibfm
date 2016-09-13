@@ -16,8 +16,8 @@ function ImportBinarySignal
     mode 2 Failed ZeroSignalSource
 function ExportHeatEnergy
     mode 1 Operational HeatSink
-    mode 2 Degraded InsulatedHeatSink
-    mode 3 Failed NoHeatSink
+    mode 2 Degraded HotHeatSink
+    mode 3 Failed HottestHeatSink
 function ImportMaterial
     mode 1 Operational NominalMaterialSource
     mode 2 Failed NoMaterialSource

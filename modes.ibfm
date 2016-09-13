@@ -35,8 +35,8 @@ mode NoMaterialSink
     Material input rate = Zero
 mode NominalChemicalToElectricalEnergyConversion
     Heat output rate = Electrical output rate
-    Electrical output effort = Chemical input effort
-    Chemical input rate = Electrical output rate
+    Electrical output effort = ChemicalEnergy input effort
+    ChemicalEnergy input rate = Electrical output rate
 mode InefficientChemicalToElectricalEnergyConversion
     Heat output rate = Electrical output rate ++
     Electrical output effort = ChemicalEnergy input effort

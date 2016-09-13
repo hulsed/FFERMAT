@@ -23,6 +23,8 @@ import pickle
 
 class InconsistencyError(Exception):
   pass
+class ModelError(Exception):
+  pass
 
 def resetClock():
   '''Reset the global clock variable to zero for a new simulation.'''
@@ -84,15 +86,12 @@ class State(float):
     return self.__class__.__qualname__
   def __str__(self):
     return self.__class__.__qualname__
-  @classmethod
-  def makeList(cls,flows):
-    return[cls(flow) for flow in flows]
   @staticmethod
   def getMethod(string):
     state_class = getSubclass(State,string)
     try:
       state = state_class()
-      return lambda: state
+      return lambda: [state]
     except TypeError:
       return None
   @classmethod
@@ -102,38 +101,44 @@ class State(float):
     if string == 'rate':
       return cls.setValueToRate
     if string == 'max':
-      return cls.maximum
+      return cls._max
     if string == 'min':
-      return cls.minimum
+      return cls._min
     if string == '++':
-      return cls.increment
+      return cls._increment
     if string == '--':
-      return cls.decrement
-    if string == 'inverse':
-      return cls.inverse
+      return cls._decrement
+    if string == 'invert':
+      return cls._inverse
     if string == 'any':
-      return cls.any
+      return cls._any
     if string == 'all':
-      return cls.all
+      return cls._all
+    if string == 'not':
+      return cls._not
     return None
   @classmethod
   def getBinaryMethod(cls,string):
     if string == ',':
-      return cls.combine
+      return cls._combine
     if string == '*':
-      return cls.times
+      return cls._times
     if string == '==':
-      return cls.eq
+      return cls._eq
     if string == '!=':
-      return cls.neq
+      return cls._neq
     if string == '>=':
-      return cls.geq
+      return cls._geq
     if string == '<=':
-      return cls.leq
+      return cls._leq
     if string == '<':
-      return cls.lt
+      return cls._lt
     if string == '>':
-      return cls.gt
+      return cls._gt
+    if string == 'and':
+      return cls._and
+    if string == 'or':
+      return cls._or
     return None
   @classmethod
   def getSetMethod(cls,string):
@@ -148,40 +153,43 @@ class State(float):
   def setValueToRate(states):
     return [State(state.flow.rate,state.flow) for state in states]
   @staticmethod
-  def maximum(states):
+  def _max(states):
     value = max(states)
     return [state for state in states if state == value]
   @staticmethod
-  def minimum(states):
+  def _min(states):
     value = min(states)
     return [state for state in states if state == value]
   @staticmethod
-  def increment(states):
+  def _increment(states):
     return [State(state+1,state.flow) for state in states]
   @staticmethod
-  def decrement(states):
+  def _decrement(states):
     return [State(state-1,state.flow) for state in states]
   @staticmethod
-  def inverse(states):
+  def _inverse(states):
     for i,state in enumerate(states):
       if state == Zero():
         states[i] = Highest(flow = state.flow)
       elif state == Low():
         states[i] = High(flow = state.flow)
-      elif state >= High:
+      elif state >= High():
         states[i] = Low(flow = state.flow)
     return states
   @staticmethod
-  def any(tested):
-    return [any(tested)]
+  def _any(x):
+    return [any(x)]
   @staticmethod
-  def all(tested):
-    return [all(tested)]
+  def _all(x):
+    return [all(x)]
   @staticmethod
-  def combine(x1,x2):
+  def _not(xs):
+    return [not x for x in xs]
+  @staticmethod
+  def _combine(x1,x2):
     return x1+x2
   @staticmethod
-  def times(x1s,x2s):
+  def _times(x1s,x2s):
     if len(x1s) == 1:
       if x1s[0].flow == None:
         return [State(x1s[0]*x2,x2.flow) for x2 in x2s]
@@ -196,61 +204,79 @@ class State(float):
       return [State(x2s[0]*x1) for x1 in x1s]
     if len(x1s) == len(x2s):
       return [State(x1*x2) for x1,x2 in zip(x1s, x2s)]
-    Exception('Unforseen multiplication case!')
+    raise Exception('Unforseen multiplication case!')
   @staticmethod
-  def eq(x1s,x2s):
+  def _eq(x1s,x2s):
     if len(x2s) == 1:
       return [x2s[0] == x1 for x1 in x1s]
     if len(x1s) == 1:
       return [x1s[0] == x2 for x2 in x2s]
     if len(x1s) == len(x2s):
       return [x1 == x2 for x1,x2 in zip(x1s,x2s)]
-    Exception('Unforseen eq case')
+    raise Exception('Unforseen eq case')
   @staticmethod
-  def neq(x1s,x2s):
+  def _neq(x1s,x2s):
     if len(x2s) == 1:
       return [x2s[0] != x1 for x1 in x1s]
     if len(x1s) == 1:
       return [x1s[0] != x2 for x2 in x2s]
     if len(x1s) == len(x2s):
       return [x1 != x2 for x1,x2 in zip(x1s,x2s)]
-    Exception('Unforseen neq case')
+    raise Exception('Unforseen neq case')
   @staticmethod
-  def geq(x1s,x2s):
+  def _geq(x1s,x2s):
     if len(x2s) == 1:
-      return [x2s[0] >= x1 for x1 in x1s]
+      return [x1 >= x2s[0] for x1 in x1s]
     if len(x1s) == 1:
       return [x1s[0] >= x2 for x2 in x2s]
     if len(x1s) == len(x2s):
       return [x1 >= x2 for x1,x2 in zip(x1s,x2s)]
-    Exception('Unforseen geq case')
+    raise Exception('Unforseen geq case')
   @staticmethod
-  def leq(x1s,x2s):
+  def _leq(x1s,x2s):
     if len(x2s) == 1:
-      return [x2s[0] <= x1 for x1 in x1s]
+      return [x1 <= x2s[0] for x1 in x1s]
     if len(x1s) == 1:
       return [x1s[0] <= x2 for x2 in x2s]
     if len(x1s) == len(x2s):
       return [x1 <= x2 for x1,x2 in zip(x1s,x2s)]
-    Exception('Unforseen leq case')
+    raise Exception('Unforseen leq case')
   @staticmethod
-  def gt(x1s,x2s):
+  def _gt(x1s,x2s):
     if len(x2s) == 1:
-      return [x2s[0] > x1 for x1 in x1s]
+      return [x1 > x2s[0] for x1 in x1s]
     if len(x1s) == 1:
       return [x1s[0] > x2 for x2 in x2s]
     if len(x1s) == len(x2s):
       return [x1 > x2 for x1,x2 in zip(x1s,x2s)]
-    Exception('Unforseen gt case')
+    raise Exception('Unforseen gt case')
   @staticmethod
-  def lt(x1s,x2s):
+  def _lt(x1s,x2s):
     if len(x2s) == 1:
-      return [x2s[0] < x1 for x1 in x1s]
+      return [x1 < x2s[0] for x1 in x1s]
     if len(x1s) == 1:
       return [x1s[0] < x2 for x2 in x2s]
     if len(x1s) == len(x2s):
       return [x1 < x2 for x1,x2 in zip(x1s,x2s)]
-    Exception('Unforseen lt case')
+    raise Exception('Unforseen lt case')
+  @staticmethod
+  def _and(x1s,x2s):
+    if len(x2s) == 1:
+      return [x1 and x2s[0] for x1 in x1s]
+    if len(x1s) == 1:
+      return [x1s[0] and x2 for x2 in x2s]
+    if len(x1s) == len(x2s):
+      return [x1 and x2 for x1,x2 in zip(x1s,x2s)]
+    raise Exception('Unforseen and case')
+  @staticmethod
+  def _or(x1s,x2s):
+    if len(x2s) == 1:
+      return [x1 or x2s[0] for x1 in x1s]
+    if len(x1s) == 1:
+      return [x1s[0] or x2 for x2 in x2s]
+    if len(x1s) == len(x2s):
+      return [x1 or x2 for x1,x2 in zip(x1s,x2s)]
+    raise Exception('Unforseen or case')
   @staticmethod
   def setRate(lhs,rhs):
     value = rhs[0]
@@ -258,7 +284,7 @@ class State(float):
       if value != state:
         print(rhs)
         print([state for state in rhs])
-        InconsistencyError()
+        raise InconsistencyError()
     for state in lhs:
       state.flow.setRate(value)
   @staticmethod
@@ -268,7 +294,7 @@ class State(float):
       if value != state:
         print(rhs)
         print([state for state in rhs])
-        InconsistencyError()
+        raise InconsistencyError()
     for state in lhs:
       state.flow.setEffort(value)
 
@@ -295,7 +321,101 @@ class Degraded(ModeHealth):
 class Failed(ModeHealth):
   pass
 
-class Mode(object):
+class ModeConditionParent(object):
+  def stack(self,x):
+    # Check if done
+    if len(x) == 1:
+      if callable(x[0]):
+        return x[0]
+      else:
+        raise Exception('Unexpected: '+str(x[0])+' in '+self.__class__.__name__)
+    # Collapse parentheses
+    count = 0
+    for i,element in enumerate(x):
+      if element == '(':
+        count = count + 1
+        if count == 1:
+          i1 = i
+      elif element == ')':
+        count = count - 1
+        if count == 0:
+          return self.stack(x[:i1]+[self.stack(x[i1+1:i])]+x[i+1:])
+    if count:
+      raise Exception('Mismatched parenthesis in ' + self.__class__.__name__)
+    # Stack Unary Operators from both ends
+    for i in [-1,0]:
+      f = State.getUnaryMethod(x[i])
+      if f:
+        x.pop(i)
+        g = self.stack(x)
+        if not callable(g):
+          raise Exception('Unforseen stack case: '+str(x))
+        return self.getLambda(f,g)
+    # Stack binary operators
+    for i in [-2,1]:
+      f = State.getBinaryMethod(x[i])
+      if f:
+        g = self.stack(x[:i])
+        h = self.stack(x[i+1:])
+        return self.getLambda(f,g,h)
+    raise Exception('Unforseen stack case: '+str(x))
+  def getLambda(self,f=None,g=None,h=None,arg=None):
+    if arg:
+      if f:
+        return lambda: f(arg)
+      else:
+        return lambda: arg
+    if h:
+      return lambda: f(g(),h())
+    if g:
+      return lambda: f(g())
+    raise Exception('Unforseen getLambda')
+  def flowAndStateMethods(self,behavior,optional=False):
+    # Replace strings with flow and state object methods
+    with_methods = []
+    flow_class = None
+    flow = None
+    for element in behavior:
+      if flow_class:
+        if element == 'input':
+          flow = self.in_flow[flow_class]
+        elif element == 'output':
+          flow = self.out_flow[flow_class]
+        else:
+          raise Exception('Expected "input" or "output" following '+
+          flow_class.__name__+' in '+str(self)+' '+
+          self.__class__.__name__+' definition.')
+        if flow == None:
+          raise ModelError('Expected '+flow_class.__name__+' '+element+' in '+
+            self.function.name)
+        flow_class = None
+      elif flow:
+        if element == 'effort':
+          f = self.getLambda(f=State.setValueToEffort,arg=flow)
+        elif element == 'rate':
+          f = self.getLambda(f=State.setValueToRate,arg=flow)
+        else:
+          raise Exception('Expected "effort" or "rate" following the input/output of '+
+            flow_class.__name__+' in '+str(self)+' '+
+            self.__class__.__name__+' definition.')
+        with_methods.append(f)
+        flow = None
+      else:
+        f = State.getMethod(element)
+        if f:
+          with_methods.append(f)
+        else:
+          flow_class = Flow._subclasses.get(element)
+          if not flow_class:
+            if element in ['input','output']:
+              raise Exception(element+' not following flow type in '+str(self)+
+              ' '+self.__class__.__name__+' definition.')
+            with_methods.append(element)
+    if flow:
+      with_methods.append(self.getLambda(arg=flow))
+    return with_methods
+
+class Mode(ModeConditionParent):
   '''Abstract class for operational modes that functions may use.
 
   Required methods:
@@ -312,6 +432,7 @@ class Mode(object):
               represented by the mode.
     '''
     self.name = name
+    self.function = function
     self.out_flow = function.out_flow
     self.in_flow = function.in_flow
     self.health = health
@@ -330,41 +451,10 @@ class Mode(object):
     Used by dictionaries in NetworkX.
     '''
     return self.__class__ == other.__class__ and self.health == other.health
-  def stack(self,x):
-    # Check if done
-    if len(x) == 1:
-      if callable(x[0]):
-        return x[0]
-      else:
-        Exception('Unexpected: '+str(x[0])+' in '+self.__class__.__name__)
-    # Stack Unary Operators from both ends
-    for i in [-1,0]:
-      f = State.getUnaryMethod(x[i])
-      if f:
-        x.pop(i)
-        g = self.stack(x)
-        return lambda: f(g())
-    # Collapse flowheses
-    count = 0
-    for i,element in enumerate(x):
-      if element == '(':
-        count = count + 1
-        if count == 1:
-          i1 = i
-      elif element == ')':
-        count = count - 1
-        if count == 0:
-          return self.stack(x[:i1]+[self.stack(x[i1+1:i])]+x[i+1:])
-    if count:
-      Exception('Mismatched flowhesis in ' + self.__class__.__name__)
-    # Stack binary operators
-    for i in [-2,1]:
-      f = State.getBinaryMethod(x[i])
-      if f:
-        g = self.stack(x[:i])
-        h = self.stack(x[i+1:])
-        return lambda: f(g(),h())
-
+  def createSetMethod(self,setMethod,lhs,rhs):
+    if not callable(lhs) or not callable(rhs) or not callable(setMethod):
+      raise Exception('Bad creatSetMethod call')
+    return lambda: setMethod(lhs(),rhs())
   def behaviors(self,mode=None):
     '''Yield Behavior methods.
 
@@ -379,60 +469,32 @@ class Mode(object):
         optional = True
         behavior = behavior[1:]
       elif 'import' == behavior[0].lower():
-        from_Mode = Mode._subclasses[behavior[1]]
-        if from_Mode:
-          yield from from_Mode.behaviors(self,from_Mode)
+        from_mode = Mode._subclasses[behavior[1]]
+        if from_mode:
+          yield from from_mode.behaviors(self,from_mode)
         else:
           raise Exception(behavior[1]+' is not a defined mode. '+str(self)+
             ' tried to use behaviors from it.')
         continue
-      # Replace strings with flow and state object methods
-      with_flows = []
-      flow_class = None
-      flow = None
-      for element in behavior:
-        if flow_class:
-          try:
-            if element == 'input':
-              flow = self.in_flow[flow_class]
-            elif element == 'output':
-              flow = self.out_flow[flow_class]
-            else:
-              Exception('Expected "input" or "output" following '+
-              flow_class.__name__+' in '+str(self)+' mode definition.')
-            flow_class = None
-          except KeyError:
-            if not optional:
-              raise
-        elif flow:
-          state = State.makeList(flow)
-          flow = None
-          if element == 'effort':
-            f = lambda: State.setValueToEffort(state)
-          elif element == 'rate':
-            f = lambda: State.setValueToRate(state)
-          else:
-            Exception('Expected "effort" or "rate" following the input/output of '+
-              flow_class.__name__+' in '+str(self)+' mode definition.')
-            with_flows.append(f)
-        else:
-          f = State.getMethod(element)
-          if f:
-            with_flows.append(f)
-          else:
-            flow_class = Flow._subclasses.get(element)
-            if not flow_class:
-              with_flows.append(element)
       # Separate the left-hand side from the right-hand side of the assignment
-      assignment = with_flows.index('=')
-      lhs = with_flows[:assignment]
-      rhs = with_flows[assignment+1:]
+      assignment = behavior.index('=')
+      lhs = behavior[:assignment]
+      rhs = behavior[assignment+1:]
       # Get value setter method
       setMethod = State.getSetMethod(lhs.pop())
+      # Replace flows and states with appropriate methods
+      try:
+        lhs = self.flowAndStateMethods(lhs,optional)
+        rhs = self.flowAndStateMethods(rhs,optional)
+      except KeyError:
+        if optional:
+          continue
+        else:
+          raise
+      # Replace everything else
       lhs = self.stack(lhs)
       rhs = self.stack(rhs)
-      yield lambda: setMethod(lhs(),rhs())
-
+      yield self.createSetMethod(setMethod,lhs,rhs)
   def textBehaviors(self,mode=None):
     if mode == None:
         mode = self
@@ -479,7 +541,7 @@ class Mode(object):
     '''
     pass
 
-class Condition(object):
+class Condition(ModeConditionParent):
   '''Abstract class for a condition to advance to another mode.
 
   Required methods:
@@ -500,27 +562,26 @@ class Condition(object):
     self.delay = delay
     self.reset()
     if logical_not:
-      self.test = lambda: not self.behavior().test
+      self.test = lambda: not self.behavior()
     else:
-      self.test = self.behavior().test
-  def behavior(self):
-    for behavior in self.__class__._behaviors:
-      if 'from' in behavior[0].lower():
-        return getSubclass(Behavior,behavior[1]).behavior(self)
-        continue
-      ins = []
-      outs = []
-      cls = getSubclass(Behavior,behavior[0])
-      for word in behavior[1:]:
-        if word.lower() in 'inout':
-          entry = word.lower()
-        elif entry == 'in':
-          ins.extend(self.in_flow[Flow._subclasses[word]])
-        elif entry == 'out':
-          outs.extend(self.out_flow[Flow._subclasses[word]])
-        else:
-          raise Exception('Looking for keywords in or out, found: '+word)
-      return cls(ins,outs)
+      self.test = self.behavior()
+  def behavior(self,condition=None):
+    if condition == None:
+      condition = self.__class__
+    if len(condition._behaviors) != 1:
+      raise Exception('Conditions must have exactly one test behavior! '+
+      condition.__name__+' does not.')
+    behavior = condition._behaviors[0]
+    if 'import' == behavior[0].lower():
+      from_condition = Mode._subclasses[behavior[1]]
+      if from_condition:
+        return from_condition.behavior(self,from_condition)
+      else:
+        raise Exception(behavior[1]+' is not a defined condition. '+str(self)+
+          ' tried to use the behavior from it.')
+    behavior = self.flowAndStateMethods(behavior)
+    test = self.stack(behavior)
+    return lambda: test()[0]
   def reset(self):
     '''Resets the delay timer.
     '''
@@ -752,6 +813,7 @@ class Flow(object):
     self.drain = drain
     self.name = source.name+'_'+drain.name+'_'+self.__class__.__name__
     self.reset()
+    self.flow = self #For State.setValueToEffort and setValueToFlow
   def __repr__(self):
     return self.__class__.__qualname__
   def reset(self,effort=Zero(),rate=Zero()):
@@ -1233,10 +1295,6 @@ class Experiment(object):
       self.model.printState(state=result)
       input()
 
-#############################  Behaviors  ####################################
-with open('behaviors.py') as f:
-    code = compile(f.read(), 'behaviors.py', 'exec')
-    exec(code)
 
 
 def load(filename):
@@ -1246,11 +1304,11 @@ def load(filename):
     first_line = False #True after reading the first line of a keyword
     indent = 0
     for i,line in enumerate(file):
-      words = re.findall(r"[\w]+|==|!=|<=|>=|\+\+|--|[*=,()<>]",line)
+      words = re.findall(r"[\w]+|==|!=|<=|>=|\+\+|--|[*=,()<>%$#/]",line)
       if not words: #Ignore blank lines
         continue
       word = words[0].lower()
-      if word[0] in '%$#/': #Allow many comment characters
+      if word in '%$#/': #Allow many comment characters
         continue
       line = line.expandtabs(4)
       line_indent = len(line)-len(line.lstrip())
