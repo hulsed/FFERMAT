@@ -88,6 +88,7 @@ class State(float):
     return self.__class__.__qualname__
   @staticmethod
   def getMethod(string):
+    '''Return a lambda method that returns the state specified in string.'''
     state_class = getSubclass(State,string)
     try:
       state = state_class()
@@ -96,6 +97,7 @@ class State(float):
       return None
   @classmethod
   def getUnaryMethod(cls,string):
+    '''Return the appropriate single-argument operator specified by string.'''
     if string == 'effort':
       return cls.setValueToEffort
     if string == 'rate':
@@ -119,6 +121,7 @@ class State(float):
     return None
   @classmethod
   def getBinaryMethod(cls,string):
+    '''Return the appropriate double-argument operator specified by string.'''
     if string == ',':
       return cls._combine
     if string == '*':
@@ -142,15 +145,19 @@ class State(float):
     return None
   @classmethod
   def getSetMethod(cls,string):
+    '''Return the appropriate method for setting either the effort or rate of
+    the flow specified during simulation.'''
     if string == 'effort':
       return cls.setEffort
     elif string == 'rate':
       return cls.setRate
   @staticmethod
   def setValueToEffort(states):
+    '''Set the value of each state in states to the effort of its flow'''
     return [State(state.flow.effort,state.flow) for state in states]
   @staticmethod
   def setValueToRate(states):
+    '''Set the value of each state in states to the rate of its flow'''
     return [State(state.flow.rate,state.flow) for state in states]
   @staticmethod
   def _max(states):
@@ -322,7 +329,16 @@ class Failed(ModeHealth):
   pass
 
 class ModeConditionParent(object):
+  '''Superclass for the Mode and Condition classes.
+
+  Contains methods used by both Mode and Condition objects.
+  '''
   def stack(self,x):
+    '''Take a list of strings and functions and fold it into a single function.
+
+    Recursivley identifies keywords in x as operators in order to construct a
+    single function out of an ibfm expression in mode and condition definitions.
+    '''
     # Check if done
     if len(x) == 1:
       if callable(x[0]):
@@ -360,6 +376,7 @@ class ModeConditionParent(object):
         return self.getLambda(f,g,h)
     raise Exception('Unforseen stack case: '+str(x))
   def getLambda(self,f=None,g=None,h=None,arg=None):
+    '''A lambda factory to ensure proper argument closure.'''
     if arg:
       if f:
         return lambda: f(arg)
@@ -371,12 +388,18 @@ class ModeConditionParent(object):
       return lambda: f(g())
     raise Exception('Unforseen getLambda')
   def flowAndStateMethods(self,behavior,optional=False):
+    '''Replaces ibfm references to states and flows with the appropriate objects.
+
+    Behavior is a list of strings, some of which refer to states and flows.
+    Each reference to a state or flow is replaced by a method which returns the
+    state or flow refered to.
+    '''
     # Replace strings with flow and state object methods
     with_methods = []
     flow_class = None
     flow = None
     for element in behavior:
-      if flow_class:
+      if flow_class: #If a flow class is already identified
         if element == 'input':
           flow = self.in_flow[flow_class]
         elif element == 'output':
@@ -389,7 +412,7 @@ class ModeConditionParent(object):
           raise ModelError('Expected '+flow_class.__name__+' '+element+' in '+
             self.function.name)
         flow_class = None
-      elif flow:
+      elif flow: #If a flow class and its direction have been identified
         if element == 'effort':
           f = self.getLambda(f=State.setValueToEffort,arg=flow)
         elif element == 'rate':
@@ -401,25 +424,26 @@ class ModeConditionParent(object):
         with_methods.append(f)
         flow = None
       else:
+        #Test for references to a state
         f = State.getMethod(element)
         if f:
           with_methods.append(f)
         else:
+          #Test for references to a flow
           flow_class = Flow._subclasses.get(element)
           if not flow_class:
             if element in ['input','output']:
               raise Exception(element+' not following flow type in '+str(self)+
               ' '+self.__class__.__name__+' definition.')
+            #Everything else gets passed through unchanged.
             with_methods.append(element)
     if flow:
+      #The effort/rate distinction has already been identifed in self.behavior(s)
       with_methods.append(self.getLambda(arg=flow))
     return with_methods
 
 class Mode(ModeConditionParent):
-  '''Abstract class for operational modes that functions may use.
-
-  Required methods:
-  behaviors(self) -- yield Behavior objects.
+  '''Class for operational modes that functions may use.
   '''
   _subclasses = {}
   def __init__(self,name,function,health,**attr):
@@ -542,10 +566,7 @@ class Mode(ModeConditionParent):
     pass
 
 class Condition(ModeConditionParent):
-  '''Abstract class for a condition to advance to another mode.
-
-  Required methods:
-  behavior(self) -- Return a Behavior object.
+  '''Class for a condition to advance to another mode.
   '''
   _subclasses = {}
   def __init__(self,function,delay=0,logical_not=False):
