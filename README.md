@@ -29,9 +29,9 @@ All models, functions, flows, modes, and conditions are defined in text files wi
 A simple functional model is defined as follows:
 ```
 model Simple_System 
-    function f1 Import_Electrical_Energy
-    function f2 Export_Electrical_Energy
-    flow f1 f2 Electrical_Energy
+    function f1 ImportElectricalEnergy
+    function f2 ExportElectricalEnergy
+    flow f1 f2 Electrical
 ```
 The first line contains the keyword `model` to let the program know that a model is being defined, followed by the intended model name. The indented lines indicate all of the functions and flows included in the functional model. Each line describing a function begins with the keyword `function`, followed by a unique within-model identifier for that particular function, followed by the name of the type of function. Each line describing a flow begins with the keyword `flow`, followed by the identifiers for the source and drain functions that the flow connects, followed by the name of the type of flow. All flows required by each function must be connected for the model to load properly.
 Creating an experiment with this model would be accomplished with the following line:
@@ -98,28 +98,28 @@ condition HighVoltage
 Logical operators may be combined to form more complex tests. All binary operators are evaluated from left to right, so parentheses may be required.
 
 ## Order of operations 
-1. Special operators that must be used at the beginning of a statement: 
-  `import` Use behavior statements from another mode definition.
+1. Special operators that must be used at the beginning of a statement:  
+  `import` Use behavior statements from another mode definition.  
   `optional` Ignore behavior statement if flows are not available.
 2. Parentheses `()` These take precedence over unary and binary operators. They must be used in matching pairs.
-3. Binary operators evaluated from left to right. May be placed to left or right of operand:
-  `,` Combine flows/states into a single list
-  `*` Multiply states
-  `==` Test for equality
-  `!=` Test for inequality
-  `>=` Test for greater than or equal to 
-  `<=` Test for less than or equal to 
-  `>` Test for greater than 
-  `<` Test for less than 
-  `and` Logical and
-  `or` Logical or
-4. Unary operators evaluated from left to right after binary operators: 
-  `effort` Switch the current variable of the flow to its effort.
-  `rate` Switch the current variable of the flow to its rate.
-  `max` Find the maximum value of the current variable of a set of flows, and return all of the flows with that value. 
-  `min` Find the minimum value of the current variable of a set of flows, and return all of the flows with that value.
-  `++` Increase the value of the state by one qualitative level. Stops at Highest. 
-  `--` Decrease the value of the state by one qualitative level. Stops at Zero.
-  `invert` Return the pseudo inverse of the state. Zero -> Highest, Low -> High, Nominal -> Nominal, High/Highest -> Low
-  `any` Logical any
-  `all` Logical all
+3. Binary operators evaluated from left to right. May be placed to left or right of operand:  
+  `,` Combine flows/states into a single list  
+  `*` Multiply states  
+  `==` Test for equality  
+  `!=` Test for inequality  
+  `>=` Test for greater than or equal to  
+  `<=` Test for less than or equal to  
+  `>` Test for greater than  
+  `<` Test for less than  
+  `and` Logical and  
+  `or` Logical or  
+4. Unary operators evaluated from left to right after binary operators:  
+  `effort` Switch the current variable of the flow to its effort.  
+  `rate` Switch the current variable of the flow to its rate.  
+  `max` Find the maximum value of the current variable of a set of flows, and return all of the flows with that value.  
+  `min` Find the minimum value of the current variable of a set of flows, and return all of the flows with that value.  
+  `++` Increase the value of the state by one qualitative level. Stops at Highest.  
+  `--` Decrease the value of the state by one qualitative level. Stops at Zero.  
+  `invert` Return the pseudo inverse of the state. Zero -> Highest, Low -> High, Nominal -> Nominal, High/Highest -> Low  
+  `any` Logical any  
+  `all` Logical all  
