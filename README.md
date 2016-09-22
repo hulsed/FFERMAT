@@ -36,7 +36,7 @@ model Simple_System
 The first line contains the keyword `model` to let the program know that a model is being defined, followed by the intended model name. The indented lines indicate all of the functions and flows included in the functional model. Each line describing a function begins with the keyword `function`, followed by a unique within-model identifier for that particular function, followed by the name of the type of function. Each line describing a flow begins with the keyword `flow`, followed by the identifiers for the source and drain functions that the flow connects, followed by the name of the type of flow. All flows required by each function must be connected for the model to load properly.
 Creating an experiment with this model would be accomplished with the following line:
 ```python
-ex = ibfm.Experiment(“Simple_System”)
+ex = ibfm.Experiment("Simple_System")
 ```
 
 ## Functions
