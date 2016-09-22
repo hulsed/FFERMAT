@@ -18,7 +18,7 @@ from time import time
 from glob import glob
 import networkx as nx
 import re
-import multiprocessing
+#import multiprocessing
 import pickle
 
 class InconsistencyError(Exception):
