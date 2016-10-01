@@ -702,21 +702,23 @@ class Function(object):
         raise Exception(mode[2]+' is not a defined mode')
       self.addMode(ident,health,mode_class)
     for condition in self.__class__._conditions:
-      condition_class = Condition._subclasses.get(condition[0])
-      if condition_class is None:
-        raise Exception(condition[0]+' is not a defined mode')
       entry = None
       delay = 0
       source_modes = []
-      for word in condition[1:]:
+      for word in condition:
         if word.lower() == 'to':
           entry = 'to'
         elif word.lower() == 'delay':
           entry = 'delay'
         elif entry == 'to':
           next_mode = word
+          entry = 'class'
         elif entry == 'delay':
           delay = float(word)
+        elif entry == 'class':
+          condition_class = Condition._subclasses.get(word)
+          if condition_class is None:
+            raise Exception(condition[0]+' is not a defined mode')
         else:
           source_modes.append(word)
       self.addCondition(source_modes,condition_class,next_mode,delay=delay)
