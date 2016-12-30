@@ -57,11 +57,11 @@ function InvertElectricalEnergy
 function BranchElectricalEnergy
     mode 1 Operational NominalBranchElectricalEnergy
     mode 2 Failed OpenCircuit
-    condition AnyHighestCurrent 1 to 2 delay 2
+    condition 1 to 2 AnyHighestCurrent delay 2
 function CombineElectricalEnergy
     mode 1 Operational NominalCombineElectricalEnergy
     mode 2 Failed OpenCircuit
-    condition HighestCurrent 1 to 2 delay 2
+    condition 1 to 2 HighestCurrent delay 2
 function ConvertChemicalToElectricalEnergy
     mode 1 Operational NominalChemicalToElectricalEnergyConversion
     mode 2 Degraded InefficientChemicalToElectricalEnergyConversion

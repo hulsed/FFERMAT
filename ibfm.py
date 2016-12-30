@@ -1279,7 +1279,8 @@ class Experiment(object):
     if run_parallel:
       pool = multiprocessing.Pool(n_workers)
     t2 = time()
-    print('Experiment created in '+str(t2-t1)+' seconds.')
+    print(str(len(self.scenarios))+' scenario experiment created in '+str(t2-t1)+' seconds.')
+    return
     t1 = time()
     if run_parallel:
       self.results = list(pool.map(self.runOneScenario,self.scenarios))
