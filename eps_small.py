@@ -2,7 +2,7 @@
 then experiment on it using IBFM
 
 '''
-
+from multiprocessing import *
 import ibfm
 
 if __name__ == '__main__':
@@ -13,3 +13,10 @@ if __name__ == '__main__':
   eps.run(2)
   eps.run(3)
   eps.run(4)
+  
+  
+  #note: scenarios used are found in eps.scenarios
+  #more information using eps.getScenarios()
+  #end states are given by: list(map(eps.runOneScenario,eps.scenarios))
+  
+  

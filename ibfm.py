@@ -6,13 +6,14 @@ Author: Matthew G McIntire
 '''
 
 #These flags can be changed in the file or at runtime after import ibfm
-track_states = False
+track_states = True
 printWarnings = False
 print_iterations = False
 print_scenarios = False
 run_parallel = False
 n_workers = 3
 
+import multiprocessing
 from math import inf
 from time import time
 from glob import glob
@@ -538,7 +539,7 @@ class Mode(ModeConditionParent):
         continue
       ins = []
       outs = []
-      cls = getSubclass(Behavior,behavior[0])
+      cls = getSubclass(behavior,behavior[0])
       if not cls:
         raise Exception(behavior[0]+' is not a defined behavior.')
       try:
@@ -1280,7 +1281,7 @@ class Experiment(object):
       pool = multiprocessing.Pool(n_workers)
     t2 = time()
     print(str(len(self.scenarios))+' scenario experiment created in '+str(t2-t1)+' seconds.')
-    return
+    #return
     t1 = time()
     if run_parallel:
       self.results = list(pool.map(self.runOneScenario,self.scenarios))
@@ -1298,6 +1299,7 @@ class Experiment(object):
     #print(str(self.unique))
     print(str(int(len(self.unique)))+' states or '+
       str(int(len(self.unique)*100/len(self.results)))+" percent unique")
+    return
 #    self.findUniqueHealth()
 #    print(str(int(len(self.unique)))+' health states or '+
 #      str(int(len(self.unique)*100/len(self.results)))+" percent unique")

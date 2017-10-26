@@ -1,14 +1,18 @@
 model eps_small
   function protectEE1 ProtectElectricalEnergy
   function actuateEE1 ActuateElectricalEnergy
-  function importBS1 ImportBinarySignal
   function importCE1 ImportChemicalEnergy
   function CEtoEE1 ConvertChemicalToElectricalEnergy
   function exportEE1 ExportElectricalEnergy
   function exportHE1 ExportHeatEnergy
+  function senseEE1 SenseCurrent
+  function processEE1 ProcessSignalIsNominal
+  
   flow importCE1 CEtoEE1 ChemicalEnergy
   flow CEtoEE1 exportHE1 Heat
-  flow CEtoEE1 protectEE1 Electrical
+  flow senseEE1 protectEE1 Electrical
   flow protectEE1 actuateEE1 Electrical
   flow actuateEE1 exportEE1 Electrical
-  flow importBS1 actuateEE1 Signal
+  flow CEtoEE1 senseEE1 Electrical
+  flow senseEE1 processEE1 Signal
+  flow processEE1 actuateEE1 Signal
