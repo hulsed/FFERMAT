@@ -1,6 +1,7 @@
 ActuateElectricalEnergy
 BranchElectricalEnergy
 CombineElectricalEnergy
+ControlElectrical
 ConvertChemicalToElectricalEnergy
 ConvertElectricalToMechanicalEnergy
 ConvertElectricalToOpticalEnergy

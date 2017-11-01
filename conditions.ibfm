@@ -12,6 +12,10 @@ condition HighVoltage
     Electrical input effort > Nominal
 condition AnyHighestCurrent
     any Electrical output rate > High
+condition HighSignal
+    Signal input effort > Nominal
+condition LowSignal
+    Signal input effort < Nominal
 condition NominalSignal
     Signal input effort == Nominal
 condition NonNominalSignal

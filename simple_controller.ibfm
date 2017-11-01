@@ -1,0 +1,10 @@
+model simple_controller
+	function importEE1 ImportElectricalEnergy
+	function senseEE1 SenseVoltage
+	function controlEE1 ControlElectrical
+	function exportEE1 ExportElectricalEnergy
+	
+	flow importEE1 senseEE1 Electrical
+	flow senseEE1 controlEE1 Electrical
+	flow senseEE1 controlEE1 Signal
+	flow controlEE1 exportEE1 Electrical
