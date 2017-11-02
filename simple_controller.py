@@ -25,3 +25,4 @@ if __name__ == '__main__':
   #note: scenarios used are found in eps.scenarios
   #more information using eps.getScenarios()
   #end states are given by: list(map(eps.runOneScenario,eps.scenarios))
+  # eps.model.states
