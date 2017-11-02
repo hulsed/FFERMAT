@@ -127,8 +127,8 @@ function ControlElectrical
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseVoltage
     mode 3 Operational DecreaseVoltage
-    condition 1 to 1 LowSignal
-    condition 2 to 2 HighSignal
-    condition 3 to 3 NominalSignal
+    condition 1 to 2 LowSignal
+    condition 1 to 3 HighSignal
+    condition 2 3 to 1 NominalSignal
     
     
