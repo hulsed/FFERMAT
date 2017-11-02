@@ -15,7 +15,7 @@ condition AnyHighestCurrent
 condition HighSignal
     Signal input effort > Nominal
 condition LowSignal
-    Signal input effort < Nominal
+    (Signal input effort < Nominal) and (Signal input effort >  Zero)
 condition NominalSignal
     Signal input effort == Nominal
 condition NonNominalSignal
