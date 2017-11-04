@@ -18,6 +18,10 @@ mode HighVoltageSource
     Electrical output effort = High
 mode ResistiveLoad
     Electrical input rate = Electrical input effort
+mode ResistiveLoadD
+    Electrical input rate = Electrical input effort
+mode ResistiveLoadF
+    Electrical input rate = Electrical input effort
 mode NominalSignalSource
     Signal output effort = Nominal
 mode ZeroSignalSource

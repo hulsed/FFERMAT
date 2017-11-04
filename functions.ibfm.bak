@@ -5,15 +5,8 @@ function ImportElectricalEnergy
 	mode 4 Failed OpenCircuit
 function ExportElectricalEnergy
     mode 1 Operational ResistiveLoad
-    mode 2 Degraded ResistiveLoadD
-    mode 3 Failed ShortCircuit
-    mode 4 Failed OpenCircuit
-    mode 5 Failed ResistiveLoadF
-    condition 1 5 to 2 LowVoltage
-    condition 1 2 5 to 3 HighVoltage
-    condition 2 5 to 1 NominalVoltage
-    condition 1 2 5 to 3 HighestVoltage
-    condition 1 2 to 5 NoVoltage
+    mode 2 Failed ShortCircuit
+    mode 3 Failed OpenCircuit
 function ImportChemicalEnergy
     mode 1 Operational NominalChemicalEffortSource
     mode 2 Degraded LowChemicalEffortSource
@@ -136,11 +129,10 @@ function ControlElectrical
     mode 3 Operational DecreaseVoltage
     condition 1 to 2 LowSignal
     condition 2 to 3 LowSignal
-    condition 3 to 1 LowSignal
-    condition 1 to 3 HighSignal
-    condition 2 to 1 HighSignal
-    condition 3 to 3 HighSignal
-    condition 1 to 1 NominalSignal
-    condition 2 to 2 NominalSignal
-    condition 3 to 3 NominalSignal
-    condition 1 2 to 3 NoSignal
+    condition 3 to 3 LowSignal
+    condition 1 to 2 HighSignal
+    condition 2 to 3 HighSignal
+    condition 3 to 1 HighSignal
+    condition 1 to 2 NominalSignal
+    condition 2 to 3 NominalSignal
+    condition 3 to 1 NominalSignal

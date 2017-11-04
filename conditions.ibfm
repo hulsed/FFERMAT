@@ -2,6 +2,8 @@ condition NominalVoltage
     Electrical input effort == Nominal
 condition HighCurrent
     Electrical output rate > Nominal
+condition NoCurrent
+    Electrical output rate == Zero
 condition NonZeroVoltage
     Electrical input effort != Zero
 condition HighestCurrent
@@ -9,13 +11,19 @@ condition HighestCurrent
 condition LowVoltage
     (Electrical input effort < Nominal) and (Electrical input effort > Zero)
 condition HighVoltage
-    Electrical input effort > Nominal
+    (Electrical input effort > Nominal) and (Electrical input effort < Highest)
+condition NoVoltage
+    Electrical input effort == Zero
 condition AnyHighestCurrent
     any Electrical output rate > High
+condition HighestVoltage
+    Electrical input effort == Highest
 condition HighSignal
     Signal input effort > Nominal
 condition LowSignal
     (Signal input effort < Nominal) and (Signal input effort >  Zero)
+condition NoSignal
+    Signal input effort == Zero
 condition NominalSignal
     Signal input effort == Nominal
 condition NonNominalSignal
@@ -29,7 +37,7 @@ condition AnyZeroSignals
 condition NoZeroSignals
     all Signal input effort != Zero
 condition AnyNonZeroSignals
-    any Signal input effot != Zero
+    any Signal input effort != Zero
 condition AllZeroSignals
     all Signal input effort == Zero
 condition Hot
