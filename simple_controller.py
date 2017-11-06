@@ -28,7 +28,9 @@ if __name__ == '__main__':
   #con.model.printStates(flows=True)
   #note: scenarios used are found in eps.scenarios
   #more information using eps.getScenarios()
+
   #end states are given by: list(map(eps.runOneScenario,eps.scenarios))
   # eps.model.states
   # eps.results
   # eps.getResults()
+  #end states are given by: list(map(eps.runOneScenario,eps.scenarios))

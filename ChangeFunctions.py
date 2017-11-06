@@ -7,27 +7,13 @@ Created on Thu Nov  2 11:34:44 2017
 import os
 import sys
 import fileinput
-import numpy as np
-import scipy as sp
 
 def changeController():
-    #actions
-    actionmodes=['2','3','3','2','3','1','2','3','1']
-    #states
-    modes=3
-    conditions=['LowSignal', 'HighSignal','NominalSignal']
-    condlist, modelist=enumerateStates(conditions, modes)
-    
-    changeFunctions(condlist, modelist, actionmodes)
-    
-    return 0
-
-def changeFunctions(condlist, modelist, actionmodes):
     filename='functions.ibfm'
     function='ControlElectrical'
     infunction=0
-    statenum=0
-    
+    inmodes=['1','2','3']
+    outmodes=['1','2','3']
     newline=''
     
     with fileinput.FileInput(filename, inplace=True, backup='.bak') as thefile:
@@ -38,26 +24,23 @@ def changeFunctions(condlist, modelist, actionmodes):
             elif 'function' in line:
                 #print('other function')
                 infunction=0
-            elif 'mode' not in line and infunction==1:
-                newline='    condition ' + modelist[statenum] + ' to ' + actionmodes[statenum] + ' ' + condlist[statenum] + '\n'
-                statenum=statenum+1
+            elif 'condition' in line and infunction==1:
+                if 'LowSignal' in line:
+                    newline='    condition ' + inmodes[0] + ' to ' + outmodes[0] + ' LowSignal' + '\n'
+                elif 'HighSignal' in line:
+                    newline='    condition ' + inmodes[1] + ' to ' + outmodes[1] + ' HighSignal' + '\n'
+                elif 'NominalSignal' in line:
+                    newline='    condition ' + inmodes[2] + ' to ' + outmodes[2] + ' NominalSignal' + '\n'
                 #print(line)
                 line=newline
             print(line, end='')
+                #print(newline)
+                #cond=cond+1
+                #thefile.write(line)
+    tempfile.close()
     return 0
 
-def enumerateStates(conditions, modes):
-    conds=len(conditions)
-    condlist=[]
-    modelist=[]
+def policy2Controller:
     
-    for j in range(conds):
-        for k in range(modes):
-            condlist=condlist+[conditions[j]]
-            modelist=modelist+[str(k+1)]
-            
-    return condlist, modelist
-            
-        
-
+    return 0
     
