@@ -7,12 +7,17 @@ import ibfm
 
 if __name__ == '__main__':
 
-  eps = ibfm.Experiment('eps_small')
+  #eps = ibfm.Experiment('eps_small')
   #Run with 2 then 3 simultaneous faults
-  eps.run(1)
-  eps.run(2)
+  #eps.run(1)
+  #eps.run(2)
   #eps.run(3)
   #eps.run(4)
+  
+  exp = ibfm.Experiment('eps_small')
+  #Run with 2 then 3 simultaneous faults
+  exp.run(1)
+  exp.run(2)
   
   
   #note: scenarios used are found in eps.scenarios
