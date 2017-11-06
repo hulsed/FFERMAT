@@ -134,7 +134,6 @@ function ControlElectrical
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseVoltage
     mode 3 Operational DecreaseVoltage
-<<<<<<< HEAD
     condition 1 to 2 LowSignal
     condition 2 to 3 LowSignal
     condition 3 to 1 LowSignal
@@ -145,10 +144,3 @@ function ControlElectrical
     condition 2 to 2 NominalSignal
     condition 3 to 3 NominalSignal
     condition 1 2 to 3 NoSignal
-=======
-    condition 1 to 1 LowSignal
-    condition 2 to 2 HighSignal
-    condition 3 to 3 NominalSignal
-    
-    
->>>>>>> parent of 6510e64... added ability to change functions file
