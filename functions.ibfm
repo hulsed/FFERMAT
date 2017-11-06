@@ -1,8 +1,8 @@
 function ImportElectricalEnergy
-	mode 1 Operational NominalVoltageSource
-	mode 2 Degraded LowVoltageSource
-	mode 3 Degraded HighVoltageSource
-	mode 4 Failed OpenCircuit
+    mode 1 Operational NominalVoltageSource
+    mode 2 Degraded LowVoltageSource
+    mode 3 Degraded HighVoltageSource
+    mode 4 Failed OpenCircuit
 function ExportElectricalEnergy
     mode 1 Operational ResistiveLoad
     mode 2 Degraded ResistiveLoadD
@@ -10,7 +10,7 @@ function ExportElectricalEnergy
     mode 4 Failed OpenCircuit
     mode 5 Failed ResistiveLoadF
     condition 1 5 to 2 LowVoltage
-    condition 1 2 5 to 3 HighVoltage
+    condition 1 2 5 to 3 HighVoltage delay 10
     condition 2 5 to 1 NominalVoltage
     condition 1 2 5 to 3 HighestVoltage
     condition 1 2 to 5 NoVoltage
@@ -34,16 +34,16 @@ function ExportMaterial
 function ExportOpticalEnergy
     mode 1 Operational NominalExportOpticalEnergy
 function ProtectElectricalEnergy
-	mode 1 Operational ClosedCircuit
-	mode 2 Operational OpenCircuit
-	mode 3 Failed ClosedCircuit
-	mode 4 Failed OpenCircuit
-	mode 5 Failed ShortCircuit
+    mode 1 Operational ClosedCircuit
+    mode 2 Operational OpenCircuit
+    mode 3 Failed ClosedCircuit
+    mode 4 Failed OpenCircuit
+    mode 5 Failed ShortCircuit
     mode 6 Degraded AdverseResistance
-	condition 1 to 2 HighCurrent delay 10
-	condition 1 to 2 HighestCurrent
-	condition 3 to 4 HighestCurrent delay 1
-	condition 5 to 4 NonZeroVoltage delay 1
+    condition 1 to 2 HighCurrent delay 10
+    condition 1 to 2 HighestCurrent
+    condition 3 to 4 HighestCurrent delay 1
+    condition 5 to 4 NonZeroVoltage delay 1
 function ActuateElectricalEnergy
     mode 1 Operational ClosedCircuit
     mode 2 Operational OpenCircuit default
