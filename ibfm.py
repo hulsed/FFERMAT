@@ -6,14 +6,13 @@ Author: Matthew G McIntire
 '''
 
 #These flags can be changed in the file or at runtime after import ibfm
-track_states = True
+track_states = False
 printWarnings = False
 print_iterations = False
 print_scenarios = False
 run_parallel = False
 n_workers = 3
 
-import multiprocessing
 from math import inf
 from time import time
 from glob import glob
@@ -539,7 +538,7 @@ class Mode(ModeConditionParent):
         continue
       ins = []
       outs = []
-      cls = getSubclass(behavior,behavior[0])
+      cls = getSubclass(Behavior,behavior[0])
       if not cls:
         raise Exception(behavior[0]+' is not a defined behavior.')
       try:
@@ -719,7 +718,7 @@ class Function(object):
         elif entry == 'class':
           condition_class = Condition._subclasses.get(word)
           if condition_class is None:
-            raise Exception(condition[0]+condition[1]+condition[2]+condition[3]+' is not a defined mode')
+            raise Exception(condition[0]+' is not a defined mode')
         else:
           source_modes.append(word)
       self.addCondition(source_modes,condition_class,next_mode,delay=delay)

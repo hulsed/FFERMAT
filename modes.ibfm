@@ -4,9 +4,6 @@ mode OpenCircuit
 mode ClosedCircuit
     Electrical output effort = Electrical input effort
     Electrical input rate = Electrical output rate
-mode AdverseResistance
-    Electrical output effort= Electrical input effort
-    Electrical output rate = Electrical input rate --
 mode ShortCircuit
     Electrical input rate = Electrical input effort * Highest
     optional Electrical output effort = Zero
@@ -47,7 +44,7 @@ mode NominalChemicalToElectricalEnergyConversion
 mode InefficientChemicalToElectricalEnergyConversion
     Heat output rate = Electrical output rate ++
     Electrical output effort = ChemicalEnergy input effort
-    Electrical output rate = ChemicalEnergy input rate --
+    ChemicalEnergy input rate = Electrical output rate ++
 mode ChemicalEnergyLossNoElectricalConversion
     ChemicalEnergy input rate = ChemicalEnergy input effort * Highest
     Heat output rate = ChemicalEnergy input rate
@@ -150,10 +147,3 @@ mode NominalCombineElectricalEnergy
     max(Electrical input effort) rate = Electrical output rate
 mode NominalExportOpticalEnergy
     OpticalEnergy input rate = OpticalEnergy input effort
-mode EqualControl
-    Electrical output effort = Electrical input effort
-mode IncreaseVoltage
-    Electrical output effort = Electrical input effort ++
-mode DecreaseVoltage
-    Electrical output effort = Electrical input effort --
-    
