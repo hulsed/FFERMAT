@@ -16,13 +16,13 @@ import ibfmOpt
 
 if __name__ == '__main__':
 
-  con= ibfm.Experiment('simple_controller')
+  elm= ibfm.Experiment('simple_controller')
   #Run with 2 then 3 simultaneous faults
-  con.run(1)
+  elm.run(1)
   #eps.run(2)
   #eps.run(3)
   #eps.run(4)
-  scenscore,score=ibfmOpt.score(con)
+  scenscore,score=ibfmOpt.score(elm)
   print(scenscore, score)
   
   #con.model.printStates(flows=True)

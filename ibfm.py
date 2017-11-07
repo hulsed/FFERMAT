@@ -718,7 +718,7 @@ class Function(object):
         elif entry == 'class':
           condition_class = Condition._subclasses.get(word)
           if condition_class is None:
-            raise Exception(condition[0]+' is not a defined mode')
+            raise Exception(condition[0]+condition[1]+condition[2]+condition[3]+' is not a defined mode')
         else:
           source_modes.append(word)
       self.addCondition(source_modes,condition_class,next_mode,delay=delay)
@@ -1069,6 +1069,7 @@ class Model(object):
     finished = False
     while not finished:
       i = i+1
+      print(str(i))
       if print_iterations:
         print("\nIteration "+str(i)+'    Clock: '+str(clock))
       self.step()
