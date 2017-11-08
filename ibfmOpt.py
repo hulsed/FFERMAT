@@ -11,20 +11,26 @@ import numpy as np
 import scipy as sp
 
 def changeController():
-    #actions
-    actionmodes=['2','3','3','2','3','1','2','3','1']
-    #states
-    modes=3
+    #modes and conditions to use
+    nummodes=3
     conditions=['LowSignal', 'HighSignal','NominalSignal']
-    condlist, modelist=enumerateStates(conditions, modes)
     
-    changeFunctions(condlist, modelist, actionmodes)
+    #actions (should be input to function)
+    policy=[1,2,3]
+    
+    changeFunctions(policy,nummodes, conditions)
     
     return 0
 
-def changeFunctions(condlist, modelist, actionmodes):
+    
+
+def changeFunctions(policy,nummodes, conditions):
     filename='functions.ibfm'
     function='ControlElectrical'
+    #convert policy to input and output modes
+    inmodestr,outmodestr=policy2strs(policy,nummodes)    
+    
+    numconditions=len(conditions)
     infunction=0
     statenum=0
     
@@ -38,25 +44,30 @@ def changeFunctions(condlist, modelist, actionmodes):
             elif 'function' in line:
                 #print('other function')
                 infunction=0
-            elif 'mode' not in line and infunction==1:
-                newline='    condition ' + modelist[statenum] + ' to ' + actionmodes[statenum] + ' ' + condlist[statenum] + '\n'
+            elif 'mode' not in line and infunction==1 and statenum>=numconditions:
+                newline='    condition ' + inmodestr[statenum] + ' to ' + outmodestr[statenum] + ' ' + conditions[statenum] + '\n'
                 statenum=statenum+1
                 #print(line)
                 line=newline
             print(line, end='')
+    print(statenum)
     return 0
 
-def enumerateStates(conditions, modes):
-    conds=len(conditions)
-    condlist=[]
-    modelist=[]
+def policy2strs(policy,nummodes):
+    states=len(policy)
+    options=list(range(1,nummodes+1))
+    inmodes=np.zeros([nummodes-1])
+    inmodestr=['' for x in range(states)]
     
-    for j in range(conds):
-        for k in range(modes):
-            condlist=condlist+[conditions[j]]
-            modelist=modelist+[str(k+1)]
-            
-    return condlist, modelist
+    for i in range(states):
+        toremove=policy[i]
+        inmodes=list(filter(lambda x: x!=toremove,options))
+        inmodestr[i]=' '.join(str(x) for x in inmodes)
+        
+    outmodestr=np.char.mod('%d',policy)   
+    
+    return inmodestr,outmodestr
+
 
 def score(exp):
     numstates=len(exp.getResults())
