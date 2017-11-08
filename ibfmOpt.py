@@ -90,6 +90,8 @@ def score(exp):
     totsco=sum(scensco)
     
     return scensco, totsco
+
+
     
         
 
