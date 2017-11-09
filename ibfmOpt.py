@@ -10,19 +10,17 @@ import fileinput
 import numpy as np
 import scipy as sp
 
-def changeController():
+def changeController(policy):
     #modes and conditions to use
     nummodes=3
     conditions=['LowSignal', 'HighSignal','NominalSignal']
     
     #actions (should be input to function)
-    policy=[1,2,3]
+    #policy=[1,2,3]
     
-    changeFunctions(policy,nummodes, conditions)
+    changeFunctions(policy,nummodes,conditions)
     
     return 0
-
-    
 
 def changeFunctions(policy,nummodes, conditions):
     filename='functions.ibfm'
@@ -36,7 +34,7 @@ def changeFunctions(policy,nummodes, conditions):
     
     newline=''
     
-    with fileinput.FileInput(filename, inplace=True, backup='.bak') as thefile:
+    with fileinput.FileInput(filename, inplace=True) as thefile:
         for line in thefile:
             if 'function' in line and function in line:
                 #print('function found')
@@ -44,13 +42,13 @@ def changeFunctions(policy,nummodes, conditions):
             elif 'function' in line:
                 #print('other function')
                 infunction=0
-            elif 'mode' not in line and infunction==1 and statenum>=numconditions:
+            elif 'mode' not in line and infunction==1 and statenum<=numconditions:
                 newline='    condition ' + inmodestr[statenum] + ' to ' + outmodestr[statenum] + ' ' + conditions[statenum] + '\n'
                 statenum=statenum+1
                 #print(line)
                 line=newline
             print(line, end='')
-    print(statenum)
+    #print(statenum)
     return 0
 
 def policy2strs(policy,nummodes):
@@ -72,7 +70,7 @@ def policy2strs(policy,nummodes):
 def score(exp):
     numstates=len(exp.getResults())
     functions=['exportEE1']
-    scorefunc={'Failed': 5,'Degraded': 2, 'Operational': 0}
+    scorefunc={'Failed': -5,'Degraded': -2, 'Operational': 0}
     funsco=np.zeros([numstates,len(functions)])
     scensco=np.zeros(numstates)
     

@@ -1069,7 +1069,7 @@ class Model(object):
     finished = False
     while not finished:
       i = i+1
-      print(str(i))
+      #print(str(i))
       if print_iterations:
         print("\nIteration "+str(i)+'    Clock: '+str(clock))
       self.step()
