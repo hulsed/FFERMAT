@@ -334,12 +334,14 @@ class ModeConditionParent(object):
   Contains methods used by both Mode and Condition objects.
   '''
   def stack(self,x):
-    '''Take a list of strings and functions and fold it into a single function.
+    '''Take a list of strings and functions and folds it into a single function.
 
-    Recursivley identifies keywords in x as operators in order to construct a
+    Recursively identifies keywords in x as operators in order to construct a
     single function out of an ibfm expression in mode and condition definitions.
     '''
     # Check if done
+    #if len(x) == 0:
+    #    return
     if len(x) == 1:
       if callable(x[0]):
         return x[0]
@@ -477,7 +479,11 @@ class Mode(ModeConditionParent):
     return self.__class__ == other.__class__ and self.health == other.health
   def createSetMethod(self,setMethod,lhs,rhs):
     if not callable(lhs) or not callable(rhs) or not callable(setMethod):
-      raise Exception('Bad creatSetMethod call')
+        #print(lhs)
+        #print(rhs)
+        #print(setMethod)
+        #print(self)
+        raise Exception('Bad creatSetMethod call')
     return lambda: setMethod(lhs(),rhs())
   def behaviors(self,mode=None):
     '''Yield Behavior methods.
@@ -721,6 +727,9 @@ class Function(object):
             raise Exception(condition[0]+condition[1]+condition[2]+condition[3]+' is not a defined mode')
         else:
           source_modes.append(word)
+      #print(source_modes)
+      #print(next_mode)
+      #print(condition_class)
       self.addCondition(source_modes,condition_class,next_mode,delay=delay)
   def reset(self):
     '''Reset all modes and set mode to default.'''

@@ -53,7 +53,7 @@ condition NoPT
 condition NonZeroPT
     Propellant input effort > Zero
 condition NoGastoPower
-	(RegulatedGas input effort == Zero) or (RegulatedGas input rate == Zero)
+	RegulatedGas input effort == Zero
 condition LowGastoPower
 	RegulatedGas input effort == Low 
 condition NominalGastoPower

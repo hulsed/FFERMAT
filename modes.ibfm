@@ -68,37 +68,37 @@ mode DecreaseControl
 # Gas rate adjustment
 mode NominalFlowAdjustment
     AdjustedGas output rate = Signal input effort
-    AdjustedGas output rate = ExpandedGas input effort
-    ExpandedGas output rate = max(Zero, (Signal input effort - ExpandedGas input rate))
+    AdjustedGas output effort = ExpandedGas input effort
+    ExpandedGas output rate = invert(Signal input effort)
     ExpandedGas output effort = ExpandedGas input effort
 mode PartialLowAdjustment
     AdjustedGas output rate = Signal input effort --
-    AdjustedGas output rate = ExpandedGas input effort
-    ExpandedGas output rate = max(Zero, (Signal input effort - ExpandedGas input rate) ++ )
+    AdjustedGas output effort = ExpandedGas input effort
+    ExpandedGas output rate = invert(Signal input effort) ++
     ExpandedGas output effort = ExpandedGas input effort
 mode PartialHighAdjustment
     AdjustedGas output rate = Signal input effort ++
-    AdjustedGas output rate = ExpandedGas input effort
-    ExpandedGas output rate = max(Zero, (Signal input effort - ExpandedGas input rate) -- )
+    AdjustedGas output effort = ExpandedGas input effort
+    ExpandedGas output rate = invert(Signal input effort) --
     ExpandedGas output effort = ExpandedGas input effort
 mode NoAdjustment
     ExpandedGas output effort = Zero
     ExpandedGas output rate = Zero
-    AdjustedGas output rate = ExpandedGas input effort
+    AdjustedGas output effort = ExpandedGas input effort
     AdjustedGas output rate = ExpandedGas input rate
 mode NoAdjustmentLow
     ExpandedGas output effort = Low
     ExpandedGas output rate = Low
-    AdjustedGas output rate = ExpandedGas input effort
+    AdjustedGas output effort = ExpandedGas input effort
     AdjustedGas output rate = ExpandedGas input rate --
 # Export Gas
 mode NominalExportGas
-    ExpandedGas output rate = ExpandedGas input rate
-    ExpandedGas output effort = ExpandedGas input effort
-# Conducting ExpandedGas
+    ExpandedGas input rate = ExpandedGas input rate
+    ExpandedGas input effort = ExpandedGas input effort
+# Conducting AdjustedGas
 mode NominalConductingAdjustedGas
     AdjustedGas output effort = AdjustedGas input effort
-    AdjustedGas output rate = AdjustedGas input rate 
+    AdjustedGas output rate = AdjustedGas input rate
 mode PartialConductingAdjustedGas
     AdjustedGas output effort = AdjustedGas input effort
     AdjustedGas output rate = AdjustedGas input rate --
@@ -108,33 +108,33 @@ mode NoConductingAdjustedGas
 # Measure Gas Pressure
 mode NominalPressureSensing
     AdjustedGas output effort = AdjustedGas input effort
-    AdjustedGas output rate = AdjustedGas input rate 
-    Signal=AdjustedGas input effort
+    AdjustedGas output rate = AdjustedGas input rate
+    Signal output effort = AdjustedGas input effort
 mode DriftingLowPressureSensing
     AdjustedGas output effort = AdjustedGas input effort
-    AdjustedGas output rate = AdjustedGas input rate 
-    Signal=AdjustedGas input effort --
+    AdjustedGas output rate = AdjustedGas input rate
+    Signal output effort = AdjustedGas input effort --
 mode DriftingHighPressureSensing
     AdjustedGas output effort = AdjustedGas input effort
-    AdjustedGas output rate = AdjustedGas input rate 
-    Signal=AdjustedGas input effort ++
+    AdjustedGas output rate = AdjustedGas input rate
+    Signal output effort = AdjustedGas input effort ++
 mode NoPressureSensing
     AdjustedGas output effort = AdjustedGas input effort
-    AdjustedGas output rate = AdjustedGas input rate    
-    Signal = Zero
+    AdjustedGas output rate = AdjustedGas input rate
+    Signal output effort = Zero
 # Regulating Gas Pressure 
 mode NominalPressureRegulating
     RegulatedGas output effort = Signal input effort
-    RegulatedGas output rate = AdjustedGas input rate 
+    RegulatedGas output rate = AdjustedGas input rate
 mode LowPressureRegulating
     RegulatedGas output effort = Signal input effort ++
-    RegulatedGas output rate = AdjustedGas input rate 
+    RegulatedGas output rate = AdjustedGas input rate
 mode HighPressureRegulating
     RegulatedGas output effort = Signal input effort --
-    RegulatedGas output rate = AdjustedGas input rate 
+    RegulatedGas output rate = AdjustedGas input rate
 mode NoPressureRegulating
     RegulatedGas output effort = AdjustedGas input effort
-    RegulatedGas output rate = AdjustedGas input rate 
+    RegulatedGas output rate = AdjustedGas input rate
 mode NoPressureToRegulate
     RegulatedGas output effort = Zero
 mode NoPressureToRegulateLow
@@ -142,13 +142,13 @@ mode NoPressureToRegulateLow
 mode NoPressureToRegulateHigh
     RegulatedGas output effort = Zero
 # Conducting RegulatedGas
-mode NominalConductingAdjustedGas
+mode NominalConductingRegulatedGas
     RegulatedGas output effort = RegulatedGas input effort
-    RegulatedGas output rate = RegulatedGas input rate 
-mode PartialConductingAdjustedGas
+    RegulatedGas output rate = RegulatedGas input rate
+mode PartialConductingRegulatedGas
     RegulatedGas output effort = RegulatedGas input effort
     RegulatedGas output rate = RegulatedGas input rate --
-mode NoConductingAdjustedGas
+mode NoConductingRegulatedGas
     RegulatedGas output effort = Zero
     RegulatedGas output rate = Zero
 # Propellant source
@@ -172,7 +172,7 @@ mode NominalPropSensing
     Signal output effort = Propellant input effort
 mode DriftingLowPropSensing
     Propellant output effort = Propellant input effort
-    Propellant output rate = Propellant input rate 
+    Propellant output rate = Propellant input rate
     Signal output effort = Propellant input effort --
 mode DriftingHighPropSensing
     Propellant output effort = Propellant input effort
@@ -198,33 +198,37 @@ mode HighPTRegulating
 mode NoPTRegulating
     Propellant output effort = Propellant input effort
     RegulatedGas output effort = RegulatedGas input effort
-    RegulatedGas output rate = RegulatedGas input rate 
+    RegulatedGas output rate = RegulatedGas input rate
 mode NoIncreasePT
     Propellant output effort = Zero
     RegulatedGas output effort = Zero
+    RegulatedGas output rate = RegulatedGas input rate
 mode LowIncreasePT
     Propellant output effort = Low
     RegulatedGas output effort = Low
+    RegulatedGas output rate = RegulatedGas input rate
 mode HighIncreasePT
     Propellant output effort = High
     RegulatedGas output effort = High
+    RegulatedGas output rate = RegulatedGas input rate
 mode TooHighIncreasePT
     Propellant output effort = Zero
     RegulatedGas output effort = Highest
+    RegulatedGas output rate = RegulatedGas input rate
 # Exporting Reg. gas
 mode NominalExportRegGas
-    RegulatedGas output rate = RegulatedGas input rate
-    RegulatedGas output effort = RegulatedGas input effort
+    RegulatedGas input rate = RegulatedGas input rate
+    RegulatedGas input effort = RegulatedGas input effort
 # Conducting Propellant
 mode NominalConductingPropellant
     Propellant output effort = Propellant input effort
-    Propellant output rate = Propellant input rate 
+    Propellant output rate = Propellant input rate
 mode PartialConductingPropellant
-    Propellant output effort = Propellant input effort 
+    Propellant output effort = Propellant input effort
     Propellant output rate = Propellant input rate --
 mode NoConductingPropellant
-    ExpandedGas output effort = Zero
-    ExpandedGas output rate = Zero
+    Propellant output effort = Zero
+    Propellant output rate = Zero
 # Sensing Propellant rate
 mode NominalPropRSensing
     Propellant output effort = Propellant input effort
@@ -232,7 +236,7 @@ mode NominalPropRSensing
     Signal output effort = Propellant input rate
 mode DriftingLowPropRSensing
     Propellant output effort = Propellant input effort
-    Propellant output rate = Propellant input rate 
+    Propellant output rate = Propellant input rate
     Signal output effort = Propellant input rate --
 mode DriftingHighPropRSensing
     Propellant output effort = Propellant input effort
@@ -246,10 +250,10 @@ mode NoPropRSensing
 mode NominalPropRateAdjustment
     Propellant output rate = Signal input effort
     Propellant output effort = Propellant input effort
-mode PartialPropRateAdjustment
+mode PartialLowPropRateAdjustment
     Propellant output rate = Signal input effort --
     Propellant output effort = Propellant input effort
-mode PartialPropRateAdjustment
+mode PartialHighPropRateAdjustment
     Propellant output rate = Signal input effort ++
     Propellant output effort = Propellant input effort
 mode NoPropRateAdjustment
@@ -273,25 +277,26 @@ mode NoContainingCatalyst
 # Combust Catalyst
 mode NominalCombustion
     Thrust output rate =  Propellant input rate
-    Thust output effort =  Propellant input effort
+    Thrust output effort =  Propellant input effort
     Heat output rate = Propellant input rate
     Heat output effort = Propellant input effort
     Byproducts output rate = Propellant input rate
 mode PoorCombustion
     Thrust output rate =  Propellant input rate --
-    Thust output effort =  Propellant input effort --
+    Thrust output effort =  Propellant input effort --
+    Heat output rate = Low
     Heat output effort = Low
     Byproducts output rate = Propellant input rate --
 mode NoCombustion
-    Thrust output rate =  min(Low, Propellant input rate )
-    Thust output effort =  Zero
+    Thrust output rate =  min(Low, Propellant input rate)
+    Thrust output effort =  Zero
+    Heat output rate = Zero
     Heat output effort = Zero
     Byproducts output rate = Propellant input rate --
 mode ExportByproducts
     Byproducts input rate = Byproducts input rate
 mode ExportThrust
     Thrust input rate = Thrust input rate
-    
 mode OpenCircuit
     optional Electrical output effort = Zero
     optional Electrical input rate = Zero
@@ -437,8 +442,8 @@ mode NominalBranchElectricalEnergy
     Electrical output effort = Electrical input effort
     Electrical input rate = max all Electrical output rate
 mode NominalCombineElectricalEnergy
-    Electrical output effort = max Electrical input effort
-    max(Electrical input effort) rate = Electrical output rate
+    Electrical output effort = max(Electrical input effort)
+    Electrical output rate = max(Electrical input rate)
 mode NominalExportOpticalEnergy
     OpticalEnergy input rate = OpticalEnergy input effort
 mode AdverseResistance
@@ -449,4 +454,3 @@ mode IncreaseVoltage
     Electrical output effort = Electrical input effort ++
 mode DecreaseVoltage
     Electrical output effort = Electrical input effort --
-	

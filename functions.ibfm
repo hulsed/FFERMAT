@@ -49,12 +49,12 @@ function RegulateGasPressure
     mode 5 Operational NoPressureToRegulate
     mode 6 Degraded NoPressureToRegulateLow
     mode 7 Degraded NoPressureToRegulateHigh
-    condition NoPressure 1 to 5 
-    condition NoPressure 2 to 6 
-    condition NoPressure 3 to 7 
-    condition NonZeroPressure 5 to 1
-    condition NonZeroPressure 6 to 2
-    condition NonZeroPressure 7 to 3
+    condition 1 to 5 NoPressure
+    condition 2 to 6 NoPressure
+    condition 3 to 7 NoPressure
+    condition 5 to 1 NonZeroPressure
+    condition 6 to 2 NonZeroPressure
+    condition 7 to 3 NonZeroPressure
 function ConductRegulatedGas
     mode 1 Operational NominalConductingRegulatedGas
     mode 2 Degraded PartialConductingRegulatedGas 
@@ -81,11 +81,11 @@ function AdjustPropellantPT
     mode 6 Degraded LowIncreasePT
     mode 7 Degraded HighIncreasePT
     mode 8 Failed TooHighIncreasePT
-    condition NoGastoPower 1 2 3 6 7 to 5
-    condition LowGastoPower 1 2 3 5 7 to 6 
-    condition NominalGastoPower 2 3 5 6 7 to 1
-    condition HighGastoPower 1 2 3 5 6 to 7
-    condition TooHighGastoPower 1 2 3 4 6 7 to 8
+    condition 1 2 3 6 7 to 5 NoGastoPower
+    condition 1 2 3 5 7 to 6 LowGastoPower
+    condition 2 3 5 6 7 to 1 NominalGastoPower
+    condition 1 2 3 5 6 to 7 HighGastoPower
+    condition 1 2 3 4 6 7 to 8 TooHighGastoPower
 function ExportRegulatedGas
     mode 1 Operational NominalExportRegGas
 function ConductPropellant
@@ -125,7 +125,6 @@ function ExportByproducts
     mode 1 Operational ExportByproducts
 function ExportThrust
     mode 1 Operational ExportThrust
-
 function ImportElectricalEnergy
     mode 1 Operational NominalVoltageSource
     mode 2 Degraded LowVoltageSource

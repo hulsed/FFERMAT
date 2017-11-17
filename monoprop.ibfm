@@ -39,14 +39,14 @@ model monoprop
 	flow senseG2rate controlG2rate Signal
 	flow senseG2rate adjustG2toG3 ExpandedGas
 	flow controlG2rate adjustG2toG3 Signal
-	flow adjustG2toG3 exportG2 ExpandedGas
+    flow adjustG2toG3 exportG2 ExpandedGas
 	flow adjustG2toG3 conductG3 AdjustedGas
-	flow conductG3 measureG3 AdjustedGas
+    flow conductG3 measureG3 AdjustedGas
 	flow measureG3 controlG3press Signal
 	flow controlG3press regulateG3toG4 Signal
 	flow measureG3 regulateG3toG4 AdjustedGas
 	flow regulateG3toG4 conductG4 RegulatedGas
-	flow importP1 containG1 Propellant
+	flow importP1 containP1 Propellant
 	flow containP1 senseP1effort Propellant
 	flow senseP1effort controlP1effort Signal
 	flow controlP1effort adjustP1effort Signal
