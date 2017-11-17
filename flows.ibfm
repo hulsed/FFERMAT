@@ -6,6 +6,8 @@ flow InertGas Gas
 
 flow ExpandedGas Gas
 
+flow AdjustedGas Gas
+
 flow RegulatedGas Gas
 
 flow ExcessGas Gas
@@ -23,3 +25,11 @@ flow MechanicalEnergy Energy
 flow OpticalEnergy Energy
 
 flow Signal Flow
+
+flow Propellant Gas
+
+flow Catalyst Material
+
+flow Thrust Energy
+
+flow Byproducts Material

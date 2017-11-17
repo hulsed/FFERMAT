@@ -1,3 +1,131 @@
+ function ImportGas
+    mode 1 Operational NominalGasSource
+    mode 2 Degraded NotCompleteGasSource
+    mode 3 Failed NoGasSource
+function ImportHeat
+	mode 1 Operational NominalHeatSource
+	mode 2 Degraded LowHeatSource
+	mode 3 Degraded HighHeatSource
+	mode 4 Failed NoHeatSource
+function ContainGas
+	mode 1 Operational NominalContaining
+	mode 2 Degraded Leaking
+	mode 3 Failed NoContaining
+function ExpandGas
+    mode 1 Operational NominalExpansion
+    mode 2 Degraded HighExpansion
+    mode 3 Degraded LowExpansion
+function ConductExpandedGas
+    mode 1 Operational NominalConductingExpandedGas
+    mode 2 Degraded PartialConductingExpandedGas
+    mode 3 Failed NoConductingExpandedGas
+function SenseGasRate
+    mode 1 Operational NominalGasSensing
+    mode 2 Degraded DriftingLowGasSensing
+    mode 3 Degraded DriftingHighGasSensing
+    mode 4 Failed NoGasSensing
+function AdjustGasFlow
+    mode 1 Operational NominalFlowAdjustment
+    mode 2 Degraded PartialLowAdjustment
+    mode 3 Degraded PartialHighAdjustment
+    mode 4 Failed NoAdjustment
+    mode 6 Failed NoAdjustmentLow
+function ExportExcessGas
+    mode 1 Operational NominalExportGas
+function ConductAdjustedGas
+    mode 1 Operational NominalConductingAdjustedGas
+    mode 2 Degraded PartialConductingAdjustedGas
+    mode 3 Failed NoConductingAdjustedGas
+function MeasureGasPressure
+    mode 1 Operational NominalPressureSensing
+    mode 2 Degraded DriftingLowPressureSensing
+    mode 3 Degraded DriftingHighPressureSensing
+    mode 4 Failed NoPressureSensing  
+function RegulateGasPressure
+    mode 1 Operational NominalPressureRegulating
+    mode 2 Degraded LowPressureRegulating
+    mode 3 Degraded HighPressureRegulating
+    mode 4 Failed NoPressureRegulating   
+    mode 5 Operational NoPressureToRegulate
+    mode 6 Degraded NoPressureToRegulateLow
+    mode 7 Degraded NoPressureToRegulateHigh
+    condition NoPressure 1 to 5 
+    condition NoPressure 2 to 6 
+    condition NoPressure 3 to 7 
+    condition NonZeroPressure 5 to 1
+    condition NonZeroPressure 6 to 2
+    condition NonZeroPressure 7 to 3
+function ConductRegulatedGas
+    mode 1 Operational NominalConductingRegulatedGas
+    mode 2 Degraded PartialConductingRegulatedGas 
+    mode 3 Failed NoConductingRegulatedGas 
+function ImportPropellant
+    mode 1 Operational NominalPropellant
+    mode 2 Degraded IncompletePropellant
+    mode 3 Failed NoPropellant
+function ContainPropellant
+	mode 1 Operational NominalContainProp
+	mode 2 Degraded LeakingProp
+	mode 3 Failed NoContainingProp
+function SensePropellantPT
+    mode 1 Operational NominalPropSensing
+    mode 2 Degraded DriftingLowPropSensing
+    mode 3 Degraded DriftingHighPropSensing
+    mode 4 Failed NoPropSensing
+function AdjustPropellantPT
+    mode 1 Operational NominalPTRegulating
+    mode 2 Degraded LowPTRegulating
+    mode 3 Degraded HighPTRegulating
+    mode 4 Failed NoPTRegulating   
+    mode 5 Failed NoIncreasePT
+    mode 6 Degraded LowIncreasePT
+    mode 7 Degraded HighIncreasePT
+    mode 8 Failed TooHighIncreasePT
+    condition NoGastoPower 1 2 3 6 7 to 5
+    condition LowGastoPower 1 2 3 5 7 to 6 
+    condition NominalGastoPower 2 3 5 6 7 to 1
+    condition HighGastoPower 1 2 3 5 6 to 7
+    condition TooHighGastoPower 1 2 3 4 6 7 to 8
+function ExportRegulatedGas
+    mode 1 Operational NominalExportRegGas
+function ConductPropellant
+    mode 1 Operational NominalConductingPropellant
+    mode 2 Degraded PartialConductingPropellant
+    mode 3 Failed NoConductingPropellant 
+function SensePropellantRate
+    mode 1 Operational NominalPropRSensing
+    mode 2 Degraded DriftingLowPropRSensing
+    mode 3 Degraded DriftingHighPropRSensing
+    mode 4 Failed NoPropRSensing    
+function AdjustPropRate
+    mode 1 Operational NominalPropRateAdjustment
+    mode 2 Degraded PartialLowPropRateAdjustment
+    mode 3 Degraded PartialHighPropRateAdjustment
+    mode 4 Failed NoPropRateAdjustment
+    mode 6 Failed NoPropRateAdjustmentLow
+function ImportCatalyst
+    mode 1 Operational NominalCatalystSource
+    mode 2 Degraded NotCompleteCatalystSource
+    mode 3 Failed NoCatalystSource
+function ContainCatalyst
+	mode 1 Operational NominalContainCatalyst
+	mode 2 Failed NoContainingCatalyst
+function CombustPropellant
+    mode 1 Operational NominalCombustion
+    mode 2 Degraded PoorCombustion
+    mode 3 Failed NoCombustion
+    condition 1 3 to 2 LowCatalyst
+    condition 1 2 to 3 NoCatalyst 
+    condition 2 3 to 1 NominalCatalyst
+function ExportHeatEnergy
+    mode 1 Operational HeatSink
+    mode 2 Degraded HotHeatSink
+    mode 3 Failed HottestHeatSink
+function ExportByproducts
+    mode 1 Operational ExportByproducts
+function ExportThrust
+    mode 1 Operational ExportThrust
+
 function ImportElectricalEnergy
     mode 1 Operational NominalVoltageSource
     mode 2 Degraded LowVoltageSource
@@ -21,10 +149,6 @@ function ImportChemicalEnergy
 function ImportBinarySignal
     mode 1 Operational NominalSignalSource
     mode 2 Failed ZeroSignalSource
-function ExportHeatEnergy
-    mode 1 Operational HeatSink
-    mode 2 Degraded HotHeatSink
-    mode 3 Failed HottestHeatSink
 function ImportMaterial
     mode 1 Operational NominalMaterialSource
     mode 2 Failed NoMaterialSource
@@ -129,9 +253,37 @@ function ProcessSignalNot
     condition 1 to 2 ZeroSignal
     condition 2 to 1 NonZeroSignal
 function ControlElectrical
-    mode 1 Operational EqualControl
+    mode 1 Operational EqualVoltage
     mode 2 Operational IncreaseVoltage
     mode 3 Operational DecreaseVoltage
+    condition 2 3 to 1 LowSignal
+    condition 1 3 to 2 HighSignal
+    condition 1 2 to 3 NominalSignal
+function ControlSig1
+    mode 1 Operational EqualControl
+    mode 2 Operational IncreaseControl
+    mode 3 Operational DecreaseControl
+    condition 2 3 to 1 LowSignal
+    condition 1 3 to 2 HighSignal
+    condition 1 2 to 3 NominalSignal
+function ControlSig2
+    mode 1 Operational EqualControl
+    mode 2 Operational IncreaseControl
+    mode 3 Operational DecreaseControl
+    condition 2 3 to 1 LowSignal
+    condition 1 3 to 2 HighSignal
+    condition 1 2 to 3 NominalSignal
+function ControlSig3
+    mode 1 Operational EqualControl
+    mode 2 Operational IncreaseControl
+    mode 3 Operational DecreaseControl
+    condition 2 3 to 1 LowSignal
+    condition 1 3 to 2 HighSignal
+    condition 1 2 to 3 NominalSignal
+function ControlSig4
+    mode 1 Operational EqualControl
+    mode 2 Operational IncreaseControl
+    mode 3 Operational DecreaseControl
     condition 2 3 to 1 LowSignal
     condition 1 3 to 2 HighSignal
     condition 1 2 to 3 NominalSignal

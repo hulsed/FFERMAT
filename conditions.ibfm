@@ -44,3 +44,27 @@ condition Hot
     Heat output effort > Nominal
 condition Hottest
     Heat output effort > High
+condition NoPressure
+    AdjustedGas input effort == Zero
+condition NonZeroPressure
+    AdjustedGas input effort > Zero
+condition NoPT
+    Propellant input effort == Zero
+condition NonZeroPT
+    Propellant input effort > Zero
+condition NoGastoPower
+	(RegulatedGas input effort == Zero) or (RegulatedGas input rate == Zero)
+condition LowGastoPower
+	RegulatedGas input effort == Low 
+condition NominalGastoPower
+	RegulatedGas input effort == Nominal 
+condition HighGastoPower
+	RegulatedGas input effort == High
+condition TooHighGastoPower
+	RegulatedGas input effort == Highest
+condition LowCatalyst
+    Catalyst input effort == Low
+condition NoCatalyst
+    Catalyst input effort == Zero
+condition NominalCatalyst
+    Catalyst input effort >= Nominal
