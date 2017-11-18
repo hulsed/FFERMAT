@@ -297,6 +297,12 @@ mode ExportByproducts
     Byproducts input rate = Byproducts input rate
 mode ExportThrust
     Thrust input rate = Thrust input rate
+mode ExportLowThrust
+    Thrust input rate = Thrust input rate
+mode ExportNoThrust
+    Thrust input rate = Thrust input rate
+mode TooMuchThrust
+    Thrust input rate = Thrust input rate
 mode OpenCircuit
     optional Electrical output effort = Zero
     optional Electrical input rate = Zero

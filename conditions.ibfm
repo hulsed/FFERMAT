@@ -68,3 +68,11 @@ condition NoCatalyst
     Catalyst input effort == Zero
 condition NominalCatalyst
     Catalyst input effort >= Nominal
+condition Lowthrust
+    Thrust input effort == Low 
+condition NominalThrust
+    Thrust input effort == Nominal
+condition NoThrust
+    Thrust input effort == Zero 
+condition TooMuchThrust
+    Thrust input rate >= High 

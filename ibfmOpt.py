@@ -24,7 +24,7 @@ def changeController(policy):
 
 def changeFunctions(policy,nummodes, conditions):
     filename='functions.ibfm'
-    function='ControlElectrical'
+    function='ControlSig3'
     #convert policy to input and output modes
     inmodestr,outmodestr=policy2strs(policy,nummodes)    
     
@@ -69,7 +69,7 @@ def policy2strs(policy,nummodes):
 
 def score(exp):
     numstates=len(exp.getResults())
-    functions=['exportEE1']
+    functions=['exportT1']
     scorefunc={'Failed': -5,'Degraded': -2, 'Operational': 0}
     funsco=np.zeros([numstates,len(functions)])
     scensco=np.zeros(numstates)
