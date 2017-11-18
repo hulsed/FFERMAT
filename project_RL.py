@@ -17,6 +17,9 @@ tau=1
 signal=1
 
 if signal == 1:
+	policy_action_1=[1,1,1]
+	policy_action_2=[2,1,1]
+	policy_action_3=[3,1,1]
 elif signal == 2:
 	policy_action_1=[1,1,3]
 	policy_action_2=[1,2,3]
@@ -27,31 +30,34 @@ elif signal ==3:
 	policy_action_3=[1,2,3]
 
 #actions
-    importlib.reload(ibfm)
-    #change to mode 1
-    policy=[2,2,3]
+def action1(): 
+	#change to mode 1
+    policy=policy_action_1
     ibfmOpt.changeController(policy)
-    exp1= ibfm.Experiment('simple_controller')
-    exp1.run(1)
-    scenscore,reward=ibfmOpt.score(exp1)
+    importlib.reload(ibfm)
+    e1= ibfm.Experiment('monoprop')
+    e1.run(1)
+    scenscore,reward=ibfmOpt.score(e1)
     return reward
 
-    importlib.reload(ibfm)
-    #change to mode 2
-    policy=[1,2,3]
+def action2():
+	#change to mode 2
+    policy=policy_action_2
     ibfmOpt.changeController(policy)
-    exp2= ibfm.Experiment('simple_controller')
-    exp2.run(1)
-    scenscore,reward=ibfmOpt.score(exp2)
+    importlib.reload(ibfm)
+    e2= ibfm.Experiment('monoprop')
+    e2.run(1)
+    scenscore,reward=ibfmOpt.score(e2)
     return reward
 
-    importlib.reload(ibfm)
-    #change to mode 3
-    policy=[3,2,3]
+def action3():
+	#change to mode 3
+    policy=policy_action_3
     ibfmOpt.changeController(policy)
-    exp3= ibfm.Experiment('simple_controller')
-    exp3.run(1)
-    scenscore,reward=ibfmOpt.score(exp3)
+    importlib.reload(ibfm)
+    e3= ibfm.Experiment('monoprop')
+    e3.run(1)
+    scenscore,reward=ibfmOpt.score(e3)
     return reward
 
 #initial V values
@@ -87,18 +93,24 @@ while t<num_steps:
 	if action_taken==1:
 		#action 1
 		count_action1+=1
+		reward_action_1=action1()
+		reward_action_1=action1()
 		if count_action1>1:
 			new_value_action_1=value_action_1[(count_action1-1)-1]+(1/float(count_action1))*(reward_action_1-value_action_1[(count_action1-1)-1])
 			value_action_1.append(new_value_action_1)
 	elif action_taken==2:
 		#action 2
 		count_action2+=1
+		reward_action_2=action2()
+		reward_action_2=action2()
 		if count_action2>1:
 			new_value_action_2=value_action_2[(count_action2-1)-1]+(1/float(count_action2))*(reward_action_2-value_action_2[(count_action2-1)-1])
 			value_action_2.append(new_value_action_2)
 	elif action_taken==3:
 		#action 3
 		count_action3+=1
+		reward_action_3=action3()
+		reward_action_3=action3()
 		if count_action3>1:
 			new_value_action_3=value_action_3[(count_action3-1)-1]+(1/float(count_action3))*(reward_action_3-value_action_3[(count_action3-1)-1])
 			value_action_3.append(new_value_action_3)
