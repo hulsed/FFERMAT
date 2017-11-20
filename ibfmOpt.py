@@ -54,7 +54,7 @@ def selectPolicy(QTab, FullPolicy):
     return FullPolicy
 
 def evaluate(FullPolicy):
-    changeControllers(FullPolicy)
+    changeFunctions(FullPolicy)
     importlib.reload(ibfm)
     
     e1= ibfm.Experiment('monoprop')
@@ -63,41 +63,36 @@ def evaluate(FullPolicy):
     
     return reward
 
-    
-
-def changeControllers(FullPolicy):
-    #modes and conditions to use
+def changeFunctions(FullPolicy):
+    #parameters of problem
     nummodes=3
     controllers=len(FullPolicy)
-    conditions=['LowSignal', 'HighSignal','NominalSignal']
-    policy=FullPolicy[0]
-    
+    functions=[]
     for controller in range(controllers):
-        policy=FullPolicy[controller]
-        changeFunctions(policy,nummodes,conditions,controller)
-        print(controller)
-    
-    return 0
-
-def changeFunctions(policy,nummodes, conditions,controller):
+        num=controller+1
+        functions=functions+['ControlSig'+str(num)]
+    conditions=['LowSignal', 'HighSignal','NominalSignal']
     filename='functions.ibfm'
-    
-    num=controller+1
-    function='ControlSig'+str(num)
-    #convert policy to input and output modes
-    inmodestr,outmodestr=policy2strs(policy,nummodes)    
-    
+    #initialization
+    policy=FullPolicy[0]
+    inmodestr,outmodestr=policy2strs(policy,nummodes)     
+    num=0     
     numconditions=len(conditions)
-    infunction=0
-    statenum=0
-    
     newline=''
-    
+    infunction=0
+    #open the functions file to edit
     with fileinput.FileInput(filename, inplace=True) as thefile:
         for line in thefile:
-            if 'function' in line and function in line:
-                #print('function found')
-                infunction=1
+            #check to find function
+            if 'function' in line:
+                for function in functions:
+                    if function in line:
+                        funnum=functions.index(function)
+                        infunction=1
+                        policy=FullPolicy[funnum]
+                        inmodestr,outmodestr=policy2strs(policy,nummodes) 
+                        statenum=0
+                    
             elif 'function' in line:
                 #print('other function')
                 infunction=0
@@ -107,9 +102,8 @@ def changeFunctions(policy,nummodes, conditions,controller):
                 #print(line)
                 line=newline
             print(line, end='')
-    #print(statenum)
-        thefile.close()
-    fileinput.close()
+            
+
     return 0
 
 def policy2strs(policy,nummodes):
