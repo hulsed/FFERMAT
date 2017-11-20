@@ -9,22 +9,81 @@ import sys
 import fileinput
 import numpy as np
 import scipy as sp
+import importlib
+import ibfm
 
-def changeController(policy):
+
+    
+def initFullPolicy(controllers, conditions):
+    FullPolicy=np.ones([controllers,conditions], int)
+    return FullPolicy
+
+def initQTab(controllers, conditions, modes):
+    #Qtable: controller (state), input condition (state), output mode (action)
+    QTab=np.ones([controllers,conditions,modes])
+    return QTab
+
+def avlearn(QTab, FullPolicy,reward):
+    controllers,conditions,modes=np.shape(QTab)
+    alpha=0.1
+    taken=1
+    QVal=1.0
+    
+    for i in range(controllers):
+        for j in range(conditions):
+            taken=FullPolicy[i,j]-1
+            QVal=QTab[i,j,taken]
+            QTab[i,j,taken]=QVal+alpha*(reward-QVal)
+            
+    return QTab
+
+def selectPolicy(QTab, FullPolicy):
+    tau=1
+    
+    controllers,conditions,modes=np.shape(QTab)
+    prob=np.ones(modes)
+    relval=np.ones(modes)
+
+    for i in range(controllers):
+        for j in range (conditions):
+            for k in range(modes):
+                relval[k]=np.exp(QTab[i,j,k]/tau)
+            prob=relval/sum(relval)
+            FullPolicy[i,j]=np.random.choice(modes,1,p=prob)+1
+
+    return FullPolicy
+
+def evaluate(FullPolicy):
+    changeControllers(FullPolicy)
+    importlib.reload(ibfm)
+    
+    e1= ibfm.Experiment('monoprop')
+    e1.run(1)
+    scenscore,reward=score(e1)
+    
+    return reward
+
+    
+
+def changeControllers(FullPolicy):
     #modes and conditions to use
     nummodes=3
+    controllers=len(FullPolicy)
     conditions=['LowSignal', 'HighSignal','NominalSignal']
+    policy=FullPolicy[0]
     
-    #actions (should be input to function)
-    #policy=[1,2,3]
-    
-    changeFunctions(policy,nummodes,conditions)
+    for controller in range(controllers):
+        policy=FullPolicy[controller]
+        changeFunctions(policy,nummodes,conditions,controller)
+        print(controller)
     
     return 0
 
-def changeFunctions(policy,nummodes, conditions):
+def changeFunctions(policy,nummodes, conditions,controller):
     filename='functions.ibfm'
-    function='ControlSig3'
+    
+    num=controller+1
+    function='ControlSig'+str(num)
     #convert policy to input and output modes
     inmodestr,outmodestr=policy2strs(policy,nummodes)    
     
@@ -49,6 +108,8 @@ def changeFunctions(policy,nummodes, conditions):
                 line=newline
             print(line, end='')
     #print(statenum)
+        thefile.close()
+    fileinput.close()
     return 0
 
 def policy2strs(policy,nummodes):
