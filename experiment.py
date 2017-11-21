@@ -38,3 +38,7 @@ for k in range(iterations):
 x=range(iterations)
 
 plt.errorbar(x,avereward,stdreward, linestyle='None',marker='+')
+plt.title('Convergence of Learner Over Time')
+plt.xlabel('Iterations')
+plt.ylabel('Score of End-States')
+plt.grid()
