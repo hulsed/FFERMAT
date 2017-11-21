@@ -59,9 +59,9 @@ def evaluate(FullPolicy):
     
     e1= ibfm.Experiment('monoprop')
     e1.run(1)
-    scenscore,reward=score(e1)
+    statescore,reward=score(e1)
     
-    return reward
+    return reward, statescore
 
 def changeFunctions(FullPolicy):
     #parameters of problem
