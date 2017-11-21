@@ -22,8 +22,8 @@ if __name__ == '__main__':
   #eps.run(2)
   #eps.run(3)
   #eps.run(4)
-  scenscore,score=ibfmOpt.score(elm)
-  print(scenscore, score)
+  #scenscore,score=ibfmOpt.score(elm)
+  #print(scenscore, score)
   
   #con.model.printStates(flows=True)
   #note: scenarios used are found in eps.scenarios

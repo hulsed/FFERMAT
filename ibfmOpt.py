@@ -125,24 +125,46 @@ def policy2strs(policy,nummodes):
 def score(exp):
     numstates=len(exp.getResults())
     functions=['exportT1']
-    scorefunc={'Failed': -5,'Degraded': -2, 'Operational': 0}
-    funsco=np.zeros([numstates,len(functions)])
+    Flow="Thrust"
+    
+    statescores=np.zeros([numstates,len(functions)])
     scensco=np.zeros(numstates)
     
-    count=0
+    for i in range (numstates):
+        flowsraw=list(exp.results[i].keys())
+        flows=[str(j) for j in flowsraw]
+        states=list(exp.results[i].values())
+        loc=flows.index(Flow)
+        
+        effort=int(states[loc][0])
+        rate=int(states[loc][1])
+        statescores[i]=scoreState(rate,effort)
+        
+    totalscore=sum(statescores)
     #score modes
-    for i in range(numstates):
-        count=0
-        for j in functions:
-            #takes the state of the function at the final iteration
-            res=exp.getResults()[i][j][1]
-            funsco[i,count]=scorefunc[res]
-            count=count+1
-        scensco[i]=sum(funsco[i,:])
+    #for i in range(numstates):
+    #    count=0
+    #    for j in functions:
+    #        #takes the state of the function at the final iteration
+    #        res=exp.getResults()[i][j][1]
+    #        funsco[i,count]=scorefunc[res]
+    #        count=count+1
+    #    scensco[i]=sum(funsco[i,:])
+    #scorefunc={'Failed': -5,'Degraded': -2, 'Operational': 0}
         
     totsco=sum(scensco)
     
-    return scensco, totsco
+    return statescores, totalscore
+
+def scoreState(rate, effort):
+    func = [[-10,-10,-10,-10,-10],
+            [-10, -5, -3, -1, -7],
+            [-10, -3,  0, -3, -9],
+            [-10, -1, -3, -5,-10],
+            [-10, -7, -9,-10,-10]]
+            
+    score=func[effort][rate]
+    return score
 
 
     
