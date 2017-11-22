@@ -20,7 +20,7 @@ def initFullPolicy(controllers, conditions):
 
 def initQTab(controllers, conditions, modes):
     #Qtable: controller (state), input condition (state), output mode (action)
-    QTab=np.ones([controllers,conditions,modes])
+    QTab=np.ones([controllers,conditions,modes])*-250
     return QTab
 
 def avlearn(QTab, actions, instates, reward):
@@ -68,7 +68,7 @@ def Qlearn(QTab, actions, instates, reward):
 #    return QTab
 
 def selectPolicy(QTab, FullPolicy):
-    tau=1
+    tau=1.0
     
     controllers,conditions,modes=np.shape(QTab)
     prob=np.ones(modes)
