@@ -20,22 +20,52 @@ def initFullPolicy(controllers, conditions):
 
 def initQTab(controllers, conditions, modes):
     #Qtable: controller (state), input condition (state), output mode (action)
-    QTab=np.ones([controllers,conditions,modes])*-620
+    QTab=np.ones([controllers,conditions,modes])
     return QTab
 
-def avlearn(QTab, FullPolicy,reward):
+def avlearn(QTab, actions, instates, reward):
     controllers,conditions,modes=np.shape(QTab)
-    alpha=0.1
-    taken=1
+    alpha=0.01
     QVal=1.0
     
     for i in range(controllers):
-        for j in range(conditions):
-            taken=FullPolicy[i,j]-1
-            QVal=QTab[i,j,taken]
-            QTab[i,j,taken]=QVal+alpha*(reward-QVal)
-            
-    return QTab
+        taken=actions[i]
+        instate=instates[i]
+        QVal=QTab[i,instate,taken]
+        QTab[i,instate,taken]=QVal+alpha*(reward-QVal)
+        
+def Qlearn(QTab, actions, instates, reward):
+    controllers,conditions,modes=np.shape(QTab)
+    alpha=0.01
+    QVal=1.0
+    
+    #preceding controllers get max next q value
+    for i in range(controllers-1):
+        taken=actions[i]
+        instate=instates[i]
+        QVal=QTab[i,instate,taken]
+        maxnextQ=max(QTab[i+1,instates[i+1],:])
+        QTab[i,instate,taken]=QVal+alpha*(maxnextQ-QVal)
+    
+    #final controller gets reward
+    finaltaken=actions[controllers-1]
+    finalstate=instates[controllers-1]
+    QVal=QTab[controllers-1,finalstate,finaltaken]
+    QTab[controllers-1,finalstate,finaltaken]=QVal+alpha*(reward-QVal)
+        
+#def avlearn(QTab, FullPolicy,reward):
+#    controllers,conditions,modes=np.shape(QTab)
+#    alpha=0.1
+#    taken=1
+#    QVal=1.0
+#    
+#    for i in range(controllers):
+#        for j in range(conditions):
+#            taken=FullPolicy[i,j]-1
+#            QVal=QTab[i,j,taken]
+#            QTab[i,j,taken]=QVal+alpha*(reward-QVal)
+#            
+#    return QTab
 
 def selectPolicy(QTab, FullPolicy):
     tau=1
@@ -59,9 +89,17 @@ def evaluate(FullPolicy):
     
     e1= ibfm.Experiment('monoprop')
     e1.run(1)
-    statescore,reward=score(e1)
     
-    return reward, statescore
+    scenarios=len(e1.results)
+    actions=[]
+    instates=[]
+    scores=[]
+    for scenario in range(scenarios):
+        actions=actions+[trackActions(e1,scenario)]
+        instates=instates+[trackFlows(e1,scenario)]
+        scores=scores+[scoreEndstate(e1,scenario)]
+    
+    return actions, instates, scores
 
 def changeFunctions(FullPolicy):
     #parameters of problem
@@ -121,42 +159,57 @@ def policy2strs(policy,nummodes):
     
     return inmodestr,outmodestr
 
-
-def score(exp):
+def trackActions(exp, scenario):
+    #functions of concern--the controlling functions
+    functions=['controlG2rate','controlG3press','controlP1effort','controlP1rate']
+    mode2actions={'EqualControl': 0, 'IncreaseControl': 1, 'DecreaseControl': 2}
     numstates=len(exp.getResults())
+    
+    actions=[]
+    #find actions taken
+    for function in functions:
+        mode=str(exp.results[scenario][function])
+        actions=actions+[mode2actions[mode]] 
+    return actions
+    
+#NOTE: Will ONLY work if only signals are to controllers
+def trackFlows(exp, scenario):
+    #flows of concern--inputs to the controllers    
+    condition2state={'Negative':0,'Zero': 0,'Low': 0,'High': 1,'Highest': 1,'Nominal': 2}
+    
+    flowtypesraw=list(exp.results[scenario].keys())
+    flowtypes=[str(j) for j in flowtypesraw]
+    flowstates=list(exp.results[scenario].values())
+    
+    flownum=len(flowtypes)
+    instates=[]
+    
+    #find states entered
+    for i in range(flownum):
+        if flowtypes[i]=='Signal':
+            if i%2==0:
+                incondition=str(flowstates[i][0])
+                instate=condition2state[incondition]
+                instates=instates+[instate]
+                
+    return instates
+
+def scoreEndstate(exp, scenario):
     functions=['exportT1']
     Flow="Thrust"
     
-    statescores=np.zeros([numstates,len(functions)])
-    scensco=np.zeros(numstates)
+    flowsraw=list(exp.results[scenario].keys())
+    flows=[str(j) for j in flowsraw]
+    states=list(exp.results[scenario].values())
+    loc=flows.index(Flow)
+        
+    effort=int(states[loc][0])
+    rate=int(states[loc][1])
+    statescore=scoreFlowstate(rate,effort)
     
-    for i in range (numstates):
-        flowsraw=list(exp.results[i].keys())
-        flows=[str(j) for j in flowsraw]
-        states=list(exp.results[i].values())
-        loc=flows.index(Flow)
-        
-        effort=int(states[loc][0])
-        rate=int(states[loc][1])
-        statescores[i]=scoreState(rate,effort)
-        
-    totalscore=sum(statescores)
-    #score modes
-    #for i in range(numstates):
-    #    count=0
-    #    for j in functions:
-    #        #takes the state of the function at the final iteration
-    #        res=exp.getResults()[i][j][1]
-    #        funsco[i,count]=scorefunc[res]
-    #        count=count+1
-    #    scensco[i]=sum(funsco[i,:])
-    #scorefunc={'Failed': -5,'Degraded': -2, 'Operational': 0}
-        
-    totsco=sum(scensco)
-    
-    return statescores, totalscore
+    return statescore
 
-def scoreState(rate, effort):
+def scoreFlowstate(rate, effort):
     func = [[-10,-10,-10,-10,-10],
             [-10, -5, -3, -1, -7],
             [-10, -3,  0, -3, -9],

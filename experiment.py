@@ -11,8 +11,8 @@ from matplotlib import pyplot as plt
 controllers=4
 conditions=3
 modes=3
-iterations=75
-runs=20
+iterations=1000
+runs=1
     
 FullPolicy=io.initFullPolicy(controllers,conditions)
 QTab=io.initQTab(controllers, conditions, modes)
@@ -23,10 +23,16 @@ for i in range(runs):
     for j in range(iterations):
         FullPolicy=io.selectPolicy(QTab, FullPolicy)
     
-        reward,statescore=io.evaluate(FullPolicy)
-        rewardhist[i,j]=reward
-    
-        QTab=io.avlearn(QTab,FullPolicy,reward)
+        actions, instates, scores=io.evaluate(FullPolicy)
+        rewardhist[i,j]=sum(scores)
+        
+        for k in range(len(scores)):
+            action=actions[k]
+            instate=instates[k]
+            reward=scores[k]
+            Qtab=io.Qlearn(QTab,action,instate,reward)
+        
+        #QTab=io.avlearn(QTab,FullPolicy,reward)
         
 avereward=np.ones(iterations)
 stdreward=np.ones(iterations)

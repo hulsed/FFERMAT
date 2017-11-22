@@ -21,7 +21,7 @@ condition HighestVoltage
 condition HighSignal
     Signal input effort > Nominal
 condition LowSignal
-    (Signal input effort < Nominal) and (Signal input effort >  Zero)
+    Signal input effort < Nominal
 condition NoSignal
     Signal input effort == Zero
 condition NominalSignal
