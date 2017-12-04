@@ -12,7 +12,7 @@ controllers=4
 conditions=3
 modes=3
 iterations=100
-runs=1
+runs=10
     
 FullPolicy=io.initFullPolicy(controllers,conditions)
 QTab=io.initQTab(controllers, conditions, modes)
@@ -31,16 +31,20 @@ for i in range(runs):
             instate=instates[k]
             reward=scores[k]
             #note: not sure why individual rewards don't work, but they don't
-            Qtab=io.Qlearn(QTab,action,instate,sum(scores))
+            #Qtab=io.avlearn(QTab,action,instate,sum(scores))
         
-        #QTab=io.avlearn(QTab,FullPolicy,reward)
+        QTab=io.avlearnnotracking(QTab, FullPolicy,reward)
         
 avereward=np.ones(iterations)
 stdreward=np.ones(iterations)
+maxreward=np.ones(iterations)
+minreward=np.ones(iterations)
     
 for k in range(iterations):
     avereward[k]=np.mean(rewardhist[:,k])
     stdreward[k]=np.std(rewardhist[:,k])
+    maxreward[k]=np.max(rewardhist[:,k])
+    minreward[k]=np.min(rewardhist[:,k])
 
 x=range(iterations)
 

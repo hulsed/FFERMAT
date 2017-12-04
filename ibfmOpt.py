@@ -23,6 +23,19 @@ def initQTab(controllers, conditions, modes):
     QTab=np.ones([controllers,conditions,modes])*-250
     return QTab
 
+def avlearnnotracking(QTab, FullPolicy,reward):
+    controllers,conditions,modes=np.shape(QTab)
+    alpha=0.01
+    taken=1
+    QVal=1.0
+    
+    for i in range(controllers):
+        for j in range(conditions):
+            taken=FullPolicy[i,j]-1
+            QVal=QTab[i,j,taken]
+            QTab[i,j,taken]=QVal+alpha*(reward-QVal)            
+    return QTab
+
 def avlearn(QTab, actions, instates, reward):
     controllers,conditions,modes=np.shape(QTab)
     alpha=0.01

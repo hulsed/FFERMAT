@@ -15,7 +15,14 @@ if __name__ == '__main__':
     
     #t,s=ibfmOpt.policy2strs([1,2,3],3)
     #ibfmOpt.changeController()
-    importlib.reload(ibfmOpt)
+    #importlib.reload(ibfmOpt)
+    e1= ibfm.Experiment('monoprop')
+    
+    
+    #graph of model: e1.model.graph
+    # display: nx.draw_spectral(e1.model.graph)
+    # nodes: graph.nodes()
+    # edges: graph.edges()
     
     #actions=ibfmOpt.trackActions(e1)
-    instates=ibfmOpt.trackFlows(e1,1)
+    #instates=ibfmOpt.trackFlows(e1,1)
