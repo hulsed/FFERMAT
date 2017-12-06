@@ -24,6 +24,7 @@ for i in range(runs):
         FullPolicy=io.selectPolicy(QTab, FullPolicy)
     
         actions, instates, scores=io.evaluate(FullPolicy)
+        totreward=sum(scores)/10
         rewardhist[i,j]=sum(scores)
         
         for k in range(len(scores)):
@@ -33,7 +34,7 @@ for i in range(runs):
             #note: not sure why individual rewards don't work, but they don't
             #Qtab=io.avlearn(QTab,action,instate,sum(scores))
         
-        QTab=io.avlearnnotracking(QTab, FullPolicy,reward)
+        QTab=io.avlearnnotracking(QTab, FullPolicy,totreward)
         
 avereward=np.ones(iterations)
 stdreward=np.ones(iterations)

@@ -20,12 +20,12 @@ def initFullPolicy(controllers, conditions):
 
 def initQTab(controllers, conditions, modes):
     #Qtable: controller (state), input condition (state), output mode (action)
-    QTab=np.ones([controllers,conditions,modes])*-250
+    QTab=np.ones([controllers,conditions,modes])*-25
     return QTab
 
 def avlearnnotracking(QTab, FullPolicy,reward):
     controllers,conditions,modes=np.shape(QTab)
-    alpha=0.01
+    alpha=0.1
     taken=1
     QVal=1.0
     
@@ -232,6 +232,31 @@ def scoreFlowstate(rate, effort):
     score=func[effort][rate]
     return score
 
+def scorefxns(exp):
+    
+    exp.run(1)
+    scenarios=len(exp.results)
+    
+    functions=[]
+    scores=[]
+    
+    #initialize dictionary
+    fxns=exp.model.graph.nodes()
+    fxnscores={}
+    for fxn in fxns:
+        fxnscores[fxn]=[]
+    
+    for scenario in range(scenarios):
+        function=list(exp.scenarios[scenario].keys())[0]
+        functions=functions+[function]
+        score=scoreEndstate(exp,scenario)
+        scores=scores+[score]
+        
+        fxnscores[function]=[score]+fxnscores[function]
+        
+    
+    return functions, scores, fxnscores
+        
 
     
         

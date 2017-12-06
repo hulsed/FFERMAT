@@ -17,12 +17,15 @@ if __name__ == '__main__':
     #ibfmOpt.changeController()
     #importlib.reload(ibfmOpt)
     e1= ibfm.Experiment('monoprop')
-    
+    functions, scores, fxnscores = ibfmOpt.scorefxns(e1)
     
     #graph of model: e1.model.graph
     # display: nx.draw_spectral(e1.model.graph)
+    # better display? nx.draw_networkx(e1.model.graph)
     # nodes: graph.nodes()
     # edges: graph.edges()
+    
+    # find downstream fxn: e1.model.graph.neighbors('fxn')
     
     #actions=ibfmOpt.trackActions(e1)
     #instates=ibfmOpt.trackFlows(e1,1)
