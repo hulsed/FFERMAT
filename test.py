@@ -18,6 +18,7 @@ if __name__ == '__main__':
     #ibfmOpt.changeController()
     #importlib.reload(ibfmOpt)
     e1= ibfm.Experiment('monoprop')
+    functions, scores,probs, fxnscores, fxnprobs = ibfmOpt.scorefxns(e1)
     
     #graph of model: e1.model.graph
     # display: nx.draw_spectral(e1.model.graph)
