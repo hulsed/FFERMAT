@@ -783,7 +783,6 @@ class Function(object):
                default default is the first given mode with health=Operational.
                
     '''
-    print(mode_class)
     mode = mode_class(name,self,health(),prob, **attr)
     self.modes.append(mode)
     if default or (self.default == None and health == Operational):

@@ -23,7 +23,7 @@ for i in range(runs):
     for j in range(iterations):
         FullPolicy=io.selectPolicy(QTab, FullPolicy)
     
-        actions, instates, scores=io.evaluate(FullPolicy)
+        actions, instates, scores, probs=io.evaluate(FullPolicy)
         totreward=sum(scores)/10
         rewardhist[i,j]=sum(scores)
         

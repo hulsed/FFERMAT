@@ -18,7 +18,6 @@ if __name__ == '__main__':
     #ibfmOpt.changeController()
     #importlib.reload(ibfmOpt)
     e1= ibfm.Experiment('monoprop')
-    functions, scores, fxnscores = ibfmOpt.scorefxns(e1)
     
     #graph of model: e1.model.graph
     # display: nx.draw_spectral(e1.model.graph)
@@ -30,3 +29,6 @@ if __name__ == '__main__':
     
     #actions=ibfmOpt.trackActions(e1)
     #instates=ibfmOpt.trackFlows(e1,1)
+    
+    #probability can now be gotten by:
+    # list(e1.scenarios[51].values())[0].prob

@@ -107,12 +107,16 @@ def evaluate(FullPolicy):
     actions=[]
     instates=[]
     scores=[]
+    probs=[]
     for scenario in range(scenarios):
         actions=actions+[trackActions(e1,scenario)]
         instates=instates+[trackFlows(e1,scenario)]
         scores=scores+[scoreEndstate(e1,scenario)]
+        
+        prob=float(list(e1.scenarios[scenario].values())[0].prob)
+        probs=probs+[prob]
     
-    return actions, instates, scores
+    return actions, instates, scores, probs
 
 def changeFunctions(FullPolicy):
     #parameters of problem
@@ -239,23 +243,33 @@ def scorefxns(exp):
     
     functions=[]
     scores=[]
+    probs=[]
     
     #initialize dictionary
     fxns=exp.model.graph.nodes()
     fxnscores={}
+    fxnprobs={}
     for fxn in fxns:
         fxnscores[fxn]=[]
+        fxnprobs[fxn]=[]
     
     for scenario in range(scenarios):
         function=list(exp.scenarios[scenario].keys())[0]
         functions=functions+[function]
+        
+        prob=float(list(exp.scenarios[scenario].values())[0].prob)
+        probs=probs+[prob]
+        
         score=scoreEndstate(exp,scenario)
         scores=scores+[score]
         
         fxnscores[function]=[score]+fxnscores[function]
+        fxnprobs[function]=[prob]+fxnprobs[function]
         
     
-    return functions, scores, fxnscores
+    return functions, scores, probs, fxnscores, fxnprobs
+
+
         
 
     
