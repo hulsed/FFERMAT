@@ -9,6 +9,7 @@ from multiprocessing import *
 import networkx as nx
 import ibfm
 import ibfmOpt
+importlib.reload(ibfm)
 import importlib
 
 if __name__ == '__main__':

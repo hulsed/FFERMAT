@@ -448,7 +448,7 @@ class Mode(ModeConditionParent):
   '''Class for operational modes that functions may use.
   '''
   _subclasses = {}
-  def __init__(self,name,function,health,**attr):
+  def __init__(self,name,function,health,prob, **attr):
     '''Return a Mode object.
 
     Required arguments:
@@ -462,6 +462,7 @@ class Mode(ModeConditionParent):
     self.out_flow = function.out_flow
     self.in_flow = function.in_flow
     self.health = health
+    self.prob = prob
     self.attr = attr
   def __repr__(self):
     return self.__class__.__qualname__
@@ -632,10 +633,10 @@ class Condition(ModeConditionParent):
     return self.timer
 
 class Function(object):
-  '''Abstrct class for functions in the functional model.
+  '''Abstract class for functions in the functional model.
 
   Required methods:
-  construct(self) -- call self.addMode(name,health,mode_class,default=False) and
+  construct(self) -- call self.addMode(name,health,mode_class,prob, default=False) and
                      self.addCondition(source_modes,condition,next_mode,delay=0)
                      repeatedly to specify all of the modes and conditions
                      attainable by the function. The default default is the
@@ -704,9 +705,14 @@ class Function(object):
       ident = mode[0]
       health = getSubclass(ModeHealth,mode[1])
       mode_class = Mode._subclasses.get(mode[2])
+      try: 
+          prob=mode[4]
+      except IndexError:
+          prob='NA'
+      
       if mode_class is None:
         raise Exception(mode[2]+' is not a defined mode')
-      self.addMode(ident,health,mode_class)
+      self.addMode(ident,health,mode_class, prob)
     for condition in self.__class__._conditions:
       entry = None
       delay = 0
@@ -764,7 +770,7 @@ class Function(object):
     if Flow not in flow_class.__bases__:
       for base in flow_class.__bases__:
         self._addFlow(flow,base,flows)
-  def addMode(self,name,health,mode_class,default=False,**attr):
+  def addMode(self,name,health,mode_class, prob, default=False,**attr):
     '''Add a mode to the function.
 
     Required arguments:
@@ -775,8 +781,10 @@ class Function(object):
     mode_class -- the Mode subclass representing the mode being added
     default -- whether the mode should be the default for the function. The
                default default is the first given mode with health=Operational.
+               
     '''
-    mode = mode_class(name,self,health(),**attr)
+    print(mode_class)
+    mode = mode_class(name,self,health(),prob, **attr)
     self.modes.append(mode)
     if default or (self.default == None and health == Operational):
       self.default = mode
