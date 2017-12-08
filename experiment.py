@@ -33,6 +33,7 @@ for i in range(runs):
             reward=scores[k]
             #note: not sure why individual rewards don't work, but they don't
             #Qtab=io.avlearn(QTab,action,instate,sum(scores))
+            #note: probability of the nominal state is prod(1-p_e), for e independent events
         
         QTab=io.avlearnnotracking(QTab, FullPolicy,totreward)
         
