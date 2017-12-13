@@ -23,6 +23,15 @@ def initQTab(controllers, conditions, modes):
     QTab=np.ones([controllers,conditions,modes])*-25
     return QTab
 
+def initActions():
+    FullPolicy=[[1,2,3],[1,2,3],[1,2,3],[1,2,3]]
+    changeFxnfile(FullPolicy)
+    e1= ibfm.Experiment('monoprop')
+    actionkey=e1.model.graph.nodes()[6].modes
+    
+    return actionkey    
+    
+
 def avlearnnotracking(QTab, FullPolicy,reward):
     controllers,conditions,modes=np.shape(QTab)
     alpha=0.1
@@ -96,85 +105,69 @@ def selectPolicy(QTab, FullPolicy):
 
     return FullPolicy
 
-def evaluate(FullPolicy):
+def evaluate(FullPolicy,actionkey):
     changeFunctions(FullPolicy)
-    importlib.reload(ibfm)
-    
+    #importlib.reload(ibfm)
     e1= ibfm.Experiment('monoprop')
-    e1.run(1)
+    e2=changeModes(FullPolicy, actionkey, e1)
     
-    scenarios=len(e1.results)
+    e2.run(1)
+    
+    scenarios=len(e2.results)
     actions=[]
     instates=[]
     scores=[]
     probs=[]
     for scenario in range(scenarios):
-        actions=actions+[trackActions(e1,scenario)]
-        instates=instates+[trackFlows(e1,scenario)]
-        scores=scores+[scoreEndstate(e1,scenario)]
+        actions=actions+[trackActions(e2,scenario)]
+        instates=instates+[trackFlows(e2,scenario)]
+        scores=scores+[scoreEndstate(e2,scenario)]
         
         prob=float(list(e1.scenarios[scenario].values())[0].prob)
         probs=probs+[prob]
     
-    return actions, instates, scores, probs
+    return actions, instates, scores, probs, e2
+
+def changeModes(FullPolicy, actionkey, exp):
+    
+    functions=['controlG2rate','controlG3press','controlP1effort','controlP1rate']
+    
+    newmodes=[]
+    funnum=0
+    for function in exp.model.graph.nodes():
+        newmodes=[]
+        name=str(function)
+        if name in functions:
+            loc=functions.index(name)
+            policy=FullPolicy[loc]
+            for action in policy:
+                newmode=actionkey[action-1]
+                newmodes=newmodes+[newmode]
+            exp.model.graph.nodes()[funnum].modes=newmodes
+        funnum=funnum+1
+    return exp
 
 def changeFunctions(FullPolicy):
     #parameters of problem
     nummodes=3
     controllers=len(FullPolicy)
     functions=[]
+    
     for controller in range(controllers):
         num=controller+1
         functions=functions+['ControlSig'+str(num)]
     conditions=['LowSignal', 'HighSignal','NominalSignal']
-    filename='functions.ibfm'
-    #initialization
-    policy=FullPolicy[0]
-    inmodestr,outmodestr=policy2strs(policy,nummodes)     
-    num=0     
-    numconditions=len(conditions)
-    newline=''
-    infunction=0
-    #open the functions file to edit
-    with fileinput.FileInput(filename, inplace=True) as thefile:
-        for line in thefile:
-            #check to find function
-            if 'function' in line:
-                for function in functions:
-                    if function in line:
-                        funnum=functions.index(function)
-                        infunction=1
-                        policy=FullPolicy[funnum]
-                        inmodestr,outmodestr=policy2strs(policy,nummodes) 
-                        statenum=0
-                    
-            elif 'function' in line:
-                #print('other function')
-                infunction=0
-            elif 'mode' not in line and infunction==1 and statenum<=numconditions:
-                newline='    condition ' + inmodestr[statenum] + ' to ' + outmodestr[statenum] + ' ' + conditions[statenum] + '\n'
-                statenum=statenum+1
-                #print(line)
-                line=newline
-            print(line, end='')
-            
-
-    return 0
-
-def policy2strs(policy,nummodes):
-    states=len(policy)
-    options=list(range(1,nummodes+1))
-    inmodes=np.zeros([nummodes-1])
-    inmodestr=['' for x in range(states)]
+    modes=['EqualControl','IncreaseControl','DecreaseControl']
+    template=[('EqualControl','Operational'),('EqualControl','Operational'),('EqualControl','Operational')]
     
-    for i in range(states):
-        toremove=policy[i]
-        inmodes=list(filter(lambda x: x!=toremove,options))
-        inmodestr[i]=' '.join(str(x) for x in inmodes)
+    #changes dictionary values (not model definition, unfortunately)
+    for controller in range(controllers):
         
-    outmodestr=np.char.mod('%d',policy)   
+        ibfm.functions[functions[controller]]=[(modes[FullPolicy[controller][0]-1],'Operational'),
+         (modes[FullPolicy[controller][1]-1],'Operational'),
+         (modes[FullPolicy[controller][2]-1],'Operational')]
     
-    return inmodestr,outmodestr
+    return 0
 
 def trackActions(exp, scenario):
     #functions of concern--the controlling functions
@@ -270,8 +263,65 @@ def scorefxns(exp):
     return functions, scores, probs, fxnscores, fxnprobs
 
 
-        
+### Deprecated functions
+#writes full policy to function file
+def changeFxnfile(FullPolicy):
+    #parameters of problem
+    nummodes=3
+    controllers=len(FullPolicy)
+    functions=[]
+    for controller in range(controllers):
+        num=controller+1
+        functions=functions+['ControlSig'+str(num)]
+    conditions=['LowSignal', 'HighSignal','NominalSignal']
+    filename='functions.ibfm'
+    #initialization
+    policy=FullPolicy[0]
+    inmodestr,outmodestr=policy2strs(policy,nummodes)     
+    num=0     
+    numconditions=len(conditions)
+    newline=''
+    infunction=0
+    #open the functions file to edit
+    with fileinput.FileInput(filename, inplace=True) as thefile:
+        for line in thefile:
+            #check to find function
+            if 'function' in line:
+                for function in functions:
+                    if function in line:
+                        funnum=functions.index(function)
+                        infunction=1
+                        policy=FullPolicy[funnum]
+                        inmodestr,outmodestr=policy2strs(policy,nummodes) 
+                        statenum=0
+                    
+            elif 'function' in line:
+                #print('other function')
+                infunction=0
+            elif 'mode' not in line and infunction==1 and statenum<=numconditions:
+                newline='    condition ' + inmodestr[statenum] + ' to ' + outmodestr[statenum] + ' ' + conditions[statenum] + '\n'
+                statenum=statenum+1
+                #print(line)
+                line=newline
+            print(line, end='')
+            
 
+    return 0
+#converts a single policy to a string
+def policy2strs(policy,nummodes):
+    states=len(policy)
+    options=list(range(1,nummodes+1))
+    inmodes=np.zeros([nummodes-1])
+    inmodestr=['' for x in range(states)]
+    
+    for i in range(states):
+        toremove=policy[i]
+        inmodes=list(filter(lambda x: x!=toremove,options))
+        inmodestr[i]=' '.join(str(x) for x in inmodes)
+        
+    outmodestr=np.char.mod('%d',policy)   
+    
+    return inmodestr,outmodestr
     
         
 

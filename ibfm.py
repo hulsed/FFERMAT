@@ -1450,6 +1450,8 @@ for function in Function._subclasses:
   functions[function] = [(mode[2],mode[1]) for mode in Function._subclasses[function]._modes]
 
 '''Create a dictionary of all defined modes'''
-#modes = {}
-#for mode in Mode._subclasses:
-#    modes[mode] = [m for m in Mode._subclasses[mode].textBehaviors(Mode._subclasses[mode])]
+modes = {}
+for mode in Mode._subclasses:
+    modes[mode] = (mode, Mode._subclasses[mode])
+
+#[z for z in ibfm.Mode._subclasses['IncreaseControl'].textBehaviors('IncreaseControl')]
