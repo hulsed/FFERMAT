@@ -944,7 +944,7 @@ class Model(object):
         function = Function._subclasses.get(data[function_key])
         if function is None:
           raise Exception(data[function_key]+' is not a defined function name.')
-        self.addFunction(function(self,node))
+        self.addFunction(function(self,node), node)
       for node1,node2,data in self.imported_graph.edges_iter(data=True):
         flow_class = Flow._subclasses.get(data[flow_key])
         if flow_class is None:
@@ -954,11 +954,12 @@ class Model(object):
       for words in self.__class__._functions:
         ident = words[0]
         function = Function._subclasses[words[1]]
-        self.addFunction(function(self,ident))
+        self.addFunction(function(self,ident),words[1])
       for words in self.__class__._flows:
         ident = words[:2]
         flow = Flow._subclasses[words[2]]
         self.addFlow(flow,ident[0],ident[1])
+        
 
   def flows(self,functions=False):
     '''Generate flows for iterating.
@@ -990,9 +991,10 @@ class Model(object):
       out_function.addInFlow(flow)
     for function in self.functions():
       function.construct()
-  def addFunction(self,function):
+  def addFunction(self,function, typename):
     '''Add function to the graph of the functional model.'''
-    self.graph.add_node(function)
+
+    self.graph.add_node(function, function=typename)
   def addFlow(self,flow_class,in_function_name,out_function_name):
     '''Add flow to the graph of the functional model.
 

@@ -1,0 +1,189 @@
+function ControlSig111
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 2 3 to 1 LowSignal
+	condition 2 3 to 1 HighSignal
+	condition 2 3 to 1 NominalSignal
+function ControlSig112
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 2 3 to 1 LowSignal
+	condition 2 3 to 1 HighSignal
+	condition 1 3 to 2 NominalSignal
+function ControlSig113
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 2 3 to 1 LowSignal
+	condition 2 3 to 1 HighSignal
+	condition 1 2 to 3 NominalSignal
+function ControlSig121
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 2 3 to 1 LowSignal
+	condition 1 3 to 2 HighSignal
+	condition 2 3 to 1 NominalSignal
+function ControlSig122
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 2 3 to 1 LowSignal
+	condition 1 3 to 2 HighSignal
+	condition 1 3 to 2 NominalSignal
+function ControlSig123
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 2 3 to 1 LowSignal
+	condition 1 3 to 2 HighSignal
+	condition 1 2 to 3 NominalSignal
+function ControlSig131
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 2 3 to 1 LowSignal
+	condition 1 2 to 3 HighSignal
+	condition 2 3 to 1 NominalSignal
+function ControlSig132
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 2 3 to 1 LowSignal
+	condition 1 2 to 3 HighSignal
+	condition 1 3 to 2 NominalSignal
+function ControlSig133
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 2 3 to 1 LowSignal
+	condition 1 2 to 3 HighSignal
+	condition 1 2 to 3 NominalSignal
+function ControlSig211
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 3 to 2 LowSignal
+	condition 2 3 to 1 HighSignal
+	condition 2 3 to 1 NominalSignal
+function ControlSig212
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 3 to 2 LowSignal
+	condition 2 3 to 1 HighSignal
+	condition 1 3 to 2 NominalSignal
+function ControlSig213
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 3 to 2 LowSignal
+	condition 2 3 to 1 HighSignal
+	condition 1 2 to 3 NominalSignal
+function ControlSig221
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 3 to 2 LowSignal
+	condition 1 3 to 2 HighSignal
+	condition 2 3 to 1 NominalSignal
+function ControlSig222
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 3 to 2 LowSignal
+	condition 1 3 to 2 HighSignal
+	condition 1 3 to 2 NominalSignal
+function ControlSig223
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 3 to 2 LowSignal
+	condition 1 3 to 2 HighSignal
+	condition 1 2 to 3 NominalSignal
+function ControlSig231
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 3 to 2 LowSignal
+	condition 1 2 to 3 HighSignal
+	condition 2 3 to 1 NominalSignal
+function ControlSig232
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 3 to 2 LowSignal
+	condition 1 2 to 3 HighSignal
+	condition 1 3 to 2 NominalSignal
+function ControlSig233
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 3 to 2 LowSignal
+	condition 1 2 to 3 HighSignal
+	condition 1 2 to 3 NominalSignal
+function ControlSig311
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 2 to 3 LowSignal
+	condition 2 3 to 1 HighSignal
+	condition 2 3 to 1 NominalSignal
+function ControlSig312
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 2 to 3 LowSignal
+	condition 2 3 to 1 HighSignal
+	condition 1 3 to 2 NominalSignal
+function ControlSig313
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 2 to 3 LowSignal
+	condition 2 3 to 1 HighSignal
+	condition 1 2 to 3 NominalSignal
+function ControlSig321
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 2 to 3 LowSignal
+	condition 1 3 to 2 HighSignal
+	condition 2 3 to 1 NominalSignal
+function ControlSig322
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 2 to 3 LowSignal
+	condition 1 3 to 2 HighSignal
+	condition 1 3 to 2 NominalSignal
+function ControlSig323
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 2 to 3 LowSignal
+	condition 1 3 to 2 HighSignal
+	condition 1 2 to 3 NominalSignal
+function ControlSig331
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 2 to 3 LowSignal
+	condition 1 2 to 3 HighSignal
+	condition 2 3 to 1 NominalSignal
+function ControlSig332
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 2 to 3 LowSignal
+	condition 1 2 to 3 HighSignal
+	condition 1 3 to 2 NominalSignal
+function ControlSig333
+	mode 1 Operational EqualControl 
+	mode 2 Operational IncreaseControl 
+	mode 3 Operational DecreaseControl 
+	condition 1 2 to 3 LowSignal
+	condition 1 2 to 3 HighSignal
+	condition 1 2 to 3 NominalSignal

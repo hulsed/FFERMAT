@@ -11,8 +11,80 @@ import numpy as np
 import scipy as sp
 import importlib
 import ibfm
+import networkx as nx
 
 
+def createVariants():
+    
+    file=open('ctlfxnvariants.ibfm', mode='w')
+    variants=[3,3,3]
+    options=list(range(1,variants[0]+1))
+    
+    for i in range(variants[0]):
+        for j in range(variants[1]):
+            for k in range(variants[2]):
+                file.write('function ControlSig'+str(i+1)+str(j+1)+str(k+1)+'\n')
+                file.write('\t'+'mode 1 Operational EqualControl \n')
+                file.write('\t'+'mode 2 Operational IncreaseControl \n')
+                file.write('\t'+'mode 3 Operational DecreaseControl \n')
+                
+                toremove=i+1
+                inmodes=list(filter(lambda x: x!=toremove,options))
+                inmodestr=' '.join(str(x) for x in inmodes)
+                
+                file.write('\t'+'condition '+inmodestr+' to '+str(toremove)+' LowSignal'+'\n')
+                
+                toremove=j+1
+                inmodes=list(filter(lambda x: x!=toremove,options))
+                inmodestr=' '.join(str(x) for x in inmodes)
+                
+                file.write('\t'+'condition '+inmodestr+' to '+str(toremove)+' HighSignal'+'\n')
+                
+                toremove=k+1
+                inmodes=list(filter(lambda x: x!=toremove,options))
+                inmodestr=' '.join(str(x) for x in inmodes)
+                
+                file.write('\t'+'condition '+inmodestr+' to '+str(toremove)+' NominalSignal'+'\n')
+                
+    file.close()
+    return 0
+
+           
+def reviseModel(FullPolicy, exp):
+    graph=exp.model.graph.copy()
+    nodes=graph.nodes()
+    edges=graph.edges()
+    
+    functions=['controlG2rate','controlG3press','controlP1effort','controlP1rate']
+    
+    newgraph=nx.DiGraph()
+    
+    for node in nodes:
+        name=str(node)
+        fxn=graph.node[node]['function']
+        
+        newgraph.add_node(name, function=fxn)
+        if name in functions:
+            loc=functions.index(name)
+            policy=FullPolicy[loc]
+            
+            ctlfxn='ControlSig'+str(policy[0])+str(policy[1])+str(policy[2])
+            newgraph.node[name]={'function': ctlfxn}
+            
+    
+    for edge in edges:
+        
+        prev=str(edge[0])
+        new=str(edge[1])
+        
+        flowtype=str(list(graph.edge[edge[0]][edge[1]][0].values())[0])
+
+        newgraph.add_edge(prev,new,flow=flowtype)
+        #newgraph.edge[prev]={new: {'flow': flowtype}}
+        
+    return newgraph  
+    
+    
     
 def initFullPolicy(controllers, conditions):
     FullPolicy=np.ones([controllers,conditions], int)
