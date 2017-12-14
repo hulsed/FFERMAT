@@ -177,28 +177,26 @@ def selectPolicy(QTab, FullPolicy):
 
     return FullPolicy
 
-def evaluate(FullPolicy,actionkey):
-    changeFunctions(FullPolicy)
+def evaluate(FullPolicy,experiment):
+    graph=reviseModel(FullPolicy, experiment)
     #importlib.reload(ibfm)
-    e1= ibfm.Experiment('monoprop')
-    e2=changeModes(FullPolicy, actionkey, e1)
+    newexp= ibfm.Experiment(graph)
+    newexp.run(1)
     
-    e2.run(1)
-    
-    scenarios=len(e2.results)
+    scenarios=len(newexp.results)
     actions=[]
     instates=[]
     scores=[]
     probs=[]
     for scenario in range(scenarios):
-        actions=actions+[trackActions(e2,scenario)]
-        instates=instates+[trackFlows(e2,scenario)]
-        scores=scores+[scoreEndstate(e2,scenario)]
+        actions=actions+[trackActions(newexp,scenario)]
+        instates=instates+[trackFlows(newexp,scenario)]
+        scores=scores+[scoreEndstate(newexp,scenario)]
         
-        prob=float(list(e1.scenarios[scenario].values())[0].prob)
+        prob=float(list(newexp.scenarios[scenario].values())[0].prob)
         probs=probs+[prob]
     
-    return actions, instates, scores, probs, e2
+    return actions, instates, scores, probs, newexp
 
 def changeModes(FullPolicy, actionkey, exp):
     
