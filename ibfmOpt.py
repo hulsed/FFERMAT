@@ -189,9 +189,9 @@ def evaluate(FullPolicy,experiment):
     scores=[]
     probs=[]
     for scenario in range(scenarios):
-        actions=actions+[trackActions(newexp,scenario)]
-        instates=instates+[trackFlows(newexp,scenario)]
-        scores=scores+[scoreEndstate(newexp,scenario)]
+        actions+=[trackActions(newexp,scenario)]
+        instates+=[trackFlows(newexp,scenario)]
+        scores+=[scoreEndstate(newexp,scenario)]
         
         prob=float(list(newexp.scenarios[scenario].values())[0].prob)
         probs=probs+[prob]
@@ -212,7 +212,7 @@ def changeModes(FullPolicy, actionkey, exp):
             policy=FullPolicy[loc]
             for action in policy:
                 newmode=actionkey[action-1]
-                newmodes=newmodes+[newmode]
+                newmodes+=[newmode]
             exp.model.graph.nodes()[funnum].modes=newmodes
         funnum=funnum+1
     return exp
@@ -249,7 +249,7 @@ def trackActions(exp, scenario):
     #find actions taken
     for function in functions:
         mode=str(exp.results[scenario][function])
-        actions=actions+[mode2actions[mode]] 
+        actions+=[mode2actions[mode]] 
     return actions
     
 #NOTE: Will ONLY work if only signals are to controllers
@@ -270,7 +270,7 @@ def trackFlows(exp, scenario):
             if i%2==0:
                 incondition=str(flowstates[i][0])
                 instate=condition2state[incondition]
-                instates=instates+[instate]
+                instates+=[instate]
                 
     return instates
 
@@ -318,13 +318,13 @@ def scorefxns(exp):
     
     for scenario in range(scenarios):
         function=list(exp.scenarios[scenario].keys())[0]
-        functions=functions+[function]
+        functions+=[function]
         
         prob=float(list(exp.scenarios[scenario].values())[0].prob)
-        probs=probs+[prob]
+        probs+=[prob]
         
         score=scoreEndstate(exp,scenario)
-        scores=scores+[score]
+        scores+=[score]
         
         fxnscores[function]=[score]+fxnscores[function]
         fxnprobs[function]=[prob]+fxnprobs[function]
