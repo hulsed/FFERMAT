@@ -199,7 +199,9 @@ def evaluate(FullPolicy,experiment):
     nominalstate=newexp.model.nominal_state
     nominalscore=scoreNomstate(nominalstate)
     
+    probabilities=0.01*np.array(probs)
     
+    nominalprob=np.prod(1-probabilities)
     
     return actions, instates, scores, probabilities, nominalscore, nominalprob
 
