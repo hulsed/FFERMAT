@@ -1,47 +1,47 @@
- function ImportGas
+function ImportGas cost 1
     mode 1 Operational NominalGasSource 
     mode 2 Degraded NotCompleteGasSource prob 1
     mode 3 Failed NoGasSource prob 1
-function ImportHeat
+function ImportHeat cost 1
 	mode 1 Operational NominalHeatSource 
 	mode 2 Degraded LowHeatSource prob 1
 	mode 3 Degraded HighHeatSource prob 1
 	mode 4 Failed NoHeatSource prob 1
-function ContainGas
+function ContainGas cost 1
 	mode 1 Operational NominalContaining 
 	mode 2 Degraded Leaking prob 1
 	mode 3 Failed NoContaining prob 1
-function ExpandGas
+function ExpandGas cost 1
     mode 1 Operational NominalExpansion 
     mode 2 Degraded HighExpansion prob 1
     mode 3 Degraded LowExpansion prob 1
-function ConductExpandedGas
+function ConductExpandedGas cost 1
     mode 1 Operational NominalConductingExpandedGas 
     mode 2 Degraded PartialConductingExpandedGas prob 1
     mode 3 Failed NoConductingExpandedGas prob 1
-function SenseGasRate
+function SenseGasRate cost 1
     mode 1 Operational NominalGasSensing 
     mode 2 Degraded DriftingLowGasSensing prob 1
     mode 3 Degraded DriftingHighGasSensing prob 1
     mode 4 Failed NoGasSensing prob 1
-function AdjustGasFlow
+function AdjustGasFlow cost 1
     mode 1 Operational NominalFlowAdjustment 
     mode 2 Degraded PartialLowAdjustment prob 1
     mode 3 Degraded PartialHighAdjustment prob 1
     mode 4 Failed NoAdjustment prob 1
     mode 6 Failed NoAdjustmentLow prob 1
-function ExportExcessGas
+function ExportExcessGas cost 1
     mode 1 Operational NominalExportGas
 function ConductAdjustedGas
     mode 1 Operational NominalConductingAdjustedGas
     mode 2 Degraded PartialConductingAdjustedGas prob 1
     mode 3 Failed NoConductingAdjustedGas prob 1
-function MeasureGasPressure
+function MeasureGasPressure cost 1
     mode 1 Operational NominalPressureSensing
     mode 2 Degraded DriftingLowPressureSensing prob 1
     mode 3 Degraded DriftingHighPressureSensing prob 1
     mode 4 Failed NoPressureSensing prob 1
-function RegulateGasPressure
+function RegulateGasPressure cost 1
     mode 1 Operational NominalPressureRegulating
     mode 2 Degraded LowPressureRegulating prob 1
     mode 3 Degraded HighPressureRegulating prob 1
@@ -55,24 +55,24 @@ function RegulateGasPressure
     condition 5 to 1 NonZeroPressure
     condition 6 to 2 NonZeroPressure
     condition 7 to 3 NonZeroPressure
-function ConductRegulatedGas
+function ConductRegulatedGas cost 1
     mode 1 Operational NominalConductingRegulatedGas
     mode 2 Degraded PartialConductingRegulatedGas prob 1
     mode 3 Failed NoConductingRegulatedGas prob 1
-function ImportPropellant
+function ImportPropellant cost 1
     mode 1 Operational NominalPropellant
     mode 2 Degraded IncompletePropellant prob 1
     mode 3 Failed NoPropellant prob 1
-function ContainPropellant
+function ContainPropellant cost 1
 	mode 1 Operational NominalContainProp
 	mode 2 Degraded LeakingProp prob 1
 	mode 3 Failed NoContainingProp prob 1
-function SensePropellantPT
+function SensePropellantPT cost 1
     mode 1 Operational NominalPropSensing
     mode 2 Degraded DriftingLowPropSensing prob 1
     mode 3 Degraded DriftingHighPropSensing prob 1
     mode 4 Failed NoPropSensing prob 1
-function AdjustPropellantPT
+function AdjustPropellantPT cost 1
     mode 1 Operational NominalPTRegulating
     mode 2 Degraded LowPTRegulating prob 1
     mode 3 Degraded HighPTRegulating prob 1
@@ -86,44 +86,44 @@ function AdjustPropellantPT
     condition 2 3 5 6 7 to 1 NominalGastoPower
     condition 1 2 3 5 6 to 7 HighGastoPower
     condition 1 2 3 4 6 7 to 8 TooHighGastoPower
-function ExportRegulatedGas
+function ExportRegulatedGas cost 1
     mode 1 Operational NominalExportRegGas
-function ConductPropellant
+function ConductPropellant cost 1
     mode 1 Operational NominalConductingPropellant
     mode 2 Degraded PartialConductingPropellant prob 1
     mode 3 Failed NoConductingPropellant  prob 1
-function SensePropellantRate
+function SensePropellantRate cost 1
     mode 1 Operational NominalPropRSensing
     mode 2 Degraded DriftingLowPropRSensing prob 1
     mode 3 Degraded DriftingHighPropRSensing prob 1
     mode 4 Failed NoPropRSensing prob 1
-function AdjustPropRate
+function AdjustPropRate cost 1
     mode 1 Operational NominalPropRateAdjustment
     mode 2 Degraded PartialLowPropRateAdjustment prob 1
     mode 3 Degraded PartialHighPropRateAdjustment prob 1
     mode 4 Failed NoPropRateAdjustment prob 1
     mode 6 Failed NoPropRateAdjustmentLow prob 1
-function ImportCatalyst
+function ImportCatalyst cost 1
     mode 1 Operational NominalCatalystSource
     mode 2 Degraded NotCompleteCatalystSource prob 1
     mode 3 Failed NoCatalystSource prob 1
-function ContainCatalyst
+function ContainCatalyst cost 1
 	mode 1 Operational NominalContainCatalyst
 	mode 2 Failed NoContainingCatalyst prob 1
-function CombustPropellant
+function CombustPropellant cost 1
     mode 1 Operational NominalCombustion
     mode 2 Degraded PoorCombustion prob 1
     mode 3 Failed NoCombustion prob 1
     condition 1 3 to 2 LowCatalyst
     condition 1 2 to 3 NoCatalyst 
     condition 2 3 to 1 NominalCatalyst
-function ExportHeatEnergy
+function ExportHeatEnergy cost 1
     mode 1 Operational HeatSink
     mode 2 Degraded HotHeatSink prob 1
     mode 3 Failed HottestHeatSink prob 1
-function ExportByproducts
+function ExportByproducts cost 1
     mode 1 Operational ExportByproducts
-function ExportThrust
+function ExportThrust cost 1
     mode 1 Operational ExportThrust
     mode 2 Degraded ExportLowThrust prob 1
     mode 3 Failed ExportNoThrust prob 1
@@ -132,12 +132,12 @@ function ExportThrust
     condition 2 3 to 1 NominalThrust
     condition 1 3 to 2 NoThrust
     condition 1 2 3 to 4 TooMuchThrust
-function ImportElectricalEnergy
+function ImportElectricalEnergy cost 1
     mode 1 Operational NominalVoltageSource
     mode 2 Degraded LowVoltageSource prob 1
     mode 3 Degraded HighVoltageSource prob 1
     mode 4 Failed OpenCircuit prob 1
-function ExportElectricalEnergy
+function ExportElectricalEnergy cost 1
     mode 1 Operational ResistiveLoad
     mode 2 Degraded ResistiveLoadD prob 1
     mode 3 Failed ShortCircuit prob 1
@@ -148,20 +148,20 @@ function ExportElectricalEnergy
     condition 2 5 to 1 NominalVoltage
     condition 1 2 5 to 3 HighestVoltage
     condition 1 2 to 5 NoVoltage
-function ImportChemicalEnergy
+function ImportChemicalEnergy cost 1
     mode 1 Operational NominalChemicalEffortSource
     mode 2 Degraded LowChemicalEffortSource prob 1
     mode 3 Failed NoChemicalEffortSource prob 1
-function ImportBinarySignal
+function ImportBinarySignal cost 1
     mode 1 Operational NominalSignalSource
     mode 2 Failed ZeroSignalSource prob 1
-function ImportMaterial
+function ImportMaterial cost 1
     mode 1 Operational NominalMaterialSource
     mode 2 Failed NoMaterialSource prob 1
-function ExportMaterial
+function ExportMaterial cost 1
     mode 1 Operational NominalMaterialSink
     mode 2 Failed NoMaterialSink prob 1
-function ExportOpticalEnergy
+function ExportOpticalEnergy cost 1
     mode 1 Operational NominalExportOpticalEnergy
 function ProtectElectricalEnergy
     mode 1 Operational ClosedCircuit
@@ -174,7 +174,7 @@ function ProtectElectricalEnergy
     condition 1 to 2 HighestCurrent
     condition 3 to 4 HighestCurrent delay 1
     condition 5 to 4 NonZeroVoltage delay 1
-function ActuateElectricalEnergy
+function ActuateElectricalEnergy cost 1
     mode 1 Operational ClosedCircuit
     mode 2 Operational OpenCircuit default
     mode 3 Failed ClosedCircuit prob 1
@@ -186,7 +186,7 @@ function ActuateElectricalEnergy
     condition 1 3 6 to 4 HighestCurrent delay 1
     condition 5 to 4 NonZeroVoltage delay 1
     condition 1 to 6 HighCurrent
-function InvertElectricalEnergy
+function InvertElectricalEnergy cost 1
     mode 1 Operational NominalInvertElectricalEnergy
     mode 2 Operational NoInvertElectricalEnergy 
     mode 3 Failed NoInvertElectricalEnergy prob 1
@@ -194,11 +194,11 @@ function InvertElectricalEnergy
     condition 1 to 2 HighVoltage
     condition 2 to 1 NominalVoltage
     condition 1 to 3 HighestCurrent
-function BranchElectricalEnergy
+function BranchElectricalEnergy cost 1
     mode 1 Operational NominalBranchElectricalEnergy
     mode 2 Failed OpenCircuit prob 1
     condition 1 to 2 AnyHighestCurrent delay 2
-function CombineElectricalEnergy
+function CombineElectricalEnergy cost 1
     mode 1 Operational NominalCombineElectricalEnergy
     mode 2 Failed OpenCircuit prob 1
     condition 1 to 2 HighestCurrent delay 2
@@ -219,74 +219,74 @@ function ConvertElectricalToOpticalEnergy
     mode 1 Operational NominalElectricalToOpticalEnergyConversion
     mode 2 Failed NoElectricalToOpticalEnergyConversion prob 1
     condition 1 to 2 HighVoltage delay 1
-function TransportMaterial
+function TransportMaterial cost 1
     mode 1 Operational NominalTransportMaterial
     mode 2 Degraded RestrictedTransportMaterial prob 1
     mode 3 Failed BlockedTransportMaterial prob 1
-function SenseVoltage
+function SenseVoltage cost 1
     mode 1 Operational NominalVoltageSensing
     mode 2 Degraded DriftingLowVoltageSensing prob 1
     mode 3 Degraded DriftingHighVoltageSensing prob 1
     mode 4 Failed NoVoltageSensing prob 1
-function SenseCurrent
+function SenseCurrent cost 1
     mode 1 Operational NominalCurrentSensing
     mode 2 Degraded DriftingLowCurrentSensing prob 1
     mode 3 Degraded DriftingHighCurrentSensing prob 1
     mode 4 Failed NoCurrentSensing prob 1
-function SenseTemperature
+function SenseTemperature cost 1
     mode 1 Operational NominalTemperatureSensing
     mode 2 Degraded DriftingLowTemperatureSensing prob 1
     mode 3 Degraded DriftingHighTemperatureSensing prob 1
     mode 4 Failed NoTemperatureSensing prob 1
-function ProcessSignalIsNominal
+function ProcessSignalIsNominal cost 1
     mode 1 Operational ZeroSignalSource
     mode 2 Operational NominalSignalSource
     condition 1 to 2 NominalSignal
     condition 2 to 1 NonNominalSignal
-function ProcessSignalAnd
+function ProcessSignalAnd cost 1
     mode 1 Operational ZeroSignalSource
     mode 2 Operational NominalSignalSource
     condition 1 to 2 NoZeroSignals
     condition 2 to 1 AnyZeroSignals
-function ProcessSignalOr
+function ProcessSignalOr cost 1
     mode 1 Operational ZeroSignalSource
     mode 2 Operational NominalSignalSource
     condition 1 to 2 AnyNonZeroSignals
     condition 2 to 1 AllZeroSignals
-function ProcessSignalNot
+function ProcessSignalNot cost 1
     mode 1 Operational ZeroSignalSource
     mode 2 Operational NominalSignalSource
     condition 1 to 2 ZeroSignal
     condition 2 to 1 NonZeroSignal
-function ControlElectrical
+function ControlElectrical cost 1
     mode 1 Operational EqualVoltage
     mode 2 Operational IncreaseVoltage
     mode 3 Operational DecreaseVoltage
     condition 2 3 to 1 LowSignal
     condition 1 3 to 2 HighSignal
     condition 1 2 to 3 NominalSignal
-function ControlSig1
+function ControlSig1 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
     condition 2 3 to 1 LowSignal
     condition 1 3 to 2 HighSignal
     condition 1 2 to 3 NominalSignal
-function ControlSig2
+function ControlSig2 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
     condition 2 3 to 1 LowSignal
     condition 1 3 to 2 HighSignal
     condition 1 2 to 3 NominalSignal
-function ControlSig3
+function ControlSig3 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
     condition 2 3 to 1 LowSignal
     condition 1 3 to 2 HighSignal
     condition 1 2 to 3 NominalSignal
-function ControlSig4
+function ControlSig4 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl

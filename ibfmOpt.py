@@ -92,7 +92,7 @@ def initFullPolicy(controllers, conditions):
 
 def initQTab(controllers, conditions, modes):
     #Qtable: controller (state), input condition (state), output mode (action)
-    QTab=np.ones([controllers,conditions,modes])*-1
+    QTab=np.ones([controllers,conditions,modes])
     return QTab
 
 def initActions():
@@ -162,7 +162,7 @@ def Qlearn(QTab, actions, instates, reward):
 #    return QTab
 
 def selectPolicy(QTab, FullPolicy):
-    tau=1.0
+    tau=0.5
     
     controllers,conditions,modes=np.shape(QTab)
     prob=np.ones(modes)
@@ -211,46 +211,7 @@ def evaluate(FullPolicy,experiment):
     
     return actions, instates, utilityscores
 
-def changeModes(FullPolicy, actionkey, exp):
-    
-    functions=['controlG2rate','controlG3press','controlP1effort','controlP1rate']
-    
-    newmodes=[]
-    funnum=0
-    for function in exp.model.graph.nodes():
-        newmodes=[]
-        name=str(function)
-        if name in functions:
-            loc=functions.index(name)
-            policy=FullPolicy[loc]
-            for action in policy:
-                newmode=actionkey[action-1]
-                newmodes+=[newmode]
-            exp.model.graph.nodes()[funnum].modes=newmodes
-        funnum=funnum+1
-    return exp
 
-def changeFunctions(FullPolicy):
-    #parameters of problem
-    nummodes=3
-    controllers=len(FullPolicy)
-    functions=[]
-    
-    for controller in range(controllers):
-        num=controller+1
-        functions=functions+['ControlSig'+str(num)]
-    conditions=['LowSignal', 'HighSignal','NominalSignal']
-    modes=['EqualControl','IncreaseControl','DecreaseControl']
-    template=[('EqualControl','Operational'),('EqualControl','Operational'),('EqualControl','Operational')]
-    
-    #changes dictionary values (not model definition, unfortunately)
-    for controller in range(controllers):
-        
-        ibfm.functions[functions[controller]]=[(modes[FullPolicy[controller][0]-1],'Operational'),
-         (modes[FullPolicy[controller][1]-1],'Operational'),
-         (modes[FullPolicy[controller][2]-1],'Operational')]
-    
-    return 0
 
 def trackNomActions(nominal_state):
     #functions of concern--the controlling functions
@@ -453,6 +414,47 @@ def policy2strs(policy,nummodes):
     outmodestr=np.char.mod('%d',policy)   
     
     return inmodestr,outmodestr
+#changes modes in graph (but does nothing)
+def changeModes(FullPolicy, actionkey, exp):
+    
+    functions=['controlG2rate','controlG3press','controlP1effort','controlP1rate']
+    
+    newmodes=[]
+    funnum=0
+    for function in exp.model.graph.nodes():
+        newmodes=[]
+        name=str(function)
+        if name in functions:
+            loc=functions.index(name)
+            policy=FullPolicy[loc]
+            for action in policy:
+                newmode=actionkey[action-1]
+                newmodes+=[newmode]
+            exp.model.graph.nodes()[funnum].modes=newmodes
+        funnum=funnum+1
+    return exp
+#changes function dictionary (which also does nothing)
+def changeFunctions(FullPolicy):
+    #parameters of problem
+    nummodes=3
+    controllers=len(FullPolicy)
+    functions=[]
+    
+    for controller in range(controllers):
+        num=controller+1
+        functions=functions+['ControlSig'+str(num)]
+    conditions=['LowSignal', 'HighSignal','NominalSignal']
+    modes=['EqualControl','IncreaseControl','DecreaseControl']
+    template=[('EqualControl','Operational'),('EqualControl','Operational'),('EqualControl','Operational')]
+    
+    #changes dictionary values (not model definition, unfortunately)
+    for controller in range(controllers):
+        
+        ibfm.functions[functions[controller]]=[(modes[FullPolicy[controller][0]-1],'Operational'),
+         (modes[FullPolicy[controller][1]-1],'Operational'),
+         (modes[FullPolicy[controller][2]-1],'Operational')]
+    
+    return 0
     
         
 

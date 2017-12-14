@@ -1391,8 +1391,13 @@ def load(filename):
       if not current:
         first_line = True
         if 'function' == word:
-          current = type(words[1],(Function,),{'_modes':[],'_conditions':[]})
-          Function._subclasses[words[1]] = current
+          
+            if 'cost' in words:
+                cost=words[3]
+            else:
+                cost='NA'
+            current = type(words[1],(Function,),{'_modes':[],'_conditions':[],'_cost':[cost]})
+            Function._subclasses[words[1]] = current
         elif 'mode' == word:
           current = type(words[1],(Mode,),{'_behaviors':[]})
           Mode._subclasses[words[1]] = current
@@ -1449,7 +1454,7 @@ with open('function_list.txt','w') as file:
 '''Create a dictionary of all defined functions'''
 functions = {}
 for function in Function._subclasses:
-  functions[function] = [(mode[2],mode[1]) for mode in Function._subclasses[function]._modes]
+  functions[function] = {'mode': [(mode[2],mode[1]) for mode in Function._subclasses[function]._modes], 'cost': Function._subclasses[function]._cost}
 
 '''Create a dictionary of all defined modes'''
 modes = {}
