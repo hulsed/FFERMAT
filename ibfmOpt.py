@@ -195,8 +195,13 @@ def evaluate(FullPolicy,experiment):
         
         prob=float(list(newexp.scenarios[scenario].values())[0].prob)
         probs=probs+[prob]
+        
+    nominalstate=newexp.model.nominal_state
+    nominalscore=scoreNomstate(nominalstate)
     
-    return actions, instates, scores, probs, newexp
+    
+    
+    return actions, instates, scores, probabilities, nominalscore, nominalprob
 
 def changeModes(FullPolicy, actionkey, exp):
     
@@ -273,6 +278,21 @@ def trackFlows(exp, scenario):
                 instates+=[instate]
                 
     return instates
+
+def scoreNomstate(Nominalstate):
+    functions=['exportT1']
+    Flow="Thrust"
+    
+    flowsraw=list(Nominalstate.keys())
+    flows=[str(j) for j in flowsraw]
+    states=list(Nominalstate.values())
+    loc=flows.index(Flow)
+    
+    effort=int(states[loc][0])
+    rate=int(states[loc][1])
+    statescore=scoreFlowstate(rate,effort)
+    
+    return statescore
 
 def scoreEndstate(exp, scenario):
     functions=['exportT1']

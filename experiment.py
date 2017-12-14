@@ -29,7 +29,9 @@ for i in range(runs):
     for j in range(iterations):
         FullPolicy=io.selectPolicy(QTab, FullPolicy)
     
-        actions, instates, scores, probs, newexp=io.evaluate(FullPolicy,initexperiment)
+        actions, instates, scores, probs, nomscore,nomprob =io.evaluate(FullPolicy,initexperiment)
+        utility=sum(scores*probs)+nomscore*nomprob
+        
         totreward=sum(scores)/10
         rewardhist[i,j]=sum(scores)
         
@@ -41,9 +43,10 @@ for i in range(runs):
             #Qtab=io.avlearn(QTab,action,instate,sum(scores))
             #note: probability of the nominal state is prod(1-p_e), for e independent events
         
-        QTab=io.avlearnnotracking(QTab, FullPolicy,totreward)
+        QTab=io.avlearnnotracking(QTab, FullPolicy,utility)
         a=sum(scores)
         print(a)
+        print(utility)
 avereward=np.ones(iterations)
 stdreward=np.ones(iterations)
 maxreward=np.ones(iterations)
