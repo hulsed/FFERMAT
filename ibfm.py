@@ -1298,7 +1298,7 @@ class Experiment(object):
     if run_parallel:
       pool = multiprocessing.Pool(n_workers)
     t2 = time()
-    print(str(len(self.scenarios))+' scenario experiment created in '+str(t2-t1)+' seconds.')
+    # print(str(len(self.scenarios))+' scenario experiment created in '+str(t2-t1)+' seconds.')
     #return
     t1 = time()
     if run_parallel:
@@ -1312,11 +1312,11 @@ class Experiment(object):
 #      self.results.append(self.model.getState())
 #      self.health.append(self.model.getHealth())
     t2 = time()
-    print(str(len(self.scenarios))+' scenarios simulated in '+str(t2-t1)+' seconds.')
+    #print(str(len(self.scenarios))+' scenarios simulated in '+str(t2-t1)+' seconds.')
     self.findUniqueResults()
     #print(str(self.unique))
-    print(str(int(len(self.unique)))+' states or '+
-      str(int(len(self.unique)*100/len(self.results)))+" percent unique")
+    #print(str(int(len(self.unique)))+' states or '+
+    #  str(int(len(self.unique)*100/len(self.results)))+" percent unique")
     return
 #    self.findUniqueHealth()
 #    print(str(int(len(self.unique)))+' health states or '+

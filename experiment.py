@@ -7,6 +7,7 @@ Created on Sun Nov 19 18:50:24 2017
 import ibfmOpt as io
 import numpy as np
 from matplotlib import pyplot as plt
+import ibfm
 
 controllers=4
 conditions=3
