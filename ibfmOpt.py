@@ -92,7 +92,7 @@ def initFullPolicy(controllers, conditions):
 
 def initQTab(controllers, conditions, modes):
     #Qtable: controller (state), input condition (state), output mode (action)
-    QTab=np.ones([controllers,conditions,modes])*-25
+    QTab=np.ones([controllers,conditions,modes])*-1
     return QTab
 
 def initActions():
@@ -200,10 +200,16 @@ def evaluate(FullPolicy,experiment):
     nominalscore=scoreNomstate(nominalstate)
     
     probabilities=0.01*np.array(probs)
-    
     nominalprob=np.prod(1-probabilities)
     
-    return actions, instates, scores, probabilities, nominalscore, nominalprob
+    actions+=[trackNomActions(nominalstate)]
+    instates+=[trackNomFlows(nominalstate)]
+    scores+=[nominalscore]
+    probabilities=np.append(probabilities, nominalprob)
+    
+    utilityscores=scores*probabilities
+    
+    return actions, instates, utilityscores
 
 def changeModes(FullPolicy, actionkey, exp):
     
@@ -246,6 +252,18 @@ def changeFunctions(FullPolicy):
     
     return 0
 
+def trackNomActions(nominal_state):
+    #functions of concern--the controlling functions
+    functions=['controlG2rate','controlG3press','controlP1effort','controlP1rate']
+    mode2actions={'EqualControl': 0, 'IncreaseControl': 1, 'DecreaseControl': 2}
+    
+    actions=[]
+    #find actions taken
+    for function in functions:
+        mode=str(nominal_state[function])
+        actions+=[mode2actions[mode]] 
+    return actions
+
 def trackActions(exp, scenario):
     #functions of concern--the controlling functions
     functions=['controlG2rate','controlG3press','controlP1effort','controlP1rate']
@@ -258,6 +276,27 @@ def trackActions(exp, scenario):
         mode=str(exp.results[scenario][function])
         actions+=[mode2actions[mode]] 
     return actions
+
+def trackNomFlows(nominal_state):
+    #flows of concern--inputs to the controllers    
+    condition2state={'Negative':0,'Zero': 0,'Low': 0,'High': 1,'Highest': 1,'Nominal': 2}
+    
+    flowtypesraw=list(nominal_state.keys())
+    flowtypes=[str(j) for j in flowtypesraw]
+    flowstates=list(nominal_state.values())
+    
+    flownum=len(flowtypes)
+    instates=[]
+    
+    #find states entered
+    for i in range(flownum):
+        if flowtypes[i]=='Signal':
+            if i%2==0:
+                incondition=str(flowstates[i][0])
+                instate=condition2state[incondition]
+                instates+=[instate]
+                
+    return instates
     
 #NOTE: Will ONLY work if only signals are to controllers
 def trackFlows(exp, scenario):
@@ -318,7 +357,7 @@ def scoreFlowstate(rate, effort):
             [-10, -1, -3, -5,-10],
             [-10, -7, -9,-10,-10]]
             
-    score=func[effort][rate]
+    score=float(func[effort][rate])
     return score
 
 def scorefxns(exp):
