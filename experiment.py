@@ -35,15 +35,14 @@ for i in range(runs):
         
         rewardhist[i,j]=utility
         
-        for k in range(len(scores)):
+        for k in range(len(utilityscores)):
             action=actions[k]
             instate=instates[k]
             reward=utilityscores[k]
             #note: not sure why individual rewards don't work, but they don't
-            #Qtab=io.avlearn(QTab,action,instate,sum(scores))
-            #note: probability of the nominal state is prod(1-p_e), for e independent events
+            Qtab=io.Qlearn(QTab,action,instate,sum(utilityscores))
         
-        QTab=io.avlearnnotracking(QTab, FullPolicy,utility)
+        #QTab=io.avlearnnotracking(QTab, FullPolicy,utility)
         print(utility)
 avereward=np.ones(iterations)
 stdreward=np.ones(iterations)

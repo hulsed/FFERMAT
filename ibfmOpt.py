@@ -13,7 +13,7 @@ import importlib
 import ibfm
 import networkx as nx
 
-
+#Creates function variants in corresponding files
 def createVariants():
     
     file=open('ctlfxnvariants.ibfm', mode='w')
@@ -48,62 +48,19 @@ def createVariants():
                 
     file.close()
     return 0
-
-           
-def reviseModel(FullPolicy, exp):
-    graph=exp.model.graph.copy()
-    nodes=graph.nodes()
-    edges=graph.edges()
-    
-    functions=['controlG2rate','controlG3press','controlP1effort','controlP1rate']
-    
-    newgraph=nx.DiGraph()
-    
-    for node in nodes:
-        name=str(node)
-        fxn=graph.node[node]['function']
-        
-        newgraph.add_node(name, function=fxn)
-        if name in functions:
-            loc=functions.index(name)
-            policy=FullPolicy[loc]
-            
-            ctlfxn='ControlSig'+str(policy[0])+str(policy[1])+str(policy[2])
-            newgraph.node[name]={'function': ctlfxn}
-            
-    
-    for edge in edges:
-        
-        prev=str(edge[0])
-        new=str(edge[1])
-        
-        flowtype=str(list(graph.edge[edge[0]][edge[1]][0].values())[0])
-
-        newgraph.add_edge(prev,new,flow=flowtype)
-        #newgraph.edge[prev]={new: {'flow': flowtype}}
-        
-    return newgraph  
-    
-    
-    
+   
+#Initializes the Policy    
 def initFullPolicy(controllers, conditions):
     FullPolicy=np.ones([controllers,conditions], int)
     return FullPolicy
 
+#Initializes the Q-table
 def initQTab(controllers, conditions, modes):
     #Qtable: controller (state), input condition (state), output mode (action)
     QTab=np.ones([controllers,conditions,modes])
     return QTab
-
-def initActions():
-    FullPolicy=[[1,2,3],[1,2,3],[1,2,3],[1,2,3]]
-    changeFxnfile(FullPolicy)
-    e1= ibfm.Experiment('monoprop')
-    actionkey=e1.model.graph.nodes()[6].modes
-    
-    return actionkey    
-    
-
+  
+#Learns value of the policy without tracking states entered
 def avlearnnotracking(QTab, FullPolicy,reward):
     controllers,conditions,modes=np.shape(QTab)
     alpha=0.1
@@ -117,6 +74,7 @@ def avlearnnotracking(QTab, FullPolicy,reward):
             QTab[i,j,taken]=QVal+alpha*(reward-QVal)            
     return QTab
 
+#Learns the value of the policy without propogating future states to previous
 def avlearn(QTab, actions, instates, reward):
     controllers,conditions,modes=np.shape(QTab)
     alpha=0.01
@@ -127,7 +85,9 @@ def avlearn(QTab, actions, instates, reward):
         instate=instates[i]
         QVal=QTab[i,instate,taken]
         QTab[i,instate,taken]=QVal+alpha*(reward-QVal)
-        
+
+#Learns the value of the policy by rewarding each action that lead future states
+# which lead to a reward      
 def Qlearn(QTab, actions, instates, reward):
     controllers,conditions,modes=np.shape(QTab)
     alpha=0.01
@@ -161,6 +121,7 @@ def Qlearn(QTab, actions, instates, reward):
 #            
 #    return QTab
 
+#Selects a policy by iterating throug the Q-table
 def selectPolicy(QTab, FullPolicy):
     tau=0.5
     
@@ -177,6 +138,8 @@ def selectPolicy(QTab, FullPolicy):
 
     return FullPolicy
 
+#Takes the policy, changes the model, runs it, tracks the actions, and gives 
+#a utility score for each scenario
 def evaluate(FullPolicy,experiment):
     graph=reviseModel(FullPolicy, experiment)
     #importlib.reload(ibfm)
@@ -200,6 +163,8 @@ def evaluate(FullPolicy,experiment):
     nominalscore=scoreNomstate(nominalstate)
     
     probabilities=0.01*np.array(probs)
+    
+    #probability of the nominal state is prod(1-p_e), for e independent events
     nominalprob=np.prod(1-probabilities)
     
     actions+=[trackNomActions(nominalstate)]
@@ -211,8 +176,33 @@ def evaluate(FullPolicy,experiment):
     
     return actions, instates, utilityscores
 
+#Revises the model based on the policy, creating a new graph to be used in ibfm        
+def reviseModel(FullPolicy, exp):
+    graph=exp.model.graph.copy()
+    nodes=graph.nodes()
+    edges=graph.edges()
+    functions=['controlG2rate','controlG3press','controlP1effort','controlP1rate']
+    newgraph=nx.DiGraph()
+    
+    for node in nodes:
+        name=str(node)
+        fxn=graph.node[node]['function']
+        newgraph.add_node(name, function=fxn)
+        if name in functions:
+            loc=functions.index(name)
+            policy=FullPolicy[loc]    
+            ctlfxn='ControlSig'+str(policy[0])+str(policy[1])+str(policy[2])
+            newgraph.node[name]={'function': ctlfxn}
+              
+    for edge in edges:
+        prev=str(edge[0])
+        new=str(edge[1])
+        flowtype=str(list(graph.edge[edge[0]][edge[1]][0].values())[0])
+        newgraph.add_edge(prev,new,flow=flowtype)
+        #newgraph.edge[prev]={new: {'flow': flowtype}}
+    return newgraph
 
-
+#Track the actions taken for the nominal state
 def trackNomActions(nominal_state):
     #functions of concern--the controlling functions
     functions=['controlG2rate','controlG3press','controlP1effort','controlP1rate']
@@ -225,6 +215,7 @@ def trackNomActions(nominal_state):
         actions+=[mode2actions[mode]] 
     return actions
 
+#Track the actions taken (given which scenario it is in a list) for the experiment
 def trackActions(exp, scenario):
     #functions of concern--the controlling functions
     functions=['controlG2rate','controlG3press','controlP1effort','controlP1rate']
@@ -238,6 +229,7 @@ def trackActions(exp, scenario):
         actions+=[mode2actions[mode]] 
     return actions
 
+#Track flows going into the functions for the nominal state, as per trackFlows()
 def trackNomFlows(nominal_state):
     #flows of concern--inputs to the controllers    
     condition2state={'Negative':0,'Zero': 0,'Low': 0,'High': 1,'Highest': 1,'Nominal': 2}
@@ -258,8 +250,13 @@ def trackNomFlows(nominal_state):
                 instates+=[instate]
                 
     return instates
-    
-#NOTE: Will ONLY work if only signals are to controllers
+
+#Track flows going into the functions for each scenario 
+#(given which scenario it is in a list) for the experiment
+#This is used for seeing how an action in one controller changes the state
+#for the next controller. However, it may only work if the controllers are 
+#oriented in a chain
+#NOTE: May ONLY work if only signals are to controllers
 def trackFlows(exp, scenario):
     #flows of concern--inputs to the controllers    
     condition2state={'Negative':0,'Zero': 0,'Low': 0,'High': 1,'Highest': 1,'Nominal': 2}
@@ -281,6 +278,7 @@ def trackFlows(exp, scenario):
                 
     return instates
 
+#Score the nominal state
 def scoreNomstate(Nominalstate):
     functions=['exportT1']
     Flow="Thrust"
@@ -296,6 +294,7 @@ def scoreNomstate(Nominalstate):
     
     return statescore
 
+#Score a scenario (given which scenario it is in a list) for the experiment
 def scoreEndstate(exp, scenario):
     functions=['exportT1']
     Flow="Thrust"
@@ -311,16 +310,18 @@ def scoreEndstate(exp, scenario):
     
     return statescore
 
+#Score function for a given flow state.
 def scoreFlowstate(rate, effort):
-    func = [[-10,-10,-10,-10,-10],
-            [-10, -5, -3, -1, -7],
-            [-10, -3,  0, -3, -9],
-            [-10, -1, -3, -5,-10],
-            [-10, -7, -9,-10,-10]]
+    func = [[-10.,-10.,-10.,-10.,-10.],
+            [-10., -5., -3., -1., -7.],
+            [-10., -3.,  0., -3., -9.],
+            [-10., -1., -3., -5.,-10.],
+            [-10., -7., -9.,-10.,-10.]]
             
-    score=float(func[effort][rate])
+    score=func[effort][rate]
     return score
 
+#Individually scores functions based on their failure impact
 def scorefxns(exp):
     
     exp.run(1)
@@ -350,8 +351,6 @@ def scorefxns(exp):
         
         fxnscores[function]=[score]+fxnscores[function]
         fxnprobs[function]=[prob]+fxnprobs[function]
-        
-    
     return functions, scores, probs, fxnscores, fxnprobs
 
 
@@ -455,7 +454,15 @@ def changeFunctions(FullPolicy):
          (modes[FullPolicy[controller][2]-1],'Operational')]
     
     return 0
+
+#Initializes actions to take
+def initActions():
+    FullPolicy=[[1,2,3],[1,2,3],[1,2,3],[1,2,3]]
+    changeFxnfile(FullPolicy)
+    e1= ibfm.Experiment('monoprop')
+    actionkey=e1.model.graph.nodes()[6].modes
     
+    return actionkey 
         
 
     
