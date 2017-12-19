@@ -313,13 +313,14 @@ def scoreEndstate(exp, scenario):
 #Score function for a given flow state.
 def scoreFlowstate(rate, effort):
     func = [[-10.,-10.,-10.,-10.,-10.],
-            [-10., -5., -3., -1., -7.],
-            [-10., -3.,  0., -3., -9.],
+            [-10., -5., -3., -1., -10.],
+            [-10., -3.,  0., -3., -10.],
             [-10., -1., -3., -5.,-10.],
-            [-10., -7., -9.,-10.,-10.]]
+            [-10., -10., -10.,-10.,-10.]]
             
     score=func[effort][rate]
     return score
+
 
 #Individually scores functions based on their failure impact
 def scorefxns(exp):

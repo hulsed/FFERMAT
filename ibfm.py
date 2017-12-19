@@ -448,7 +448,7 @@ class Mode(ModeConditionParent):
   '''Class for operational modes that functions may use.
   '''
   _subclasses = {}
-  def __init__(self,name,function,health,prob, **attr):
+  def __init__(self,name,function,health,prob,when, **attr):
     '''Return a Mode object.
 
     Required arguments:
@@ -463,6 +463,7 @@ class Mode(ModeConditionParent):
     self.in_flow = function.in_flow
     self.health = health
     self.prob = prob
+    self.when = when
     self.attr = attr
   def __repr__(self):
     return self.__class__.__qualname__
@@ -709,10 +710,13 @@ class Function(object):
           prob=mode[4]
       except IndexError:
           prob='NA'
-      
+      try: 
+          when=mode[5]
+      except IndexError:
+          when='NA' 
       if mode_class is None:
         raise Exception(mode[2]+' is not a defined mode')
-      self.addMode(ident,health,mode_class, prob)
+      self.addMode(ident,health,mode_class, prob, when)
     for condition in self.__class__._conditions:
       entry = None
       delay = 0
@@ -770,7 +774,7 @@ class Function(object):
     if Flow not in flow_class.__bases__:
       for base in flow_class.__bases__:
         self._addFlow(flow,base,flows)
-  def addMode(self,name,health,mode_class, prob, default=False,**attr):
+  def addMode(self,name,health,mode_class, prob, when, default=False,**attr):
     '''Add a mode to the function.
 
     Required arguments:
@@ -778,12 +782,14 @@ class Function(object):
             self.addCondition()
     health -- a ModeHealth subclass designating the health of the function
               when represented by the mode.
+    prob -- probability of failure mode
+    when -- when the failure mode occurs (outside of pseudo-time)
     mode_class -- the Mode subclass representing the mode being added
     default -- whether the mode should be the default for the function. The
                default default is the first given mode with health=Operational.
                
     '''
-    mode = mode_class(name,self,health(),prob, **attr)
+    mode = mode_class(name,self,health(),prob,when, **attr)
     self.modes.append(mode)
     if default or (self.default == None and health == Operational):
       self.default = mode
