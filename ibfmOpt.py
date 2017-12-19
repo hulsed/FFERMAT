@@ -48,7 +48,7 @@ def createVariants():
                 
     file.close()
     return 0
-   
+
 #Initializes the Policy    
 def initFullPolicy(controllers, conditions):
     FullPolicy=np.ones([controllers,conditions], int)
@@ -173,9 +173,11 @@ def evaluate(FullPolicy,experiment):
     scores+=[nominalscore]
     probabilities=np.append(probabilities, nominalprob)
     
+    designcost=PolicyCost(FullPolicy)
+    
     utilityscores=scores*probabilities
     
-    return actions, instates, utilityscores
+    return actions, instates, utilityscores, designcost
 
 #Revises the model based on the policy, creating a new graph to be used in ibfm        
 def reviseModel(FullPolicy, exp):
@@ -278,6 +280,33 @@ def trackFlows(exp, scenario):
                 instates+=[instate]
                 
     return instates
+
+#creates a cost for the design provided it enables certain parts of the policy
+def PolicyCost(FullPolicy):
+    controllercost=1.0
+    increaseratecost=0.5
+    increasenomratecost=1.0
+    
+    ratecontrollers=[0,3]
+    controllers=len(FullPolicy)
+    
+    cost=0.0
+    
+    for controller in range(controllers):
+        #penalty for having a controller at all
+        if all(FullPolicy[controller][i]==1 for i in range(len(FullPolicy[controller]))):
+            cost+=0.0
+        else:
+            cost+=controllercost
+        #penalties for rate variables
+        if controller in ratecontrollers:
+            #penalty for increasing rate in nominal state
+            if FullPolicy[controller][2]==2:
+                cost+=increasenomratecost
+            #penalty for increasing rate otherwise
+            if any([FullPolicy[controller][0]==2,FullPolicy[controller][1]==2]):
+                cost+=increaseratecost    
+    return cost
 
 #Score a scenario (given which scenario it is in a list)
 def scoreScenario(exp, scenario, Nominalstate):

@@ -29,8 +29,8 @@ for i in range(runs):
     for j in range(iterations):
         FullPolicy=io.selectPolicy(QTab, FullPolicy)
     
-        actions, instates, utilityscores =io.evaluate(FullPolicy,initexperiment)
-        utility=sum(utilityscores)
+        actions, instates, utilityscores, designcost =io.evaluate(FullPolicy,initexperiment)
+        utility=sum(utilityscores)-designcost
         
         
         rewardhist[i,j]=utility
