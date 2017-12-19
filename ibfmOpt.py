@@ -151,17 +151,18 @@ def evaluate(FullPolicy,experiment):
     instates=[]
     scores=[]
     probs=[]
+    
+    nominalstate=newexp.model.nominal_state
+    nominalscore=scoreNomstate(nominalstate)
+    
     for scenario in range(scenarios):
         actions+=[trackActions(newexp,scenario)]
         instates+=[trackFlows(newexp,scenario)]
-        scores+=[scoreEndstate(newexp,scenario)]
+        scores+=[scoreScenario(newexp,scenario, nominalstate)]
         
         prob=float(list(newexp.scenarios[scenario].values())[0].prob)
         probs=probs+[prob]
         
-    nominalstate=newexp.model.nominal_state
-    nominalscore=scoreNomstate(nominalstate)
-    
     probabilities=0.01*np.array(probs)
     
     #probability of the nominal state is prod(1-p_e), for e independent events
@@ -278,6 +279,22 @@ def trackFlows(exp, scenario):
                 
     return instates
 
+#Score a scenario (given which scenario it is in a list)
+def scoreScenario(exp, scenario, Nominalstate):
+    time2coeff={'beginning':0.0,'early':0.1,'midway':0.3,'late':0.6,'end':0.9}
+    
+    nomscore=scoreNomstate(Nominalstate)
+    endscore=scoreEndstate(exp, scenario)
+    
+    time=list(exp.scenarios[scenario].values())[0].when
+    
+    cnom=time2coeff[time]
+    cend=1.0-cnom
+    
+    scenscore=cnom*nomscore+cend*endscore
+    
+    return scenscore
+
 #Score the nominal state
 def scoreNomstate(Nominalstate):
     functions=['exportT1']
@@ -294,7 +311,7 @@ def scoreNomstate(Nominalstate):
     
     return statescore
 
-#Score a scenario (given which scenario it is in a list) for the experiment
+#Score an endstate for the experiment
 def scoreEndstate(exp, scenario):
     functions=['exportT1']
     Flow="Thrust"
@@ -306,19 +323,21 @@ def scoreEndstate(exp, scenario):
         
     effort=int(states[loc][0])
     rate=int(states[loc][1])
+    
     statescore=scoreFlowstate(rate,effort)
     
     return statescore
 
 #Score function for a given flow state.
 def scoreFlowstate(rate, effort):
-    func = [[-10.,-10.,-10.,-10.,-10.],
-            [-10., -5., -3., -1., -10.],
+    qualfunc = [[-10.,-10.,-10.,-10.,-10.],
+            [-10., -5., -3., -2.0, -10.],
             [-10., -3.,  0., -3., -10.],
-            [-10., -1., -3., -5.,-10.],
+            [-10., -2.0, -3., -5.,-10.],
             [-10., -10., -10.,-10.,-10.]]
-            
-    score=func[effort][rate]
+    
+    longbonus=[0.0,1.0,0.0,-1.0,0.0]
+    score=qualfunc[effort][rate]+longbonus[rate]
     return score
 
 
