@@ -9,8 +9,10 @@ from multiprocessing import *
 import networkx as nx
 import ibfm
 import ibfmOpt
+import importlib 
 importlib.reload(ibfm)
-import importlib
+importlib.reload(ibfmOpt)
+
 
 if __name__ == '__main__':
     
@@ -18,7 +20,8 @@ if __name__ == '__main__':
     #ibfmOpt.changeController()
     #importlib.reload(ibfmOpt)
     e1= ibfm.Experiment('monoprop')
-    functions, scores,probs, fxnscores, fxnprobs = ibfmOpt.scorefxns(e1)
+    functions, fxnscores, fxnprobs, failutility, fxncost = ibfmOpt.scorefxns(e1)
+    fxnreds=ibfmOpt.optRedundancy(functions, fxnscores, fxnprobs, fxncost)
     
     #graph of model: e1.model.graph
     # display: nx.draw_spectral(e1.model.graph)

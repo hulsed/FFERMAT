@@ -381,27 +381,75 @@ def scorefxns(exp):
     probs=[]
     
     #initialize dictionary
-    fxns=exp.model.graph.nodes()
+    functions=exp.model.graph.nodes()
     fxnscores={}
     fxnprobs={}
-    for fxn in fxns:
+    failutility={}
+    fxncost={}
+    
+    for fxn in functions:
         fxnscores[fxn]=[]
         fxnprobs[fxn]=[]
-    
+        failutility[fxn]=0.0
+        try:
+            fxncost[fxn]=float(fxn._cost[0])
+        except ValueError:
+            fxncost[fxn]=0.0
+    #map each scenario to its originating function
     for scenario in range(scenarios):
         function=list(exp.scenarios[scenario].keys())[0]
-        functions+=[function]
         
-        prob=float(list(exp.scenarios[scenario].values())[0].prob)
+        prob=0.01*float(list(exp.scenarios[scenario].values())[0].prob)
         probs+=[prob]
-        
-        score=scoreEndstate(exp,scenario)
+        #remove: simply to make current problem interesting
+        score=100*scoreEndstate(exp,scenario)
         scores+=[score]
         
-        fxnscores[function]=[score]+fxnscores[function]
-        fxnprobs[function]=[prob]+fxnprobs[function]
-    return functions, scores, probs, fxnscores, fxnprobs
+        fxnscores[function]+=[score]
+        fxnprobs[function]+=[prob]
+        failutility[function]=failutility[function] + score*prob
+    #map each function to the utility of making it redundant
+    
+    
+    return functions, fxnscores, fxnprobs, failutility, fxncost
 
+def optRedundancy(functions, fxnscores, fxnprobs, fxncost):
+    
+    
+    fxnreds={}
+    
+    for function in functions:
+        fxnreds[function]=0
+    
+    ufunc=0.0
+    
+    for function in functions:
+        probs=np.array(fxnprobs[function])
+        scores=np.array(fxnscores[function])
+        cost=fxncost[function]
+        
+        ufunc=sum(scores*probs)-cost
+        converged=0
+        n=0
+        print(ufunc)
+        while not(converged):
+            n+=1
+            newufunc=sum(scores*probs**(n+1))-cost*(n+1)
+            print(newufunc)
+            
+            if newufunc >= ufunc:
+                ufunc=newufunc
+            else:
+                converged=1
+                
+            if n>150:
+                break
+        
+        fxnreds[function]=n
+        
+    return fxnreds 
+                
+    
 
 ### Deprecated functions
 #writes full policy to function file

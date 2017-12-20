@@ -32,7 +32,7 @@ function AdjustGasFlow cost 1
     mode 6 Failed NoAdjustmentLow prob 1 midway
 function ExportExcessGas cost 1
     mode 1 Operational NominalExportGas
-function ConductAdjustedGas
+function ConductAdjustedGas cost 1
     mode 1 Operational NominalConductingAdjustedGas
     mode 2 Degraded PartialConductingAdjustedGas prob 1 midway
     mode 3 Failed NoConductingAdjustedGas prob 1 early
@@ -269,27 +269,27 @@ function ControlSig1 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
-    condition 2 3 to 1 LowSignal
-    condition 1 3 to 2 HighSignal
-    condition 1 2 to 3 NominalSignal
+    condition 1 3 to 2 LowSignal
+    condition 1 2 to 3 HighSignal
+    condition 2 3 to 1 NominalSignal
 function ControlSig2 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
-    condition 2 3 to 1 LowSignal
-    condition 1 3 to 2 HighSignal
-    condition 1 2 to 3 NominalSignal
+    condition 1 3 to 2 LowSignal
+    condition 1 2 to 3 HighSignal
+    condition 2 3 to 1 NominalSignal
 function ControlSig3 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
-    condition 2 3 to 1 LowSignal
-    condition 1 3 to 2 HighSignal
-    condition 1 2 to 3 NominalSignal
+    condition 1 3 to 2 LowSignal
+    condition 1 2 to 3 HighSignal
+    condition 2 3 to 1 NominalSignal
 function ControlSig4 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
-    condition 2 3 to 1 LowSignal
-    condition 1 3 to 2 HighSignal
-    condition 1 2 to 3 NominalSignal
+    condition 1 3 to 2 LowSignal
+    condition 1 2 to 3 HighSignal
+    condition 2 3 to 1 NominalSignal

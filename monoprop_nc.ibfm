@@ -1,0 +1,84 @@
+model monoprop
+	function importG1 ImportGas
+	function importH1 ImportHeat
+	function containG1 ContainGas
+	function expandG1toG2 ExpandGas
+	function conductG2 ConductExpandedGas
+	function senseG2rate SenseGasRate
+	function controlG2rate ControlSig1
+	function adjustG2toG3 AdjustGasFlow
+	function exportG2 ExportExcessGas
+	function conductG3 ConductAdjustedGas
+	function measureG3 MeasureGasPressure
+	function controlG3press ControlSig2
+	function regulateG3toG4 RegulateGasPressure
+	function conductG4 ConductRegulatedGas
+	function importP1 ImportPropellant
+	function containP1 ContainPropellant
+	function senseP1effort SensePropellantPT
+	function controlP1effort ControlSig3
+	function adjustP1effort AdjustPropellantPT
+	function exportG4 ExportRegulatedGas
+	function conductP1 ConductPropellant
+	function senseP1rate SensePropellantRate
+	function controlP1rate ControlSig4
+	function adjustP1rate AdjustPropRate
+	function conductP12 ConductPropellant
+	function importC1 ImportCatalyst
+	function containC1 ContainCatalyst
+	function combustP1 CombustPropellant
+	function exportH1 ExportHeatEnergy
+	function exportB1 ExportByproducts
+	function exportT1 ExportThrust
+	
+	flow importG1 containG1 InertGas
+	flow containG1 expandG1toG2 InertGas
+	flow importH1 expandG1toG2 Heat
+	flow expandG1toG2 conductG2 ExpandedGas
+	flow conductG2 senseG2rate ExpandedGas
+	flow senseG2rate controlG2rate Signal
+	flow senseG2rate adjustG2toG3 ExpandedGas
+	flow controlG2rate adjustG2toG3 Signal
+    flow adjustG2toG3 exportG2 ExpandedGas
+	flow adjustG2toG3 conductG3 AdjustedGas
+    flow conductG3 measureG3 AdjustedGas
+	flow measureG3 controlG3press Signal
+	flow controlG3press regulateG3toG4 Signal
+	flow measureG3 regulateG3toG4 AdjustedGas
+	flow regulateG3toG4 conductG4 RegulatedGas
+	flow importP1 containP1 Propellant
+	flow containP1 senseP1effort Propellant
+	flow senseP1effort controlP1effort Signal
+	flow controlP1effort adjustP1effort Signal
+	flow senseP1effort adjustP1effort Propellant
+	flow conductG4 adjustP1effort RegulatedGas
+	flow adjustP1effort exportG4 RegulatedGas
+	flow adjustP1effort conductP1 Propellant
+	flow conductP1 senseP1rate Propellant
+	flow senseP1rate controlP1rate Signal
+	flow controlP1rate adjustP1rate Signal
+	flow senseP1rate adjustP1rate Propellant
+	flow adjustP1rate conductP12 Propellant
+	flow importC1 containC1 Catalyst
+	flow containC1 combustP1 Catalyst
+	flow conductP12 combustP1 Propellant
+	flow combustP1 exportH1 Heat
+	flow combustP1 exportB1 Byproducts
+	flow combustP1 exportT1 Thrust
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
