@@ -448,7 +448,7 @@ class Mode(ModeConditionParent):
   '''Class for operational modes that functions may use.
   '''
   _subclasses = {}
-  def __init__(self,name,function,health,prob,when, **attr):
+  def __init__(self,name,function,health,prob,when,cost, **attr):
     '''Return a Mode object.
 
     Required arguments:
@@ -465,6 +465,7 @@ class Mode(ModeConditionParent):
     self.prob = prob
     self.when = when
     self.attr = attr
+    self.cost = cost
   def __repr__(self):
     return self.__class__.__qualname__
   def __hash__(self):
@@ -714,9 +715,13 @@ class Function(object):
           when=mode[5]
       except IndexError:
           when='NA' 
+      try:
+          cost=mode[7]
+      except IndexError:
+          cost='NA'
       if mode_class is None:
         raise Exception(mode[2]+' is not a defined mode')
-      self.addMode(ident,health,mode_class, prob, when)
+      self.addMode(ident,health,mode_class, prob, when, cost)
     for condition in self.__class__._conditions:
       entry = None
       delay = 0
@@ -774,7 +779,7 @@ class Function(object):
     if Flow not in flow_class.__bases__:
       for base in flow_class.__bases__:
         self._addFlow(flow,base,flows)
-  def addMode(self,name,health,mode_class, prob, when, default=False,**attr):
+  def addMode(self,name,health,mode_class, prob, when, cost, default=False,**attr):
     '''Add a mode to the function.
 
     Required arguments:
@@ -789,7 +794,7 @@ class Function(object):
                default default is the first given mode with health=Operational.
                
     '''
-    mode = mode_class(name,self,health(),prob,when, **attr)
+    mode = mode_class(name,self,health(),prob,when,cost, **attr)
     self.modes.append(mode)
     if default or (self.default == None and health == Operational):
       self.default = mode
