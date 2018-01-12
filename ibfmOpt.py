@@ -49,6 +49,71 @@ def createVariants():
     file.close()
     return 0
 
+def randFullPolicy(controllers, conditions):
+    FullPolicy=np.random.randint(3,size=(controllers,conditions))
+    return FullPolicy
+
+def randController(FullPolicy):
+    controllers,conditions=FullPolicy.shape
+    randcontroller=np.random.randint(controllers)
+    FullPolicy[randcontroller]=np.random.randint(3,size=conditions)    
+    return FullPolicy
+
+def randCondition(FullPolicy):
+    controllers,conditions=FullPolicy.shape
+    randcontroller=np.random.randint(controllers)
+    randcondition=np.random.randint(conditions)
+    FullPolicy[randcontroller][randcondition]=np.random.randint(3)
+    return FullPolicy
+
+def initPopulation(pop,controllers, conditions):
+    Population=np.random.randint(3,size=(pop,controllers,conditions))
+    return Population
+    
+def permutePopulation(Population):
+    pop,controllers,conditions=Population.shape
+    frac=0.8
+    
+    for i in range(pop):
+        oldPolicy=Population[i]
+        
+        rand=np.random.rand()
+        if rand>frac:
+            newPolicy=randController(oldPolicy)
+        else:
+            newPolicy=randCondition(oldPolicy)
+            
+        Population[i]=newPolicy
+    return Population
+
+def evalPopulation(Population, experiment):
+    pop,controllers,conditions=Population.shape
+    fitness=np.ones(pop)
+    
+    for i in range(pop):
+        actions, instates, utilityscores, designcost=evaluate(Population[i],experiment)
+        fitness[i]=sum(utilityscores)-designcost
+    
+    return fitness
+
+def selectPopulation(Population1, fitness1, Population2, fitness2):
+    newfitness=fitness1
+    newpopulation=Population1
+    
+    totfitness=np.append(fitness1,fitness2)
+    totpopulation=np.append(Population1, Population2)
+    medfitness=np.median(totfitness)
+    k=0
+    
+    for i in range(len(totfitness)):
+        if totfitness[i]>medfitness:
+            newfitness[k]=totfitness[i]
+            newpopulation[k]=totpopulation[k]
+            k+=1
+    
+    return newpopulation, newfitness
+        
+    
 #Initializes the Policy    
 def initFullPolicy(controllers, conditions):
     FullPolicy=np.ones([controllers,conditions], int)
