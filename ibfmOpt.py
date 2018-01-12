@@ -50,24 +50,24 @@ def createVariants():
     return 0
 
 def randFullPolicy(controllers, conditions):
-    FullPolicy=np.random.randint(3,size=(controllers,conditions))
+    FullPolicy=np.random.randint(3,size=(controllers,conditions))+1
     return FullPolicy
 
 def randController(FullPolicy):
     controllers,conditions=FullPolicy.shape
     randcontroller=np.random.randint(controllers)
-    FullPolicy[randcontroller]=np.random.randint(3,size=conditions)    
+    FullPolicy[randcontroller]=np.random.randint(3,size=conditions)+1    
     return FullPolicy
 
 def randCondition(FullPolicy):
     controllers,conditions=FullPolicy.shape
     randcontroller=np.random.randint(controllers)
     randcondition=np.random.randint(conditions)
-    FullPolicy[randcontroller][randcondition]=np.random.randint(3)
+    FullPolicy[randcontroller][randcondition]=np.random.randint(3)+1
     return FullPolicy
 
 def initPopulation(pop,controllers, conditions):
-    Population=np.random.randint(3,size=(pop,controllers,conditions))
+    Population=np.random.randint(3,size=(pop,controllers,conditions))+1
     return Population
     
 def permutePopulation(Population):
@@ -112,7 +112,27 @@ def selectPopulation(Population1, fitness1, Population2, fitness2):
             k+=1
     
     return newpopulation, newfitness
+      
+def EA(pop,generations, controllers, conditions, experiment):
+    Population1=initPopulation(pop,controllers, conditions)
+    Population2=initPopulation(pop,controllers, conditions)
+    
+    fitness1=evalPopulation(Population1, experiment)
+    fitness2=evalPopulation(Population2, experiment)
+    
+    fithist=np.ones(generations)
+    
+    for i in range(generations):
+        Population2=permutePopulation(Population1)
+        fitness2=evalPopulation(Population2, experiment)
         
+        Population1,fitness1=selectPopulation(Population1, fitness1, Population2, fitness2)
+        
+        maxfitness=max(fitness1)
+        bestsolloc=np.argmax(fitness1)
+        bestsol=Population1[bestsolloc]
+        fithist[i]=maxfitness        
+    return maxfitness, bestsol, fithist
     
 #Initializes the Policy    
 def initFullPolicy(controllers, conditions):
