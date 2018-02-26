@@ -447,14 +447,13 @@ def scoreEndstate(exp, scenario):
 
 #Score function for a given flow state.
 def scoreFlowstate(rate, effort):
-    qualfunc = [[-10.,-10.,-10.,-10.,-10.],
-            [-10., -5., -3., -2.0, -10.],
-            [-10., -3.,  0., -3., -10.],
-            [-10., -2.0, -3., -5.,-10.],
-            [-10., -10., -10.,-10.,-10.]]
+    qualfunc = [[-90.,-80.,-70.,-85.,-100.],
+            [-80., -50., -20, -15, -100.],
+            [-70., -20.,  0., -20., -100.],
+            [-85., -10, -20., -50.,-110.],
+            [-100., -100., -100.,-110.,-110.]]
     
-    longbonus=[0.0,1.0,0.0,-1.0,0.0]
-    score=qualfunc[effort][rate]+longbonus[rate]
+    score=1e6*qualfunc[effort][rate]
     return score
 
 
