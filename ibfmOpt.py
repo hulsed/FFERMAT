@@ -245,10 +245,12 @@ def evaluate(FullPolicy,experiment):
         instates+=[trackFlows(newexp,scenario)]
         scores+=[scoreScenario(newexp,scenario, nominalstate)]
         
-        prob=float(list(newexp.scenarios[scenario].values())[0].prob)
+        prob1=list(newexp.scenarios[scenario].values())[0].prob
+        nloc=prob1.find('n')
+        prob= float(prob1[:nloc]+'-'+prob1[nloc+1:])
         probs=probs+[prob]
         
-    probabilities=0.01*np.array(probs)
+    probabilities=np.array(probs)
     
     #probability of the nominal state is prod(1-p_e), for e independent events
     nominalprob=np.prod(1-probabilities)
@@ -400,8 +402,9 @@ def scoreScenario(exp, scenario, Nominalstate):
     nomscore=scoreNomstate(Nominalstate)
     endscore=scoreEndstate(exp, scenario)
     
-    time=list(exp.scenarios[scenario].values())[0].when
     
+    
+    time=list(exp.scenarios[scenario].values())[0].when
     cnom=time2coeff[time]
     cend=1.0-cnom
     

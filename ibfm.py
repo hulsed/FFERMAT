@@ -720,6 +720,7 @@ class Function(object):
       except IndexError:
           cost='NA'
       if mode_class is None:
+        print(mode)
         raise Exception(mode[2]+' is not a defined mode')
       self.addMode(ident,health,mode_class, prob, when, cost)
     for condition in self.__class__._conditions:
