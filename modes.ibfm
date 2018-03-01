@@ -154,17 +154,23 @@ mode NoConductingRegulatedGas
 # Propellant source
 mode NominalPropellant
     Propellant output effort = Nominal
+	Propellant output rate = Nominal
 mode IncompletePropellant
-    Propellant output effort = Low
+    Propellant output effort = Nominal
+	Propellant output rate = Low
 mode NoPropellant
     Propellant output effort = Zero
+	Propellant output rate = Zero
 # Containing Propellant
 mode NominalContainProp
     Propellant output effort = Propellant input effort
+	Propellant output rate = Propellant input rate
 mode LeakingProp
     Propellant output effort = Propellant input effort --
+	Propellant output rate = Propellant input rate
 mode NoContainingProp
     Propellant output effort = Zero
+	Propellant output rate = Zero
 # Sensing Propellant effort
 mode NominalPropSensing
     Propellant output effort = Propellant input effort

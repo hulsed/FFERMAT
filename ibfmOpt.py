@@ -101,16 +101,17 @@ def selectPopulation(Population1, fitness1, Population2, fitness2):
     newpopulation=Population1
     
     totfitness=np.append(fitness1,fitness2)
-    totpopulation=np.append(Population1, Population2)
-    medfitness=np.median(totfitness)
-    k=0
+    totpopulation=np.append(Population1, Population2, axis=0)
     
-    for i in range(len(totfitness)):
-        if totfitness[i]>medfitness:
-            newfitness[k]=totfitness[i]
-            newpopulation[k]=totpopulation[k]
-            k+=1
+    popkey=totfitness.argsort()
+    totpopulation=totpopulation[popkey]
+    totfitness=totfitness[popkey]
     
+    pop=len(newfitness)
+    newpopulation=totpopulation[pop:int(2*pop)]
+    newfitness=totfitness[pop:int(2*pop)]
+    print(totfitness)
+    print(newfitness)
     return newpopulation, newfitness
       
 def EA(pop,generations, controllers, conditions, experiment):
@@ -131,6 +132,9 @@ def EA(pop,generations, controllers, conditions, experiment):
         maxfitness=max(fitness1)
         bestsolloc=np.argmax(fitness1)
         bestsol=Population1[bestsolloc]
+        #print(bestsol)
+        #print(maxfitness)
+        #print(Population1)
         fithist[i]=maxfitness        
     return maxfitness, bestsol, fithist
     
@@ -251,10 +255,10 @@ def evaluate(FullPolicy,experiment):
         probs=probs+[prob]
         
     probabilities=np.array(probs)
-    
+
     #probability of the nominal state is prod(1-p_e), for e independent events
     nominalprob=np.prod(1-probabilities)
-    
+
     actions+=[trackNomActions(nominalstate)]
     instates+=[trackNomFlows(nominalstate)]
     scores+=[nominalscore]
