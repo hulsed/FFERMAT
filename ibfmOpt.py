@@ -96,9 +96,7 @@ def evalPopulation(Population, experiment):
     
     return fitness
 
-def selectPopulation(Population1, fitness1, Population2, fitness2):
-    newfitness=fitness1
-    newpopulation=Population1
+def selectPopulation(Population1, fitness1, Population2, fitness2, pop):
     
     totfitness=np.append(fitness1,fitness2)
     totpopulation=np.append(Population1, Population2, axis=0)
@@ -107,11 +105,8 @@ def selectPopulation(Population1, fitness1, Population2, fitness2):
     totpopulation=totpopulation[popkey]
     totfitness=totfitness[popkey]
     
-    pop=len(newfitness)
     newpopulation=totpopulation[pop:int(2*pop)]
     newfitness=totfitness[pop:int(2*pop)]
-    print(totfitness)
-    print(newfitness)
     return newpopulation, newfitness
       
 def EA(pop,generations, controllers, conditions, experiment):
@@ -127,14 +122,15 @@ def EA(pop,generations, controllers, conditions, experiment):
         Population2=permutePopulation(Population1)
         fitness2=evalPopulation(Population2, experiment)
         
-        Population1,fitness1=selectPopulation(Population1, fitness1, Population2, fitness2)
+        Population1,fitness1=selectPopulation(Population1, fitness1, Population2, fitness2, pop)
         
         maxfitness=max(fitness1)
         bestsolloc=np.argmax(fitness1)
         bestsol=Population1[bestsolloc]
-        #print(bestsol)
-        #print(maxfitness)
-        #print(Population1)
+        print(bestsol)
+        print(maxfitness)
+        print(Population1)
+        print(fitness1)
         fithist[i]=maxfitness        
     return maxfitness, bestsol, fithist
     
