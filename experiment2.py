@@ -15,7 +15,7 @@ conditions=3
 modes=3
 iterations=10
 runs=1
-pop=10
+pop=20
 generations=10
     
 
