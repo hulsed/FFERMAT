@@ -74,6 +74,8 @@ def permutePopulation(Population):
     pop,controllers,conditions=Population.shape
     frac=0.8
     
+    Population2=Population.copy()
+    
     for i in range(pop):
         oldPolicy=Population[i]
         
@@ -83,8 +85,8 @@ def permutePopulation(Population):
         else:
             newPolicy=randCondition(oldPolicy)
             
-        Population[i]=newPolicy
-    return Population
+        Population2[i]=newPolicy
+    return Population2
 
 def evalPopulation(Population, experiment):
     pop,controllers,conditions=Population.shape
@@ -92,43 +94,45 @@ def evalPopulation(Population, experiment):
     
     for i in range(pop):
         actions, instates, utilityscores, designcost=evaluate(Population[i],experiment)
-        fitness[i]=sum(utilityscores)-designcost
+        fitness[i]=sum(utilityscores)+designcost
     
     return fitness
 
 def selectPopulation(Population1, fitness1, Population2, fitness2, pop):
     
     totfitness=np.append(fitness1,fitness2)
-    totpopulation=np.append(Population1, Population2, axis=0)
+    totpopulation=np.append(Population1.copy(), Population2.copy(), axis=0)
     
     popkey=totfitness.argsort()
-    totpopulation=totpopulation[popkey]
-    totfitness=totfitness[popkey]
+    sortpopulation=totpopulation[popkey]
+    sortfitness=totfitness[popkey]
+    print(sortpopulation)
     
-    newpopulation=totpopulation[pop:int(2*pop)]
-    newfitness=totfitness[pop:int(2*pop)]
+    newpopulation=sortpopulation[pop:int(2*pop)]
+    newfitness=sortfitness[pop:int(2*pop)]
+    print(newpopulation)
     return newpopulation, newfitness
       
 def EA(pop,generations, controllers, conditions, experiment):
     Population1=initPopulation(pop,controllers, conditions)
-    Population2=initPopulation(pop,controllers, conditions)
+    Population1[0]=np.array([[1,1,1],[1,1,1],[1,1,1],[1,1,1]])
     
     fitness1=evalPopulation(Population1, experiment)
+    
+    Population2=permutePopulation(Population1.copy())
     fitness2=evalPopulation(Population2, experiment)
     
     fithist=np.ones(generations)
     
     for i in range(generations):
-        Population2=permutePopulation(Population1)
+        Population2=permutePopulation(Population1.copy())
         fitness2=evalPopulation(Population2, experiment)
         
-        Population1,fitness1=selectPopulation(Population1, fitness1, Population2, fitness2, pop)
+        Population1,fitness1=selectPopulation(Population1.copy(), fitness1, Population2.copy(), fitness2, pop)
         
         maxfitness=max(fitness1)
         bestsolloc=np.argmax(fitness1)
         bestsol=Population1[bestsolloc]
-        print(bestsol)
-        print(maxfitness)
         print(Population1)
         print(fitness1)
         fithist[i]=maxfitness        
@@ -370,29 +374,21 @@ def trackFlows(exp, scenario):
 
 #creates a cost for the design provided it enables certain parts of the policy
 def PolicyCost(FullPolicy):
-    controllercost=1.0
-    increaseratecost=0.5
-    increasenomratecost=1.0
+    increasecost=[-50000, -50000, -50000, -50000]
+    decreasecost=[0, -50000, -50000, 0]
+    increasecapcost=[-5000000, 0, 0, -20000000]
     
-    ratecontrollers=[0,3]
     controllers=len(FullPolicy)
     
     cost=0.0
     
     for controller in range(controllers):
-        #penalty for having a controller at all
-        if all(FullPolicy[controller][i]==1 for i in range(len(FullPolicy[controller]))):
-            cost+=0.0
-        else:
-            cost+=controllercost
-        #penalties for rate variables
-        if controller in ratecontrollers:
-            #penalty for increasing rate in nominal state
-            if FullPolicy[controller][2]==2:
-                cost+=increasenomratecost
-            #penalty for increasing rate otherwise
-            if any([FullPolicy[controller][0]==2,FullPolicy[controller][1]==2]):
-                cost+=increaseratecost    
+        if any(FullPolicy[controller]==[2,2,2]):
+            cost+=increasecost[controller]
+            cost+=increasecapcost[controller]
+        if any(FullPolicy[controller]==[3,3,3]):
+            cost+=decreasecost[controller]
+        
     return cost
 
 #Score a scenario (given which scenario it is in a list)
@@ -453,7 +449,7 @@ def scoreFlowstate(rate, effort):
             [-85., -10, -20., -50.,-110.],
             [-100., -100., -100.,-110.,-110.]]
     
-    score=1e6*qualfunc[effort][rate]
+    score=1e7*qualfunc[effort][rate]
     return score
 
 
