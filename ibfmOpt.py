@@ -106,11 +106,9 @@ def selectPopulation(Population1, fitness1, Population2, fitness2, pop):
     popkey=totfitness.argsort()
     sortpopulation=totpopulation[popkey]
     sortfitness=totfitness[popkey]
-    print(sortpopulation)
     
     newpopulation=sortpopulation[pop:int(2*pop)]
     newfitness=sortfitness[pop:int(2*pop)]
-    print(newpopulation)
     return newpopulation, newfitness
       
 def EA(pop,generations, controllers, conditions, experiment):
@@ -133,8 +131,6 @@ def EA(pop,generations, controllers, conditions, experiment):
         maxfitness=max(fitness1)
         bestsolloc=np.argmax(fitness1)
         bestsol=Population1[bestsolloc]
-        print(Population1)
-        print(fitness1)
         fithist[i]=maxfitness        
     return maxfitness, bestsol, fithist
     
@@ -449,7 +445,7 @@ def scoreFlowstate(rate, effort):
             [-85., -10, -20., -50.,-110.],
             [-100., -100., -100.,-110.,-110.]]
     
-    score=1e7*qualfunc[effort][rate]
+    score=50*1e6*qualfunc[effort][rate]
     return score
 
 

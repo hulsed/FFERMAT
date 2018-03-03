@@ -16,7 +16,7 @@ modes=3
 iterations=10
 runs=1
 pop=20
-generations=10
+generations=20
     
 
 io.createVariants()
