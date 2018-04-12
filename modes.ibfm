@@ -349,11 +349,21 @@ mode MajorOverloading
 	Heat output effort = Highest
 	
 mode NominalDistribution
-	Electrical output effort = Electrical input effort * Signal input effort
-	Electrical input rate = Electrical output rate
+	Electrical output effort = Electrical input effort 
+	Electrical input rate = max all Electrical output rate
 mode PoorAllocation
 	Electrical output effort = Electrical input effort --
-
+	Electrical input rate = max all Electrical output rate
+mode AdverseResistanceDist
+	Electrical output effort = Electrical input effort --
+	Electrical input rate = max all Electrical output rate
+mode ShortCircuitDist
+	Electrical input rate = Electrical input effort * Highest
+    Electrical output effort = Zero
+mode OpenCircuitDist
+	Electrical output effort = Zero
+	Electrical input rate = Zero
+	
 mode NominalMechSink
 	MechanicalEnergy input rate = MechanicalEnergy input effort
 	
@@ -414,58 +424,55 @@ mode NominalElectricalToMechanicalEnergyConversion
     Heat output rate = Electrical input rate
     MechanicalEnergy output effort = Electrical input effort
 	MechanicalEnergy output rate = Electrical input effort
-    Electrical input rate = invert MechanicalEnergy output rate
+    Electrical input rate = Electrical input effort
 mode ShortCircuitNoMechanicalEnergyConversion
     Electrical input rate = Electrical input effort * Highest
-    Heat output rate = Electrical input rate
+    Heat output effort = Electrical input effort
     MechanicalEnergy output effort = Zero
     MechanicalEnergy output rate = Zero
 mode OpenCircuitNoMechanicalEnergyConversion
     Electrical input rate = Zero
-    Heat output rate = Zero
+    Heat output effort = Zero
     MechanicalEnergy output effort = Zero
     MechanicalEnergy output rate = Zero
 
 mode LowTorque
-	Heat output rate = Electrical input rate --
+	Heat output effort = Electrical input effort --
     MechanicalEnergy output effort = Electrical input effort --
-	MechanicalEnergy output rate = Electrical input effort ++
-    Electrical input rate = invert MechanicalEnergy output rate
+    Electrical input rate = invert MechanicalEnergy output rate --
 mode HighTorque
-	Heat output rate = Electrical input rate ++
+	Heat output effort = Electrical input effort ++
     MechanicalEnergy output effort = Electrical input effort ++
-	MechanicalEnergy output rate = Electrical input effort --
-    Electrical input rate = invert MechanicalEnergy output rate
+    Electrical input rate = invert MechanicalEnergy output rate --
 mode TooHighTorque
-	Heat output rate = Highest
+	Heat output effort = Highest
     MechanicalEnergy output effort = Highest
-	MechanicalEnergy output rate = Zero
     Electrical input rate = Highest
 
 mode NominalElectricalToOpticalEnergyConversion
-    OpticalEnergy output rate = Electrical input effort
-    Heat output rate = Electrical input effort
+    OpticalEnergy output effort = Electrical input effort
+    Heat output effort = Electrical input effort
     Electrical input rate = Electrical input effort
 mode AdverseOpticalResistance
-	OpticalEnergy output rate = Electrical input effort --
-	Heat output rate = Electrical input effort --
+	OpticalEnergy output effort = Electrical input effort --
+	Heat output effort = Electrical input effort --
 	Electrical input rate = Electrical input effort --
 mode NoElectricalToOpticalEnergyConversion
     Electrical input rate = Zero
-    Heat output rate = Zero
-    OpticalEnergy output rate = Zero
+    Heat output effort = Zero
+    OpticalEnergy output effort = Zero
 	
 mode NominalElectricalToHeatConversion
-    Heat output rate = Electrical input effort
+    Heat output effort = Electrical input effort
     Electrical input rate = Electrical input effort
 mode NotEnoughHeat
-    Heat output rate = Electrical input effort
+    Heat output effort = Electrical input effort --
     Electrical input rate = Electrical input effort
 mode Hot
-    Heat output rate = Electrical input effort ++
+    Heat output effort = Electrical input effort ++
     Electrical input rate = Electrical input effort ++
 mode TooHot
-	Heat output rate = Highest
+	Heat output effort = Highest
     Electrical input rate = Highest
 mode OpenCircuitHeat
     Heat output effort = Zero
