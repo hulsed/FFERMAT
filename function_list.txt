@@ -45,14 +45,17 @@ ControlSig332
 ControlSig333
 ControlSig4
 ConvertChemicalToElectricalEnergy
-ConvertElectricalToMechanicalEnergy
-ConvertElectricalToOpticalEnergy
+ConvertElectricalEnergyToHeatEnergy
+ConvertElectricalEnergyToMechanicalEnergy
+ConvertElectricalEnergyToOpticalEnergy
+DistributeElectricalEnergy
 ExpandGas
 ExportByproducts
 ExportElectricalEnergy
 ExportExcessGas
 ExportHeatEnergy
 ExportMaterial
+ExportMechanicalEnergy
 ExportOpticalEnergy
 ExportRegulatedGas
 ExportThrust
@@ -78,4 +81,6 @@ SensePropellantPT
 SensePropellantRate
 SenseTemperature
 SenseVoltage
+StoreElectricalEnergy
+SupplyElectricalEnergy
 TransportMaterial

@@ -309,31 +309,68 @@ mode ExportNoThrust
     Thrust input rate = Thrust input rate
 mode TooMuchThrust
     Thrust input rate = Thrust input rate
+
 mode OpenCircuit
-    optional Electrical output effort = Zero
-    optional Electrical input rate = Zero
+    Electrical output effort = Zero
+    Electrical input rate = Zero
 mode ClosedCircuit
     Electrical output effort = Electrical input effort
     Electrical input rate = Electrical output rate
 mode ShortCircuit
     Electrical input rate = Electrical input effort * Highest
     optional Electrical output effort = Zero
+
 mode NominalVoltageSource
     Electrical output effort = Nominal
 mode LowVoltageSource
     Electrical output effort = Low
 mode HighVoltageSource
     Electrical output effort = High
+mode NoVoltageSource
+    Electrical output effort = Zero
+
+mode NominalStorage
+	Electrical output effort = Electrical input effort
+	Electrical output rate = Nominal
+mode PartialStorage
+	Electrical output effort = Electrical input effort
+	Electrical output rate = Low
+mode NoStorage
+	Electrical output effort = Zero
+
+mode NominalSupply
+	Electrical output effort = Electrical input effort
+	Heat output effort = Nominal
+mode MinorOverloading
+	Electrical output effort = Electrical input effort ++
+	Heat output effort = High
+mode MajorOverloading
+	Electrical output effort = Highest
+	Heat output effort = Highest
+	
+mode NominalDistribution
+	Electrical output effort = Electrical input effort * Signal input effort
+	Electrical input rate = Electrical output rate
+mode PoorAllocation
+	Electrical output effort = Electrical input effort --
+
+mode NominalMechSink
+	MechanicalEnergy input rate = MechanicalEnergy input effort
+	
 mode ResistiveLoad
     Electrical input rate = Electrical input effort
 mode ResistiveLoadD
     Electrical input rate = Electrical input effort
 mode ResistiveLoadF
     Electrical input rate = Electrical input effort
+	
 mode NominalSignalSource
     Signal output effort = Nominal
 mode ZeroSignalSource
     Signal output effort = Zero
+mode PartialSignal
+	Signal output effort = Low
+	
 mode HeatSink
     Heat input effort = Nominal
 mode HotHeatSink
@@ -372,26 +409,69 @@ mode NoInvertElectricalEnergy
     Electrical output effort = Zero
     Heat output rate = Zero
     Electrical input rate = Zero
+
 mode NominalElectricalToMechanicalEnergyConversion
     Heat output rate = Electrical input rate
     MechanicalEnergy output effort = Electrical input effort
+	MechanicalEnergy output rate = Electrical input effort
     Electrical input rate = invert MechanicalEnergy output rate
 mode ShortCircuitNoMechanicalEnergyConversion
     Electrical input rate = Electrical input effort * Highest
     Heat output rate = Electrical input rate
     MechanicalEnergy output effort = Zero
+    MechanicalEnergy output rate = Zero
 mode OpenCircuitNoMechanicalEnergyConversion
     Electrical input rate = Zero
     Heat output rate = Zero
     MechanicalEnergy output effort = Zero
+    MechanicalEnergy output rate = Zero
+
+mode LowTorque
+	Heat output rate = Electrical input rate --
+    MechanicalEnergy output effort = Electrical input effort --
+	MechanicalEnergy output rate = Electrical input effort ++
+    Electrical input rate = invert MechanicalEnergy output rate
+mode HighTorque
+	Heat output rate = Electrical input rate ++
+    MechanicalEnergy output effort = Electrical input effort ++
+	MechanicalEnergy output rate = Electrical input effort --
+    Electrical input rate = invert MechanicalEnergy output rate
+mode TooHighTorque
+	Heat output rate = Highest
+    MechanicalEnergy output effort = Highest
+	MechanicalEnergy output rate = Zero
+    Electrical input rate = Highest
+
 mode NominalElectricalToOpticalEnergyConversion
     OpticalEnergy output rate = Electrical input effort
     Heat output rate = Electrical input effort
     Electrical input rate = Electrical input effort
+mode AdverseOpticalResistance
+	OpticalEnergy output rate = Electrical input effort --
+	Heat output rate = Electrical input effort --
+	Electrical input rate = Electrical input effort --
 mode NoElectricalToOpticalEnergyConversion
     Electrical input rate = Zero
     Heat output rate = Zero
     OpticalEnergy output rate = Zero
+	
+mode NominalElectricalToHeatConversion
+    Heat output rate = Electrical input effort
+    Electrical input rate = Electrical input effort
+mode NotEnoughHeat
+    Heat output rate = Electrical input effort
+    Electrical input rate = Electrical input effort
+mode Hot
+    Heat output rate = Electrical input effort ++
+    Electrical input rate = Electrical input effort ++
+mode TooHot
+	Heat output rate = Highest
+    Electrical input rate = Highest
+mode OpenCircuitHeat
+    Heat output effort = Zero
+    Electrical input rate = Zero
+	
+	
 mode NominalChemicalEffortSource
     ChemicalEnergy output effort = Nominal
 mode LowChemicalEffortSource
@@ -459,7 +539,7 @@ mode NominalCombineElectricalEnergy
 mode NominalExportOpticalEnergy
     OpticalEnergy input rate = OpticalEnergy input effort
 mode AdverseResistance
-    Electrical output rate = Electrical input rate --
+    Electrical output effort = Electrical input effort --
 mode EqualVoltage
     Electrical output effort = Electrical input effort
 mode IncreaseVoltage
