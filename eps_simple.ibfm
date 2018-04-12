@@ -22,7 +22,7 @@ model eps_simple
     flow distEE EEtoME Electrical
     flow distEE EEtoOE Electrical
     flow distEE EEtoHE Electrical
-	flow EEtoHE exportHE2 Heat
+	flow EEtoHE exportHE2 DesiredHeat
     flow EEtoME exportME MechanicalEnergy
 	flow EEtoME exportHE3 Heat 
     flow EEtoOE exportOE OpticalEnergy

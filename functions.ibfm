@@ -159,7 +159,7 @@ function ImportBinarySignal cost 500
 function StoreElectricalEnergy cost 1750
 	mode 1 Operational NominalStorage
 	mode 2 Degraded PartialStorage prob 5en4 cost 2000
-	mode 3 Failed NoStorage prob 5.5en5 cost 2000
+	mode 3 Failed NoStorage prob 5en5 cost 2000
 function SupplyElectricalEnergy cost 400
 	mode 1 Operational NominalSupply
 	mode 2 Degraded AdverseResistance prob 5en5 cost 400
@@ -232,7 +232,7 @@ function ConvertElectricalEnergyToMechanicalEnergy cost 180
 	mode 3 Degraded LowTorque prob 1en4 cost 200
 	mode 4 Failed TooHighTorque prob 5en5 cost 200
 	mode 5 Failed OpenCircuitNoMechanicalEnergyConversion prob 5en5 cost 200
-	mode 6 Failed ShortCircuitNoMechanicalEnergyConversion cost 200	
+	mode 6 Failed ShortCircuitNoMechanicalEnergyConversion prob 5en5 cost 200	
 function ConvertElectricalEnergyToHeatEnergy
 	mode 1 Operational NominalElectricalToHeatConversion
 	mode 2 Degraded NotEnoughHeat prob 1en6 cost 200
@@ -256,7 +256,7 @@ function DistributeElectricalEnergy
 function ConvertElectricalEnergyToOpticalEnergy
     mode 1 Operational NominalElectricalToOpticalEnergyConversion
 	mode 2 Degraded AdverseOpticalResistance prob 1en3 cost 70
-	mode 3 Failed NoElectricalToOpticalEnergyConversion prob 1 cost 1
+	mode 3 Failed NoElectricalToOpticalEnergyConversion prob 1en3  cost 100
     condition 1 2 to 3 HighVoltage 
 function TransportMaterial cost 1
     mode 1 Operational NominalTransportMaterial

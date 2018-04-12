@@ -422,7 +422,6 @@ def scoreNomstate(Nominalstate):
 
 #Score an endstate for the experiment
 def scoreEndstate(exp, scenario):
-    functions=['exportT1']
     Flow="Thrust"
     
     flowsraw=list(exp.results[scenario].keys())
@@ -437,6 +436,27 @@ def scoreEndstate(exp, scenario):
     
     return statescore
 
+def scoreEndstates(exp, scenario):
+    functions=['exportT1']
+    Flows=["OpticalEnergy","MechanicalEnergy","DesiredHeat"]
+    statescores=[]
+    
+    for Flow in Flows:
+    
+        flowsraw=list(exp.results[scenario].keys())
+        flows=[str(j) for j in flowsraw]
+        states=list(exp.results[scenario].values())
+        loc=flows.index(Flow)
+        
+        effort=int(states[loc][0])
+        rate=int(states[loc][1])
+    
+        statescores=statescores+[scoreFlowstate(rate,effort)]
+    
+    statescore=sum(statescores)
+    
+    return statescore
+
 #Score function for a given flow state.
 def scoreFlowstate(rate, effort):
     qualfunc = [[-90.,-80.,-70.,-85.,-100.],
@@ -444,8 +464,8 @@ def scoreFlowstate(rate, effort):
             [-70., -20.,  0., -20., -100.],
             [-85., -10, -20., -50.,-110.],
             [-100., -100., -100.,-110.,-110.]]
-    
-    score=50*1e6*qualfunc[effort][rate]
+    #1e6
+    score=10*qualfunc[effort][rate]
     return score
 
 
@@ -478,10 +498,15 @@ def scorefxns(exp):
     for scenario in range(scenarios):
         function=list(exp.scenarios[scenario].keys())[0]
         
-        prob=0.01*float(list(exp.scenarios[scenario].values())[0].prob)
+        
+        prob1=list(exp.scenarios[scenario].values())[0].prob
+        nloc=prob1.find('n')
+        prob= float(prob1[:nloc]+'-'+prob1[nloc+1:])
+        
+        probs=probs+[prob]
         probs+=[prob]
-        #remove: simply to make current problem interesting
-        score=100*scoreEndstate(exp,scenario)
+
+        score=scoreEndstates(exp,scenario)
         scores+=[score]
         
         fxnscores[function]+=[score]
@@ -489,12 +514,9 @@ def scorefxns(exp):
         failutility[function]=failutility[function] + score*prob
     #map each function to the utility of making it redundant
     
-    
     return functions, fxnscores, fxnprobs, failutility, fxncost
 
-def optRedundancy(functions, fxnscores, fxnprobs, fxncost):
-    
-    
+def optRedundancy(functions, fxnscores, fxnprobs, fxncost):  
     fxnreds={}
     
     for function in functions:

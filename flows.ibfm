@@ -18,6 +18,8 @@ flow Electrical Energy
 
 flow Heat Energy
 
+flow DesiredHeat Heat
+
 flow ChemicalEnergy Energy
 
 flow MechanicalEnergy Energy
