@@ -233,7 +233,7 @@ function ConvertElectricalEnergyToMechanicalEnergy cost 180
 	mode 4 Failed TooHighTorque prob 5en5 cost 200
 	mode 5 Failed OpenCircuitNoMechanicalEnergyConversion prob 5en5 cost 200
 	mode 6 Failed ShortCircuitNoMechanicalEnergyConversion prob 5en5 cost 200	
-function ConvertElectricalEnergyToHeatEnergy
+function ConvertElectricalEnergyToHeatEnergy cost 200 
 	mode 1 Operational NominalElectricalToHeatConversion
 	mode 2 Degraded NotEnoughHeat prob 1en6 cost 200
 	mode 3 Degraded Hot prob 1en5 cost 200
@@ -241,19 +241,19 @@ function ConvertElectricalEnergyToHeatEnergy
 	mode 5 Failed OpenCircuitHeat prob 1en8 cost 200
 	condition 1 2 3 4 to 5 HighestVoltage
 	condition 1 to 2 HighVoltage 
-function DistributeElectricalEnergy
+function DistributeElectricalEnergy cost 1500
 	mode 1 Operational NominalDistribution
 	mode 2 Degraded AdverseResistanceDist prob 1en4 cost 1500
 	mode 3 Degraded PoorAllocation prob 1en2 cost 500
 	mode 4 Failed ShortCircuitDist prob 5en4 cost 1500
 	mode 5 Failed OpenCircuitDist prob 5en4 cost 1500
 	mode 6 Operational OpenCircuitDist prob 0 cost 0
-	mode 7 Operational PoorAllocation prob 0 cost 0
+	mode 7 Operational PoorAllocation prob 0 cost 
 	condition 1 2 3 to 4 HighestCurrent
 	condition 1 to 6 LowSignal
 	condition 1 6 to 7 NoSignal
 	condition 6 7 to 1 NominalSignal 
-function ConvertElectricalEnergyToOpticalEnergy
+function ConvertElectricalEnergyToOpticalEnergy cost 100
     mode 1 Operational NominalElectricalToOpticalEnergyConversion
 	mode 2 Degraded AdverseOpticalResistance prob 1en3 cost 70
 	mode 3 Failed NoElectricalToOpticalEnergyConversion prob 1en3  cost 100

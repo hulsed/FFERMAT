@@ -516,39 +516,45 @@ def scorefxns(exp):
     
     return functions, fxnscores, fxnprobs, failutility, fxncost
 
-def optRedundancy(functions, fxnscores, fxnprobs, fxncost):  
+def optRedundancy(functions, fxnscores, fxnprobs, fxncost, factor):  
     fxnreds={}
+    newfailutility={}
     
     for function in functions:
         fxnreds[function]=0
+        newfailutility[function]=0.0
     
     ufunc=0.0
     
     for function in functions:
         probs=np.array(fxnprobs[function])
-        scores=np.array(fxnscores[function])
+        scores=factor*np.array(fxnscores[function])
         cost=fxncost[function]
         
         ufunc=sum(scores*probs)-cost
         converged=0
         n=0
         print(ufunc)
-        while not(converged):
-            n+=1
-            newufunc=sum(scores*probs**(n+1))-cost*(n+1)
-            print(newufunc)
-            
-            if newufunc >= ufunc:
-                ufunc=newufunc
-            else:
-                converged=1
+        
+        if cost == 0:
+            n=1
+        else:
+            while not(converged):
+                n+=1
+                newufunc=sum(scores*probs**(n+1))-cost*(n+1)
+                print(newufunc)
                 
-            if n>150:
-                break
+                if newufunc >= ufunc:
+                    ufunc=newufunc
+                else:
+                    converged=1
+                    
+                if n>150:
+                    break
         
         fxnreds[function]=n
-        
-    return fxnreds 
+        newfailutility[function]=ufunc
+    return fxnreds, newfailutility
                 
     
 
