@@ -175,9 +175,9 @@ function ImportMaterial cost 1
 function ExportMaterial cost 1
     mode 1 Operational NominalMaterialSink
     mode 2 Failed NoMaterialSink prob 1 cost 1
-function ExportMechanicalEnergy
+function ExportMechanicalEnergy cost 0.0
 	mode 1 Operational NominalMechSink
-function ExportOpticalEnergy cost 1
+function ExportOpticalEnergy cost 0.0
     mode 1 Operational NominalExportOpticalEnergy
 function ProtectElectricalEnergy
     mode 1 Operational ClosedCircuit

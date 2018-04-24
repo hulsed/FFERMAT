@@ -21,7 +21,6 @@ functions, fxnscores, fxnprobs, failutility, fxncost = io.scorefxns(e1)
 
 factor=1000000
 
-
 fxnreds, newfailutility=io.optRedundancy(functions, fxnscores, fxnprobs, fxncost,factor)
 
 print(fxnreds)

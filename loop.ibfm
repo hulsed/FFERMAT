@@ -1,0 +1,10 @@
+model loop
+    function ImportE1 ImportElectricalEnergy
+    function CombE1 CombineElectricalEnergy
+    function ProtectE1 ProtectElectricalEnergy
+    function ProtectE2 ProtectElectricalEnergy
+    
+    flow ImportE1 CombE1 Electrical
+    flow CombE1 ProtectE1 Electrical
+    flow ProtectE1 ProtectE2 Electrical
+    flow ProtectE2 CombE1 Electrical
