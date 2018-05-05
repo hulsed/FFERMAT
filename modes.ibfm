@@ -14,6 +14,18 @@ mode HighHeatSource
     Heat output effort = High
 mode NoHeatSource
     Heat output effort = Zero
+# Branch Heat
+mode NominalBranchHeat
+	Heat output effort = Heat input effort
+	Heat input rate = max Heat output rate
+# Branch Gas
+mode NominalBranchGas
+	InertGas output effort = InertGas input effort
+	InertGas input rate = max InertGas output rate
+# Combine Gas
+mode NominalCombineGas
+	ExpandedGas output effort = max ExpandedGas input effort
+	
 # Containing  
 mode NominalContaining
     InertGas output effort = InertGas input effort
@@ -105,6 +117,14 @@ mode PartialConductingAdjustedGas
 mode NoConductingAdjustedGas
     AdjustedGas output effort = Zero
     AdjustedGas output rate = Zero
+# Recover Heat
+mode NominalRecoverHeat
+	Heat output effort = Nominal 
+mode TooMuchRecovery
+	Heat output effort = Highest 
+# Combine Heat
+mode NominalCombineHeat
+	Heat output effort = max Heat input effort
 # Measure Gas Pressure
 mode NominalPressureSensing
     AdjustedGas output effort = AdjustedGas input effort
@@ -121,6 +141,23 @@ mode DriftingHighPressureSensing
 mode NoPressureSensing
     AdjustedGas output effort = AdjustedGas input effort
     AdjustedGas output rate = AdjustedGas input rate
+    Signal output effort = Zero
+# Measure Gas Pressure
+mode NominalAPressureSensing
+    RegulatedGas output effort = RegulatedGas input effort
+    RegulatedGas output rate = RegulatedGas input rate
+    Signal output effort = RegulatedGas input effort
+mode DriftingALowPressureSensing
+    RegulatedGas output effort = RegulatedGas input effort
+    RegulatedGas output rate = RegulatedGas input rate
+    Signal output effort = RegulatedGas input effort --
+mode DriftingAHighPressureSensing
+    RegulatedGas output effort = RegulatedGas input effort
+    RegulatedGas output rate = RegulatedGas input rate
+    Signal output effort = RegulatedGas input effort ++
+mode NoAPressureSensing
+    RegulatedGas output effort = RegulatedGas input effort
+    RegulatedGas output rate = RegulatedGas input rate
     Signal output effort = Zero
 # Regulating Gas Pressure 
 mode NominalPressureRegulating
@@ -140,6 +177,25 @@ mode NoPressureToRegulate
 mode NoPressureToRegulateLow
     RegulatedGas output effort = Zero
 mode NoPressureToRegulateHigh
+    RegulatedGas output effort = Zero
+# Regulating Gas Pressure 
+mode NominalRPressureRegulating
+    RegulatedGas output effort = Signal input effort
+    RegulatedGas output rate = RegulatedGas input rate
+mode LowRPressureRegulating
+    RegulatedGas output effort = Signal input effort ++
+    RegulatedGas output rate = RegulatedGas input rate
+mode HighRPressureRegulating
+    RegulatedGas output effort = Signal input effort --
+    RegulatedGas output rate = RegulatedGas input rate
+mode NoRPressureRegulating
+    RegulatedGas output effort = RegulatedGas input effort
+    RegulatedGas output rate = RegulatedGas input rate
+mode NoRPressureToRegulate
+    RegulatedGas output effort = Zero
+mode NoRPressureToRegulateLow
+    RegulatedGas output effort = Zero
+mode NoRPressureToRegulateHigh
     RegulatedGas output effort = Zero
 # Conducting RegulatedGas
 mode NominalConductingRegulatedGas
@@ -268,6 +324,13 @@ mode NoPropRateAdjustment
 mode NoPropRateAdjustmentLow
     Propellant output effort = Low
     Propellant output rate = Low
+# Branch Gas Propellant
+mode NominalBranchPropellant
+	Propellant output effort = Propellant input effort
+	Propellant output rate = Propellant input rate
+# Branch Catalyst 
+mode NominalBranchCatalyst
+	Catalyst output effort =  Catalyst input effort
 # Import Catalyst
 mode NominalCatalystSource
     Catalyst output effort = Nominal
@@ -301,6 +364,10 @@ mode NoCombustion
     Byproducts output rate = Propellant input rate --
 mode ExportByproducts
     Byproducts input rate = Byproducts input rate
+# Combine Thrust
+mode NominalCombineThrust
+	Thrust output effort = max Thrust input effort
+	Thrust output rate = max Thrust input rate
 mode ExportThrust
     Thrust input rate = Thrust input rate
 mode ExportLowThrust

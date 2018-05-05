@@ -7,6 +7,14 @@ function ImportHeat cost 4.44e6
 	mode 2 Degraded LowHeatSource prob 5en5 midway cost 1
 	mode 3 Degraded HighHeatSource prob 5en5 midway cost 1
 	mode 4 Failed NoHeatSource prob 5en6 midway cost 1
+function BranchHeat cost 1.0e6
+	mode 1 Operational NominalBranchHeat
+function BranchGas cost 1.0e5
+	mode 1 Operational NominalBranchGas
+function CombineGas cost 1.0e5
+	mode 1 Operational NominalCombineGas
+function CombineHeat cost 1.0e4
+	mode 1 Operational NominalCombineHeat
 function ContainGas cost 10.1e6
 	mode 1 Operational NominalContaining 
 	mode 2 Degraded Leaking prob 1en5 early cost 1
@@ -41,6 +49,11 @@ function MeasureGasPressure cost 5.02e5
     mode 2 Degraded DriftingLowPressureSensing prob 5en4 late cost 1
     mode 3 Degraded DriftingHighPressureSensing prob 5en4 late cost 1
     mode 4 Failed NoPressureSensing prob 1en4 midway cost 1
+function MeasureAGasPressure cost 5.02e5
+    mode 1 Operational NominalAPressureSensing
+    mode 2 Degraded DriftingALowPressureSensing prob 5en4 late cost 1
+    mode 3 Degraded DriftingAHighPressureSensing prob 5en4 late cost 1
+    mode 4 Failed NoAPressureSensing prob 1en4 midway cost 1
 function RegulateGasPressure cost 1.244e6
     mode 1 Operational NominalPressureRegulating
     mode 2 Degraded LowPressureRegulating prob 1en4 late cost 1
@@ -49,6 +62,20 @@ function RegulateGasPressure cost 1.244e6
     mode 5 Operational NoPressureToRegulate prob 0 midway
     mode 6 Degraded NoPressureToRegulateLow prob 1en5 midway cost 1
     mode 7 Degraded NoPressureToRegulateHigh prob 1en5 midway cost 1
+    condition 1 to 5 NoPressure
+    condition 2 to 6 NoPressure 
+    condition 3 to 7 NoPressure
+    condition 5 to 1 NonZeroPressure
+    condition 6 to 2 NonZeroPressure
+    condition 7 to 3 NonZeroPressure
+function RegulateRGasPressure cost 1.244e6
+    mode 1 Operational NominalRPressureRegulating
+    mode 2 Degraded LowRPressureRegulating prob 1en4 late cost 1
+    mode 3 Degraded HighRPressureRegulating prob 1en4 late cost 1
+    mode 4 Failed NoRPressureRegulating prob 5en5 midway cost 1
+    mode 5 Operational NoRPressureToRegulate prob 0 midway
+    mode 6 Degraded NoRPressureToRegulateLow prob 1en5 midway cost 1
+    mode 7 Degraded NoRPressureToRegulateHigh prob 1en5 midway cost 1
     condition 1 to 5 NoPressure
     condition 2 to 6 NoPressure 
     condition 3 to 7 NoPressure
@@ -107,6 +134,10 @@ function ImportCatalyst cost 2.88e5
     mode 1 Operational NominalCatalystSource
     mode 2 Degraded NotCompleteCatalystSource prob 1en7 beginning cost 1
     mode 3 Failed NoCatalystSource prob 1en8 beginning cost 1
+function BranchPropellant cost 1e5
+	mode 1 Operational NominalBranchPropellant
+function BranchCatalyst cost 1e5
+	mode 1 Operational NominalBranchCatalyst
 function ContainCatalyst cost 1.12e6
 	mode 1 Operational NominalContainCatalyst
 	mode 2 Failed NoContainingCatalyst prob 1en6 early cost 1
@@ -117,6 +148,11 @@ function CombustPropellant cost 5.44e6
     condition 1 3 to 2 LowCatalyst
     condition 1 2 to 3 NoCatalyst 
     condition 2 3 to 1 NominalCatalyst
+function CombineThrust cost 2.0e5
+	mode 1 Operational NominalCombineThrust
+function RecoverHeat cost 1e5
+	mode 1 Operational NominalRecoverHeat
+	mode 2 Failed TooMuchRecovery prob 5en5 midway cost 1
 function ExportHeatEnergy cost 750
     mode 1 Operational HeatSink
     mode 2 Degraded HotHeatSink prob 1en5 late cost 500
@@ -309,26 +345,26 @@ function ControlSig1 cost 1
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
     condition 2 3 to 1 LowSignal
-    condition 1 3 to 2 HighSignal
-    condition 1 2 to 3 NominalSignal
+    condition 2 3 to 1 HighSignal
+    condition 2 3 to 1 NominalSignal
 function ControlSig2 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
     condition 2 3 to 1 LowSignal
-    condition 1 3 to 2 HighSignal
-    condition 1 2 to 3 NominalSignal
+    condition 2 3 to 1 HighSignal
+    condition 2 3 to 1 NominalSignal
 function ControlSig3 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
     condition 2 3 to 1 LowSignal
-    condition 1 3 to 2 HighSignal
-    condition 1 2 to 3 NominalSignal
+    condition 2 3 to 1 HighSignal
+    condition 2 3 to 1 NominalSignal
 function ControlSig4 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
     condition 2 3 to 1 LowSignal
-    condition 1 3 to 2 HighSignal
-    condition 1 2 to 3 NominalSignal
+    condition 2 3 to 1 HighSignal
+    condition 2 3 to 1 NominalSignal

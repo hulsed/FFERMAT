@@ -14,5 +14,5 @@ import importlib
 importlib.reload(ibfm)
 importlib.reload(io)
 
-e1=ibfm.Experiment('loop')
+e1=ibfm.Experiment('monoprop5')
 e1.run(1)

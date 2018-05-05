@@ -9,13 +9,13 @@ plt.figure(1)
 
 
 x=range(20)
-plt.plot(x, (fithist1+100000000), 'ro-', x, (fithist5)/5+100000000, 'g^:', x, (fithist10)/10+100000000, 'bs--', x, (fithist50)/50+100000000, 'mp-.')
+plt.plot(x, (fithist1), 'ro-', x, (fithist5)/5, 'g^:', x, (fithist10)/10, 'bs--', x, (fithist50)/50, 'mp-.')
 
-plt.title('Optimization of Resilient Parameters Across Mission Utilities')
+plt.title('Optimization Across Worst Failure Costs')
 plt.xlabel('Generations (of population 20)')
-plt.ylabel('Scaled Design Scoring ($/utility)')
-plt.legend(['$100M utility','$500M utility','$1B utility','$5B utility'])
-plt.xticks(range(0,21,5))
+plt.ylabel('Scaled Score (\$ / \$failure)')
+plt.legend(['$100M failure','$500M failure','$1B failure','$5B failure'])
+plt.xticks(range(0,20,5))
 plt.minorticks_on()
 plt.grid()
 plt.show()
