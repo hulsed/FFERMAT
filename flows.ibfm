@@ -35,3 +35,15 @@ flow Catalyst Material
 flow Thrust Energy
 
 flow Byproducts Material
+
+flow ExpandedGas2 ExpandedGas
+
+flow InertGas2 InertGas
+
+flow Heat2 Heat
+
+flow Heat1 Heat
+
+flow Thrust2 Thrust 
+
+flow Thrust1 Thrust

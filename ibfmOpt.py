@@ -223,6 +223,50 @@ def selectPolicy(QTab, FullPolicy):
 
     return FullPolicy
 
+def evaluate2(experiment):
+    scenarios=len(experiment.results)
+    actions=[]
+    instates=[]
+    scores=[]
+    probs=[]
+    fxncosts=[]
+    
+    nominalstate=experiment.model.nominal_state
+    nominalscore=scoreNomstate(nominalstate)
+    
+    fxns=experiment.model.graph.nodes()
+    
+    for fxn in fxns:
+        
+        fxncosts+=[float(fxn._cost[0])]
+    
+    designcost=-sum(fxncosts)
+    
+    for scenario in range(scenarios):
+        scores+=[scoreScenario(experiment,scenario, nominalstate)]
+        
+        prob1=list(experiment.scenarios[scenario].values())[0].prob
+        nloc=prob1.find('n')
+        prob= float(prob1[:nloc]+'-'+prob1[nloc+1:])
+        probs=probs+[prob]
+        
+    probabilities=np.array(probs)
+
+    #probability of the nominal state is prod(1-p_e), for e independent events
+    nominalprob=np.prod(1-probabilities)
+
+    actions+=[trackNomActions(nominalstate)]
+    instates+=[trackNomFlows(nominalstate)]
+    scores+=[nominalscore]
+    probabilities=np.append(probabilities, nominalprob)
+    
+    
+    failcost=sum(scores*probabilities)
+    
+    utility = failcost + designcost
+    
+    return  failcost, designcost, utility
+
 #Takes the policy, changes the model, runs it, tracks the actions, and gives 
 #a utility score for each scenario
 def evaluate(FullPolicy,experiment):
@@ -465,7 +509,8 @@ def scoreFlowstate(rate, effort):
             [-85., -10, -20., -50.,-110.],
             [-100., -100., -100.,-110.,-110.]]
     #1e6
-    score=10*qualfunc[effort][rate]
+    #10
+    score=1e6*qualfunc[effort][rate]
     return score
 
 

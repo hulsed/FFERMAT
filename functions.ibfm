@@ -1,60 +1,68 @@
-function ImportGas cost 11.5e6
+function ImportGas cost 11e6
     mode 1 Operational NominalGasSource 
     mode 2 Degraded NotCompleteGasSource prob 1en7 beginning cost 1
     mode 3 Failed NoGasSource prob 1en8 beginning
-function ImportHeat cost 4.44e6
+function ImportHeat cost 4e6
 	mode 1 Operational NominalHeatSource 
 	mode 2 Degraded LowHeatSource prob 5en5 midway cost 1
 	mode 3 Degraded HighHeatSource prob 5en5 midway cost 1
 	mode 4 Failed NoHeatSource prob 5en6 midway cost 1
-function BranchHeat cost 1.0e6
+function BranchHeat cost 1e6
 	mode 1 Operational NominalBranchHeat
-function BranchGas cost 1.0e5
+function BranchGas cost 1e5
 	mode 1 Operational NominalBranchGas
-function CombineGas cost 1.0e5
-	mode 1 Operational NominalCombineGas
-function CombineHeat cost 1.0e4
-	mode 1 Operational NominalCombineHeat
-function ContainGas cost 10.1e6
+function CombineGas cost 1e5
+	mode 1 Operational CombineDegradedGas
+	mode 2 Operational NominalGasOut
+	condition 1 to 2 AnyNominalGasInput
+	condition 2 to 1 NoNominalGasInput
+function CombineHeat cost 1e4
+	mode 1 Operational NoHeatYet
+	mode 2 Operational NormalHeat
+	mode 3 Operational RecoveredHeat
+	condition 1 to 2 AnyHeatInput
+	condition 2 to 3 LostPrimaryHeat
+	
+function ContainGas cost 10e6
 	mode 1 Operational NominalContaining 
 	mode 2 Degraded Leaking prob 1en5 early cost 1
 	mode 3 Failed NoContaining prob 1en6 early cost 1
-function ExpandGas cost 5.066e6
+function ExpandGas cost 5e6
     mode 1 Operational NominalExpansion 
     mode 2 Degraded HighExpansion prob 5en6 late cost 1
     mode 3 Degraded LowExpansion prob 5en5 late cost 1
-function ConductExpandedGas cost 3.44e5
+function ConductExpandedGas cost 3e5
     mode 1 Operational NominalConductingExpandedGas 
     mode 2 Degraded PartialConductingExpandedGas prob 5en5 midway cost 1
     mode 3 Failed NoConductingExpandedGas prob 1en5 early cost 1
-function SenseGasRate cost 2.02e5
+function SenseGasRate cost 2e5
     mode 1 Operational NominalGasSensing 
     mode 2 Degraded DriftingLowGasSensing prob 5en4 late cost 1
     mode 3 Degraded DriftingHighGasSensing prob 5en4 late cost 1
     mode 4 Failed NoGasSensing prob 1en4 midway cost 1
-function AdjustGasFlow cost 6.44e5
+function AdjustGasFlow cost 6e5
     mode 1 Operational NominalFlowAdjustment 
     mode 2 Degraded PartialLowAdjustment prob 1en4 late cost 1
     mode 3 Degraded PartialHighAdjustment prob 1en4 late cost 1
     mode 4 Failed NoAdjustment prob 5en5 midway cost 1
     mode 6 Failed NoAdjustmentLow prob 1en5 midway cost 1
-function ExportExcessGas cost 1.02e5
+function ExportExcessGas cost 1e5
     mode 1 Operational NominalExportGas
-function ConductAdjustedGas cost 5.66e5
+function ConductAdjustedGas cost 5e5
     mode 1 Operational NominalConductingAdjustedGas
     mode 2 Degraded PartialConductingAdjustedGas prob 5en5 midway cost 1
     mode 3 Failed NoConductingAdjustedGas prob 1en5 early cost 1
-function MeasureGasPressure cost 5.02e5
+function MeasureGasPressure cost 5e5
     mode 1 Operational NominalPressureSensing
     mode 2 Degraded DriftingLowPressureSensing prob 5en4 late cost 1
     mode 3 Degraded DriftingHighPressureSensing prob 5en4 late cost 1
     mode 4 Failed NoPressureSensing prob 1en4 midway cost 1
-function MeasureAGasPressure cost 5.02e5
+function MeasureAGasPressure cost 5e5
     mode 1 Operational NominalAPressureSensing
     mode 2 Degraded DriftingALowPressureSensing prob 5en4 late cost 1
     mode 3 Degraded DriftingAHighPressureSensing prob 5en4 late cost 1
     mode 4 Failed NoAPressureSensing prob 1en4 midway cost 1
-function RegulateGasPressure cost 1.244e6
+function RegulateGasPressure cost 1e6
     mode 1 Operational NominalPressureRegulating
     mode 2 Degraded LowPressureRegulating prob 1en4 late cost 1
     mode 3 Degraded HighPressureRegulating prob 1en4 late cost 1
@@ -68,7 +76,7 @@ function RegulateGasPressure cost 1.244e6
     condition 5 to 1 NonZeroPressure
     condition 6 to 2 NonZeroPressure
     condition 7 to 3 NonZeroPressure
-function RegulateRGasPressure cost 1.244e6
+function RegulateRGasPressure cost 1e6
     mode 1 Operational NominalRPressureRegulating
     mode 2 Degraded LowRPressureRegulating prob 1en4 late cost 1
     mode 3 Degraded HighRPressureRegulating prob 1en4 late cost 1
@@ -82,24 +90,24 @@ function RegulateRGasPressure cost 1.244e6
     condition 5 to 1 NonZeroPressure
     condition 6 to 2 NonZeroPressure
     condition 7 to 3 NonZeroPressure
-function ConductRegulatedGas cost 5.44e5
+function ConductRegulatedGas cost 5e5
     mode 1 Operational NominalConductingRegulatedGas
     mode 2 Degraded PartialConductingRegulatedGas prob 5en5 midway cost 1
     mode 3 Failed NoConductingRegulatedGas prob 1en5 early cost 1
-function ImportPropellant cost 44.1e6
+function ImportPropellant cost 44e6
     mode 1 Operational NominalPropellant
     mode 2 Degraded IncompletePropellant prob 1en7 beginning cost 1
     mode 3 Failed NoPropellant prob 1en8 beginning cost 1
-function ContainPropellant cost 16.4e6
+function ContainPropellant cost 16e6
 	mode 1 Operational NominalContainProp
 	mode 2 Degraded LeakingProp prob 1en5 early cost 1
 	mode 3 Failed NoContainingProp prob 1en6 early cost 1
-function SensePropellantPT cost 1.502e5
+function SensePropellantPT cost 1e5
     mode 1 Operational NominalPropSensing
     mode 2 Degraded DriftingLowPropSensing prob 5en4 late cost 1
     mode 3 Degraded DriftingHighPropSensing prob 4en4 late cost 1
     mode 4 Failed NoPropSensing prob 1en4 midway cost 1
-function AdjustPropellantPT cost 1.166e6
+function AdjustPropellantPT cost 1e6
     mode 1 Operational NominalPTRegulating
     mode 2 Degraded LowPTRegulating prob 1en4 midway cost 1
     mode 3 Degraded HighPTRegulating prob 1en4 midway cost 1
@@ -115,7 +123,7 @@ function AdjustPropellantPT cost 1.166e6
     condition 1 2 3 4 6 7 to 8 TooHighGastoPower
 function ExportRegulatedGas cost 1e5
     mode 1 Operational NominalExportRegGas
-function ConductPropellant cost 5.44e5
+function ConductPropellant cost 5e5
     mode 1 Operational NominalConductingPropellant
     mode 2 Degraded PartialConductingPropellant prob 5en5 midway cost 1
     mode 3 Failed NoConductingPropellant  prob 1en5 early cost 1
@@ -124,13 +132,13 @@ function SensePropellantRate cost 3e5
     mode 2 Degraded DriftingLowPropRSensing prob 5en4 late cost 1
     mode 3 Degraded DriftingHighPropRSensing prob 5en4 late cost 1
     mode 4 Failed NoPropRSensing prob 1en4 midway cost 1
-function AdjustPropRate cost 1.088e5
+function AdjustPropRate cost 1e5
     mode 1 Operational NominalPropRateAdjustment
     mode 2 Degraded PartialLowPropRateAdjustment prob 1en4 midway cost 1
     mode 3 Degraded PartialHighPropRateAdjustment prob 1en4 midway cost 1
     mode 4 Failed NoPropRateAdjustment prob 5en5 midway cost 1
     mode 6 Failed NoPropRateAdjustmentLow prob 1en5 midway cost 1
-function ImportCatalyst cost 2.88e5
+function ImportCatalyst cost 2e5
     mode 1 Operational NominalCatalystSource
     mode 2 Degraded NotCompleteCatalystSource prob 1en7 beginning cost 1
     mode 3 Failed NoCatalystSource prob 1en8 beginning cost 1
@@ -138,18 +146,22 @@ function BranchPropellant cost 1e5
 	mode 1 Operational NominalBranchPropellant
 function BranchCatalyst cost 1e5
 	mode 1 Operational NominalBranchCatalyst
-function ContainCatalyst cost 1.12e6
+function ContainCatalyst cost 1e6
 	mode 1 Operational NominalContainCatalyst
 	mode 2 Failed NoContainingCatalyst prob 1en6 early cost 1
-function CombustPropellant cost 5.44e6
+function CombustPropellant cost 5e6
     mode 1 Operational NominalCombustion
     mode 2 Degraded PoorCombustion prob 5en5 midway cost 1
     mode 3 Failed NoCombustion prob 1en5 midway cost 1
     condition 1 3 to 2 LowCatalyst
     condition 1 2 to 3 NoCatalyst 
     condition 2 3 to 1 NominalCatalyst
-function CombineThrust cost 2.0e5
-	mode 1 Operational NominalCombineThrust
+function CombineThrust cost 2e5
+	mode 1 Operational InactiveThrust
+	mode 2 Operational Thrust2Out
+	mode 3 Operational Thrust1Out
+	condition 1 to 2 AnyNonZeroThrust
+	condition 2 to 3 Thrust1Best
 function RecoverHeat cost 1e5
 	mode 1 Operational NominalRecoverHeat
 	mode 2 Failed TooMuchRecovery prob 5en5 midway cost 1
@@ -157,9 +169,9 @@ function ExportHeatEnergy cost 750
     mode 1 Operational HeatSink
     mode 2 Degraded HotHeatSink prob 1en5 late cost 500
     mode 3 Failed HottestHeatSink prob 5en6 late cost 1000
-function ExportByproducts cost 1
+function ExportByproducts cost 1e5
     mode 1 Operational ExportByproducts
-function ExportThrust cost 1
+function ExportThrust cost 1e5
     mode 1 Operational ExportThrust
     mode 2 Degraded ExportLowThrust prob 5en6 late cost 1
     mode 3 Failed ExportNoThrust prob 1en6 late cost 1

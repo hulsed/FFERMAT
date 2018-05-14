@@ -78,6 +78,6 @@ model monoprop3
 	flow combustP1 exportB1 Byproducts
 	flow combustP12 exportH12 Heat
 	flow combustP12 exportB2 Byproducts
-	flow combustP1 combineT1 Thrust
-	flow combustP12 combineT1 Thrust
+	flow combustP1 combineT1 Thrust1
+	flow combustP12 combineT1 Thrust2
 	flow combineT1 exportT1 Thrust

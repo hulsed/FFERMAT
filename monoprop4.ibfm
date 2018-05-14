@@ -35,7 +35,7 @@ model monoprop4
 	
 	flow importG1 containG1 InertGas
 	flow containG1 expandG1toG2 InertGas
-	flow importH1 combineH1 Heat
+	flow importH1 combineH1 Heat1
 	flow combineH1 expandG1toG2 Heat
 	flow expandG1toG2 conductG2 ExpandedGas
 	flow conductG2 senseG2rate ExpandedGas
@@ -67,6 +67,6 @@ model monoprop4
 	flow conductP12 combustP1 Propellant
 	flow combustP1 exportH1 Heat
 	flow combustP1 recoverH1 Heat
-	flow recoverH1 combineH1 Heat
+	flow recoverH1 combineH1 Heat2
 	flow combustP1 exportB1 Byproducts
 	flow combustP1 exportT1 Thrust

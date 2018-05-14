@@ -14,5 +14,7 @@ import importlib
 importlib.reload(ibfm)
 importlib.reload(io)
 
-e1=ibfm.Experiment('monoprop5')
+e1=ibfm.Experiment('monoprop4')
 e1.run(1)
+
+failcost, designcost, utility = io.evaluate2(e1)

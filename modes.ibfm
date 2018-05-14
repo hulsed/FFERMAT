@@ -23,8 +23,10 @@ mode NominalBranchGas
 	InertGas output effort = InertGas input effort
 	InertGas input rate = max InertGas output rate
 # Combine Gas
-mode NominalCombineGas
+mode CombineDegradedGas
 	ExpandedGas output effort = max ExpandedGas input effort
+mode NominalGasOut
+	ExpandedGas output effort = Nominal 
 	
 # Containing  
 mode NominalContaining
@@ -123,6 +125,12 @@ mode NominalRecoverHeat
 mode TooMuchRecovery
 	Heat output effort = Highest 
 # Combine Heat
+mode NoHeatYet
+	Heat output effort = Zero
+mode NormalHeat
+	Heat output effort = Heat1 input effort
+mode RecoveredHeat
+	Heat output effort = Heat2 input effort 
 mode NominalCombineHeat
 	Heat output effort = max Heat input effort
 # Measure Gas Pressure
@@ -365,9 +373,16 @@ mode NoCombustion
 mode ExportByproducts
     Byproducts input rate = Byproducts input rate
 # Combine Thrust
-mode NominalCombineThrust
-	Thrust output effort = max Thrust input effort
-	Thrust output rate = max Thrust input rate
+mode InactiveThrust
+	Thrust output rate = Zero
+	Thrust output effort = Zero 
+mode Thrust1Out
+	Thrust output rate = Thrust1 input rate
+	Thrust output effort = Thrust1 input effort
+mode Thrust2Out
+	Thrust output rate = Thrust2 input rate
+	Thrust output effort = Thrust2 input effort
+	
 mode ExportThrust
     Thrust input rate = Thrust input rate
 mode ExportLowThrust

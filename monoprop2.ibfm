@@ -38,7 +38,7 @@ model monoprop2
 	
 	flow importG1 branchG1 InertGas
 	flow branchG1 containG1 InertGas
-	flow branchG1 containG12 InertGas
+	flow branchG1 containG12 InertGas2
 	flow containG1 expandG1toG2 InertGas
 	flow containG12 expandG1toG22 InertGas
 	flow importH1 branchH1 Heat

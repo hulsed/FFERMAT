@@ -75,4 +75,20 @@ condition NominalThrust
 condition NoThrust
     Thrust input effort == Zero 
 condition TooMuchThrust
-    Thrust input rate >= High 
+    Thrust input rate >= High
+condition AnyNominalGasInput
+	any ExpandedGas input effort == Nominal
+condition NoNominalGasInput
+	all ExpandedGas input effort != Nominal
+condition NoNominalThrustInputRate
+	all Thrust input rate != Nominal
+condition NoNominalThrustInputEffort
+	all Thrust input effort != Nominal
+condition Thrust1Best
+	(Thrust2 input effort != Nominal ) or (Thrust2 input rate !=Nominal ) 
+condition AnyNonZeroThrust
+	(Thrust1 input effort != Zero) or (Thrust2 input effort != Zero)
+condition AnyHeatInput
+	any Heat input effort > Zero
+condition LostPrimaryHeat
+	Heat input effort != Nominal
