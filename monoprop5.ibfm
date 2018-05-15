@@ -11,9 +11,9 @@ model monoprop5
 	function conductG3 ConductAdjustedGas
 	function measureG3 MeasureGasPressure
 	function controlG3press ControlSig2
+	function regulateG3toG4 RegulateAGasPressure
 	
-	function regulateG3toG4 RegulateGasPressure
-	function measureG32 MeasureAGasPressure
+	function measureG32 MeasureRGasPressure
 	function controlG3press2 ControlSig2
 	function regulateG3toG42 RegulateRGasPressure
 	
@@ -51,10 +51,14 @@ model monoprop5
 	flow controlG3press regulateG3toG4 Signal
 	flow measureG3 regulateG3toG4 AdjustedGas
 	flow regulateG3toG4 measureG32 RegulatedGas
+	
+	flow measureG3 regulateG3toG42 AdjustedGas
+	flow regulateG3toG4 regulateG3toG42 Signal2
 	flow measureG32 controlG3press2 Signal
-	flow controlG3press2 regulateG3toG42 Signal
+	flow controlG3press2 regulateG3toG42 Signal1
 	flow measureG32 regulateG3toG42 RegulatedGas
 	flow regulateG3toG42 conductG4 RegulatedGas
+	
 	flow importP1 containP1 Propellant
 	flow containP1 senseP1effort Propellant
 	flow senseP1effort controlP1effort Signal

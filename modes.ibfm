@@ -37,14 +37,14 @@ mode NoContaining
     InertGas output effort = Zero
 # Expansion
 mode NominalExpansion
-    ExpandedGas output effort = InertGas input effort
-    ExpandedGas output rate = Heat input effort
+    ExpandedGas output effort = Heat input effort
+    ExpandedGas output rate = InertGas input effort
 mode HighExpansion
-    ExpandedGas output effort = InertGas input effort
-    ExpandedGas output rate = Heat input effort ++
+    ExpandedGas output effort = Heat input effort ++
+    ExpandedGas output rate = InertGas input effort
 mode LowExpansion
-    ExpandedGas output effort = InertGas input effort
-    ExpandedGas output rate = Heat input effort --
+    ExpandedGas output effort = Heat input effort --
+    ExpandedGas output rate = InertGas input effort 
 # Conducting ExpandedGas
 mode NominalConductingExpandedGas
     ExpandedGas output effort = ExpandedGas input effort
@@ -151,22 +151,23 @@ mode NoPressureSensing
     AdjustedGas output rate = AdjustedGas input rate
     Signal output effort = Zero
 # Measure Gas Pressure
-mode NominalAPressureSensing
+mode NominalRPressureSensing
     RegulatedGas output effort = RegulatedGas input effort
     RegulatedGas output rate = RegulatedGas input rate
     Signal output effort = RegulatedGas input effort
-mode DriftingALowPressureSensing
+mode DriftingRLowPressureSensing
     RegulatedGas output effort = RegulatedGas input effort
     RegulatedGas output rate = RegulatedGas input rate
     Signal output effort = RegulatedGas input effort --
-mode DriftingAHighPressureSensing
+mode DriftingRHighPressureSensing
     RegulatedGas output effort = RegulatedGas input effort
     RegulatedGas output rate = RegulatedGas input rate
     Signal output effort = RegulatedGas input effort ++
-mode NoAPressureSensing
+mode NoRPressureSensing
     RegulatedGas output effort = RegulatedGas input effort
     RegulatedGas output rate = RegulatedGas input rate
     Signal output effort = Zero
+	
 # Regulating Gas Pressure 
 mode NominalPressureRegulating
     RegulatedGas output effort = Signal input effort
@@ -187,18 +188,47 @@ mode NoPressureToRegulateLow
 mode NoPressureToRegulateHigh
     RegulatedGas output effort = Zero
 # Regulating Gas Pressure 
-mode NominalRPressureRegulating
+mode NominalAPressureRegulating
     RegulatedGas output effort = Signal input effort
-    RegulatedGas output rate = RegulatedGas input rate
-mode LowRPressureRegulating
+    RegulatedGas output rate = AdjustedGas input rate
+	Signal output effort = Nominal
+mode LowAPressureRegulating
     RegulatedGas output effort = Signal input effort ++
-    RegulatedGas output rate = RegulatedGas input rate
-mode HighRPressureRegulating
+    RegulatedGas output rate = AdjustedGas input rate
+	Signal output effort = Zero
+mode HighAPressureRegulating
     RegulatedGas output effort = Signal input effort --
+    RegulatedGas output rate = AdjustedGas input rate
+	Signal output effort = Zero
+mode NoAPressureRegulating
+    RegulatedGas output effort = AdjustedGas input effort
+    RegulatedGas output rate = AdjustedGas input rate
+	Signal output effort = Zero
+mode NoAPressureToRegulate
+    RegulatedGas output effort = Zero
+	Signal output effort = Nominal
+mode NoAPressureToRegulateLow
+    RegulatedGas output effort = Zero
+	Signal output effort = Zero
+mode NoAPressureToRegulateHigh
+    RegulatedGas output effort = Zero
+	Signal output effort = Zero
+# Regulating Gas Pressure 
+mode NoRegulation
+	RegulatedGas output effort = RegulatedGas input effort
     RegulatedGas output rate = RegulatedGas input rate
+mode NominalRPressureRegulating
+    RegulatedGas output effort = AdjustedGas input effort
+    RegulatedGas output rate = AdjustedGas input rate
+mode LowRPressureRegulating
+    RegulatedGas output effort = AdjustedGas input effort ++
+    RegulatedGas output rate = AdjustedGas input rate
+mode HighRPressureRegulating
+    RegulatedGas output effort = AdjustedGas input effort --
+    RegulatedGas output rate = AdjustedGas input rate
 mode NoRPressureRegulating
-    RegulatedGas output effort = RegulatedGas input effort
-    RegulatedGas output rate = RegulatedGas input rate
+    RegulatedGas output effort = AdjustedGas input effort
+    RegulatedGas output rate = AdjustedGas input rate
 mode NoRPressureToRegulate
     RegulatedGas output effort = Zero
 mode NoRPressureToRegulateLow

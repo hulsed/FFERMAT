@@ -48,6 +48,10 @@ condition NoPressure
     AdjustedGas input effort == Zero
 condition NonZeroPressure
     AdjustedGas input effort > Zero
+condition NoRPressure
+    RegulatedGas input effort == Zero
+condition NonZeroRPressure
+    RegulatedGas input effort > Zero
 condition NoPT
     Propellant input effort == Zero
 condition NonZeroPT
@@ -92,3 +96,7 @@ condition AnyHeatInput
 	any Heat input effort > Zero
 condition LostPrimaryHeat
 	Heat input effort != Nominal
+condition SignalOn
+	Signal2 input effort != Nominal
+condition SignalOff
+	Signal2 input effort == Nominal 

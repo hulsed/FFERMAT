@@ -75,14 +75,15 @@ ImportHeat
 ImportMaterial
 ImportPropellant
 InvertElectricalEnergy
-MeasureAGasPressure
 MeasureGasPressure
+MeasureRGasPressure
 ProcessSignalAnd
 ProcessSignalIsNominal
 ProcessSignalNot
 ProcessSignalOr
 ProtectElectricalEnergy
 RecoverHeat
+RegulateAGasPressure
 RegulateGasPressure
 RegulateRGasPressure
 SenseCurrent

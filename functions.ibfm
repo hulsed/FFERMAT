@@ -4,10 +4,10 @@ function ImportGas cost 11e6
     mode 3 Failed NoGasSource prob 1en8 beginning
 function ImportHeat cost 4e6
 	mode 1 Operational NominalHeatSource 
-	mode 2 Degraded LowHeatSource prob 5en5 midway cost 1
-	mode 3 Degraded HighHeatSource prob 5en5 midway cost 1
-	mode 4 Failed NoHeatSource prob 5en6 midway cost 1
-function BranchHeat cost 1e6
+	mode 2 Degraded LowHeatSource prob 1en4 midway cost 1
+	mode 3 Degraded HighHeatSource prob 1en4 midway cost 1
+	mode 4 Failed NoHeatSource prob 5en5 midway cost 1
+function BranchHeat cost 1e5
 	mode 1 Operational NominalBranchHeat
 function BranchGas cost 1e5
 	mode 1 Operational NominalBranchGas
@@ -17,13 +17,11 @@ function CombineGas cost 1e5
 	condition 1 to 2 AnyNominalGasInput
 	condition 2 to 1 NoNominalGasInput
 function CombineHeat cost 1e4
-	mode 1 Operational NoHeatYet
-	mode 2 Operational NormalHeat
-	mode 3 Operational RecoveredHeat
-	condition 1 to 2 AnyHeatInput
-	condition 2 to 3 LostPrimaryHeat
+	mode 1 Operational NormalHeat
+	mode 2 Operational RecoveredHeat
+	condition 1 to 2 LostPrimaryHeat
 	
-function ContainGas cost 10e6
+function ContainGas cost 5e6
 	mode 1 Operational NominalContaining 
 	mode 2 Degraded Leaking prob 1en5 early cost 1
 	mode 3 Failed NoContaining prob 1en6 early cost 1
@@ -31,6 +29,7 @@ function ExpandGas cost 5e6
     mode 1 Operational NominalExpansion 
     mode 2 Degraded HighExpansion prob 5en6 late cost 1
     mode 3 Degraded LowExpansion prob 5en5 late cost 1
+	
 function ConductExpandedGas cost 3e5
     mode 1 Operational NominalConductingExpandedGas 
     mode 2 Degraded PartialConductingExpandedGas prob 5en5 midway cost 1
@@ -57,11 +56,11 @@ function MeasureGasPressure cost 5e5
     mode 2 Degraded DriftingLowPressureSensing prob 5en4 late cost 1
     mode 3 Degraded DriftingHighPressureSensing prob 5en4 late cost 1
     mode 4 Failed NoPressureSensing prob 1en4 midway cost 1
-function MeasureAGasPressure cost 5e5
-    mode 1 Operational NominalAPressureSensing
-    mode 2 Degraded DriftingALowPressureSensing prob 5en4 late cost 1
-    mode 3 Degraded DriftingAHighPressureSensing prob 5en4 late cost 1
-    mode 4 Failed NoAPressureSensing prob 1en4 midway cost 1
+function MeasureRGasPressure cost 5e5
+    mode 1 Operational NominalRPressureSensing
+    mode 2 Degraded DriftingRLowPressureSensing prob 5en4 late cost 1
+    mode 3 Degraded DriftingRHighPressureSensing prob 5en4 late cost 1
+    mode 4 Failed NoRPressureSensing prob 1en4 midway cost 1
 function RegulateGasPressure cost 1e6
     mode 1 Operational NominalPressureRegulating
     mode 2 Degraded LowPressureRegulating prob 1en4 late cost 1
@@ -76,20 +75,37 @@ function RegulateGasPressure cost 1e6
     condition 5 to 1 NonZeroPressure
     condition 6 to 2 NonZeroPressure
     condition 7 to 3 NonZeroPressure
-function RegulateRGasPressure cost 1e6
-    mode 1 Operational NominalRPressureRegulating
-    mode 2 Degraded LowRPressureRegulating prob 1en4 late cost 1
-    mode 3 Degraded HighRPressureRegulating prob 1en4 late cost 1
-    mode 4 Failed NoRPressureRegulating prob 5en5 midway cost 1
-    mode 5 Operational NoRPressureToRegulate prob 0 midway
-    mode 6 Degraded NoRPressureToRegulateLow prob 1en5 midway cost 1
-    mode 7 Degraded NoRPressureToRegulateHigh prob 1en5 midway cost 1
+function RegulateAGasPressure cost 1e6
+    mode 1 Operational NominalAPressureRegulating
+    mode 2 Degraded LowAPressureRegulating prob 1en4 late cost 1
+    mode 3 Degraded HighAPressureRegulating prob 1en4 late cost 1
+    mode 4 Failed NoAPressureRegulating prob 5en5 midway cost 1
+    mode 5 Operational NoAPressureToRegulate prob 0 midway
+    mode 6 Degraded NoAPressureToRegulateLow prob 1en5 midway cost 1
+    mode 7 Degraded NoAPressureToRegulateHigh prob 1en5 midway cost 1
     condition 1 to 5 NoPressure
     condition 2 to 6 NoPressure 
     condition 3 to 7 NoPressure
     condition 5 to 1 NonZeroPressure
     condition 6 to 2 NonZeroPressure
     condition 7 to 3 NonZeroPressure
+function RegulateRGasPressure cost 1e6
+	mode 1 Operational NoRegulation
+    mode 2 Operational NominalRPressureRegulating
+    mode 3 Degraded LowRPressureRegulating prob 0 late cost 1
+    mode 4 Degraded HighRPressureRegulating prob 0 late cost 1
+    mode 5 Failed NoRPressureRegulating prob 0 midway cost 1
+    mode 6 Operational NoRPressureToRegulate prob 0 midway
+    mode 7 Degraded NoRPressureToRegulateLow prob 0 midway cost 1
+    mode 8 Degraded NoRPressureToRegulateHigh prob 0 midway cost 1
+	condition 1 to 2 SignalOn
+	condition 2 to 1 SignalOff
+    condition 2 to 6 NoRPressure
+    condition 3 to 7 NoRPressure 
+    condition 4 to 8 NoRPressure
+    condition 6 to 2 NonZeroRPressure
+    condition 7 to 3 NonZeroRPressure
+    condition 8 to 4 NonZeroRPressure
 function ConductRegulatedGas cost 5e5
     mode 1 Operational NominalConductingRegulatedGas
     mode 2 Degraded PartialConductingRegulatedGas prob 5en5 midway cost 1

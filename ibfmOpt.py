@@ -265,7 +265,7 @@ def evaluate2(experiment):
     
     utility = failcost + designcost
     
-    return  failcost, designcost, utility
+    return  failcost, designcost, utility, scores
 
 #Takes the policy, changes the model, runs it, tracks the actions, and gives 
 #a utility score for each scenario
@@ -510,7 +510,7 @@ def scoreFlowstate(rate, effort):
             [-100., -100., -100.,-110.,-110.]]
     #1e6
     #10
-    score=1e6*qualfunc[effort][rate]
+    score=50e6*qualfunc[effort][rate]
     return score
 
 
