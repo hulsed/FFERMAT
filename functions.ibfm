@@ -9,7 +9,7 @@ function ImportHeat cost 4e6
 	mode 4 Failed NoHeatSource prob 5en5 midway cost 1
 function BranchHeat cost 1e4
 	mode 1 Operational NominalBranchHeat
-function BranchGas cost 1e4
+function BranchGas cost 1e3
 	mode 1 Operational NominalBranchGas
 function CombineGas cost 1e4
 	mode 1 Operational CombineDegradedGas
@@ -160,12 +160,12 @@ function ImportCatalyst cost 2e4
     mode 3 Failed NoCatalystSource prob 1en8 beginning cost 1
 function BranchPropellant cost 1e4
 	mode 1 Operational NominalBranchPropellant
-function BranchCatalyst cost 5e4
+function BranchCatalyst cost 5e3
 	mode 1 Operational NominalBranchCatalyst
 function ContainCatalyst cost 1e5
 	mode 1 Operational NominalContainCatalyst
 	mode 2 Failed NoContainingCatalyst prob 1en6 early cost 1
-function CombustPropellant cost 7e5
+function CombustPropellant cost 2e5
     mode 1 Operational NominalCombustion
     mode 2 Degraded PoorCombustion prob 5en5 midway cost 1
     mode 3 Failed NoCombustion prob 1en5 midway cost 1
@@ -181,7 +181,7 @@ function CombineThrust cost 2e4
 function RecoverHeat cost 1e5
 	mode 1 Operational NominalRecoverHeat
 	mode 2 Failed TooMuchRecovery prob 5en5 midway cost 1
-function ExportHeatEnergy cost 750
+function ExportHeatEnergy cost 1e4
     mode 1 Operational HeatSink
     mode 2 Degraded HotHeatSink prob 1en5 late cost 500
     mode 3 Failed HottestHeatSink prob 5en6 late cost 1000
