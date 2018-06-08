@@ -238,7 +238,10 @@ def evaluate2(experiment):
     
     for fxn in fxns:
         
-        fxncosts+=[float(fxn._cost[0])]
+        try:
+            fxncosts+=[float(fxn._cost[0])]
+        except ValueError:
+            fxncosts+=[0.0]
     
     designcost=-sum(fxncosts)
     
@@ -415,7 +418,7 @@ def trackFlows(exp, scenario):
 #creates a cost for the design provided it enables certain parts of the policy
 def PolicyCost(FullPolicy):
     increasecost=[-50000, -50000, -50000, -50000]
-    decreasecost=[0, -50000, -50000, 0]
+    decreasecost=[-5000, -50000, -50000, -5000]
     increasecapcost=[-5000000, 0, 0, -20000000]
     
     controllers=len(FullPolicy)
