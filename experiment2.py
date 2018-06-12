@@ -24,8 +24,9 @@ initexperiment=ibfm.Experiment('monoprop')
 
 maxfitness, bestsol, fithist=io.EA(pop,generations, controllers, conditions, initexperiment)
 
+plothist=fithist-fithist[0]
 
-plt.plot(fithist)
-plt.title('Best Design Found by EA Over Time')
+plt.plot(plothist)
+plt.title('Cost Improvement over Baseline from Optimization')
 plt.xlabel('Generations (of population 30)')
-plt.ylabel('Cost Score')
+plt.ylabel('Cost Score Inprovement')
