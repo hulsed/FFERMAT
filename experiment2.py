@@ -27,5 +27,5 @@ maxfitness, bestsol, fithist=io.EA(pop,generations, controllers, conditions, ini
 
 plt.plot(fithist)
 plt.title('Best Design Found by EA Over Time')
-plt.xlabel('Generations (of population 20)')
-plt.ylabel('Utility Value')
+plt.xlabel('Generations (of population 30)')
+plt.ylabel('Cost Score')
