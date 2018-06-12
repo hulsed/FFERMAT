@@ -27,6 +27,9 @@ maxfitness, bestsol, fithist=io.EA(pop,generations, controllers, conditions, ini
 plothist=fithist-fithist[0]
 
 plt.plot(plothist)
-plt.title('Cost Improvement over Baseline from Optimization')
+plt.title('Cost Improvement from Optimization')
 plt.xlabel('Generations (of population 30)')
-plt.ylabel('Cost Score Inprovement')
+plt.ylabel('Cost Score Improvement')
+plt.grid()
+plt.grid(axis='y', which='minor')
+plt.grid(axis='x', which='minor')
