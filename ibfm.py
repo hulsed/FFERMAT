@@ -750,8 +750,8 @@ class Function(object):
   def reset(self):
     '''Reset all modes and set mode to default.'''
     self.mode = self.default
-    for node in self.condition_graph.nodes_iter():
-      node.reset()
+    for node in list(self.condition_graph.nodes()):
+        node.reset()
   def addOutFlow(self,flow):
     '''Attach an outflow flow to the function.
 
@@ -837,7 +837,8 @@ class Function(object):
     '''
     transition = False
     minimum_timer = inf
-    for condition in self.condition_graph.successors_iter(self.mode):
+    
+    for condition in self.condition_graph.successors(self.mode):
       timer = condition.time_remaining()
       minimum_timer = min(minimum_timer,timer)
       if timer <= clock:
@@ -845,9 +846,9 @@ class Function(object):
           raise Exception('Missed condition')
         if not transition:
           transition = True
-          self.mode = self.condition_graph.successors(condition)[0]
+          self.mode = list(self.condition_graph.successors(condition))[0]
 
-    for behavior in self.behavior_graph.successors_iter(self.mode):
+    for behavior in self.behavior_graph.successors(self.mode):
       try:
         behavior()
       except:
@@ -918,7 +919,7 @@ class Model(object):
     self.names = []
     self.imported_graph = graph
     self.graph = nx.MultiDiGraph()
-    self.functions = self.graph.nodes_iter #for code readability
+    self.functions = self.graph.nodes() #for code readability
     self.construct()
     self.connect()
     self.reset()
@@ -933,7 +934,7 @@ class Model(object):
       #Find keys
       function_key = None
       flow_key = None
-      for _,data in self.imported_graph.nodes_iter(data=True):
+      for _,data in list(self.imported_graph.nodes(data=True)):
         for key in data:
           if Function._subclasses.get(data[key]) is not None:
             function_key = key
@@ -942,9 +943,9 @@ class Model(object):
           break
       else:
         raise Exception('No defined function names found.')
-      for _,_,data in self.imported_graph.edges_iter(data=True):
+      for _,_,data in list(self.imported_graph.edges(data=True)):
         for key in data:
-          if Flow._subclasses.get(data[key]) is not None:
+          if Flow._subclasses.get(str(data[key])) is not None:
             flow_key = key
             break
         if flow_key:
@@ -952,13 +953,13 @@ class Model(object):
       else:
         raise Exception('No defined flow names found.')
       #Build model
-      for node,data in self.imported_graph.nodes_iter(data=True):
-        function = Function._subclasses.get(data[function_key])
+      for node,data in list(self.imported_graph.nodes(data=True)):
+        function = Function._subclasses.get(str(data[function_key]))
         if function is None:
           raise Exception(data[function_key]+' is not a defined function name.')
         self.addFunction(function(self,node), node)
-      for node1,node2,data in self.imported_graph.edges_iter(data=True):
-        flow_class = Flow._subclasses.get(data[flow_key])
+      for node1,node2,data in list(self.imported_graph.edges(data=True)):
+        flow_class = Flow._subclasses.get(str(data[flow_key]))
         if flow_class is None:
           raise Exception(data[flow_key]+' is not a defined flow name.')
         self.addFlow(flow_class,node1,node2)
@@ -980,11 +981,11 @@ class Model(object):
     stored as edge attributes.
     '''
     if functions:
-      for in_function,out_function,attr in self.graph.edges_iter(data=True):
-        yield (attr[Flow],in_function,out_function)
+      for in_function,out_function,attr in list(self.graph.edges(data=True)):   
+        yield (attr['attr_dict'][Flow],in_function,out_function)
     else:
-      for _,_,attr in self.graph.edges_iter(data=True):
-        yield attr[Flow]
+      for _,_,attr in list(self.graph.edges(data=True)):
+        yield attr['attr_dict'][Flow]
   def reset(self):
     '''Reset the clock, all functions, and all flows.'''
     resetClock()

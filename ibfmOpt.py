@@ -329,12 +329,13 @@ def reviseModel(FullPolicy, exp):
             loc=functions.index(name)
             policy=FullPolicy[loc]    
             ctlfxn='ControlSig'+str(policy[0])+str(policy[1])+str(policy[2])
-            newgraph.node[name]={'function': ctlfxn}
+            newgraph.node[name].update({'function': ctlfxn})
               
     for edge in edges:
         prev=str(edge[0])
         new=str(edge[1])
-        flowtype=str(list(graph.edge[edge[0]][edge[1]][0].values())[0])
+        flowobj=graph.get_edge_data(prev,new)[0]['attr_dict']
+        flowtype=list(flowobj.values())[0]
         newgraph.add_edge(prev,new,flow=flowtype)
         #newgraph.edge[prev]={new: {'flow': flowtype}}
     return newgraph
@@ -712,7 +713,7 @@ def initActions():
     FullPolicy=[[1,2,3],[1,2,3],[1,2,3],[1,2,3]]
     changeFxnfile(FullPolicy)
     e1= ibfm.Experiment('monoprop')
-    actionkey=e1.model.graph.nodes()[6].modes
+    actionkey=list(e1.model.graph.nodes())[6].modes
     
     return actionkey 
         
