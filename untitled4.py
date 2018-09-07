@@ -11,6 +11,8 @@ from matplotlib import pyplot as plt
 import ibfm
 import importlib
 
+initexperiment=ibfm.Experiment('monoprop')
+
 importlib.reload(ibfm)
 importlib.reload(io)
 
@@ -56,9 +58,9 @@ designutils=np.array([utility2, utility3, utility4, utility5, utility6])-designc
 width=0.25
 variants=np.array([1,2,3,4,5])
 fig, ax = plt.subplots()
-p1 = plt.bar(variants, designcosts, width, color='white', edgecolor='blue', hatch='//')
-p2 = plt.bar(variants+width ,failcosts, width, color='white', edgecolor='green', hatch='o')
-p3 = plt.bar(variants+2*width, designutils, width, color='white', edgecolor='red', hatch='x')
+p1 = ax.bar(variants, designcosts, width=width, color='white', edgecolor=['blue']*len(variants), hatch='//')
+p2 = ax.bar(variants+width ,failcosts, width, color='white', edgecolor=['green']*len(variants), hatch='o')
+p3 = ax.bar(variants+2*width, designutils, width, color='white', edgecolor=['red']*len(variants), hatch='x')
 
 ax.set_title('Differential Design Variant Cost')
 ax.set_xticks(variants+width)

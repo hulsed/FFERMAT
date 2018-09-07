@@ -454,7 +454,6 @@ def scoreScenario(exp, scenario, Nominalstate):
 
 #Score the nominal state
 def scoreNomstate(Nominalstate):
-    functions=['exportT1']
     Flow="Thrust"
     
     flowsraw=list(Nominalstate.keys())

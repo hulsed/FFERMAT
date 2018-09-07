@@ -414,13 +414,13 @@ mode Thrust2Out
 	Thrust output effort = Thrust2 input effort
 	
 mode ExportThrust
-    Thrust input rate = Thrust input rate
+    Thrust input effort = Thrust input effort
 mode ExportLowThrust
-    Thrust input rate = Thrust input rate
+    Thrust input effort = Thrust input effort
 mode ExportNoThrust
-    Thrust input rate = Thrust input rate
+    Thrust input effort = Thrust input effort
 mode TooMuchThrust
-    Thrust input rate = Thrust input rate
+    Thrust input effort = Thrust input effort
 
 mode OpenCircuit
     Electrical output effort = Zero

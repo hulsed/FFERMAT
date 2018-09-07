@@ -1,12 +1,12 @@
 function ImportGas cost 11e6
-    mode 1 Operational NominalGasSource 
+    mode 1 Operational NominalGasSource
     mode 2 Degraded NotCompleteGasSource prob 1en7 beginning cost 1
     mode 3 Failed NoGasSource prob 1en8 beginning
 function ImportHeat cost 4e6
-	mode 1 Operational NominalHeatSource 
+	mode 1 Operational NominalHeatSource
 	mode 2 Degraded LowHeatSource prob 1en4 midway cost 1
 	mode 3 Degraded HighHeatSource prob 1en4 midway cost 1
-	mode 4 Failed NoHeatSource prob 5en5 midway cost 1
+	mode 4 Failed NoHeatSource prob 5en4 midway cost 1
 function BranchHeat cost 1e4
 	mode 1 Operational NominalBranchHeat
 function BranchGas cost 1e3
@@ -20,27 +20,27 @@ function CombineHeat cost 1e4
 	mode 1 Operational NormalHeat
 	mode 2 Operational RecoveredHeat
 	condition 1 to 2 LostPrimaryHeat
-	
+
 function ContainGas cost 5e4
-	mode 1 Operational NominalContaining 
+	mode 1 Operational NominalContaining
 	mode 2 Degraded Leaking prob 1en5 early cost 1
 	mode 3 Failed NoContaining prob 1en6 early cost 1
 function ExpandGas cost 5e4
-    mode 1 Operational NominalExpansion 
+    mode 1 Operational NominalExpansion
     mode 2 Degraded HighExpansion prob 5en6 late cost 1
     mode 3 Degraded LowExpansion prob 5en5 late cost 1
-	
+
 function ConductExpandedGas cost 3e4
-    mode 1 Operational NominalConductingExpandedGas 
+    mode 1 Operational NominalConductingExpandedGas
     mode 2 Degraded PartialConductingExpandedGas prob 5en5 midway cost 1
     mode 3 Failed NoConductingExpandedGas prob 1en5 early cost 1
 function SenseGasRate cost 2e4
-    mode 1 Operational NominalGasSensing 
+    mode 1 Operational NominalGasSensing
     mode 2 Degraded DriftingLowGasSensing prob 5en4 late cost 1
     mode 3 Degraded DriftingHighGasSensing prob 5en4 late cost 1
     mode 4 Failed NoGasSensing prob 1en4 midway cost 1
 function AdjustGasFlow cost 6e4
-    mode 1 Operational NominalFlowAdjustment 
+    mode 1 Operational NominalFlowAdjustment
     mode 2 Degraded PartialLowAdjustment prob 1en4 late cost 1
     mode 3 Degraded PartialHighAdjustment prob 1en4 late cost 1
     mode 4 Failed NoAdjustment prob 5en5 midway cost 1
@@ -70,7 +70,7 @@ function RegulateGasPressure cost 4e4
     mode 6 Degraded NoPressureToRegulateLow prob 1en5 midway cost 1
     mode 7 Degraded NoPressureToRegulateHigh prob 1en5 midway cost 1
     condition 1 to 5 NoPressure
-    condition 2 to 6 NoPressure 
+    condition 2 to 6 NoPressure
     condition 3 to 7 NoPressure
     condition 5 to 1 NonZeroPressure
     condition 6 to 2 NonZeroPressure
@@ -84,7 +84,7 @@ function RegulateAGasPressure cost 4e4
     mode 6 Degraded NoAPressureToRegulateLow prob 1en5 midway cost 1
     mode 7 Degraded NoAPressureToRegulateHigh prob 1en5 midway cost 1
     condition 1 to 5 NoPressure
-    condition 2 to 6 NoPressure 
+    condition 2 to 6 NoPressure
     condition 3 to 7 NoPressure
     condition 5 to 1 NonZeroPressure
     condition 6 to 2 NonZeroPressure
@@ -101,7 +101,7 @@ function RegulateRGasPressure cost 4e4
 	condition 1 to 2 SignalOn
 	condition 2 to 1 SignalOff
     condition 2 to 6 NoRPressure
-    condition 3 to 7 NoRPressure 
+    condition 3 to 7 NoRPressure
     condition 4 to 8 NoRPressure
     condition 6 to 2 NonZeroRPressure
     condition 7 to 3 NonZeroRPressure
@@ -170,7 +170,7 @@ function CombustPropellant cost 2e5
     mode 2 Degraded PoorCombustion prob 5en5 midway cost 1
     mode 3 Failed NoCombustion prob 1en5 midway cost 1
     condition 1 3 to 2 LowCatalyst
-    condition 1 2 to 3 NoCatalyst 
+    condition 1 2 to 3 NoCatalyst
     condition 2 3 to 1 NominalCatalyst
 function CombineThrust cost 2e4
 	mode 1 Operational InactiveThrust
@@ -232,7 +232,7 @@ function SupplyElectricalEnergy cost 400
 	mode 5 Failed ShortCircuit prob 1en7 cost 400
 	mode 6 Failed OpenCircuit prob 4en8 cost 200
 	condition 1 2 3 4 to 5 HighestCurrent
-	condition 1 2 3 to 4 HighCurrent	
+	condition 1 2 3 to 4 HighCurrent
 function ImportMaterial cost 1
     mode 1 Operational NominalMaterialSource
     mode 2 Failed NoMaterialSource prob 1 cost 1
@@ -289,22 +289,22 @@ function ConvertChemicalToElectricalEnergy
     mode 4 Failed NoChemicalToElectricalEnergyConversion prob 1 cost 1
     condition 1 2 3 to 4 Hot delay 10
     condition 1 2 3 to 4 Hottest delay 1
-	
+
 function ConvertElectricalEnergyToMechanicalEnergy cost 180
     mode 1 Operational NominalElectricalToMechanicalEnergyConversion
     mode 2 Degraded HighTorque prob 1en4 cost 200
 	mode 3 Degraded LowTorque prob 1en4 cost 200
 	mode 4 Failed TooHighTorque prob 5en5 cost 200
 	mode 5 Failed OpenCircuitNoMechanicalEnergyConversion prob 5en5 cost 200
-	mode 6 Failed ShortCircuitNoMechanicalEnergyConversion prob 5en5 cost 200	
-function ConvertElectricalEnergyToHeatEnergy cost 200 
+	mode 6 Failed ShortCircuitNoMechanicalEnergyConversion prob 5en5 cost 200
+function ConvertElectricalEnergyToHeatEnergy cost 200
 	mode 1 Operational NominalElectricalToHeatConversion
 	mode 2 Degraded NotEnoughHeat prob 1en6 cost 200
 	mode 3 Degraded Hot prob 1en5 cost 200
 	mode 4 Failed TooHot prob 5en5 cost 200
 	mode 5 Failed OpenCircuitHeat prob 1en8 cost 200
 	condition 1 2 3 4 to 5 HighestVoltage
-	condition 1 to 2 HighVoltage 
+	condition 1 to 2 HighVoltage
 function DistributeElectricalEnergy cost 1500
 	mode 1 Operational NominalDistribution
 	mode 2 Degraded AdverseResistanceDist prob 1en4 cost 1500
@@ -312,16 +312,16 @@ function DistributeElectricalEnergy cost 1500
 	mode 4 Failed ShortCircuitDist prob 5en4 cost 1500
 	mode 5 Failed OpenCircuitDist prob 5en4 cost 1500
 	mode 6 Operational OpenCircuitDist prob 0 cost 0
-	mode 7 Operational PoorAllocation prob 0 cost 
+	mode 7 Operational PoorAllocation prob 0 cost
 	condition 1 2 3 to 4 HighestCurrent
 	condition 1 to 6 LowSignal
 	condition 1 6 to 7 NoSignal
-	condition 6 7 to 1 NominalSignal 
+	condition 6 7 to 1 NominalSignal
 function ConvertElectricalEnergyToOpticalEnergy cost 100
     mode 1 Operational NominalElectricalToOpticalEnergyConversion
 	mode 2 Degraded AdverseOpticalResistance prob 1en3 cost 70
 	mode 3 Failed NoElectricalToOpticalEnergyConversion prob 1en3  cost 100
-    condition 1 2 to 3 HighVoltage 
+    condition 1 2 to 3 HighVoltage
 function TransportMaterial cost 1
     mode 1 Operational NominalTransportMaterial
     mode 2 Degraded RestrictedTransportMaterial prob 1 cost 1
@@ -373,26 +373,26 @@ function ControlSig1 cost 1
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
     condition 2 3 to 1 LowSignal
-    condition 1 3 to 2 HighSignal
-    condition 1 2 to 3 NominalSignal
+    condition 2 3 to 1 HighSignal
+    condition 2 3 to 1 NominalSignal
 function ControlSig2 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
     condition 2 3 to 1 LowSignal
-    condition 1 3 to 2 HighSignal
-    condition 1 2 to 3 NominalSignal
+    condition 2 3 to 1 HighSignal
+    condition 2 3 to 1 NominalSignal
 function ControlSig3 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
     condition 2 3 to 1 LowSignal
-    condition 1 3 to 2 HighSignal
-    condition 1 2 to 3 NominalSignal
+    condition 2 3 to 1 HighSignal
+    condition 2 3 to 1 NominalSignal
 function ControlSig4 cost 1
     mode 1 Operational EqualControl
     mode 2 Operational IncreaseControl
     mode 3 Operational DecreaseControl
     condition 2 3 to 1 LowSignal
-    condition 1 3 to 2 HighSignal
-    condition 1 2 to 3 NominalSignal
+    condition 2 3 to 1 HighSignal
+    condition 2 3 to 1 NominalSignal
