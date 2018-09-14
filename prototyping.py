@@ -59,17 +59,18 @@ class importEE:
             self.elecstate=np.inf
         elif self.faults.intersection(set(['lowv'])):
             self.elecstate=0.5
-        elif self.faults.intersection(set(['nov'])):
+        elif self.faults.intersection(set(['nom'])):
             self.elecstate=0.0
     def behavior(self):
         self.EEout=self.elecstate
     def updatefxn(self,fault=['nom'],inputs={}):
-        self.faults=set(fault)
+        self.faults.update(fault)
         self.condfaults()
         self.resolvefaults()
         self.detbehav()
         self.behavior()
-        return self.EEout
+        outputs={'EE': self.EEout}
+        return outputs
         
 class importWat:
     def __init__(self):
@@ -95,12 +96,13 @@ class importWat:
         self.Watout['level']=self.wlstate
         self.Watout['visc']=self.wvstate
     def updatefxn(self,fault=['nom'], inputs={}):
-        self.faults=set(fault)
+        self.faults.update(fault)
         self.condfaults()
         self.resolvefaults()
         self.detbehav()
         self.behavior()
-        return self.Watout
+        outputs={'Water': self.Watout}
+        return outputs
     
 class moveWat:
     def __init__(self):
@@ -154,15 +156,16 @@ class moveWat:
         self.Watout['flow']=m2to1([ trunc(self.Watout['level']), trunc(1/self.Watin['visc']), self.mechstate, self.elecstate, trunc(self.EEin)])
         self.Sigout=m2to1([self.sensestate, self.elecstate, self.EEin])
         
-    def updatefxn(self,faults=['nom'], inputs={'EE':1.0, 'Water_1': {'level':1.0, 'visc':1.0, 'flow':1.0}}):
+    def updatefxn(self,faults=['nom'], inputs={'EE':1.0, 'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}):
         self.faults.update(faults)
         self.EEin=inputs['EE']
-        self.Watin=inputs['Water_1']
+        self.Watin=inputs['Water']
         self.condfaults()
         self.resolvefaults()
         self.detbehav()
         self.behavior()
-        return self.Watout, self.Sigout
+        outputs={'Water':self.Watout,'Signal':self.Sigout}
+        return outputs
 
 class exportWat():
     def __init__(self):
@@ -179,8 +182,8 @@ class exportWat():
     def behavior(self):
         self.Wat=self.Watin
         return 0
-    def updatefxn(self, faults=['nom'],inputs={'Water_2': {'level':1.0, 'visc':1.0, 'flow':1.0}}):
-        self.Watin=inputs['Water_2']
+    def updatefxn(self, faults=['nom'],inputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}):
+        self.Watin=inputs['Water']
         self.behavior()
         return
 
@@ -207,24 +210,24 @@ class exportSig():
 g=nx.DiGraph()
 
 Import_EE=importEE()
-g.add_node('Import_EE', funcdef=importEE, funcobj=Import_EE)
+g.add_node('Import_EE', funcdef=importEE, funcobj=Import_EE, inputs={}, outputs={'EE':1.0})
 Import_Water=importWat()
-g.add_node('Import_Water', funcdef=importWat, funcobj=Import_Water)
+g.add_node('Import_Water', funcdef=importWat, funcobj=Import_Water, inputs={},outputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}})
 Move_Water=moveWat()
-g.add_node('Move_Water', funcdef=moveWat, funcobj=Move_Water)
+g.add_node('Move_Water', funcdef=moveWat, funcobj=Move_Water,inputs={'EE':1.0, 'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}, outputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}, 'Signal':1.0})
 Export_Water=exportWat()
-g.add_node('Export_Water', funcdef=exportWat, funcobj=Export_Water)
+g.add_node('Export_Water', funcdef=exportWat, funcobj=Export_Water,inputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}},outputs={})
 Export_Signal=exportSig()
-g.add_node('Export_Signal', funcdef=exportSig, funcobj=Export_Signal)
+g.add_node('Export_Signal', funcdef=exportSig, funcobj=Export_Signal, inputs={'Signal':1.0}, outputs={})
 
 EE=1.0
-g.add_edge('Import_EE', 'Move_Water', flow='EE', flowvar=EE)
+g.add_edge('Import_EE', 'Move_Water', EE=EE)
 Water_1={'level':1.0, 'visc':1.0, 'flow':1.0}
-g.add_edge('Import_Water','Move_Water', flow='Water_1', flowvar=Water_1)
+g.add_edge('Import_Water','Move_Water', Water=Water_1)
 Water_2={'level':1.0, 'visc':1.0, 'flow':1.0}
-g.add_edge('Move_Water','Export_Water', flow='Water_2', flowar=Water_2)
+g.add_edge('Move_Water','Export_Water', Water=Water_2)
 Signal=1.0
-g.add_edge('Move_Water','Export_Signal', flow='Signal', flowvar=Signal)
+g.add_edge('Move_Water','Export_Signal', Signal=Signal)
 
 
 labels=dict()
@@ -238,29 +241,64 @@ nx.draw_networkx(g,pos)
 nx.draw_networkx_edge_labels(g,pos,edge_labels=labels)
 plt.show()
 
-def initedges():
+
+#inject fault
+outputs=Import_EE.updatefxn(fault=['nov'])
+for outflow in outputs:
+    g.edges['Import_EE','Move_Water'][outflow]=outputs[outflow]
     
-    return
-
-
+#goal:
+#if an edge has changed, adjacent nodes now active
+#if a node has changed, it is also now active
 
 fxnnames=list(g.nodes())
-for fxnname in fxnnames:
-    fxn=g.nodes(data='funcobj')[fxnname]
-    outputvals=[x[2] for x in list(g.out_edges(fxnname,data='flowvar'))]
-    outputnames=[x[2] for x in list(g.out_edges(fxnname,data='flow'))]
-    inputvals=[x[2] for x in list(g.in_edges(fxnname,data='flowvar'))]
-    inputnames=[x[2] for x in list(g.in_edges(fxnname,data='flow'))]
-    inputdict=dict(zip(inputnames,inputvals))
-    fxn.updatefxn(inputs=inputdict)
+activefxns=set(fxnnames)
+while activefxns:
+    
+    for fxnname in list(activefxns):
+        fxn=g.nodes(data='funcobj')[fxnname]
+        
+        #iterate over input edges
+        inputdict={}
+        for edge in g.in_edges(fxnname):
+            edgeinputs=g.edges[edge]
+            inputdict.update(edgeinputs)
+        #if same inputs, remove from active functions, otherwise update inputs    
+        if inputdict==g.nodes('inputs')[fxnname]:
+            activefxns.discard(fxnname)
+        else:
+            for key in g.nodes('inputs')[fxnname]:
+                g.nodes('inputs')[fxnname][key]=inputdict[key]
+        
+        #update outputs
+        outputs=fxn.updatefxn(inputs=inputdict)
+        
+        #if outputs==g.nodes('outputs')[fxnname]:
+        #    activefxns.discard(fxnname)        
+        
+        #iterate over output edges
+        for edge in g.out_edges(fxnname):
+            active_edge=False
+        #iterate over flows
+            for outflow in outputs:
+                if outflow in g.edges[edge]:
+                    if g.edges[edge][outflow]!=outputs[outflow]:
+                        active_edge=True
+                    g.edges[edge][outflow]=outputs[outflow]
+        #if a new value, functions are now active?
+            if active_edge:
+                activefxns.update(edge)
+        
+        
+    
         
 
 
 
 
-EE1=impE.updatefxn(fault=['infv'])
-Wat1=impW.updatefxn()
-Wat2,Sig1=moveW.updatefxn(EEin=EE1,Watin=Wat1)
-expW.updatefxn(Watin=Wat2)
-expS.updatefxn(Sigin=Sig1)
+#EE1=Import_EE.updatefxn(fault=['infv'])
+#Wat1=Import_Water.updatefxn()
+#Wat2,Sig1=Move_Water.updatefxn(inputs={'EE': EE1,'Water_1': Wat1})
+#Export_Water.updatefxn(inputs={'Water_2':Wat2})
+#Export_Signal.updatefxn(inputs={'Signal':Sig1})
     
