@@ -10,6 +10,9 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+##BASIC OPERATIONS
+
 #x1 takes precedence over x2 in decidint if num is inf or zero
 def m2to1(x):
     if np.size(x)>2:
@@ -42,11 +45,11 @@ def trunc(x):
 #outstate=outputfxn(c,outflow)
 #maybe nodes have state values which determines in/out to next?
 
-
+##MODEL
 
 class importEE:
     def __init__(self):
-        self.EEout=1.0
+        self.EEout={'state': 1.0}
         self.elecstate=1.0
         self.faultmodes=[['infv','lowv','nov']]
         self.faults=set(['nom'])
@@ -62,7 +65,7 @@ class importEE:
         elif self.faults.intersection(set(['nom'])):
             self.elecstate=0.0
     def behavior(self):
-        self.EEout=self.elecstate
+        self.EEout['state']=self.elecstate
     def updatefxn(self,fault=['nom'],inputs={}):
         self.faults.update(fault)
         self.condfaults()
@@ -106,8 +109,8 @@ class importWat:
     
 class moveWat:
     def __init__(self):
-        self.EEin=1.0
-        self.Sigout=1.0
+        self.EEin={'state': 1.0}
+        self.Sigout={'state': 1.0}
         self.Watin={'level':1.0, 'visc':1.0, 'flow':1.0}
         self.Watout={'level':1.0, 'visc':1.0, 'flow':1.0}
         self.modes={'e':{'f': set(['shortc','openc'])}, 
@@ -126,7 +129,7 @@ class moveWat:
         if any(self.faults.intersection(['break'])) and any(self.faults.intersection(['jam','misalign'])):
             self.faults.difference_update(['jam','misalign'])
     def condfaults(self):
-        if self.EEin==np.inf:
+        if self.EEin['state']==np.inf:
             self.faults.update(['openc','nosensing'])
         if self.Watin['visc']==np.inf and self.EEin>0:
             self.faults.update(['break','openc'])
@@ -153,10 +156,10 @@ class moveWat:
     def behavior(self):
         self.Watout['level']=self.Watin['level']
         self.Watout['visc']=self.Watin['visc']
-        self.Watout['flow']=m2to1([ trunc(self.Watout['level']), trunc(1/self.Watin['visc']), self.mechstate, self.elecstate, trunc(self.EEin)])
-        self.Sigout=m2to1([self.sensestate, self.elecstate, self.EEin])
+        self.Watout['flow']=m2to1([ trunc(self.Watout['level']), trunc(1/self.Watin['visc']), self.mechstate, self.elecstate, trunc(self.EEin['state'])])
+        self.Sigout['state']=m2to1([self.sensestate, self.elecstate, self.EEin['state']])
         
-    def updatefxn(self,faults=['nom'], inputs={'EE':1.0, 'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}):
+    def updatefxn(self,faults=['nom'], inputs={'EE':{'state': 1.0}, 'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}):
         self.faults.update(faults)
         self.EEin=inputs['EE']
         self.Watin=inputs['Water']
@@ -189,7 +192,7 @@ class exportWat():
 
 class exportSig():
     def __init__(self):
-        self.Sigin=1.0
+        self.Sigin={'state': 1.0}
         self.Sig=1.0
         self.modes={}
         self.faults=set(['nom'])
@@ -202,97 +205,138 @@ class exportSig():
     def behavior(self):
         self.Sig=self.Sigin
         return 0
-    def updatefxn(self, faults=['nom'],inputs={'Signal':1.0}):
+    def updatefxn(self, faults=['nom'],inputs={'Signal':{'state': 1.0}}):
         self.Sigin=inputs['Signal']
         self.behavior()
         return    
-    
+
+##MODEL GRAPH AND INITIALIZATION    
 g=nx.DiGraph()
 
 Import_EE=importEE()
-g.add_node('Import_EE', funcdef=importEE, funcobj=Import_EE, inputs={}, outputs={'EE':1.0})
+g.add_node('Import_EE', funcdef=importEE, funcobj=Import_EE, inputs={}, outputs={'EE': {'state': 1.0}})
 Import_Water=importWat()
 g.add_node('Import_Water', funcdef=importWat, funcobj=Import_Water, inputs={},outputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}})
 Move_Water=moveWat()
-g.add_node('Move_Water', funcdef=moveWat, funcobj=Move_Water,inputs={'EE':1.0, 'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}, outputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}, 'Signal':1.0})
+g.add_node('Move_Water', funcdef=moveWat, funcobj=Move_Water,inputs={'EE': {'state': 1.0}, 'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}, outputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}, 'Signal': {'state': 1.0}})
 Export_Water=exportWat()
 g.add_node('Export_Water', funcdef=exportWat, funcobj=Export_Water,inputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}},outputs={})
 Export_Signal=exportSig()
-g.add_node('Export_Signal', funcdef=exportSig, funcobj=Export_Signal, inputs={'Signal':1.0}, outputs={})
+g.add_node('Export_Signal', funcdef=exportSig, funcobj=Export_Signal, inputs={'Signal': {'state': 1.0}}, outputs={})
 
-EE=1.0
+EE={'state': 1.0}
 g.add_edge('Import_EE', 'Move_Water', EE=EE)
 Water_1={'level':1.0, 'visc':1.0, 'flow':1.0}
 g.add_edge('Import_Water','Move_Water', Water=Water_1)
 Water_2={'level':1.0, 'visc':1.0, 'flow':1.0}
 g.add_edge('Move_Water','Export_Water', Water=Water_2)
-Signal=1.0
+Signal={'state': 1.0}
 g.add_edge('Move_Water','Export_Signal', Signal=Signal)
 
 
-labels=dict()
-for (u,v,label) in g.edges.data('flow'):
-    labels[(u,v)]=label
-
-edges=g.edges()
-
-pos=nx.spring_layout(g)
-nx.draw_networkx(g,pos)
-nx.draw_networkx_edge_labels(g,pos,edge_labels=labels)
-plt.show()
-
-
-#inject fault
-outputs=Import_EE.updatefxn(fault=['nov'])
-for outflow in outputs:
-    g.edges['Import_EE','Move_Water'][outflow]=outputs[outflow]
+def showgraph(g):
+    labels=dict()
+    for edge in g.edges:
+        flows=list(g.get_edge_data(edge[0],edge[1]).keys())
+        labels[edge[0],edge[1]]=flows
     
+    pos=nx.spring_layout(g)
+    nx.draw_networkx(g,pos)
+    nx.draw_networkx_edge_labels(g,pos,edge_labels=labels)
+    plt.show()
+
+
+
+def runonefault(g):
+    #inject fault
+    outputs=Import_EE.updatefxn(fault=['nov'])
+    for outflow in outputs:
+        g.edges['Import_EE','Move_Water'][outflow]=outputs[outflow]
+
+    propagatefaults(g)
+    endflows=findfaultflows(g)
+    endfaults=findfaults(g)
+    
+    return endflows,endfaults
+
 #goal:
 #if an edge has changed, adjacent nodes now active
 #if a node has changed, it is also now active
-
-fxnnames=list(g.nodes())
-activefxns=set(fxnnames)
-while activefxns:
     
-    for fxnname in list(activefxns):
+def propagatefaults(g):
+
+    fxnnames=list(g.nodes())
+    activefxns=set(fxnnames)
+    while activefxns:
+        
+        for fxnname in list(activefxns):
+            fxn=g.nodes(data='funcobj')[fxnname]
+            
+            #iterate over input edges
+            inputdict={}
+            for edge in g.in_edges(fxnname):
+                edgeinputs=g.edges[edge]
+                inputdict.update(edgeinputs)
+            #if same inputs, remove from active functions, otherwise update inputs    
+            if inputdict==g.nodes('inputs')[fxnname]:
+                activefxns.discard(fxnname)
+            else:
+                for key in g.nodes('inputs')[fxnname]:
+                    g.nodes('inputs')[fxnname][key]=inputdict[key]
+            
+            #update outputs
+            outputs=fxn.updatefxn(inputs=inputdict)
+            
+            #if outputs==g.nodes('outputs')[fxnname]:
+            #    activefxns.discard(fxnname)        
+            
+            #iterate over output edges
+            for edge in g.out_edges(fxnname):
+                active_edge=False
+            #iterate over flows
+                for outflow in outputs:
+                    if outflow in g.edges[edge]:
+                        if g.edges[edge][outflow]!=outputs[outflow]:
+                            active_edge=True
+                        g.edges[edge][outflow]=outputs[outflow]
+            #if a new value, functions are now active?
+                if active_edge:
+                    activefxns.update(edge)
+    return
+        
+        
+#extract end-state of interest
+endstate=g.edges['Move_Water','Export_Water']
+
+
+#extract non-nominal flow paths
+def findfaultflows(g):
+    endflows=dict()
+    for edge in g.edges:
+        g.get_edge_data(edge[0],edge[1])
+        flows=list(g.get_edge_data(edge[0],edge[1]).keys())
+        for flow in flows:
+            states=list(g.get_edge_data(edge[0],edge[1])[flow])
+            for state in states:
+                value=g.get_edge_data(edge[0],edge[1])[flow][state]
+                if value!=1.0:
+                    endflows[edge[0],edge[1],flow,state]=value
+    return endflows
+
+#generates lists of faults present
+def findfaults(g):
+    endfaults=dict()
+    #extract list of faults present
+    for fxnname in fxnnames:
         fxn=g.nodes(data='funcobj')[fxnname]
-        
-        #iterate over input edges
-        inputdict={}
-        for edge in g.in_edges(fxnname):
-            edgeinputs=g.edges[edge]
-            inputdict.update(edgeinputs)
-        #if same inputs, remove from active functions, otherwise update inputs    
-        if inputdict==g.nodes('inputs')[fxnname]:
-            activefxns.discard(fxnname)
-        else:
-            for key in g.nodes('inputs')[fxnname]:
-                g.nodes('inputs')[fxnname][key]=inputdict[key]
-        
-        #update outputs
-        outputs=fxn.updatefxn(inputs=inputdict)
-        
-        #if outputs==g.nodes('outputs')[fxnname]:
-        #    activefxns.discard(fxnname)        
-        
-        #iterate over output edges
-        for edge in g.out_edges(fxnname):
-            active_edge=False
-        #iterate over flows
-            for outflow in outputs:
-                if outflow in g.edges[edge]:
-                    if g.edges[edge][outflow]!=outputs[outflow]:
-                        active_edge=True
-                    g.edges[edge][outflow]=outputs[outflow]
-        #if a new value, functions are now active?
-            if active_edge:
-                activefxns.update(edge)
-        
-        
+        fxn.faults.remove('nom')
+        if len(fxn.faults) > 0:
+            endfaults[fxnname]=fxn.faults
+    return endfaults
     
-        
 
+
+#classify results
 
 
 
