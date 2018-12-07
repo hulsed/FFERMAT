@@ -51,7 +51,7 @@ class importEE:
     def __init__(self):
         self.EEout={'state': 1.0}
         self.elecstate=1.0
-        self.faultmodes=[['infv','lowv','nov']]
+        self.faultmodes=['infv','lowv','nov']
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -66,8 +66,8 @@ class importEE:
             self.elecstate=0.0
     def behavior(self):
         self.EEout['state']=self.elecstate
-    def updatefxn(self,fault=['nom'],inputs={}):
-        self.faults.update(fault)
+    def updatefxn(self,faults=['nom'],inputs={}):
+        self.faults.update(faults)
         self.condfaults()
         self.resolvefaults()
         self.detbehav()
@@ -80,7 +80,7 @@ class importWat:
         self.wlstate=1.0
         self.wvstate=1.0
         self.Watout={'level':1.0, 'visc':1.0, 'flow':1.0}
-        self.modes=[['nowat','hiwat'],['highvisc','solids']]
+        self.faultmodes=['nowat','hiwat','highvisc','solids']
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -98,8 +98,8 @@ class importWat:
     def behavior(self):
         self.Watout['level']=self.wlstate
         self.Watout['visc']=self.wvstate
-    def updatefxn(self,fault=['nom'], inputs={}):
-        self.faults.update(fault)
+    def updatefxn(self,faults=['nom'], inputs={}):
+        self.faults.update(faults)
         self.condfaults()
         self.resolvefaults()
         self.detbehav()
@@ -113,9 +113,10 @@ class moveWat:
         self.Sigout={'state': 1.0}
         self.Watin={'level':1.0, 'visc':1.0, 'flow':1.0}
         self.Watout={'level':1.0, 'visc':1.0, 'flow':1.0}
-        self.modes={'e':{'f': set(['shortc','openc'])}, 
-                       'm':{'d':set(['jam','misalign']), 'f':set(['break'])}, 
-                       's':{'f': set(['nosensing']), 'd': set(['poorsensing'])}}
+        #self.faultmodes={'e':{'f': set(['shortc','openc'])}, 
+        #               'm':{'d':set(['jam','misalign']), 'f':set(['break'])}, 
+        #               's':{'f': set(['nosensing']), 'd': set(['poorsensing'])}}
+        self.faultmodes=['shortc','openc','jam','misalign','break','nosensing','poorsensing']
         self.faults=set(['nom'])
         self.opermodes=['on','off']
         self.mechstate=1.0
@@ -131,9 +132,9 @@ class moveWat:
     def condfaults(self):
         if self.EEin['state']==np.inf:
             self.faults.update(['openc','nosensing'])
-        if self.Watin['visc']==np.inf and self.EEin>0:
+        if self.Watin['visc']==np.inf and self.EEin['state']>0:
             self.faults.update(['break','openc'])
-        elif self.Watin['visc']>1 and self.EEin>0:
+        elif self.Watin['visc']>1 and self.EEin['state']>0:
             self.faults.update(['misalign'])
         if self.Watin['level']==np.inf:
             if self.EEin>0.0:
@@ -174,7 +175,7 @@ class exportWat():
     def __init__(self):
         self.Watin={'level':1.0, 'visc':1.0, 'flow':1.0}
         self.Wat={'level':1.0, 'visc':1.0, 'flow':1.0}
-        self.modes={}
+        self.faultmodes={}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -194,7 +195,7 @@ class exportSig():
     def __init__(self):
         self.Sigin={'state': 1.0}
         self.Sig=1.0
-        self.modes={}
+        self.faultmodes={}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -245,13 +246,34 @@ def showgraph(g):
     nx.draw_networkx_edge_labels(g,pos,edge_labels=labels)
     plt.show()
 
+def listinitfaults(g):
+    faultlist=[]
+    fxnnames=list(g.nodes)
+    for fxnname in fxnnames:
+        fxn=g.nodes(data='funcobj')[fxnname]
+        modes=fxn.faultmodes
+        for mode in modes:
+            faultlist.append([fxnname,fxn,mode])
+    return faultlist
 
+def runlist(g):
+    faultlist=listinitfaults(g)
+    
+    for [fxnname,fxn,mode] in faultlist:
+        endflows,endfaults=runonefault(g.copy(),fxnname,fxn,mode)
+    return endflows, endfaults
+    
 
-def runonefault(g):
+def runonefault(g,fxnname,fxn,mode):
     #inject fault
-    outputs=Import_EE.updatefxn(fault=['nov'])
-    for outflow in outputs:
-        g.edges['Import_EE','Move_Water'][outflow]=outputs[outflow]
+    outputs=fxn.updatefxn(faults=[mode])
+    #propogate effect to immediate node edges
+    for edge in g.edges(fxnname): 
+        for outflow in outputs:
+            if outflow in g.edges[edge]:
+                g.edges[edge][outflow]=outputs[outflow]
+
+    
 
     propagatefaults(g)
     endflows=findfaultflows(g)
@@ -326,10 +348,12 @@ def findfaultflows(g):
 #generates lists of faults present
 def findfaults(g):
     endfaults=dict()
+    fxnnames=list(g.nodes)
     #extract list of faults present
     for fxnname in fxnnames:
         fxn=g.nodes(data='funcobj')[fxnname]
-        fxn.faults.remove('nom')
+        if fxn.faults.issuperset({'nom'}):
+            fxn.faults.remove('nom')
         if len(fxn.faults) > 0:
             endfaults[fxnname]=fxn.faults
     return endfaults
