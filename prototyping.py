@@ -73,7 +73,7 @@ class importEE:
         self.detbehav()
         self.behavior()
         outputs={'EE': self.EEout}
-        return outputs
+        return {'outputs':outputs, 'inputs':inputs}
         
 class importWat:
     def __init__(self):
@@ -98,14 +98,14 @@ class importWat:
     def behavior(self):
         self.Watout['level']=self.wlstate
         self.Watout['visc']=self.wvstate
-    def updatefxn(self,faults=['nom'], inputs={}):
+    def updatefxn(self,faults=['nom'], inputs={}, outputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}):
         self.faults.update(faults)
         self.condfaults()
         self.resolvefaults()
         self.detbehav()
         self.behavior()
         outputs={'Water': self.Watout}
-        return outputs
+        return {'outputs':outputs, 'inputs':inputs}
     
 class moveWat:
     def __init__(self):
@@ -160,7 +160,7 @@ class moveWat:
         self.Watout['flow']=m2to1([ trunc(self.Watout['level']), trunc(1/self.Watin['visc']), self.mechstate, self.elecstate, trunc(self.EEin['state'])])
         self.Sigout['state']=m2to1([self.sensestate, self.elecstate, self.EEin['state']])
         
-    def updatefxn(self,faults=['nom'], inputs={'EE':{'state': 1.0}, 'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}):
+    def updatefxn(self,faults=['nom'], inputs={'EE':{'state': 1.0}, 'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}, outputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0},'Signal':{'state': 1.0}}):
         self.faults.update(faults)
         self.EEin=inputs['EE']
         self.Watin=inputs['Water']
@@ -169,7 +169,8 @@ class moveWat:
         self.detbehav()
         self.behavior()
         outputs={'Water':self.Watout,'Signal':self.Sigout}
-        return outputs
+        inputs={'EE':self.EEin,'Water':self.Watin}
+        return {'outputs':outputs, 'inputs':inputs}
 
 class exportWat():
     def __init__(self):
@@ -189,7 +190,9 @@ class exportWat():
     def updatefxn(self, faults=['nom'],inputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}):
         self.Watin=inputs['Water']
         self.behavior()
-        return
+        outputs={}
+        inputs={'Water':self.Watin}
+        return {'outputs':outputs, 'inputs':inputs}
 
 class exportSig():
     def __init__(self):
@@ -209,7 +212,9 @@ class exportSig():
     def updatefxn(self, faults=['nom'],inputs={'Signal':{'state': 1.0}}):
         self.Sigin=inputs['Signal']
         self.behavior()
-        return    
+        outputs={}
+        inputs={'Signal':self.Sigin}
+        return {'outputs':outputs, 'inputs':inputs}
 
 ##MODEL GRAPH AND INITIALIZATION   
 
@@ -240,7 +245,12 @@ def initialize():
     g.add_edge('Move_Water','Export_Water', Water=Water_2)
     Signal={'state': 1.0}
     g.add_edge('Move_Water','Export_Signal', Signal=Signal)
-    return g
+    
+    backgraph=g.reverse(copy=True)
+    forwardgraph=g
+    fullgraph=nx.compose(backgraph, forwardgraph)
+    
+    return [forwardgraph,backgraph,fullgraph]
 
 
 def showgraph(g):
@@ -264,12 +274,12 @@ def listinitfaults(g):
             faultlist.append([fxnname,mode])
     return faultlist
 
-def runlist(g):
-    faultlist=listinitfaults(g)
+def runlist(forwardgraph,backgraph,fullgraph):
+    faultlist=listinitfaults(fullgraph)
     
     for [fxnname, mode] in faultlist:
-        g=initialize()
-        endflows,endfaults=runonefault(g,fxnname,mode)
+        [forwardgraph,backgraph,fullgraph]=initialize()
+        endflows,endfaults=runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode)
         print(fxnname)
         print(mode)
         print('FLOW EFFECTS:')
@@ -279,33 +289,40 @@ def runlist(g):
     return endflows, endfaults
     
 
-def runonefault(g,fxnname,mode):
+
+
+def runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode):
     
     #findfxn
-    fxn=g.nodes(data='funcobj')[fxnname]
+    fxn=fullgraph.nodes(data='funcobj')[fxnname]
     #inject fault
-    outputs=fxn.updatefxn(faults=[mode])
-    #propogate effect to immediate node edges
-    for edge in g.edges(fxnname): 
-        for outflow in outputs:
-            if outflow in g.edges[edge]:
-                g.edges[edge][outflow]=outputs[outflow]
-
+    fxncall=fxn.updatefxn(faults=[mode])
+    outputs=fxncall['outputs']
+    inputs=fxncall['inputs']
     
+    #propogate effect to immediate node edges (forward)
+    for edge in forwardgraph.edges(fxnname): 
+        for outflow in outputs:
+            if outflow in forwardgraph.edges[edge]:
+                forwardgraph.edges[edge][outflow]=outputs[outflow]
+    #propogate effect to immediate node edges (backward)          
+    for edge in backgraph.edges(fxnname):
+        for inflow in inputs:
+            if inflow in fullgraph.edges[edge]:
+                backgraph.edges[edge][inflow]=inputs[inflow]
+                
 
-    propagatefaults(g)
-    endflows=findfaultflows(g)
-    endfaults=findfaults(g)
+    propfaults(forwardgraph)
+    endflows=findfaultflows(forwardgraph)
+    endfaults=findfaults(forwardgraph)
     
     return endflows,endfaults
 
-g=initialize()
-runlist(g)
 #goal:
 #if an edge has changed, adjacent nodes now active
 #if a node has changed, it is also now active
     
-def propagatefaults(g):
+def propfaults(g):
 
     fxnnames=list(g.nodes())
     activefxns=set(fxnnames)
@@ -329,11 +346,11 @@ def propagatefaults(g):
                     g.nodes('inputs')[fxnname][key]=inputdict[key]
             
             #update outputs
-            outputs=fxn.updatefxn(inputs=inputdict)
+            fxncall=fxn.updatefxn(inputs=inputdict)
+            outputs=fxncall['outputs']
             
             #if outputs==g.nodes('outputs')[fxnname]:
             #    activefxns.discard(fxnname)        
-            
             #iterate over output edges
             for edge in g.out_edges(fxnname):
                 active_edge=False
@@ -343,9 +360,11 @@ def propagatefaults(g):
                         if g.edges[edge][outflow]!=outputs[outflow]:
                             active_edge=True
                         g.edges[edge][outflow]=outputs[outflow]
+
             #if a new value, functions are now active?
                 if active_edge:
                     activefxns.update(edge)
+                    
     return
         
         
@@ -381,6 +400,9 @@ def findfaults(g):
     return endfaults
     
 
+
+[forwardgraph,backgraph,fullgraph]=initialize()
+runlist(forwardgraph,backgraph,fullgraph)
 
 #classify results
 
