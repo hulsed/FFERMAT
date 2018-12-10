@@ -60,10 +60,10 @@ class importEE:
     def detbehav(self):
         if self.faults.intersection(set(['infv'])):
             self.elecstate=np.inf
-        elif self.faults.intersection(set(['lowv'])):
-            self.elecstate=0.5
         elif self.faults.intersection(set(['nov'])):
             self.elecstate=0.0
+        elif self.faults.intersection(set(['lowv'])):
+            self.elecstate=0.5
     def behavior(self):
         self.EEout['state']=self.elecstate
     def updatefxn(self,faults=['nom'],inputs={}):
@@ -137,7 +137,7 @@ class moveWat:
         elif self.Watin['visc']>1 and self.EEin['state']>0:
             self.faults.update(['misalign'])
         if self.Watin['level']==np.inf:
-            if self.EEin>0.0:
+            if self.EEin['state']>0.0:
                 self.faults.update(['shortc','nosensing'])
             else:
                 self.faults.update(['shortc','poorsensing'])
@@ -261,15 +261,15 @@ def listinitfaults(g):
         fxn=g.nodes(data='funcobj')[fxnname]
         modes=fxn.faultmodes
         for mode in modes:
-            faultlist.append([fxnname,fxn,mode])
+            faultlist.append([fxnname,mode])
     return faultlist
 
 def runlist(g):
     faultlist=listinitfaults(g)
     
-    for [fxnname,fxn,mode] in faultlist:
+    for [fxnname, mode] in faultlist:
         g=initialize()
-        endflows,endfaults=runonefault(g,fxnname,fxn,mode)
+        endflows,endfaults=runonefault(g,fxnname,mode)
         print(fxnname)
         print(mode)
         print('FLOW EFFECTS:')
@@ -279,7 +279,10 @@ def runlist(g):
     return endflows, endfaults
     
 
-def runonefault(g,fxnname,fxn,mode):
+def runonefault(g,fxnname,mode):
+    
+    #findfxn
+    fxn=g.nodes(data='funcobj')[fxnname]
     #inject fault
     outputs=fxn.updatefxn(faults=[mode])
     #propogate effect to immediate node edges
@@ -296,6 +299,8 @@ def runonefault(g,fxnname,fxn,mode):
     
     return endflows,endfaults
 
+g=initialize()
+runlist(g)
 #goal:
 #if an edge has changed, adjacent nodes now active
 #if a node has changed, it is also now active
@@ -304,6 +309,8 @@ def propagatefaults(g):
 
     fxnnames=list(g.nodes())
     activefxns=set(fxnnames)
+    '''
+    '''
     while activefxns:
         
         for fxnname in list(activefxns):
