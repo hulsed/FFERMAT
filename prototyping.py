@@ -62,7 +62,7 @@ class importEE:
             self.elecstate=np.inf
         elif self.faults.intersection(set(['lowv'])):
             self.elecstate=0.5
-        elif self.faults.intersection(set(['nom'])):
+        elif self.faults.intersection(set(['nov'])):
             self.elecstate=0.0
     def behavior(self):
         self.EEout['state']=self.elecstate
@@ -211,28 +211,36 @@ class exportSig():
         self.behavior()
         return    
 
-##MODEL GRAPH AND INITIALIZATION    
-g=nx.DiGraph()
+##MODEL GRAPH AND INITIALIZATION   
 
-Import_EE=importEE()
-g.add_node('Import_EE', funcdef=importEE, funcobj=Import_EE, inputs={}, outputs={'EE': {'state': 1.0}})
-Import_Water=importWat()
-g.add_node('Import_Water', funcdef=importWat, funcobj=Import_Water, inputs={},outputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}})
-Move_Water=moveWat()
-g.add_node('Move_Water', funcdef=moveWat, funcobj=Move_Water,inputs={'EE': {'state': 1.0}, 'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}, outputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}, 'Signal': {'state': 1.0}})
-Export_Water=exportWat()
-g.add_node('Export_Water', funcdef=exportWat, funcobj=Export_Water,inputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}},outputs={})
-Export_Signal=exportSig()
-g.add_node('Export_Signal', funcdef=exportSig, funcobj=Export_Signal, inputs={'Signal': {'state': 1.0}}, outputs={})
+def initfxns():
+    Import_EE=importEE()
+    Import_Water=importWat()
+    Move_Water=moveWat()
+    Export_Water=exportWat()
+    Export_Signal=exportSig()
+    return Import_EE,Import_Water, Move_Water, Export_Water, Export_Signal
 
-EE={'state': 1.0}
-g.add_edge('Import_EE', 'Move_Water', EE=EE)
-Water_1={'level':1.0, 'visc':1.0, 'flow':1.0}
-g.add_edge('Import_Water','Move_Water', Water=Water_1)
-Water_2={'level':1.0, 'visc':1.0, 'flow':1.0}
-g.add_edge('Move_Water','Export_Water', Water=Water_2)
-Signal={'state': 1.0}
-g.add_edge('Move_Water','Export_Signal', Signal=Signal)
+def initialize():
+    g=nx.DiGraph()
+    
+    Import_EE,Import_Water, Move_Water, Export_Water, Export_Signal=initfxns()
+    
+    g.add_node('Import_EE', funcdef=importEE, funcobj=Import_EE, inputs={}, outputs={'EE': {'state': 1.0}})
+    g.add_node('Import_Water', funcdef=importWat, funcobj=Import_Water, inputs={},outputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}})
+    g.add_node('Move_Water', funcdef=moveWat, funcobj=Move_Water,inputs={'EE': {'state': 1.0}, 'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}, outputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}, 'Signal': {'state': 1.0}}) 
+    g.add_node('Export_Water', funcdef=exportWat, funcobj=Export_Water,inputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}},outputs={})
+    g.add_node('Export_Signal', funcdef=exportSig, funcobj=Export_Signal, inputs={'Signal': {'state': 1.0}}, outputs={})
+    
+    EE={'state': 1.0}
+    g.add_edge('Import_EE', 'Move_Water', EE=EE)
+    Water_1={'level':1.0, 'visc':1.0, 'flow':1.0}
+    g.add_edge('Import_Water','Move_Water', Water=Water_1)
+    Water_2={'level':1.0, 'visc':1.0, 'flow':1.0}
+    g.add_edge('Move_Water','Export_Water', Water=Water_2)
+    Signal={'state': 1.0}
+    g.add_edge('Move_Water','Export_Signal', Signal=Signal)
+    return g
 
 
 def showgraph(g):
@@ -260,7 +268,14 @@ def runlist(g):
     faultlist=listinitfaults(g)
     
     for [fxnname,fxn,mode] in faultlist:
-        endflows,endfaults=runonefault(g.copy(),fxnname,fxn,mode)
+        g=initialize()
+        endflows,endfaults=runonefault(g,fxnname,fxn,mode)
+        print(fxnname)
+        print(mode)
+        print('FLOW EFFECTS:')
+        print(endflows)
+        print('FAULTS:')
+        print(endfaults)
     return endflows, endfaults
     
 
@@ -328,7 +343,7 @@ def propagatefaults(g):
         
         
 #extract end-state of interest
-endstate=g.edges['Move_Water','Export_Water']
+#endstate=g.edges['Move_Water','Export_Water']
 
 
 #extract non-nominal flow paths
