@@ -292,8 +292,6 @@ def runlist(forwardgraph,backgraph,fullgraph):
     return endflows, endfaults
     
 
-
-
 def runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode):
     
     #findfxn
