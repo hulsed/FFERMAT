@@ -1,8 +1,0 @@
-model simple_chain
-	function importEE1 ImportElectricalEnergy
-	function protectEE1 ProtectElectricalEnergy
-	function export EE1 ExportElectricalEnergy
-	
-	flow importEE1 protectEE1 Electrical
-	flow protectEE1 exportEE1 Electrical
-	
