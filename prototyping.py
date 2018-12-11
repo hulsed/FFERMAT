@@ -98,7 +98,9 @@ class importWat:
     def behavior(self):
         self.Watout['level']=self.wlstate
         self.Watout['visc']=self.wvstate
+        self.Watout['flow']
     def updatefxn(self,faults=['nom'], inputs={}, outputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}):
+        self.Watout['flow']=outputs['Water']['flow']
         self.faults.update(faults)
         self.condfaults()
         self.resolvefaults()
@@ -158,6 +160,7 @@ class moveWat:
         self.Watout['level']=self.Watin['level']
         self.Watout['visc']=self.Watin['visc']
         self.Watout['flow']=m2to1([ trunc(self.Watout['level']), trunc(1/self.Watin['visc']), self.mechstate, self.elecstate, trunc(self.EEin['state'])])
+        self.Watin=self.Watout
         self.Sigout['state']=m2to1([self.sensestate, self.elecstate, self.EEin['state']])
         
     def updatefxn(self,faults=['nom'], inputs={'EE':{'state': 1.0}, 'Water': {'level':1.0, 'visc':1.0, 'flow':1.0}}, outputs={'Water': {'level':1.0, 'visc':1.0, 'flow':1.0},'Signal':{'state': 1.0}}):
@@ -425,6 +428,9 @@ def propagate(forward, backward):
                         if backward.edges[edge][inflow]!=inputs[inflow]:
                             active_edge=True
                         backward.edges[edge][inflow]=inputs[inflow]
+                #if a new value, functions are now active?
+                if active_edge:
+                    activefxns.update(edge) 
     return 
         
 #extract end-state of interest
