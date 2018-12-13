@@ -67,11 +67,12 @@ def runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode):
             if inflow in fullgraph.edges[edge]:
                 backgraph.edges[edge][inflow]=inputs[inflow]
                 
-
+    
     #propfaults(forwardgraph)
     propagate(forwardgraph, backgraph)
     endflows=findfaultflows(forwardgraph)
     endfaults=findfaults(forwardgraph)
+    
     
     return endflows,endfaults
 
@@ -105,7 +106,6 @@ def propfaults(g):
             #update outputs
             fxncall=fxn.updatefxn(inputs=inputdict)
             outputs=fxncall['outputs']
-            
             #if outputs==g.nodes('outputs')[fxnname]:
             #    activefxns.discard(fxnname)        
             #iterate over output edges

@@ -30,3 +30,15 @@ def trunc(x):
     else:
         y=x
     return y
+
+def truncn(x, n):
+    if x>n:
+        y=n
+    else:
+        y=x
+    return y
+
+def dev(x):
+    y=abs(abs(x-1.0)-1.0)
+    return y
+    

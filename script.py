@@ -6,7 +6,14 @@ Created on Tue Dec 11 09:41:32 2018
 """
 
 import ffermat
-import pumpmodel
+#import pumpmodel
 
 
-ffermat.runlist(pumpmodel)
+#ffermat.runlist(pumpmodel)
+
+import controlsurfacemodel
+
+[forwardgraph,backgraph,fullgraph]=controlsurfacemodel.initialize()
+ffermat.runlist(controlsurfacemodel)
+
+#ffermat.runonefault(forwardgraph,backgraph,fullgraph,'Import_Signal','nosig')
