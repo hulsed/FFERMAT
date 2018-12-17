@@ -4,7 +4,7 @@ Created on Tue Dec 11 09:38:35 2018
 
 @author: Daniel Hulse
 """
-
+import pprint
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
@@ -38,12 +38,12 @@ def runlist(mdl):
     for [fxnname, mode] in faultlist:
         [forwardgraph,backgraph,fullgraph]=mdl.initialize()
         endflows,endfaults=runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode)
-        print(fxnname)
-        print(mode)
+        print('FAULT SCENARIO: ', fxnname, ' ', mode)
         print('FLOW EFFECTS:')
-        print(endflows)
+        pprint.pprint(endflows)
         print('FAULTS:')
         print(endfaults)
+        print()
     return endflows, endfaults
 
 
