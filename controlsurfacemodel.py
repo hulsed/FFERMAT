@@ -121,7 +121,7 @@ class affectDOF:
         self.mechstate=1.0
         self.surfstate=1.0
         self.EEstate=1.0
-        self.ctlstate=0.0
+        self.ctlstate=1.0
         
         self.faultmodes=['surfbreak', 'surfwarp', 'jamcl', 'jamopen','friction','short', 'opencircuit','ctlbreak','ctldrift']
         self.faults=set(['nom'])
@@ -139,6 +139,8 @@ class affectDOF:
     def resolvefaults(self):
         return 0
     def condfaults(self):
+        if self.EEin['effort']>2.0:
+            self.faults.add('opencircuit')
         return 0
     def detbehav(self):
         if  self.faults.intersection(set(['jamopen'])):
@@ -156,8 +158,12 @@ class affectDOF:
         if self.faults.intersection(set(['short'])):
             self.EEstate=0.0
             self.Sigin['ctl']=0.0
+            self.EEin['rate']=np.inf
         elif self.faults.intersection(set(['opencircuit'])):
             self.EEstate=0.0
+            self.EEin['rate']=0
+        else:
+            self.EEin['rate']=self.EEin['effort']*self.EEstate
         
         if self.faults.intersection(set(['ctlbreak'])):
             self.ctlstate=0.0
@@ -169,9 +175,10 @@ class affectDOF:
         
         self.Forceout['force']=self.Airin['velocity']*self.mechstate*self.surfstate*self.EEstate
         
-        self.Momentout['amplitude']=self.Airin['velocity']*self.mechstate*self.surfstate*self.EEstate
+        self.Momentout['amplitude']=self.Airin['velocity']*self.EEin['effort']*self.mechstate*self.surfstate*self.EEstate
         
-        self.Momentout['intent']=self.Sigin['ctl']*self.Airin['velocity']*aux.dev(self.mechstate)*self.surfstate*self.EEstate*self.ctlstate
+        self.Momentout['intent']=self.Sigin['ctl']*self.Airin['velocity']*self.EEin['effort']*aux.dev(self.mechstate)*self.surfstate*self.EEstate*self.ctlstate
+        
         
     def updatefxn(self,faults=['nom'],inputs={'Signal':{'ctl': 1.0},'EE': {'rate': 1.0, 'effort': 1.0},'Air': {'velocity': 1.0, 'turbulence': 1.0} }, outputs={}):
         
