@@ -14,6 +14,6 @@ import ffermat
 import controlsurfacemodel
 
 [forwardgraph,backgraph,fullgraph]=controlsurfacemodel.initialize()
-endflows, endfaults= ffermat.runlist(controlsurfacemodel)
+fullresults= ffermat.runlist(controlsurfacemodel)
 
 #ffermat.runonefault(forwardgraph,backgraph,fullgraph,'Import_Signal','nosig')

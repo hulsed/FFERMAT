@@ -10,11 +10,26 @@ import numpy as np
 
 import auxfunctions as aux
 
+
+endstatekey={'noeffect': {'pfh_allow': 0, 'cost': 0 },\
+             'minor': {'pfh_allow': 1e-3, 'cost': 0.118e7 },\
+             'major': {'pfh_allow': 1e-5, 'cost': 2.98e7 } , \
+             'hazardous': {'pfh_allow': 1e-6, 'cost': 16.8e7 } , \
+             'catastrophic': {'pfh_allow': 1e-7, 'cost': 38.4e7 } }
+
+lifecycleprob={'veryhigh':{'lb': 0.2, 'ub': 1.0 }, \
+               'high':{'lb': 0.05, 'ub': 0.19}, \
+               'moderate': {'lb': 0.049, 'ub':0.0005}, \
+               'low': {'lb':1.5/1e5, 'ub':0.00049}, \
+               'remote': {'lb':0, 'ub':1.49/1e5}}
+# see scenario-based FMEA paper http://www.medicalhealthcarefmea.com/papers/kmenta.pdf
+
 class importEE:
     def __init__(self):
+        self.type='function'
         self.EEout={'rate': 1.0, 'effort': 1.0}
         self.elecstate=1.0
-        self.faultmodes=['infv','lowv','nov']
+        self.faultmodes={'infv':{'lprob':'moderate'},'lowv':{'lprob':'moderate'},'nov':{'lprob':'high'}}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -43,10 +58,13 @@ class importEE:
     
 class importAir:
     def __init__(self):
+        self.type='function'
         self.Airout={'velocity': 1.0, 'turbulence': 1.0}
         self.velstate=1.0
         self.turbstate=1.0
-        self.faultmodes=['novel','lowvel','hivel','gusts','flowsep','turb']
+        self.faultmodes={'novel': {'lprob':'low'},'lowvel': {'lprob':'moderate'},\
+                         'hivel': {'lprob':'moderate'},'gusts': {'lprob':'veryhigh'},\
+                         'flowsep': {'lprob':'moderate'},'turb': {'lprob':'high'}}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -80,9 +98,10 @@ class importAir:
 
 class importSignal:
     def __init__(self):
+        self.type='function'
         self.Sigout={'ctl': 1.0},
         self.sigstate=1.0
-        self.faultmodes=['nosig','degsig']
+        self.faultmodes={'nosig':{'lprob':'low'},'degsig':{'lprob':'low'}}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -114,6 +133,7 @@ class importSignal:
     
 class affectDOF:
     def __init__(self, dof, side):
+        self.type='function'
         self.Airout={'velocity': 1.0, 'turbulence': 1.0}
         self.Forceout={'force': 1.0}
         self.Momentout={'amplitude': 1.0, 'intent':1.0 }
@@ -123,7 +143,11 @@ class affectDOF:
         self.EEstate=1.0
         self.ctlstate=1.0
         
-        self.faultmodes=['surfbreak', 'surfwarp', 'jamcl', 'jamopen','friction','short', 'opencircuit','ctlbreak','ctldrift']
+        self.faultmodes={'surfbreak':{'lprob':'remote'}, \
+                         'surfwarp':{'lprob':'low'}, 'jamcl':{'lprob':'low'}, \
+                         'jamopen':{'lprob':'low'},'friction':{'lprob':'moderate'},\
+                         'short':{'lprob':'low'}, 'opencircuit':{'lprob':'low'}, \
+                         'ctlbreak':{'lprob':'remote'},'ctldrift':{'lprob':'low'}}
         self.faults=set(['nom'])
         
         self.dof=dof
@@ -209,6 +233,7 @@ class affectDOF:
     
 class combineforceandmoment:
     def __init__(self,dof):
+        self.type='function'
         self.ForceLin={'force': 1.0}
         self.ForceRin={'force': 1.0}
         self.MomentLin={'amplitude': 1.0, 'intent':1.0 }
@@ -222,7 +247,10 @@ class combineforceandmoment:
         
         self.dof=dof
         
-        self.faultmodes=['breakL','breakR','damageL','damageR']
+        self.faultmodes={'breakL':{'lprob':'remote'}, \
+                         'breakR':{'lprob':'remote'}, \
+                         'damageL':{'lprob':'low'},\
+                         'damageR':{'lprob':'low'}}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -322,49 +350,42 @@ class export6dof:
         self.Roll={'amplitude': 1.0, 'intent':1.0 }
         self.Pitch={'amplitude': 1.0, 'intent':1.0 }
         self.Yaw={'amplitude': 1.0, 'intent':1.0 }
+        self.type='classifier'
         
         self.Severity={'noeffect'}
-        self.faultmodes=[]
+        self.faultmodes={}
         self.faults=set(['nom'])
-    def resolvefaults(self):
-        return 0
-    def condfaults(self):
-        return 0
-    def detbehav(self):
-        return 0
-    def behavior(self):
-        return 0
     def classify(self):
         if self.Roll['intent']==0 or self.Pitch['intent']==0 or self.Yaw['intent']==0 or self.Roll['amplitude']==0:
-            self.Severity={'catastrophic'}
+            self.Severity='catastrophic'
         elif self.Roll['intent']!=1 or self.Pitch['intent']!=1 or self.Yaw['intent']!=1:
-            self.Severity={'hazardous'}
+            self.Severity='hazardous'
         elif self.Roll['amplitude']!=1 or self.Pitch['amplitude']!=1 or self.Yaw['amplitude']!=1:
-            self.Severity={'major'}
+            self.Severity='major'
         else:
-            self.Severity={'noeffect'}
+            self.Severity='noeffect'
         
-        
+    def returnvalue(self):
+        return self.Severity
+    
     def updatefxn(self,faults=['nom'],inputs={'roll':{'amplitude': 1.0, 'intent':1.0 }, 'pitch':{'amplitude': 1.0, 'intent':1.0 }, 'yaw':{'amplitude': 1.0, 'intent':1.0 } }, outputs={}):
         self.Roll=inputs['roll']
         self.Pitch=inputs['pitch']
         self.Yaw=inputs['yaw']
         
-        self.faults.update(faults)
-        self.condfaults()
-        self.resolvefaults()
-        self.detbehav()
-        self.behavior()
+        self.classify()
+        
         inputs={'Roll': self.Roll, 'Pitch': self.Pitch, 'Yaw': self.Yaw}
         outputs={}
         return {'outputs':outputs, 'inputs':inputs} 
 
 class exportAir:
     def __init__(self):
+        self.type='function'
         self.Airin={'velocity': 1.0, 'turbulence': 1.0}
         self.velstate=1.0
         self.turbstate=1.0
-        self.faultmodes=[]
+        self.faultmodes={}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0

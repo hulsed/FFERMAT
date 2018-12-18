@@ -27,7 +27,8 @@ def listinitfaults(g):
         fxn=g.nodes(data='funcobj')[fxnname]
         modes=fxn.faultmodes
         for mode in modes:
-            faultlist.append([fxnname,mode])
+            prob=modes[mode]['lprob']
+            faultlist.append([fxnname,mode, prob])
     return faultlist
 
 def runlist(mdl):
@@ -35,16 +36,26 @@ def runlist(mdl):
     [forwardgraph,backgraph,fullgraph]=mdl.initialize()
     faultlist=listinitfaults(fullgraph)
     
-    for [fxnname, mode] in faultlist:
+    fullresults={}
+    
+    for [fxnname, mode, prob] in faultlist:
         [forwardgraph,backgraph,fullgraph]=mdl.initialize()
-        endflows,endfaults=runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode)
-        print('FAULT SCENARIO: ', fxnname, ' ', mode)
+        endflows,endfaults,endclass=runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode)
+        lowscore, highscore, avescore, cost=calcscore(mdl, prob,endclass)
+        
+        print('FAULT SCENARIO: ', fxnname, ' ', mode, 'Probability: ', prob )
         print('FLOW EFFECTS:')
         pprint.pprint(endflows)
         print('FAULTS:')
         print(endfaults)
+        print('SEVERITIES:')
+        print(endclass, '(cost:', cost/1e6, ' M)')
+        print('SCORE:', avescore, ' (', lowscore, '-', highscore, ')')
         print()
-    return endflows, endfaults
+        
+        
+        fullresults[fxnname, mode]={'flow effects': endflows, 'faults':endfaults, 'classification':endclass}
+    return fullresults
 
 
 def runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode):
@@ -72,15 +83,15 @@ def runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode):
     propagate(forwardgraph, backgraph)
     endflows=findfaultflows(forwardgraph)
     endfaults=findfaults(forwardgraph)
+    endclass=findclassification(forwardgraph)
     
-    
-    return endflows,endfaults
+    return endflows,endfaults,endclass
 
 #goal:
 #if an edge has changed, adjacent nodes now active
 #if a node has changed, it is also now active
 #propagates faults forward    
-def propfaults(g):
+def propfaultsforward(g):
 
     fxnnames=list(g.nodes())
     activefxns=set(fxnnames)
@@ -216,3 +227,28 @@ def findfaults(g):
         if len(fxn.faults) > 0:
             endfaults[fxnname]=fxn.faults
     return endfaults
+
+def findclassification(g):
+    endclass=dict()
+    fxnnames=list(g.nodes)
+    #extract list of faults present
+    for fxnname in fxnnames:
+        fxn=g.nodes(data='funcobj')[fxnname]
+        if fxn.type=='classifier':
+            endclass[fxnname]=fxn.returnvalue()
+
+    return endclass
+
+def calcscore(mdl, lprob, endclass):
+    lowprob=mdl.lifecycleprob[lprob]['lb']
+    highprob=mdl.lifecycleprob[lprob]['ub']
+    rawcost=0.0
+    for classfxn in endclass:
+        cost=mdl.endstatekey[endclass[classfxn]]['cost']
+        rawcost+=cost
+    lowscore=lowprob*rawcost
+    highscore=highprob*rawcost
+    avescore=np.mean([highscore, lowscore])
+    
+    return lowscore,highscore,avescore,rawcost
+    
