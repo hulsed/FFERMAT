@@ -41,23 +41,36 @@ def runlist(mdl):
     for [fxnname, mode, prob] in faultlist:
         [forwardgraph,backgraph,fullgraph]=mdl.initialize()
         endflows,endfaults,endclass=runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode)
+        
         repairtype, lowrcost, highrcost=calcrepair(mdl,forwardgraph, endfaults, endclass)
+        
         lowscore, highscore, avescore, cost=calcscore(mdl, prob,endclass,repairtype)
+               
+        fullresults[fxnname, mode]={'flow effects': endflows, 'faults':endfaults, \
+                   'classification':endclass, 'repair type': repairtype, \
+                   'low score': lowscore, 'high score': highscore, \
+                   'average score': avescore, 'probability':prob}
         
-        print('FAULT SCENARIO: ', fxnname, ' ', mode)
-        print('PROBABILITY: ', prob)
-        print('SCORE:', avescore, ' (', lowscore, '-', highscore, ')')
-        print('SEVERITY: ', endclass)
-        print('REPAIR: ', repairtype)
-        print('FLOW EFFECTS:')
-        pprint.pprint(endflows)
-        print('END FAULTS:')
-        print(endfaults)
-        print()
-        
-        fullresults[fxnname, mode]={'flow effects': endflows, 'faults':endfaults, 'classification':endclass}
+    displayresults(fullresults)
     return fullresults
 
+def displayresults(fullresults):
+    
+    
+    for fxnname, mode in sorted(fullresults, key=lambda x: fullresults[x]['average score'], reverse=True):
+        result=fullresults[fxnname, mode]
+        print('FAULT SCENARIO: ', fxnname, ' ', mode)
+        print('PROBABILITY: ', result['probability'])
+        print('SCORE:', result['average score'], ' (', result['low score'], '-', result['high score'], ')')
+        print('SEVERITY: ', result['classification'])
+        print('REPAIR: ', result['repair type'])
+        print('FLOW EFFECTS:')
+        pprint.pprint(result['flow effects'])
+        print('END FAULTS:')
+        print(result['faults'])
+        print()    
+    
+    return
 
 def runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode):
     
