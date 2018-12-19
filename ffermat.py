@@ -5,6 +5,7 @@ Created on Tue Dec 11 09:38:35 2018
 @author: Daniel Hulse
 """
 import pprint
+import sys
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
@@ -70,6 +71,18 @@ def displayresults(fullresults):
         print(result['faults'])
         print()    
     
+    return
+
+def savereport(fullresults, filename='report.txt'):
+    
+    file = open(filename, 'w')
+    orig_stdout=sys.stdout
+    sys.stdout=file
+
+    displayresults(fullresults)   
+    
+    sys.stdout=orig_stdout
+    file.close()
     return
 
 def runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode):
