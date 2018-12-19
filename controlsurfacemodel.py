@@ -10,6 +10,8 @@ import numpy as np
 
 import auxfunctions as aux
 
+lifehours=20000
+
 #costs of various end-states to be used
 endstatekey={'noeffect': {'pfh_allow': 0, 'cost': 0, 'repair':'NA' },\
              'minor': {'pfh_allow': 1e-3, 'cost': 0.118e7, 'repair':'minor'},\

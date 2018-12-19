@@ -1,7 +1,116 @@
+SUMMARY
+--------------------------------------------
+TOTAL SCORE: 170112908.84480023
+FEASIBILITY: infeasible
+Failure Type 	 	 Expected Number 	 Allowable
+catastrophic 	 	 0.12178239999999999 	 0.002          
+hazardous   	 	 0.22782979999999986 	 0.02           
+major       	 	 2.98e-05        	 0.2            
+minor       	 	 0.0             	 20.0           
+noeffect    	 	 0.7473048000000004 	 0              
+
+FULL RESULTS:
+--------------------------------------------
+[4;33mReloaded modules[24m: ffermat, controlsurfacemodel, auxfunctions[0m
+SUMMARY
+--------------------------------------------
+TOTAL SCORE: 170112908.84480023
+FEASIBILITY: infeasible
+Failure Type 	 	 Expected Number 	 Allowable
+catastrophic 	 	 0.12178239999999999 	 0.002          
+hazardous   	 	 0.22782979999999986 	 0.02           
+major       	 	 2.98e-05        	 0.2            
+minor       	 	 0.0             	 20.0           
+noeffect    	 	 0.7473048000000004 	 0              
+
+FULL RESULTS:
+--------------------------------------------
+[4;33mReloaded modules[24m: ffermat, controlsurfacemodel, auxfunctions[0m
+SUMMARY
+--------------------------------------------
+TOTAL SCORE: 170112908.84480023
+FEASIBILITY: infeasible
+Failure Type 	 	 Expected Number 	 Allowable
+catastrophic 	 	 0.12178239999999999 	 0.002          
+hazardous   	 	 0.22782979999999986 	 0.02           
+major       	 	 2.98e-05        	 0.2            
+minor       	 	 0.0             	 20.0           
+noeffect    	 	 0.7473048000000004 	 0              
+
+FULL RESULTS:
+--------------------------------------------
+[4;33mReloaded modules[24m: ffermat, controlsurfacemodel, auxfunctions[0m
+SUMMARY
+--------------------------------------------
+TOTAL SCORE: 170112908.84480023
+FEASIBILITY: infeasible
+Failure Type 	 	 Expected Number 	 Allowable
+catastrophic 	 	 0.12178239999999999 	 0.002          
+hazardous   	 	 0.22782979999999986 	 0.02           
+major       	 	 2.98e-05        	 0.2            
+minor       	 	 0.0             	 20.0           
+noeffect    	 	 0.7473048000000004 	 0              
+
+FULL RESULTS:
+--------------------------------------------
+[4;33mReloaded modules[24m: ffermat, controlsurfacemodel, auxfunctions[0m
+SUMMARY
+--------------------------------------------
+TOTAL SCORE: 170112908.84480023
+FEASIBILITY: infeasible
+Failure Type 	 	 Expected Number 	 Allowable
+catastrophic 	 	 0.12178239999999999 	 0.002          
+hazardous   	 	 0.22782979999999986 	 0.02           
+major       	 	 2.98e-05        	 0.2            
+minor       	 	 0.0             	 20.0           
+noeffect    	 	 0.7473048000000004 	 0              
+
+FULL RESULTS:
+--------------------------------------------
+[4;33mReloaded modules[24m: ffermat, controlsurfacemodel, auxfunctions[0m
+SUMMARY
+--------------------------------------------
+TOTAL SCORE: 170112908.84480023
+FEASIBILITY: infeasible
+Failure Type 	 	 Expected Number 	 Allowable
+catastrophic 	 	 0.12178239999999999 	 0.002          
+hazardous   	 	 0.22782979999999986 	 0.02           
+major       	 	 2.98e-05        	 0.2            
+minor       	 	 0.0             	 20.0           
+noeffect    	 	 0.7473048000000004 	 0              
+
+FULL RESULTS:
+--------------------------------------------
+SUMMARY
+--------------------------------------------
+TOTAL SCORE: 170112908.84480023
+FEASIBILITY: infeasible
+Failure Type 	 	 Expected Number 	 Allowable
+catastrophic 	 	 0.12178239999999999 	 0.002          
+hazardous   	 	 0.22782979999999986 	 0.02           
+major       	 	 2.98e-05        	 0.2            
+minor       	 	 0.0             	 20.0           
+noeffect    	 	 0.7473048000000004 	 0              
+
+FULL RESULTS:
+--------------------------------------------
+SUMMARY
+--------------------------------------------
+TOTAL SCORE: 170112908.84480023
+FEASIBILITY: infeasible
+Failure Type 	 	 Expected Number 	 Allowable
+catastrophic 	 	 0.12178239999999999 	 0.002          
+hazardous   	 	 0.22782979999999986 	 0.02           
+major       	 	 2.98e-05        	 0.2            
+minor       	 	 0.0             	 20.0           
+noeffect    	 	 0.7473048000000004 	 0              
+
+FULL RESULTS:
+--------------------------------------------
 FAULT SCENARIO:  Import_EE   nov
 PROBABILITY:  high
-SCORE: 46101500.0  ( 19205000.0 - 72998000.0 )
-SEVERITY:  {'Export_DOF': 'catastrophic'}
+SCORE: 92181500.0  ( 38405000.0 - 145958000.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
 REPAIR:  totaled
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
@@ -31,8 +140,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Import_EE   infv
 PROBABILITY:  moderate
-SCORE: 4159005.0  ( 8233960.0 - 84050.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
@@ -68,8 +177,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Import_EE   lowv
 PROBABILITY:  moderate
-SCORE: 4159005.0  ( 8233960.0 - 84050.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.5,
@@ -99,8 +208,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Import_Air   lowvel
 PROBABILITY:  moderate
-SCORE: 4159005.0  ( 8233960.0 - 84050.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.5,
@@ -131,8 +240,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Import_Air   hivel
 PROBABILITY:  moderate
-SCORE: 4159005.0  ( 8233960.0 - 84050.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 2.0,
@@ -163,8 +272,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Right   friction
 PROBABILITY:  moderate
-SCORE: 4159005.0  ( 8233960.0 - 84050.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.5,
@@ -177,8 +286,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Left   friction
 PROBABILITY:  moderate
-SCORE: 4159005.0  ( 8233960.0 - 84050.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.5,
@@ -191,8 +300,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Right   friction
 PROBABILITY:  moderate
-SCORE: 4159005.0  ( 8233960.0 - 84050.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.5,
@@ -205,8 +314,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Left   friction
 PROBABILITY:  moderate
-SCORE: 4159005.0  ( 8233960.0 - 84050.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.5,
@@ -219,8 +328,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Yaw   friction
 PROBABILITY:  moderate
-SCORE: 4159005.0  ( 8233960.0 - 84050.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.5,
@@ -230,8 +339,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Import_Air   novel
 PROBABILITY:  low
-SCORE: 97009.75  ( 5761.5 - 188258.0 )
-SEVERITY:  {'Export_DOF': 'catastrophic'}
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
 REPAIR:  totaled
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
@@ -262,8 +371,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Left   short
 PROBABILITY:  low
-SCORE: 97009.75  ( 5761.5 - 188258.0 )
-SEVERITY:  {'Export_DOF': 'catastrophic'}
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
 REPAIR:  totaled
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
@@ -299,8 +408,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Right   short
 PROBABILITY:  low
-SCORE: 97009.75  ( 5761.5 - 188258.0 )
-SEVERITY:  {'Export_DOF': 'catastrophic'}
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
 REPAIR:  totaled
 FLOW EFFECTS:
 {('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.0,
@@ -314,8 +423,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Yaw   jamcl
 PROBABILITY:  low
-SCORE: 97009.75  ( 5761.5 - 188258.0 )
-SEVERITY:  {'Export_DOF': 'catastrophic'}
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
 REPAIR:  totaled
 FLOW EFFECTS:
 {('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
@@ -325,8 +434,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Yaw   jamopen
 PROBABILITY:  low
-SCORE: 97009.75  ( 5761.5 - 188258.0 )
-SEVERITY:  {'Export_DOF': 'catastrophic'}
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
 REPAIR:  totaled
 FLOW EFFECTS:
 {('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 2.0,
@@ -336,8 +445,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Yaw   short
 PROBABILITY:  low
-SCORE: 97009.75  ( 5761.5 - 188258.0 )
-SEVERITY:  {'Export_DOF': 'catastrophic'}
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
 REPAIR:  totaled
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
@@ -365,8 +474,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Yaw   opencircuit
 PROBABILITY:  low
-SCORE: 97009.75  ( 5761.5 - 188258.0 )
-SEVERITY:  {'Export_DOF': 'catastrophic'}
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
 REPAIR:  totaled
 FLOW EFFECTS:
 {('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
@@ -376,8 +485,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Right   surfwarp
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.5,
@@ -392,8 +501,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Right   jamcl
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.0,
@@ -406,8 +515,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Right   jamopen
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 2.0,
@@ -420,8 +529,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Right   short
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.0,
@@ -444,8 +553,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Right   opencircuit
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.0,
@@ -463,8 +572,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Left   surfwarp
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.5,
@@ -479,8 +588,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Left   jamcl
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.0,
@@ -493,8 +602,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Left   jamopen
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 2.0,
@@ -507,8 +616,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Left   opencircuit
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.0,
@@ -526,8 +635,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Right   surfwarp
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.5,
@@ -542,8 +651,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Right   jamcl
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.0,
@@ -556,8 +665,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Right   jamopen
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 2.0,
@@ -570,8 +679,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Right   opencircuit
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.0,
@@ -584,8 +693,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Left   surfwarp
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.5,
@@ -600,8 +709,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Left   jamcl
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
@@ -614,8 +723,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Left   jamopen
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 2.0,
@@ -628,8 +737,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Left   short
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
@@ -642,8 +751,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Left   opencircuit
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
@@ -661,8 +770,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Yaw   surfwarp
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.5,
@@ -672,8 +781,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Yaw   ctldrift
 PROBABILITY:  low
-SCORE: 42444.8  ( 2520.6 - 82369.0 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5}
@@ -682,8 +791,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Yaw   surfbreak
 PROBABILITY:  remote
-SCORE: 2862.29  ( 0.0 - 5724.58 )
-SEVERITY:  {'Export_DOF': 'catastrophic'}
+SCORE: 5723.09  ( 0.0 - 11446.18 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
 REPAIR:  totaled
 FLOW EFFECTS:
 {('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
@@ -693,8 +802,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Yaw   ctlbreak
 PROBABILITY:  remote
-SCORE: 2862.29  ( 0.0 - 5724.58 )
-SEVERITY:  {'Export_DOF': 'catastrophic'}
+SCORE: 5723.09  ( 0.0 - 11446.18 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
 REPAIR:  totaled
 FLOW EFFECTS:
 {('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0}
@@ -703,8 +812,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Right   surfbreak
 PROBABILITY:  remote
-SCORE: 1252.345  ( 0.0 - 2504.69 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.0,
@@ -719,8 +828,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Roll_Left   surfbreak
 PROBABILITY:  remote
-SCORE: 1252.345  ( 0.0 - 2504.69 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.0,
@@ -735,8 +844,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Right   surfbreak
 PROBABILITY:  remote
-SCORE: 1252.345  ( 0.0 - 2504.69 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.0,
@@ -751,8 +860,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Affect_Pitch_Left   surfbreak
 PROBABILITY:  remote
-SCORE: 1252.345  ( 0.0 - 2504.69 )
-SEVERITY:  {'Export_DOF': 'hazardous'}
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
 REPAIR:  major
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
@@ -767,8 +876,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Combine_Roll   breakL
 PROBABILITY:  remote
-SCORE: 222.308  ( 0.0 - 444.616 )
-SEVERITY:  {'Export_DOF': 'major'}
+SCORE: 444.318  ( 0.0 - 888.636 )
+SEVERITY:  {'total': 'major', 'Export_DOF': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
 {('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5}
@@ -777,8 +886,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Combine_Roll   breakR
 PROBABILITY:  remote
-SCORE: 222.308  ( 0.0 - 444.616 )
-SEVERITY:  {'Export_DOF': 'major'}
+SCORE: 444.318  ( 0.0 - 888.636 )
+SEVERITY:  {'total': 'major', 'Export_DOF': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
 {('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5}
@@ -787,8 +896,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Combine_Pitch   breakL
 PROBABILITY:  remote
-SCORE: 222.308  ( 0.0 - 444.616 )
-SEVERITY:  {'Export_DOF': 'major'}
+SCORE: 444.318  ( 0.0 - 888.636 )
+SEVERITY:  {'total': 'major', 'Export_DOF': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
 {('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5}
@@ -797,8 +906,8 @@ END FAULTS:
 
 FAULT SCENARIO:  Combine_Pitch   breakR
 PROBABILITY:  remote
-SCORE: 222.308  ( 0.0 - 444.616 )
-SEVERITY:  {'Export_DOF': 'major'}
+SCORE: 444.318  ( 0.0 - 888.636 )
+SEVERITY:  {'total': 'major', 'Export_DOF': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
 {('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5}
@@ -808,7 +917,7 @@ END FAULTS:
 FAULT SCENARIO:  Combine_Roll   damageL
 PROBABILITY:  low
 SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  moderate
 FLOW EFFECTS:
 {}
@@ -818,7 +927,7 @@ END FAULTS:
 FAULT SCENARIO:  Combine_Roll   damageR
 PROBABILITY:  low
 SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  moderate
 FLOW EFFECTS:
 {}
@@ -828,7 +937,7 @@ END FAULTS:
 FAULT SCENARIO:  Combine_Pitch   damageL
 PROBABILITY:  low
 SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  moderate
 FLOW EFFECTS:
 {}
@@ -838,7 +947,7 @@ END FAULTS:
 FAULT SCENARIO:  Combine_Pitch   damageR
 PROBABILITY:  low
 SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  moderate
 FLOW EFFECTS:
 {}
@@ -848,7 +957,7 @@ END FAULTS:
 FAULT SCENARIO:  Affect_Roll_Right   ctldrift
 PROBABILITY:  low
 SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
 {('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.5}
@@ -858,7 +967,7 @@ END FAULTS:
 FAULT SCENARIO:  Affect_Roll_Left   ctldrift
 PROBABILITY:  low
 SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
 {('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.5}
@@ -868,7 +977,7 @@ END FAULTS:
 FAULT SCENARIO:  Affect_Pitch_Right   ctldrift
 PROBABILITY:  low
 SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
 {('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.5}
@@ -878,7 +987,7 @@ END FAULTS:
 FAULT SCENARIO:  Affect_Pitch_Left   ctldrift
 PROBABILITY:  low
 SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.5}
@@ -888,7 +997,7 @@ END FAULTS:
 FAULT SCENARIO:  Affect_Roll_Right   ctlbreak
 PROBABILITY:  remote
 SCORE: 0.00745  ( 0.0 - 0.0149 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
 {('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0}
@@ -898,7 +1007,7 @@ END FAULTS:
 FAULT SCENARIO:  Affect_Roll_Left   ctlbreak
 PROBABILITY:  remote
 SCORE: 0.00745  ( 0.0 - 0.0149 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
 {('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0}
@@ -908,7 +1017,7 @@ END FAULTS:
 FAULT SCENARIO:  Affect_Pitch_Right   ctlbreak
 PROBABILITY:  remote
 SCORE: 0.00745  ( 0.0 - 0.0149 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
 {('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0}
@@ -918,7 +1027,7 @@ END FAULTS:
 FAULT SCENARIO:  Affect_Pitch_Left   ctlbreak
 PROBABILITY:  remote
 SCORE: 0.00745  ( 0.0 - 0.0149 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0}
@@ -928,7 +1037,7 @@ END FAULTS:
 FAULT SCENARIO:  Import_Air   gusts
 PROBABILITY:  veryhigh
 SCORE: 0.0  ( 0.0 - 0.0 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
@@ -947,7 +1056,7 @@ END FAULTS:
 FAULT SCENARIO:  Import_Air   flowsep
 PROBABILITY:  moderate
 SCORE: 0.0  ( 0.0 - 0.0 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
 {('Affect_Pitch_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
@@ -966,7 +1075,7 @@ END FAULTS:
 FAULT SCENARIO:  Import_Air   turb
 PROBABILITY:  high
 SCORE: 0.0  ( 0.0 - 0.0 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
 {}
@@ -976,7 +1085,7 @@ END FAULTS:
 FAULT SCENARIO:  Import_Signal   nosig
 PROBABILITY:  low
 SCORE: 0.0  ( 0.0 - 0.0 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
 {('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0,
@@ -991,7 +1100,1025 @@ END FAULTS:
 FAULT SCENARIO:  Import_Signal   degsig
 PROBABILITY:  low
 SCORE: 0.0  ( 0.0 - 0.0 )
-SEVERITY:  {'Export_DOF': 'noeffect'}
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5,
+ ('Import_Signal', 'Affect_Pitch_Left', 'Signal', 'ctl'): 0.5,
+ ('Import_Signal', 'Affect_Pitch_Right', 'Signal', 'ctl'): 0.5,
+ ('Import_Signal', 'Affect_Roll_Left', 'Signal', 'ctl'): 0.5,
+ ('Import_Signal', 'Affect_Roll_Right', 'Signal', 'ctl'): 0.5,
+ ('Import_Signal', 'Affect_Yaw', 'Signal', 'ctl'): 0.5}
+END FAULTS:
+{'Import_Signal': {'degsig'}}
+
+SUMMARY
+--------------------------------------------
+TOTAL SCORE: 170112908.84480023
+FEASIBILITY: infeasible
+Failure Type 	 	 Expected Number 	 Allowable
+catastrophic 	 	 0.12178239999999999 	 0.002          
+hazardous   	 	 0.22782979999999986 	 0.02           
+major       	 	 2.98e-05        	 0.2            
+minor       	 	 0.0             	 20.0           
+noeffect    	 	 0.7473048000000004 	 0              
+
+FULL RESULTS:
+--------------------------------------------
+FAULT SCENARIO:  Import_EE   nov
+PROBABILITY:  high
+SCORE: 92181500.0  ( 38405000.0 - 145958000.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
+REPAIR:  totaled
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.0,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'rate'): 0.0,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'rate'): 0.0,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'rate'): 0.0,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'rate'): 0.0,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'rate'): 0.0}
+END FAULTS:
+{'Import_EE': {'nov'}}
+
+FAULT SCENARIO:  Import_EE   infv
+PROBABILITY:  moderate
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): nan,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): nan,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): nan,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): nan,
+ ('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): nan,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): nan,
+ ('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): nan,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): nan,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): nan,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): nan,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): nan,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): nan,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): nan,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): nan,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'effort'): inf,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'effort'): inf,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'effort'): inf,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'effort'): inf,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'effort'): inf,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'rate'): 0}
+END FAULTS:
+{'Import_EE': {'infv'}, 'Affect_Roll_Right': {'opencircuit'}, 'Affect_Roll_Left': {'opencircuit'}, 'Affect_Pitch_Right': {'opencircuit'}, 'Affect_Pitch_Left': {'opencircuit'}, 'Affect_Yaw': {'opencircuit'}}
+
+FAULT SCENARIO:  Import_EE   lowv
+PROBABILITY:  moderate
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.5,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.5,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.5,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.5,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.5,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.5,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.5,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.5,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.5,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'effort'): 0.5,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'rate'): 0.5,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'effort'): 0.5,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'rate'): 0.5,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'effort'): 0.5,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'rate'): 0.5,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'effort'): 0.5,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'rate'): 0.5,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'effort'): 0.5,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'rate'): 0.5}
+END FAULTS:
+{'Import_EE': {'lowv'}}
+
+FAULT SCENARIO:  Import_Air   lowvel
+PROBABILITY:  moderate
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.5,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.5,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.5,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.5,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.5,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.5,
+ ('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.5,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.5,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.5,
+ ('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.5,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.5,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.5,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.5,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0.5}
+END FAULTS:
+{'Import_Air': {'lowvel'}}
+
+FAULT SCENARIO:  Import_Air   hivel
+PROBABILITY:  moderate
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 2.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 2.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 2.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 2.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 2.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 2.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 2.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 2.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 2.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 2.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 2.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 2.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 2.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 2.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 2.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 2.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 2.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0}
+END FAULTS:
+{'Import_Air': {'hivel'}, 'Combine_Roll': {'damageR', 'damageL'}, 'Combine_Pitch': {'damageR', 'damageL'}}
+
+FAULT SCENARIO:  Affect_Roll_Right   friction
+PROBABILITY:  moderate
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.5,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.5,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.75,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.75}
+END FAULTS:
+{'Affect_Roll_Right': {'friction'}}
+
+FAULT SCENARIO:  Affect_Roll_Left   friction
+PROBABILITY:  moderate
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.5,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.5,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.75,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.75}
+END FAULTS:
+{'Affect_Roll_Left': {'friction'}}
+
+FAULT SCENARIO:  Affect_Pitch_Right   friction
+PROBABILITY:  moderate
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.5,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.5,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.75,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.75}
+END FAULTS:
+{'Affect_Pitch_Right': {'friction'}}
+
+FAULT SCENARIO:  Affect_Pitch_Left   friction
+PROBABILITY:  moderate
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.5,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.5,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.75,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.75}
+END FAULTS:
+{'Affect_Pitch_Left': {'friction'}}
+
+FAULT SCENARIO:  Affect_Yaw   friction
+PROBABILITY:  moderate
+SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.5,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Yaw': {'friction'}}
+
+FAULT SCENARIO:  Import_Air   novel
+PROBABILITY:  low
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
+REPAIR:  totaled
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0}
+END FAULTS:
+{'Import_Air': {'novel'}}
+
+FAULT SCENARIO:  Affect_Roll_Left   short
+PROBABILITY:  low
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
+REPAIR:  totaled
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'rate'): inf,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'rate'): inf,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'rate'): inf,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'rate'): inf,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'rate'): inf,
+ ('Import_Signal', 'Affect_Pitch_Left', 'Signal', 'ctl'): 0.0,
+ ('Import_Signal', 'Affect_Pitch_Right', 'Signal', 'ctl'): 0.0,
+ ('Import_Signal', 'Affect_Roll_Left', 'Signal', 'ctl'): 0.0,
+ ('Import_Signal', 'Affect_Roll_Right', 'Signal', 'ctl'): 0.0,
+ ('Import_Signal', 'Affect_Yaw', 'Signal', 'ctl'): 0.0}
+END FAULTS:
+{'Import_EE': {'nov'}, 'Affect_Roll_Left': {'short'}}
+
+FAULT SCENARIO:  Affect_Pitch_Right   short
+PROBABILITY:  low
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
+REPAIR:  totaled
+FLOW EFFECTS:
+{('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Pitch_Right': {'short'}}
+
+FAULT SCENARIO:  Affect_Yaw   jamcl
+PROBABILITY:  low
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
+REPAIR:  totaled
+FLOW EFFECTS:
+{('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0}
+END FAULTS:
+{'Affect_Yaw': {'jamcl'}}
+
+FAULT SCENARIO:  Affect_Yaw   jamopen
+PROBABILITY:  low
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
+REPAIR:  totaled
+FLOW EFFECTS:
+{('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 2.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0}
+END FAULTS:
+{'Affect_Yaw': {'jamopen'}}
+
+FAULT SCENARIO:  Affect_Yaw   short
+PROBABILITY:  low
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
+REPAIR:  totaled
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'rate'): 0.0,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'rate'): 0.0,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'rate'): 0.0,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'rate'): 0.0,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'effort'): 0.0,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'rate'): 0.0}
+END FAULTS:
+{'Import_EE': {'nov'}, 'Affect_Yaw': {'short'}}
+
+FAULT SCENARIO:  Affect_Yaw   opencircuit
+PROBABILITY:  low
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
+REPAIR:  totaled
+FLOW EFFECTS:
+{('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0}
+END FAULTS:
+{'Affect_Yaw': {'opencircuit'}}
+
+FAULT SCENARIO:  Affect_Roll_Right   surfwarp
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.5,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.5,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.5,
+ ('Affect_Roll_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.75,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.75}
+END FAULTS:
+{'Affect_Roll_Right': {'surfwarp'}}
+
+FAULT SCENARIO:  Affect_Roll_Right   jamcl
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Roll_Right': {'jamcl'}}
+
+FAULT SCENARIO:  Affect_Roll_Right   jamopen
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 2.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 2.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 1.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 1.5}
+END FAULTS:
+{'Affect_Roll_Right': {'jamopen'}, 'Combine_Roll': {'damageR'}}
+
+FAULT SCENARIO:  Affect_Roll_Right   short
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'rate'): inf,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'rate'): inf,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'rate'): inf,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'rate'): inf,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'rate'): inf,
+ ('Import_Signal', 'Affect_Pitch_Left', 'Signal', 'ctl'): 0.0,
+ ('Import_Signal', 'Affect_Pitch_Right', 'Signal', 'ctl'): 0.0,
+ ('Import_Signal', 'Affect_Roll_Left', 'Signal', 'ctl'): 0.0,
+ ('Import_Signal', 'Affect_Roll_Right', 'Signal', 'ctl'): 0.0,
+ ('Import_Signal', 'Affect_Yaw', 'Signal', 'ctl'): 0.0}
+END FAULTS:
+{'Affect_Roll_Right': {'short'}}
+
+FAULT SCENARIO:  Affect_Roll_Right   opencircuit
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'rate'): 0}
+END FAULTS:
+{'Affect_Roll_Right': {'opencircuit'}}
+
+FAULT SCENARIO:  Affect_Roll_Left   surfwarp
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.5,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.5,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.5,
+ ('Affect_Roll_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.75,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.75}
+END FAULTS:
+{'Affect_Roll_Left': {'surfwarp'}}
+
+FAULT SCENARIO:  Affect_Roll_Left   jamcl
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Roll_Left': {'jamcl'}}
+
+FAULT SCENARIO:  Affect_Roll_Left   jamopen
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 2.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 2.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 1.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 1.5}
+END FAULTS:
+{'Affect_Roll_Left': {'jamopen'}, 'Combine_Roll': {'damageL'}}
+
+FAULT SCENARIO:  Affect_Roll_Left   opencircuit
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'rate'): 0}
+END FAULTS:
+{'Affect_Roll_Left': {'opencircuit'}}
+
+FAULT SCENARIO:  Affect_Pitch_Right   surfwarp
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.5,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.5,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.5,
+ ('Affect_Pitch_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.75,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.75}
+END FAULTS:
+{'Affect_Pitch_Right': {'surfwarp'}}
+
+FAULT SCENARIO:  Affect_Pitch_Right   jamcl
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Pitch_Right': {'jamcl'}}
+
+FAULT SCENARIO:  Affect_Pitch_Right   jamopen
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 2.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 2.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 1.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 1.5}
+END FAULTS:
+{'Affect_Pitch_Right': {'jamopen'}, 'Combine_Pitch': {'damageR'}}
+
+FAULT SCENARIO:  Affect_Pitch_Right   opencircuit
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Pitch_Right': {'opencircuit'}}
+
+FAULT SCENARIO:  Affect_Pitch_Left   surfwarp
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.5,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.5,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.5,
+ ('Affect_Pitch_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.75,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.75}
+END FAULTS:
+{'Affect_Pitch_Left': {'surfwarp'}}
+
+FAULT SCENARIO:  Affect_Pitch_Left   jamcl
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Pitch_Left': {'jamcl'}}
+
+FAULT SCENARIO:  Affect_Pitch_Left   jamopen
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 2.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 2.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 1.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 1.5}
+END FAULTS:
+{'Affect_Pitch_Left': {'jamopen'}, 'Combine_Pitch': {'damageL'}}
+
+FAULT SCENARIO:  Affect_Pitch_Left   short
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Pitch_Left': {'short'}}
+
+FAULT SCENARIO:  Affect_Pitch_Left   opencircuit
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5,
+ ('Import_EE', 'Affect_Pitch_Left', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Pitch_Right', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Roll_Left', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Roll_Right', 'EE', 'rate'): 0,
+ ('Import_EE', 'Affect_Yaw', 'EE', 'rate'): 0}
+END FAULTS:
+{'Affect_Pitch_Left': {'opencircuit'}}
+
+FAULT SCENARIO:  Affect_Yaw   surfwarp
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.5,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Yaw': {'surfwarp'}}
+
+FAULT SCENARIO:  Affect_Yaw   ctldrift
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Yaw': {'ctldrift'}}
+
+FAULT SCENARIO:  Affect_Yaw   surfbreak
+PROBABILITY:  remote
+SCORE: 5723.09  ( 0.0 - 11446.18 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
+REPAIR:  totaled
+FLOW EFFECTS:
+{('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0}
+END FAULTS:
+{'Affect_Yaw': {'surfbreak'}}
+
+FAULT SCENARIO:  Affect_Yaw   ctlbreak
+PROBABILITY:  remote
+SCORE: 5723.09  ( 0.0 - 11446.18 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic'}
+REPAIR:  totaled
+FLOW EFFECTS:
+{('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0}
+END FAULTS:
+{'Affect_Yaw': {'ctlbreak'}}
+
+FAULT SCENARIO:  Affect_Roll_Right   surfbreak
+PROBABILITY:  remote
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
+ ('Affect_Roll_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Roll_Right': {'surfbreak'}}
+
+FAULT SCENARIO:  Affect_Roll_Left   surfbreak
+PROBABILITY:  remote
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
+ ('Affect_Roll_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Roll_Left': {'surfbreak'}}
+
+FAULT SCENARIO:  Affect_Pitch_Right   surfbreak
+PROBABILITY:  remote
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
+ ('Affect_Pitch_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Pitch_Right': {'surfbreak'}}
+
+FAULT SCENARIO:  Affect_Pitch_Left   surfbreak
+PROBABILITY:  remote
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
+ ('Affect_Pitch_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Pitch_Left': {'surfbreak'}}
+
+FAULT SCENARIO:  Combine_Roll   breakL
+PROBABILITY:  remote
+SCORE: 444.318  ( 0.0 - 888.636 )
+SEVERITY:  {'total': 'major', 'Export_DOF': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5}
+END FAULTS:
+{'Combine_Roll': {'breakL'}}
+
+FAULT SCENARIO:  Combine_Roll   breakR
+PROBABILITY:  remote
+SCORE: 444.318  ( 0.0 - 888.636 )
+SEVERITY:  {'total': 'major', 'Export_DOF': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5}
+END FAULTS:
+{'Combine_Roll': {'breakR'}}
+
+FAULT SCENARIO:  Combine_Pitch   breakL
+PROBABILITY:  remote
+SCORE: 444.318  ( 0.0 - 888.636 )
+SEVERITY:  {'total': 'major', 'Export_DOF': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5}
+END FAULTS:
+{'Combine_Pitch': {'breakL'}}
+
+FAULT SCENARIO:  Combine_Pitch   breakR
+PROBABILITY:  remote
+SCORE: 444.318  ( 0.0 - 888.636 )
+SEVERITY:  {'total': 'major', 'Export_DOF': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5}
+END FAULTS:
+{'Combine_Pitch': {'breakR'}}
+
+FAULT SCENARIO:  Combine_Roll   damageL
+PROBABILITY:  low
+SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{}
+END FAULTS:
+{'Combine_Roll': {'damageL'}}
+
+FAULT SCENARIO:  Combine_Roll   damageR
+PROBABILITY:  low
+SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{}
+END FAULTS:
+{'Combine_Roll': {'damageR'}}
+
+FAULT SCENARIO:  Combine_Pitch   damageL
+PROBABILITY:  low
+SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{}
+END FAULTS:
+{'Combine_Pitch': {'damageL'}}
+
+FAULT SCENARIO:  Combine_Pitch   damageR
+PROBABILITY:  low
+SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{}
+END FAULTS:
+{'Combine_Pitch': {'damageR'}}
+
+FAULT SCENARIO:  Affect_Roll_Right   ctldrift
+PROBABILITY:  low
+SCORE: 0.24575  ( 0.0015 - 0.49 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  replacement
+FLOW EFFECTS:
+{('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Roll_Right': {'ctldrift'}}
+
+FAULT SCENARIO:  Affect_Roll_Left   ctldrift
+PROBABILITY:  low
+SCORE: 0.24575  ( 0.0015 - 0.49 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  replacement
+FLOW EFFECTS:
+{('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Roll_Left': {'ctldrift'}}
+
+FAULT SCENARIO:  Affect_Pitch_Right   ctldrift
+PROBABILITY:  low
+SCORE: 0.24575  ( 0.0015 - 0.49 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  replacement
+FLOW EFFECTS:
+{('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Pitch_Right': {'ctldrift'}}
+
+FAULT SCENARIO:  Affect_Pitch_Left   ctldrift
+PROBABILITY:  low
+SCORE: 0.24575  ( 0.0015 - 0.49 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  replacement
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.5}
+END FAULTS:
+{'Affect_Pitch_Left': {'ctldrift'}}
+
+FAULT SCENARIO:  Affect_Roll_Right   ctlbreak
+PROBABILITY:  remote
+SCORE: 0.00745  ( 0.0 - 0.0149 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  replacement
+FLOW EFFECTS:
+{('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0}
+END FAULTS:
+{'Affect_Roll_Right': {'ctlbreak'}}
+
+FAULT SCENARIO:  Affect_Roll_Left   ctlbreak
+PROBABILITY:  remote
+SCORE: 0.00745  ( 0.0 - 0.0149 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  replacement
+FLOW EFFECTS:
+{('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0}
+END FAULTS:
+{'Affect_Roll_Left': {'ctlbreak'}}
+
+FAULT SCENARIO:  Affect_Pitch_Right   ctlbreak
+PROBABILITY:  remote
+SCORE: 0.00745  ( 0.0 - 0.0149 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  replacement
+FLOW EFFECTS:
+{('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0}
+END FAULTS:
+{'Affect_Pitch_Right': {'ctlbreak'}}
+
+FAULT SCENARIO:  Affect_Pitch_Left   ctlbreak
+PROBABILITY:  remote
+SCORE: 0.00745  ( 0.0 - 0.0149 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  replacement
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0}
+END FAULTS:
+{'Affect_Pitch_Left': {'ctlbreak'}}
+
+FAULT SCENARIO:  Import_Air   gusts
+PROBABILITY:  veryhigh
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Pitch_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Roll_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Roll_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'turbulence'): 0.5}
+END FAULTS:
+{'Import_Air': {'gusts'}}
+
+FAULT SCENARIO:  Import_Air   flowsep
+PROBABILITY:  moderate
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Pitch_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Roll_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Roll_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'turbulence'): 0.5}
+END FAULTS:
+{'Import_Air': {'flowsep'}}
+
+FAULT SCENARIO:  Import_Air   turb
+PROBABILITY:  high
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{}
+END FAULTS:
+{'Import_Air': {'turb'}}
+
+FAULT SCENARIO:  Import_Signal   nosig
+PROBABILITY:  low
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0,
+ ('Import_Signal', 'Affect_Pitch_Left', 'Signal', 'ctl'): 0,
+ ('Import_Signal', 'Affect_Pitch_Right', 'Signal', 'ctl'): 0,
+ ('Import_Signal', 'Affect_Roll_Left', 'Signal', 'ctl'): 0,
+ ('Import_Signal', 'Affect_Roll_Right', 'Signal', 'ctl'): 0,
+ ('Import_Signal', 'Affect_Yaw', 'Signal', 'ctl'): 0}
+END FAULTS:
+{'Import_Signal': {'nosig'}}
+
+FAULT SCENARIO:  Import_Signal   degsig
+PROBABILITY:  low
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
 {('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5,

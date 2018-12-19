@@ -38,54 +38,90 @@ def runlist(mdl):
     faultlist=listinitfaults(fullgraph)
     
     fullresults={}
+    summary={}
+    totalscore=0.0
+    totalprobs_low={'catastrophic': 0.0,'hazardous': 0.0,'major': 0.0,'minor': 0.0,'noeffect': 0.0}
+    totalprobs_high={'catastrophic': 0.0,'hazardous': 0.0,'major': 0.0,'minor': 0.0,'noeffect': 0.0}
+    totalprobs_ave={'catastrophic': 0.0,'hazardous': 0.0,'major': 0.0,'minor': 0.0,'noeffect': 0.0}
+    allowprobs={'catastrophic': 0.0,'hazardous': 0.0,'major': 0.0,'minor': 0.0,'noeffect': 0.0}
+    feasibility='feasible'
     
     for [fxnname, mode, prob] in faultlist:
         [forwardgraph,backgraph,fullgraph]=mdl.initialize()
-        endflows,endfaults,endclass=runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode)
+        
+        endflows,endfaults,endclass=runonefault(mdl, forwardgraph,backgraph,fullgraph,fxnname,mode)
         
         repairtype, lowrcost, highrcost=calcrepair(mdl,forwardgraph, endfaults, endclass)
         
-        lowscore, highscore, avescore, cost=calcscore(mdl, prob,endclass,repairtype)
+        lowscore, highscore, avescore, cost,lowprob,highprob=calcscore(mdl, prob,endclass,repairtype)
                
         fullresults[fxnname, mode]={'flow effects': endflows, 'faults':endfaults, \
                    'classification':endclass, 'repair type': repairtype, \
                    'low score': lowscore, 'high score': highscore, \
                    'average score': avescore, 'probability':prob}
         
-    displayresults(fullresults)
-    return fullresults
+        totalscore+=avescore
+        totalprobs_low[endclass['total']]+=lowprob
+        totalprobs_high[endclass['total']]+=highprob
+    
+    for classification in totalprobs_low:
+        totalprobs_ave[classification]=np.mean([totalprobs_low[classification],totalprobs_high[classification]])
+        allowprobs[classification]=mdl.endstatekey[classification]['pfh_allow']*mdl.lifehours
+        if totalprobs_ave[classification]> allowprobs[classification]:
+            feasibility='infeasible'
+    
+    summary['totalscore']=totalscore
+    summary['expectednum']=totalprobs_ave    
+    summary['expectednum_allow']=allowprobs
+    summary['feasibility']=feasibility
+    
+    displayresults(fullresults, summary, justsummary=True)
+    return fullresults, summary
 
-def displayresults(fullresults):
+
+def displayresults(fullresults, summary, descending=True, justsummary=False):
     
+    print('SUMMARY')
+    print('--------------------------------------------')
+    print('TOTAL SCORE:', summary['totalscore'])
+    print('FEASIBILITY:', summary['feasibility'])
+    print('Failure Type', '\t \t','Expected Number', '\t', 'Allowable')
+    for classification in summary['expectednum']:
+        print(classification.ljust(11), '\t \t', str(summary['expectednum'][classification]).ljust(15), '\t', str(summary['expectednum_allow'][classification]).ljust(15))
     
-    for fxnname, mode in sorted(fullresults, key=lambda x: fullresults[x]['average score'], reverse=True):
-        result=fullresults[fxnname, mode]
-        print('FAULT SCENARIO: ', fxnname, ' ', mode)
-        print('PROBABILITY: ', result['probability'])
-        print('SCORE:', result['average score'], ' (', result['low score'], '-', result['high score'], ')')
-        print('SEVERITY: ', result['classification'])
-        print('REPAIR: ', result['repair type'])
-        print('FLOW EFFECTS:')
-        pprint.pprint(result['flow effects'])
-        print('END FAULTS:')
-        print(result['faults'])
-        print()    
+    print()
+    print('FULL RESULTS:')
+    print('--------------------------------------------')
+    
+    if not justsummary:
+        for fxnname, mode in sorted(fullresults, key=lambda x: fullresults[x]['average score'], reverse=descending):
+            result=fullresults[fxnname, mode]
+            print('FAULT SCENARIO: ', fxnname, ' ', mode)
+            print('PROBABILITY: ', result['probability'])
+            print('SCORE:', result['average score'], ' (', result['low score'], '-', result['high score'], ')')
+            print('SEVERITY: ', result['classification'])
+            print('REPAIR: ', result['repair type'])
+            print('FLOW EFFECTS:')
+            pprint.pprint(result['flow effects'])
+            print('END FAULTS:')
+            print(result['faults'])
+            print()    
     
     return
 
-def savereport(fullresults, filename='report.txt'):
+def savereport(fullresults,summary, filename='report.txt'):
     
     file = open(filename, 'w')
     orig_stdout=sys.stdout
     sys.stdout=file
 
-    displayresults(fullresults)   
+    displayresults(fullresults, summary)   
     
     sys.stdout=orig_stdout
     file.close()
     return
 
-def runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode):
+def runonefault(mdl, forwardgraph,backgraph,fullgraph,fxnname,mode):
     
     #findfxn
     fxn=fullgraph.nodes(data='funcobj')[fxnname]
@@ -110,7 +146,7 @@ def runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode):
     propagate(forwardgraph, backgraph)
     endflows=findfaultflows(forwardgraph)
     endfaults=findfaults(forwardgraph)
-    endclass=findclassification(forwardgraph)
+    endclass=findclassification(mdl, forwardgraph)
     
     return endflows,endfaults,endclass
 
@@ -255,15 +291,19 @@ def findfaults(g):
             endfaults[fxnname]=fxn.faults
     return endfaults
 
-def findclassification(g):
+def findclassification(mdl, g):
     endclass=dict()
     fxnnames=list(g.nodes)
+    totclass=0.0
+    endclass['total']='noeffect'
     #extract list of faults present
     for fxnname in fxnnames:
         fxn=g.nodes(data='funcobj')[fxnname]
         if fxn.type=='classifier':
             endclass[fxnname]=fxn.returnvalue()
-
+            if mdl.endstatekey[endclass[fxnname]]['cost']>totclass:
+                endclass['total']=endclass[fxnname]
+            
     return endclass
 
 def calcrepair(mdl,g, endfaults, endclass):
@@ -311,5 +351,6 @@ def calcscore(mdl, lprob, endclass, repair):
     highscore=highprob*(rawcost+mdl.repaircosts[repair]['ub'])
     avescore=np.mean([highscore, lowscore])
     
-    return lowscore,highscore,avescore,rawcost
+    
+    return lowscore,highscore,avescore,rawcost,lowprob,highprob
     
