@@ -10,13 +10,14 @@ import numpy as np
 
 import auxfunctions as aux
 
+#costs of various end-states to be used
+endstatekey={'noeffect': {'pfh_allow': 0, 'cost': 0, 'repair':'NA' },\
+             'minor': {'pfh_allow': 1e-3, 'cost': 0.118e7, 'repair':'minor'},\
+             'major': {'pfh_allow': 1e-5, 'cost': 2.98e7, 'repair':'moderate' } , \
+             'hazardous': {'pfh_allow': 1e-6, 'cost': 16.8e7, 'repair':'major' } , \
+             'catastrophic': {'pfh_allow': 1e-7, 'cost': 38.4e7, 'repair':'totaled' } }
 
-endstatekey={'noeffect': {'pfh_allow': 0, 'cost': 0 },\
-             'minor': {'pfh_allow': 1e-3, 'cost': 0.118e7 },\
-             'major': {'pfh_allow': 1e-5, 'cost': 2.98e7 } , \
-             'hazardous': {'pfh_allow': 1e-6, 'cost': 16.8e7 } , \
-             'catastrophic': {'pfh_allow': 1e-7, 'cost': 38.4e7 } }
-
+#subjective lifecycle probabilities for various faults
 lifecycleprob={'veryhigh':{'lb': 0.2, 'ub': 1.0 }, \
                'high':{'lb': 0.05, 'ub': 0.19}, \
                'moderate': {'lb': 0.049, 'ub':0.0005}, \
@@ -24,12 +25,22 @@ lifecycleprob={'veryhigh':{'lb': 0.2, 'ub': 1.0 }, \
                'remote': {'lb':0, 'ub':1.49/1e5}}
 # see scenario-based FMEA paper http://www.medicalhealthcarefmea.com/papers/kmenta.pdf
 
+# repair costs for 
+repaircosts={'totaled':{'lb': 100000, 'ub': 200000}, \
+             'major':{'lb':40000, 'ub': 100000}, \
+             'moderate':{'lb':5000, 'ub': 40000}, \
+             'minor':{'lb':1000 ,'ub': 5000}, \
+             'replacement':{'lb':100, 'ub': 1000}, \
+             'NA':{'lb':0, 'ub': 0} }
+
 class importEE:
     def __init__(self):
         self.type='function'
         self.EEout={'rate': 1.0, 'effort': 1.0}
         self.elecstate=1.0
-        self.faultmodes={'infv':{'lprob':'moderate'},'lowv':{'lprob':'moderate'},'nov':{'lprob':'high'}}
+        self.faultmodes={'infv':{'lprob':'moderate', 'rcost':'major'}, \
+                         'lowv':{'lprob':'moderate', 'rcost':'minor'}, \
+                         'nov':{'lprob':'high', 'rcost':'moderate'}}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -62,9 +73,12 @@ class importAir:
         self.Airout={'velocity': 1.0, 'turbulence': 1.0}
         self.velstate=1.0
         self.turbstate=1.0
-        self.faultmodes={'novel': {'lprob':'low'},'lowvel': {'lprob':'moderate'},\
-                         'hivel': {'lprob':'moderate'},'gusts': {'lprob':'veryhigh'},\
-                         'flowsep': {'lprob':'moderate'},'turb': {'lprob':'high'}}
+        self.faultmodes={'novel': {'lprob':'low', 'rcost':'NA'},
+                         'lowvel': {'lprob':'moderate', 'rcost':'NA'},\
+                         'hivel': {'lprob':'moderate', 'rcost':'NA'},\
+                         'gusts': {'lprob':'veryhigh', 'rcost':'NA'},\
+                         'flowsep': {'lprob':'moderate', 'rcost':'NA'},\
+                         'turb': {'lprob':'high', 'rcost':'NA'}}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -101,7 +115,8 @@ class importSignal:
         self.type='function'
         self.Sigout={'ctl': 1.0},
         self.sigstate=1.0
-        self.faultmodes={'nosig':{'lprob':'low'},'degsig':{'lprob':'low'}}
+        self.faultmodes={'nosig':{'lprob':'low' , 'rcost':'NA'},\
+                         'degsig':{'lprob':'low', 'rcost':'NA'}}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -143,11 +158,15 @@ class affectDOF:
         self.EEstate=1.0
         self.ctlstate=1.0
         
-        self.faultmodes={'surfbreak':{'lprob':'remote'}, \
-                         'surfwarp':{'lprob':'low'}, 'jamcl':{'lprob':'low'}, \
-                         'jamopen':{'lprob':'low'},'friction':{'lprob':'moderate'},\
-                         'short':{'lprob':'low'}, 'opencircuit':{'lprob':'low'}, \
-                         'ctlbreak':{'lprob':'remote'},'ctldrift':{'lprob':'low'}}
+        self.faultmodes={'surfbreak':{'lprob':'remote', 'rcost':'replacement'}, \
+                         'surfwarp':{'lprob':'low', 'rcost':'replacement'}, \
+                         'jamcl':{'lprob':'low', 'rcost':'minor'}, \
+                         'jamopen':{'lprob':'low', 'rcost':'minor'}, \
+                         'friction':{'lprob':'moderate', 'rcost':'replacement'},\
+                         'short':{'lprob':'low', 'rcost':'minor'}, \
+                         'opencircuit':{'lprob':'low', 'rcost':'replacement'}, \
+                         'ctlbreak':{'lprob':'remote', 'rcost':'replacement'}, \
+                         'ctldrift':{'lprob':'low', 'rcost':'replacement'}}
         self.faults=set(['nom'])
         
         self.dof=dof
@@ -247,10 +266,10 @@ class combineforceandmoment:
         
         self.dof=dof
         
-        self.faultmodes={'breakL':{'lprob':'remote'}, \
-                         'breakR':{'lprob':'remote'}, \
-                         'damageL':{'lprob':'low'},\
-                         'damageR':{'lprob':'low'}}
+        self.faultmodes={'breakL':{'lprob':'remote', 'rcost':'moderate'}, \
+                         'breakR':{'lprob':'remote', 'rcost':'moderate'}, \
+                         'damageL':{'lprob':'low', 'rcost':'moderate'},\
+                         'damageR':{'lprob':'low', 'rcost':'moderate'}}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0

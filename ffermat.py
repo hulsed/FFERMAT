@@ -41,18 +41,19 @@ def runlist(mdl):
     for [fxnname, mode, prob] in faultlist:
         [forwardgraph,backgraph,fullgraph]=mdl.initialize()
         endflows,endfaults,endclass=runonefault(forwardgraph,backgraph,fullgraph,fxnname,mode)
-        lowscore, highscore, avescore, cost=calcscore(mdl, prob,endclass)
+        repairtype, lowrcost, highrcost=calcrepair(mdl,forwardgraph, endfaults, endclass)
+        lowscore, highscore, avescore, cost=calcscore(mdl, prob,endclass,repairtype)
         
-        print('FAULT SCENARIO: ', fxnname, ' ', mode, 'Probability: ', prob )
+        print('FAULT SCENARIO: ', fxnname, ' ', mode)
+        print('PROBABILITY: ', prob)
+        print('SCORE:', avescore, ' (', lowscore, '-', highscore, ')')
+        print('SEVERITY: ', endclass)
+        print('REPAIR: ', repairtype)
         print('FLOW EFFECTS:')
         pprint.pprint(endflows)
-        print('FAULTS:')
+        print('END FAULTS:')
         print(endfaults)
-        print('SEVERITIES:')
-        print(endclass, '(cost:', cost/1e6, ' M)')
-        print('SCORE:', avescore, ' (', lowscore, '-', highscore, ')')
         print()
-        
         
         fullresults[fxnname, mode]={'flow effects': endflows, 'faults':endfaults, 'classification':endclass}
     return fullresults
@@ -239,15 +240,49 @@ def findclassification(g):
 
     return endclass
 
-def calcscore(mdl, lprob, endclass):
+def calcrepair(mdl,g, endfaults, endclass):
+    
+    totalcost=0.0
+    totalrepair='NA'
+    lowcost=0.0
+    highcost=0.0
+    
+ #costs from flow-based damage to functions   
+    for fxnname in endfaults:
+        fxn=g.nodes(data='funcobj')[fxnname]
+        modes=endfaults[fxnname]   
+        for mode in modes:
+            repair=fxn.faultmodes[mode]['rcost']
+            totalcost+=np.mean([mdl.repaircosts[repair]['lb'], mdl.repaircosts[repair]['ub']])
+ 
+#costs from end-state classification           
+    for classfxn in endclass:
+        repairtype= mdl.repaircosts[mdl.endstatekey[endclass[classfxn]]['repair']]
+        classcost=np.mean([repairtype['lb'], repairtype['ub']])
+        if classcost > totalcost:
+            totalcost=classcost
+    
+    if totalcost > mdl.repaircosts['totaled']['ub']:
+        totalcost=mdl.repaircosts['totaled']['ub']
+    
+    for repairtype in mdl.repaircosts:
+        if totalcost >=mdl.repaircosts[repairtype]['lb'] and totalcost < mdl.repaircosts[repairtype]['ub']:
+            totalrepair=repairtype
+            lowcost=mdl.repaircosts[repairtype]['lb']
+            highcost=mdl.repaircosts[repairtype]['ub']
+    
+    return totalrepair, lowcost, highcost
+
+def calcscore(mdl, lprob, endclass, repair):
     lowprob=mdl.lifecycleprob[lprob]['lb']
     highprob=mdl.lifecycleprob[lprob]['ub']
     rawcost=0.0
     for classfxn in endclass:
         cost=mdl.endstatekey[endclass[classfxn]]['cost']
         rawcost+=cost
-    lowscore=lowprob*rawcost
-    highscore=highprob*rawcost
+    
+    lowscore=lowprob*(rawcost+mdl.repaircosts[repair]['lb'])
+    highscore=highprob*(rawcost+mdl.repaircosts[repair]['ub'])
     avescore=np.mean([highscore, lowscore])
     
     return lowscore,highscore,avescore,rawcost
