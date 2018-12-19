@@ -89,11 +89,12 @@ def displayresults(fullresults, summary, descending=True, justsummary=False):
     for classification in summary['expectednum']:
         print(classification.ljust(11), '\t \t', str(summary['expectednum'][classification]).ljust(15), '\t', str(summary['expectednum_allow'][classification]).ljust(15))
     
-    print()
-    print('FULL RESULTS:')
-    print('--------------------------------------------')
+    
     
     if not justsummary:
+        print()
+        print('FULL RESULTS:')
+        print('--------------------------------------------')
         for fxnname, mode in sorted(fullresults, key=lambda x: fullresults[x]['average score'], reverse=descending):
             result=fullresults[fxnname, mode]
             print('FAULT SCENARIO: ', fxnname, ' ', mode)
