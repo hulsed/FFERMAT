@@ -611,8 +611,8 @@ def initialize():
     g.add_edge('Affect_Drag_Right','Combine_Drag',ForcedragR=ForcedragR['ForcedragR'], MomentdragR=MomentdragR['MomentdragR'])  
     g.add_edge('Affect_Drag_Left','Combine_Drag',ForcedragL=ForcedragL['ForcedragL'], MomentdragL=MomentdragL['MomentdragL'])
     #Lift flows
-    g.add_edge('Affect_Lift_Right','Combine_Lift',ForcepitchR=ForceliftR['ForceliftR'], MomentliftR=MomentliftR['MomentliftR'])  
-    g.add_edge('Affect_Lift_Left','Combine_Lift',ForcepitchL=ForceliftL['ForceliftL'], MomentliftL=MomentliftL['MomentliftL'])
+    g.add_edge('Affect_Lift_Right','Combine_Lift',ForceliftR=ForceliftR['ForceliftR'], MomentliftR=MomentliftR['MomentliftR'])  
+    g.add_edge('Affect_Lift_Left','Combine_Lift',ForceliftL=ForceliftL['ForceliftL'], MomentliftL=MomentliftL['MomentliftL'])
     #roll, pitch, yaw flows
     g.add_edge('Combine_Pitch', 'Export_DOF',pitch=pitch['pitch'])
     g.add_edge('Combine_Roll', 'Export_DOF',roll=roll['roll'])

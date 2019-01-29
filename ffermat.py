@@ -218,15 +218,18 @@ def propagate(forward, backward):
             for edge in backward.in_edges(fxnname):
                 edgeoutputs=backward.edges[edge]
                 outputdict.update(edgeoutputs)
-            #if same inputs and outputs, remove from active functions, otherwise update inputs    
-            if inputdict==forward.nodes('inputs')[fxnname] and outputdict==backward.nodes('outputs')[fxnname]:
-                activefxns.discard(fxnname)
-            else:
-                for key in forward.nodes('inputs')[fxnname]:
-                    forward.nodes('inputs')[fxnname][key]=inputdict[key]
-                for key in backward.nodes('outputs')[fxnname]:
-                    backward.nodes('outputs')[fxnname][key]=outputdict[key]
-            
+                
+            try:
+                #if same inputs and outputs, remove from active functions, otherwise update inputs    
+                if inputdict==forward.nodes('inputs')[fxnname] and outputdict==backward.nodes('outputs')[fxnname]:
+                    activefxns.discard(fxnname)
+                else:
+                    for key in forward.nodes('inputs')[fxnname]:
+                        forward.nodes('inputs')[fxnname][key]=inputdict[key]
+                    for key in backward.nodes('outputs')[fxnname]:
+                        backward.nodes('outputs')[fxnname][key]=outputdict[key]
+            except:
+                print('Poor graph definition. Function: ', fxnname,', Flow:', key)
             #update outputs
             fxncall=fxn.updatefxn(inputs=inputdict, outputs=outputdict)
             inputs=fxncall['inputs']
