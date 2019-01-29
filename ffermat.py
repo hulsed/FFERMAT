@@ -307,6 +307,7 @@ def findclassification(mdl, g):
             endclass[fxnname]=fxn.returnvalue()
             if mdl.endstatekey[endclass[fxnname]]['cost']>totclass:
                 endclass['total']=endclass[fxnname]
+                totclass=mdl.endstatekey[endclass[fxnname]]['cost']
             
     return endclass
 
