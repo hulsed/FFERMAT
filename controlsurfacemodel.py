@@ -365,6 +365,33 @@ class combineforceandmoment:
 #        inputs={'Force_L': self.ForceLin, 'Force_R': self.ForceRin}
 #        outputs={'Force':self.Forceout}
 #        return {'outputs':outputs, 'inputs':inputs} 
+        
+class exportLD:
+    def __init__(self):
+        self.Drag={'amplitude': 1.0, 'intent':1.0 }
+        self.Lift={'amplitude': 1.0, 'intent':1.0 }
+        self.type='classifier'
+        
+        self.Severity={'noeffect'}
+        self.faultmodes={}
+        self.faults=set(['nom'])
+    def classify(self):
+        if self.Drag['intent']!=1 or self.Drag['amplitude']!=1 or self.Lift['intent']!=1 or self.Lift['amplitude']!=1:
+            self.Severity='major'
+        else:
+            self.Severity='noeffect'
+    def returnvalue(self):
+        return self.Severity
+    
+    def updatefxn(self,faults=['nom'],inputs={'lift':{'amplitude': 1.0, 'intent':1.0 }, 'drag':{'amplitude': 1.0, 'intent':1.0 }, 'yaw':{'amplitude': 1.0, 'intent':1.0 } }, outputs={}):
+        self.Lift=inputs['lift']
+        self.Drag=inputs['drag']
+        
+        self.classify()
+        
+        inputs={'Lift': self.Lift, 'Drag': self.Drag}
+        outputs={}
+        return {'outputs':outputs, 'inputs':inputs} 
     
 class export6dof:
     def __init__(self):
@@ -435,109 +462,176 @@ class exportAir:
         
 ##MODEL GRAPH AND INITIALIZATION   
 
-def initfxns():
-    Import_EE=importEE()
-    Import_Air=importAir()
-    Import_Signal=importSignal()
-    
-    Affect_Roll_r=affectDOF('roll','R')
-    Affect_Roll_l=affectDOF('roll','L')
-    Combine_Roll=combineforceandmoment('roll')
-    
-    Affect_Pitch_r=affectDOF('pitch','R')
-    Affect_Pitch_l=affectDOF('pitch','L')
-    Combine_Pitch=combineforceandmoment('pitch')
-    
-    Affect_Yaw=affectDOF('yaw','C')  
-    
-    Export_Air=exportAir()
-    
-    Export_DOF=export6dof()
-    return Import_EE, Import_Air, Import_Signal, Affect_Roll_r, Affect_Roll_l, Combine_Roll, Affect_Pitch_r, Affect_Pitch_l, Combine_Pitch, Affect_Yaw, Export_Air, Export_DOF
-
 def initialize():
+    
+    #initialize graph
     g=nx.DiGraph()
     
-    Import_EE, Import_Air, Import_Signal, Affect_Roll_r, Affect_Roll_l, Combine_Roll, Affect_Pitch_r, Affect_Pitch_l, Combine_Pitch, Affect_Yaw, Export_Air, Export_DOF=initfxns()
-    
-    
+    ##INITIALIZE NODES
+    #INIT Import_EE
     EE={'EE':{'rate': 1.0, 'effort': 1.0}}   
-    
+    Import_EE=importEE()
     g.add_node('Import_EE', funcobj=Import_EE, inputs={}, outputs={**EE})
     
-    
+    #INIT Import_Air
+    Import_Air=importAir()
     Air={'Air':{'velocity': 1.0, 'turbulence': 1.0}}
     g.add_node('Import_Air', funcobj=Import_Air, inputs={}, outputs={**Air})
+    
+    #Init Import Signal
+    Import_Signal=importSignal()
     Sig={'Signal':{'ctl': 1.0}}
     g.add_node('Import_Signal', funcobj=Import_Signal, inputs={}, outputs={**Sig})
     
-    
+    #Init Affect Roll Right
+    Affect_Roll_r=affectDOF('roll','R')
     MomentrollR={'MomentrollR':{'amplitude': 1.0, 'intent':1.0 }}
     ForcerollR={'ForcerollR':{'force':1.0}}
     g.add_node('Affect_Roll_Right', funcobj=Affect_Roll_r, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentrollR, **ForcerollR})
     
+    #Init Affect Roll Left
+    Affect_Roll_l=affectDOF('roll','L')
     MomentrollL={'MomentrollL':{'amplitude': 1.0, 'intent':1.0 }}
     ForcerollL={'ForcerollL':{'force':1.0}}
     g.add_node('Affect_Roll_Left', funcobj=Affect_Roll_l, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentrollL, **ForcerollL})
     
+    #Init Combine Roll 
+    Combine_Roll=combineforceandmoment('roll')
     roll={'roll':{'amplitude': 1.0, 'intent':1.0 }}
     g.add_node('Combine_Roll', funcobj=Combine_Roll, inputs={**MomentrollL,**ForcerollL,**MomentrollR,**ForcerollR}, outputs={**roll})
     
+    #Init Affect Pitch Right
+    Affect_Pitch_r=affectDOF('pitch','R')
     MomentpitchR={'MomentpitchR':{'amplitude': 1.0, 'intent':1.0 }}
     ForcepitchR={'ForcepitchR':{'force':1.0}}
     g.add_node('Affect_Pitch_Right', funcobj=Affect_Pitch_r, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentpitchR, **ForcepitchR})
     
+    #Init Affect Pitch Left
+    Affect_Pitch_l=affectDOF('pitch','L')
     MomentpitchL={'MomentpitchL':{'amplitude': 1.0, 'intent':1.0 }}
     ForcepitchL={'ForcepitchL':{'force':1.0}}
-    
     g.add_node('Affect_Pitch_Left',  funcobj=Affect_Pitch_l, inputs={**EE,**Air,**Sig}, outputs={**Air,**MomentpitchL , **ForcepitchL})
     
+    #Init Combine Pitch 
+    Combine_Pitch=combineforceandmoment('pitch')
     pitch={'pitch':{'amplitude': 1.0, 'intent':1.0 }}
     g.add_node('Combine_Pitch', funcobj=Combine_Pitch, inputs={**MomentpitchL, **ForcepitchL,**MomentpitchR, **ForcepitchR}, outputs={**pitch})
     
+    #Init Affect Yaw
+    Affect_Yaw=affectDOF('yaw','C')  
     yaw={'yaw':{'amplitude': 1.0, 'intent':1.0 }}
     #ForceyawC={'ForceyawC':{'force':1.0}}
     g.add_node('Affect_Yaw', funcobj=Affect_Yaw, inputs={**EE,**Air,**Sig}, outputs={**Air, **yaw})
     
+    #Init Affect Drag Right
+    Affect_Drag_r=affectDOF('drag','R')
+    MomentdragR={'MomentdragR':{'amplitude': 1.0, 'intent':1.0 }}
+    ForcedragR={'ForcedragR':{'force':1.0}}
+    g.add_node('Affect_Drag_Right', funcobj=Affect_Drag_r, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentdragR, **ForcedragR})
+    
+    #Init Affect Drag Left
+    Affect_Drag_l=affectDOF('drag','L')
+    MomentdragL={'MomentdragL':{'amplitude': 1.0, 'intent':1.0 }}
+    ForcedragL={'ForcedragL':{'force':1.0}}
+    g.add_node('Affect_Drag_Left', funcobj=Affect_Drag_l, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentdragL, **ForcedragL})
+    
+    #Init Combine Drag
+    Combine_Drag=combineforceandmoment('drag')
+    drag={'drag':{'amplitude': 1.0, 'intent':1.0 }}
+    g.add_node('Combine_Drag', funcobj=Combine_Drag, inputs={**MomentdragL, **ForcedragL,**MomentdragR, **ForcedragR}, outputs={**drag})
+    
+    #Init Affect Lift Right
+    Affect_Lift_r=affectDOF('lift','R')
+    MomentliftR={'MomentliftR':{'amplitude': 1.0, 'intent':1.0 }}
+    ForceliftR={'ForceliftR':{'force':1.0}}
+    g.add_node('Affect_Lift_Right', funcobj=Affect_Lift_r, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentliftR, **ForceliftR})
+    
+    #Init Affect Lift Left
+    Affect_Lift_l=affectDOF('lift','L')
+    MomentliftL={'MomentliftL':{'amplitude': 1.0, 'intent':1.0 }}
+    ForceliftL={'ForceliftL':{'force':1.0}}
+    g.add_node('Affect_Lift_Left', funcobj=Affect_Lift_l, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentliftL, **ForceliftL})
+    
+    #Init Combine Drag
+    Combine_Lift=combineforceandmoment('lift')
+    lift={'lift':{'amplitude': 1.0, 'intent':1.0 }}
+    g.add_node('Combine_Lift', funcobj=Combine_Lift, inputs={**MomentliftL, **ForceliftL,**MomentliftR, **ForceliftR}, outputs={**lift})
+        
+    #Init Export Air
+    Export_Air=exportAir()
     g.add_node('Export_Air', funcobj=Export_Air, inputs={**Air}, outputs={})
     
+    #Init Export DOF
+    Export_DOF=export6dof()
     g.add_node('Export_DOF', funcobj=Export_DOF, inputs={**roll, **pitch, **yaw}, outputs={})
     
+    #Init Explort Lift/Drag
+    Export_LD=exportLD()
+    g.add_node('Export_LD',funcobj=Export_LD, inputs={**lift,**drag}, outputs={})
+    
+    
+    ##INITIALIZE EDGES
+    #Air in flows
     g.add_edge('Import_Air', 'Affect_Roll_Right', Air=Air['Air'])
     g.add_edge('Import_Air', 'Affect_Roll_Left', Air=Air['Air'])    
     g.add_edge('Import_Air', 'Affect_Pitch_Right', Air=Air['Air'])    
     g.add_edge('Import_Air', 'Affect_Pitch_Left', Air=Air['Air'])
     g.add_edge('Import_Air', 'Affect_Yaw', Air=Air['Air'])
-    
+    g.add_edge('Import_Air', 'Affect_Lift_Right', Air=Air['Air'])
+    g.add_edge('Import_Air', 'Affect_Lift_Left', Air=Air['Air'])
+    g.add_edge('Import_Air', 'Affect_Drag_Right', Air=Air['Air'])
+    g.add_edge('Import_Air', 'Affect_Drag_Left', Air=Air['Air'])
+    #EE flows
     g.add_edge('Import_EE', 'Affect_Roll_Right', EE=EE['EE'])
     g.add_edge('Import_EE', 'Affect_Roll_Left', EE=EE['EE'])    
     g.add_edge('Import_EE', 'Affect_Pitch_Right', EE=EE['EE'])    
     g.add_edge('Import_EE', 'Affect_Pitch_Left',EE=EE['EE'])
     g.add_edge('Import_EE', 'Affect_Yaw', EE=EE['EE'])
-
+    g.add_edge('Import_EE', 'Affect_Lift_Left', EE=EE['EE'])
+    g.add_edge('Import_EE', 'Affect_Lift_Right', EE=EE['EE'])
+    g.add_edge('Import_EE', 'Affect_Drag_Left', EE=EE['EE'])
+    g.add_edge('Import_EE', 'Affect_Drag_Right', EE=EE['EE'])
+    #Signal flows
     g.add_edge('Import_Signal', 'Affect_Roll_Right', Signal=Sig['Signal'])
     g.add_edge('Import_Signal', 'Affect_Roll_Left', Signal=Sig['Signal'])    
     g.add_edge('Import_Signal', 'Affect_Pitch_Right', Signal=Sig['Signal'])    
     g.add_edge('Import_Signal', 'Affect_Pitch_Left', Signal=Sig['Signal'])
-    g.add_edge('Import_Signal', 'Affect_Yaw', Signal=Sig['Signal'])   
-    
+    g.add_edge('Import_Signal', 'Affect_Yaw', Signal=Sig['Signal'])
+    g.add_edge('Import_Signal', 'Affect_Lift_Right', Signal=Sig['Signal'])
+    g.add_edge('Import_Signal', 'Affect_Lift_Left', Signal=Sig['Signal'])
+    g.add_edge('Import_Signal', 'Affect_Drag_Right', Signal=Sig['Signal'])
+    g.add_edge('Import_Signal', 'Affect_Drag_Left', Signal=Sig['Signal'])
+    #Roll flows
     g.add_edge('Affect_Roll_Right','Combine_Roll',ForcerollR=ForcerollR['ForcerollR'], MomentrollR=MomentrollR['MomentrollR'])     
     g.add_edge('Affect_Roll_Left','Combine_Roll',ForcerollL=ForcerollL['ForcerollL'], MomentrollL=MomentrollL['MomentrollL'])
-    
+    #Pitch flows
     g.add_edge('Affect_Pitch_Right','Combine_Pitch',ForcepitchR=ForcepitchR['ForcepitchR'], MomentpitchR=MomentpitchR['MomentpitchR'])  
     g.add_edge('Affect_Pitch_Left','Combine_Pitch',ForcepitchL=ForcepitchL['ForcepitchL'], MomentpitchL=MomentpitchL['MomentpitchL'])
-    
+    #Drag flows
+    g.add_edge('Affect_Drag_Right','Combine_Drag',ForcedragR=ForcedragR['ForcedragR'], MomentdragR=MomentdragR['MomentdragR'])  
+    g.add_edge('Affect_Drag_Left','Combine_Drag',ForcedragL=ForcedragL['ForcedragL'], MomentdragL=MomentdragL['MomentdragL'])
+    #Lift flows
+    g.add_edge('Affect_Lift_Right','Combine_Lift',ForcepitchR=ForceliftR['ForceliftR'], MomentliftR=MomentliftR['MomentliftR'])  
+    g.add_edge('Affect_Lift_Left','Combine_Lift',ForcepitchL=ForceliftL['ForceliftL'], MomentliftL=MomentliftL['MomentliftL'])
+    #roll, pitch, yaw flows
     g.add_edge('Combine_Pitch', 'Export_DOF',pitch=pitch['pitch'])
     g.add_edge('Combine_Roll', 'Export_DOF',roll=roll['roll'])
     g.add_edge('Affect_Yaw', 'Export_DOF', yaw=yaw['yaw'])
-    
+    #lift,drag flows
+    g.add_edge('Combine_Lift', 'Export_LD', lift=lift['lift'])
+    g.add_edge('Combine_Drag', 'Export_LD', drag=drag['drag'])
+    #Air flows 
     g.add_edge('Affect_Roll_Right', 'Export_Air', Air=Air['Air'])
     g.add_edge('Affect_Roll_Left', 'Export_Air', Air=Air['Air'])    
     g.add_edge('Affect_Pitch_Right', 'Export_Air', Air=Air['Air'])    
     g.add_edge('Affect_Pitch_Left', 'Export_Air', Air=Air['Air'])
-    g.add_edge('Affect_Yaw', 'Export_Air', Air=Air['Air']) 
+    g.add_edge('Affect_Yaw', 'Export_Air', Air=Air['Air'])
+    g.add_edge('Affect_Lift_Right', 'Export_Air', Air=Air['Air']) 
+    g.add_edge('Affect_Lift_Left', 'Export_Air', Air=Air['Air']) 
+    g.add_edge('Affect_Drag_Right', 'Export_Air', Air=Air['Air']) 
+    g.add_edge('Affect_Drag_Left', 'Export_Air', Air=Air['Air']) 
     
-
+    ##INITALIZE PROPOGATION GRAPHS
     backgraph=g.reverse(copy=True)
     forwardgraph=g
     fullgraph=nx.compose(backgraph, forwardgraph)
