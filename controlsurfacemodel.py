@@ -69,6 +69,67 @@ class importEE:
         outputs={'EE': self.EEout}
         return {'outputs':outputs, 'inputs':inputs}
     
+class distributeEE:
+    def __init__(self):
+        self.type='function'
+        self.EEin={'rate': 1.0, 'effort': 1.0}
+        self.EELiftR={'rate': 1.0, 'effort': 1.0}
+        self.EELiftL={'rate': 1.0, 'effort': 1.0}
+        self.EEDragR={'rate': 1.0, 'effort': 1.0}
+        self.EEDragL={'rate': 1.0, 'effort': 1.0}
+        self.EEYaw={'rate': 1.0, 'effort': 1.0}
+        self.EERollR={'rate': 1.0, 'effort': 1.0}
+        self.EERollL={'rate': 1.0, 'effort': 1.0}
+        self.EEPitchR={'rate': 1.0, 'effort': 1.0}
+        self.EEPitchL={'rate': 1.0, 'effort': 1.0}
+        
+        self.elecstate=1.0
+        #self.faultmodes={'infv':{'lprob':'moderate', 'rcost':'major'}, \
+        #                 'lowv':{'lprob':'moderate', 'rcost':'minor'}, \
+        #                 'nov':{'lprob':'high', 'rcost':'moderate'}}
+        self.faults=set(['nom'])
+    def resolvefaults(self):
+        return 0
+    def condfaults(self):
+        if self.EEout['rate']>2:
+            self.faults.add('nov')
+        return 0
+    def detbehav(self):
+        if self.faults.intersection(set(['infv'])):
+            self.elecstate=np.inf
+        elif self.faults.intersection(set(['nov'])):
+            self.elecstate=0.0
+        elif self.faults.intersection(set(['lowv'])):
+            self.elecstate=0.5
+    def behavior(self):
+        self.EEout['effort']=self.elecstate
+    def updatefxn(self,faults=['nom'],inputs={'EE':{'rate': 1.0, 'effort': 1.0}}, outputs={ \
+                  'EELiftR':{'rate': 1.0, 'effort': 1.0}, \
+                  'EELiftL':{'rate': 1.0, 'effort': 1.0}, 'EEDragR':{'rate': 1.0, 'effort': 1.0}, \
+                  'EEDragL':{'rate': 1.0, 'effort': 1.0}, 'EEYaw':{'rate': 1.0, 'effort': 1.0}, \
+                  'EERollR':{'rate': 1.0, 'effort': 1.0}, 'EERollL':{'rate': 1.0, 'effort': 1.0}, \
+                  'EEPitchR':{'rate': 1.0, 'effort': 1.0}, 'EEPitchL':{'rate': 1.0, 'effort': 1.0}}):
+        self.EEin['effort']=inputs['EE']['effort']
+        
+        self.EELiftR['rate']=outputs['EELiftR']['rate']
+        self.EELiftL['rate']=outputs['EELiftL']['rate']
+        self.EEDragR['rate']=outputs['EEDragR']['rate']
+        self.EEDragL['rate']=outputs['EEDragL']['rate']
+        self.EEYaw['rate']=outputs['EEYaw']['rate']
+        self.EERollR['rate']=outputs['EERollR']['rate']
+        self.EERollL['rate']=outputs['EERollL']['rate']
+        self.EEPitchR['rate']=outputs['EEPitchR']['rate']
+        self.EEPitchL['rate']=outputs['EEPitchL']['rate']
+        
+        
+        self.faults.update(faults)
+        self.condfaults()
+        self.resolvefaults()
+        self.detbehav()
+        self.behavior()
+        outputs={'EE': self.EEout}
+        return {'outputs':outputs, 'inputs':inputs}
+    
 class importAir:
     def __init__(self):
         self.type='function'

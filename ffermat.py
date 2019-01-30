@@ -229,7 +229,7 @@ def propagate(forward, backward):
                     for key in backward.nodes('outputs')[fxnname]:
                         backward.nodes('outputs')[fxnname][key]=outputdict[key]
             except:
-                print('Poor graph definition. Function: ', fxnname,', Flow:', key)
+                print('Poor graph definition. Check the edges of function: ', fxnname,', for Flow:', key)
             #update outputs
             fxncall=fxn.updatefxn(inputs=inputdict, outputs=outputdict)
             inputs=fxncall['inputs']
