@@ -84,16 +84,51 @@ class distributeEE:
         self.EEPitchL={'rate': 1.0, 'effort': 1.0}
         
         self.elecstate=1.0
-        #self.faultmodes={'infv':{'lprob':'moderate', 'rcost':'major'}, \
-        #                 'lowv':{'lprob':'moderate', 'rcost':'minor'}, \
-        #                 'nov':{'lprob':'high', 'rcost':'moderate'}}
+        self.liftrstate=1.0
+        self.liftlstate=1.0
+        self.dragrstate=1.0
+        self.draglstate=1.0
+        self.yawstate=1.0
+        self.rollrstate=1.0
+        self.rolllstate=1.0
+        self.pitchrstate=1.0
+        self.pitchlstate=1.0
+        self.faultmodes={'infv':{'lprob':'moderate', 'rcost':'major'}, \
+                         'lowv':{'lprob':'moderate', 'rcost':'minor'}, \
+                         'nov':{'lprob':'high', 'rcost':'moderate'}, \
+                         'opencLiftR':{'lprob':'low', 'rcost':'minor'}, \
+                         'opencLiftL':{'lprob':'low', 'rcost':'minor'}, \
+                         'opencDragR':{'lprob':'low', 'rcost':'minor'}, \
+                         'opencDragL':{'lprob':'low', 'rcost':'minor'}, \
+                         'opencYaw':{'lprob':'low', 'rcost':'minor'}, \
+                         'opencRollR':{'lprob':'low', 'rcost':'minor'}, \
+                         'opencRollL':{'lprob':'low', 'rcost':'minor'}, \
+                         'opencPitchR':{'lprob':'low', 'rcost':'minor'}, \
+                         'opencPitchL':{'lprob':'low', 'rcost':'minor'}, \
+                         }
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
     def condfaults(self):
-        if self.EEout['rate']>2:
-            self.faults.add('nov')
-        return 0
+        if self.EELiftR['rate']>2:
+            self.faults.add('opencLiftR')
+        if self.EELiftL['rate']>2:
+            self.faults.add('opencLiftL')
+        if self.EEDragR['rate']>2:
+            self.faults.add('opencDragR')
+        if self.EEDragL['rate']>2:
+            self.faults.add('opencDragL')
+        if self.EEYaw['rate']>2:
+            self.faults.add('opencYaw')
+        if self.EERollR['rate']>2:
+            self.faults.add('opencRollR')
+        if self.EERollL['rate']>2:
+            self.faults.add('opencRollL')
+        if self.EEPitchR['rate']>2:
+            self.faults.add('opencPitchR')
+        if self.EEPitchL['rate']>2:
+            self.faults.add('opencPitchL')
+            
     def detbehav(self):
         if self.faults.intersection(set(['infv'])):
             self.elecstate=np.inf
@@ -101,8 +136,39 @@ class distributeEE:
             self.elecstate=0.0
         elif self.faults.intersection(set(['lowv'])):
             self.elecstate=0.5
+        
+        if self.faults.intersection(set(['opencLiftR'])):
+            self.liftrstate=0.0
+        if self.faults.intersection(set(['opencLiftL'])):
+            self.liftlstate=0.0
+        if self.faults.intersection(set(['opencDragR'])):
+            self.dragrstate=0.0
+        if self.faults.intersection(set(['opencDragL'])):
+            self.draglstate=0.0
+        if self.faults.intersection(set(['opencYaw'])):
+            self.yawstate=0.0
+        if self.faults.intersection(set(['opencRollR'])):
+            self.rollrstate=0.0
+        if self.faults.intersection(set(['opencRollL'])):
+            self.rolllstate=0.0
+        if self.faults.intersection(set(['opencPitchR'])):
+            self.pitchrstate=0.0
+        if self.faults.intersection(set(['opencPitchL'])):
+            self.pitchlstate=0.0
     def behavior(self):
-        self.EEout['effort']=self.elecstate
+        
+        self.EELiftR['effort']=aux.m2to1([self.liftrstate,self.elecstate,self.EEin['effort']])
+        self.EELiftL['effort']=aux.m2to1([self.liftlstate,self.elecstate,self.EEin['effort']])
+        self.EEDragR['effort']=aux.m2to1([self.dragrstate,self.elecstate,self.EEin['effort']])
+        self.EEDragL['effort']=aux.m2to1([self.draglstate,self.elecstate,self.EEin['effort']])
+        self.EEYaw['effort']=aux.m2to1([self.yawstate,self.elecstate,self.EEin['effort']])
+        self.EERollR['effort']=aux.m2to1([self.rollrstate,self.elecstate,self.EEin['effort']])
+        self.EERollL['effort']=aux.m2to1([self.rolllstate,self.elecstate,self.EEin['effort']])
+        self.EEPitchR['effort']=aux.m2to1([self.pitchrstate,self.elecstate,self.EEin['effort']])
+        self.EEPitchL['effort']=aux.m2to1([self.pitchlstate,self.elecstate,self.EEin['effort']])
+        
+        self.EEin['rate']=self.elecstate
+        
     def updatefxn(self,faults=['nom'],inputs={'EE':{'rate': 1.0, 'effort': 1.0}}, outputs={ \
                   'EELiftR':{'rate': 1.0, 'effort': 1.0}, \
                   'EELiftL':{'rate': 1.0, 'effort': 1.0}, 'EEDragR':{'rate': 1.0, 'effort': 1.0}, \
@@ -127,7 +193,12 @@ class distributeEE:
         self.resolvefaults()
         self.detbehav()
         self.behavior()
-        outputs={'EE': self.EEout}
+        inputs={'EE':self.EEin}
+        outputs={'EELiftR':self.EELiftR, \
+                  'EELiftL':self.EELiftL, 'EEDragR':self.EEDragR, \
+                  'EEDragL':self.EEDragL, 'EEYaw':self.EEYaw, \
+                  'EERollR':self.EERollR, 'EERollL':self.EERollL, \
+                  'EEPitchR':self.EEPitchR, 'EEPitchL':self.EEPitchL}
         return {'outputs':outputs, 'inputs':inputs}
     
 class importAir:
@@ -237,10 +308,12 @@ class affectDOF:
         
         if side=='C':
             self.forcename='Force'+dof+side
-            self.momentname=dof      
+            self.momentname=dof
+            self.eename='EE'+dof.capitalize()
         else:
             self.forcename='Force'+dof+side
             self.momentname='Moment'+dof+side
+            self.eename='EE'+dof.capitalize()+side
         
     def resolvefaults(self):
         return 0
@@ -286,7 +359,10 @@ class affectDOF:
         self.Momentout['intent']=self.Sigin['ctl']*self.Airin['velocity']*self.EEin['effort']*aux.dev(self.mechstate)*self.surfstate*self.EEstate*self.ctlstate
         
         
-    def updatefxn(self,faults=['nom'],inputs={'Signal':{'ctl': 1.0},'EE': {'rate': 1.0, 'effort': 1.0},'Air': {'velocity': 1.0, 'turbulence': 1.0} }, outputs={}):
+    def updatefxn(self,faults=['nom'],inputs={}, outputs={}):
+        
+        if len(inputs)==0:
+            inputs={'Signal':{'ctl': 1.0},self.eename:{'rate': 1.0, 'effort': 1.0},'Air': {'velocity': 1.0, 'turbulence': 1.0}}
         
         if len(outputs)==0:
             if self.side=='c' or self.side=='C':
@@ -295,7 +371,7 @@ class affectDOF:
                 outputs={self.forcename:{'force':1.0}, self.momentname:{'amplitude': 1.0, 'intent':1.0 }, 'Air': {'velocity': 1.0, 'turbulence': 1.0}}
                 self.Forceout=outputs[self.forcename]
         self.Airin=inputs['Air']
-        self.EEin=inputs['EE']
+        self.EEin=inputs[self.eename]
         self.Sigin=inputs['Signal']
         self.Airout=outputs['Air']
         self.Momentout=outputs[self.momentname]
@@ -306,7 +382,7 @@ class affectDOF:
         self.resolvefaults()
         self.detbehav()
         self.behavior()
-        inputs={'Signal': self.Sigin, 'EE': self.EEin, 'Air':self.Airin}
+        inputs={'Signal': self.Sigin, self.eename: self.EEin, 'Air':self.Airin}
         if self.side=='c' or self.side=='C':
             outputs={'Air': self.Airout, self.momentname:self.Momentout}
         else:
@@ -534,6 +610,20 @@ def initialize():
     Import_EE=importEE()
     g.add_node('Import_EE', funcobj=Import_EE, inputs={}, outputs={**EE})
     
+    #Init Distribute EE
+    EELiftR={'EELiftR':{'rate': 1.0, 'effort': 1.0}}
+    EELiftL={'EELiftL':{'rate': 1.0, 'effort': 1.0}}
+    EEDragR={'EEDragR':{'rate': 1.0, 'effort': 1.0}}
+    EEDragL={'EEDragL':{'rate': 1.0, 'effort': 1.0}}
+    EEYaw={'EEYaw':{'rate': 1.0, 'effort': 1.0}}
+    EERollR={'EERollR':{'rate': 1.0, 'effort': 1.0}}
+    EERollL={'EERollL':{'rate': 1.0, 'effort': 1.0}}
+    EEPitchR={'EEPitchR':{'rate': 1.0, 'effort': 1.0}}
+    EEPitchL={'EEPitchL':{'rate': 1.0, 'effort': 1.0}}
+    Distribute_EE=distributeEE()
+    g.add_node('Distribute_EE', funcobj=Distribute_EE, inputs={**EE}, outputs={**EELiftR,\
+               **EEDragR,**EEDragL, **EELiftL, **EEYaw,**EERollR,**EERollL,**EEPitchR,**EEPitchL,**EEPitchL})
+    
     #INIT Import_Air
     Import_Air=importAir()
     Air={'Air':{'velocity': 1.0, 'turbulence': 1.0}}
@@ -548,13 +638,13 @@ def initialize():
     Affect_Roll_r=affectDOF('roll','R')
     MomentrollR={'MomentrollR':{'amplitude': 1.0, 'intent':1.0 }}
     ForcerollR={'ForcerollR':{'force':1.0}}
-    g.add_node('Affect_Roll_Right', funcobj=Affect_Roll_r, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentrollR, **ForcerollR})
+    g.add_node('Affect_Roll_Right', funcobj=Affect_Roll_r, inputs={**EERollR,**Air,**Sig}, outputs={**Air, **MomentrollR, **ForcerollR})
     
     #Init Affect Roll Left
     Affect_Roll_l=affectDOF('roll','L')
     MomentrollL={'MomentrollL':{'amplitude': 1.0, 'intent':1.0 }}
     ForcerollL={'ForcerollL':{'force':1.0}}
-    g.add_node('Affect_Roll_Left', funcobj=Affect_Roll_l, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentrollL, **ForcerollL})
+    g.add_node('Affect_Roll_Left', funcobj=Affect_Roll_l, inputs={**EERollL,**Air,**Sig}, outputs={**Air, **MomentrollL, **ForcerollL})
     
     #Init Combine Roll 
     Combine_Roll=combineforceandmoment('roll')
@@ -565,13 +655,13 @@ def initialize():
     Affect_Pitch_r=affectDOF('pitch','R')
     MomentpitchR={'MomentpitchR':{'amplitude': 1.0, 'intent':1.0 }}
     ForcepitchR={'ForcepitchR':{'force':1.0}}
-    g.add_node('Affect_Pitch_Right', funcobj=Affect_Pitch_r, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentpitchR, **ForcepitchR})
+    g.add_node('Affect_Pitch_Right', funcobj=Affect_Pitch_r, inputs={**EEPitchR,**Air,**Sig}, outputs={**Air, **MomentpitchR, **ForcepitchR})
     
     #Init Affect Pitch Left
     Affect_Pitch_l=affectDOF('pitch','L')
     MomentpitchL={'MomentpitchL':{'amplitude': 1.0, 'intent':1.0 }}
     ForcepitchL={'ForcepitchL':{'force':1.0}}
-    g.add_node('Affect_Pitch_Left',  funcobj=Affect_Pitch_l, inputs={**EE,**Air,**Sig}, outputs={**Air,**MomentpitchL , **ForcepitchL})
+    g.add_node('Affect_Pitch_Left',  funcobj=Affect_Pitch_l, inputs={**EEPitchL,**Air,**Sig}, outputs={**Air,**MomentpitchL , **ForcepitchL})
     
     #Init Combine Pitch 
     Combine_Pitch=combineforceandmoment('pitch')
@@ -582,19 +672,19 @@ def initialize():
     Affect_Yaw=affectDOF('yaw','C')  
     yaw={'yaw':{'amplitude': 1.0, 'intent':1.0 }}
     #ForceyawC={'ForceyawC':{'force':1.0}}
-    g.add_node('Affect_Yaw', funcobj=Affect_Yaw, inputs={**EE,**Air,**Sig}, outputs={**Air, **yaw})
+    g.add_node('Affect_Yaw', funcobj=Affect_Yaw, inputs={**EEYaw,**Air,**Sig}, outputs={**Air, **yaw})
     
     #Init Affect Drag Right
     Affect_Drag_r=affectDOF('drag','R')
     MomentdragR={'MomentdragR':{'amplitude': 1.0, 'intent':1.0 }}
     ForcedragR={'ForcedragR':{'force':1.0}}
-    g.add_node('Affect_Drag_Right', funcobj=Affect_Drag_r, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentdragR, **ForcedragR})
+    g.add_node('Affect_Drag_Right', funcobj=Affect_Drag_r, inputs={**EEDragR,**Air,**Sig}, outputs={**Air, **MomentdragR, **ForcedragR})
     
     #Init Affect Drag Left
     Affect_Drag_l=affectDOF('drag','L')
     MomentdragL={'MomentdragL':{'amplitude': 1.0, 'intent':1.0 }}
     ForcedragL={'ForcedragL':{'force':1.0}}
-    g.add_node('Affect_Drag_Left', funcobj=Affect_Drag_l, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentdragL, **ForcedragL})
+    g.add_node('Affect_Drag_Left', funcobj=Affect_Drag_l, inputs={**EEDragL,**Air,**Sig}, outputs={**Air, **MomentdragL, **ForcedragL})
     
     #Init Combine Drag
     Combine_Drag=combineforceandmoment('drag')
@@ -605,13 +695,13 @@ def initialize():
     Affect_Lift_r=affectDOF('lift','R')
     MomentliftR={'MomentliftR':{'amplitude': 1.0, 'intent':1.0 }}
     ForceliftR={'ForceliftR':{'force':1.0}}
-    g.add_node('Affect_Lift_Right', funcobj=Affect_Lift_r, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentliftR, **ForceliftR})
+    g.add_node('Affect_Lift_Right', funcobj=Affect_Lift_r, inputs={**EELiftR,**Air,**Sig}, outputs={**Air, **MomentliftR, **ForceliftR})
     
     #Init Affect Lift Left
     Affect_Lift_l=affectDOF('lift','L')
     MomentliftL={'MomentliftL':{'amplitude': 1.0, 'intent':1.0 }}
     ForceliftL={'ForceliftL':{'force':1.0}}
-    g.add_node('Affect_Lift_Left', funcobj=Affect_Lift_l, inputs={**EE,**Air,**Sig}, outputs={**Air, **MomentliftL, **ForceliftL})
+    g.add_node('Affect_Lift_Left', funcobj=Affect_Lift_l, inputs={**EELiftL,**Air,**Sig}, outputs={**Air, **MomentliftL, **ForceliftL})
     
     #Init Combine Drag
     Combine_Lift=combineforceandmoment('lift')
@@ -643,15 +733,17 @@ def initialize():
     g.add_edge('Import_Air', 'Affect_Drag_Right', Air=Air['Air'])
     g.add_edge('Import_Air', 'Affect_Drag_Left', Air=Air['Air'])
     #EE flows
-    g.add_edge('Import_EE', 'Affect_Roll_Right', EE=EE['EE'])
-    g.add_edge('Import_EE', 'Affect_Roll_Left', EE=EE['EE'])    
-    g.add_edge('Import_EE', 'Affect_Pitch_Right', EE=EE['EE'])    
-    g.add_edge('Import_EE', 'Affect_Pitch_Left',EE=EE['EE'])
-    g.add_edge('Import_EE', 'Affect_Yaw', EE=EE['EE'])
-    g.add_edge('Import_EE', 'Affect_Lift_Left', EE=EE['EE'])
-    g.add_edge('Import_EE', 'Affect_Lift_Right', EE=EE['EE'])
-    g.add_edge('Import_EE', 'Affect_Drag_Left', EE=EE['EE'])
-    g.add_edge('Import_EE', 'Affect_Drag_Right', EE=EE['EE'])
+    g.add_edge('Import_EE', 'Distribute_EE', EE=EE['EE'])
+    
+    g.add_edge('Distribute_EE', 'Affect_Roll_Right', EERollR=EERollR['EERollR'])
+    g.add_edge('Distribute_EE', 'Affect_Roll_Left', EERollL=EERollL['EERollL'])    
+    g.add_edge('Distribute_EE', 'Affect_Pitch_Right', EEPitchR=EEPitchR['EEPitchR'])    
+    g.add_edge('Distribute_EE', 'Affect_Pitch_Left',EEPitchL=EEPitchL['EEPitchL'])
+    g.add_edge('Distribute_EE', 'Affect_Yaw', EEYaw=EEYaw['EEYaw'])
+    g.add_edge('Distribute_EE', 'Affect_Lift_Left', EELiftL=EELiftL['EELiftL'])
+    g.add_edge('Distribute_EE', 'Affect_Lift_Right', EELiftR=EELiftR['EELiftR'])
+    g.add_edge('Distribute_EE', 'Affect_Drag_Left', EEDragL=EEDragL['EEDragL'])
+    g.add_edge('Distribute_EE', 'Affect_Drag_Right', EEDragR=EEDragR['EEDragR'])
     #Signal flows
     g.add_edge('Import_Signal', 'Affect_Roll_Right', Signal=Sig['Signal'])
     g.add_edge('Import_Signal', 'Affect_Roll_Left', Signal=Sig['Signal'])    

@@ -9,7 +9,7 @@ Created on Tue Dec 11 10:18:54 2018
 import numpy as np
 ##BASIC OPERATIONS
 
-#x1 takes precedence over x2 in decidint if num is inf or zero
+#x1 takes precedence over x2 in deciding if num is inf or zero
 def m2to1(x):
     if np.size(x)>2:
         x=[x[0], m2to1(x[1:])]
