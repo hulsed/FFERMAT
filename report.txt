@@ -1,30 +1,30 @@
 SUMMARY
 --------------------------------------------
-TOTAL SCORE: 397632041.7229998
+TOTAL SCORE: 402173960.3179997
 FEASIBILITY: infeasible
 Failure Type 	 	 Expected Number 	 Allowable
 catastrophic 	 	 0.3617824       	 0.002          
-hazardous   	 	 0.3051395999999998 	 0.02           
+hazardous   	 	 0.3036245999999998 	 0.02           
 major       	 	 0.10618919999999994 	 0.2            
 minor       	 	 0.0             	 20.0           
-noeffect    	 	 0.7487900000000005 	 0              
+noeffect    	 	 0.7503050000000007 	 0              
 
 FULL RESULTS:
 --------------------------------------------
-FAULT SCENARIO:  Distribute_EE   nov
+FAULT SCENARIO:  Import_EE   nov
 PROBABILITY:  high
 SCORE: 95757500.0  ( 39895000.0 - 151620000.0 )
 SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic', 'Export_LD': 'major'}
 REPAIR:  totaled
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.0,
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.0,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
  ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
@@ -35,20 +35,66 @@ FLOW EFFECTS:
  ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.0,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.0,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.0,
- ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.0,
- ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'rate'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'rate'): 0.0,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'rate'): 0.0,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'rate'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.0,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0.0,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0.0,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0.0,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0.0,
+ ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.0,
+ ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0.0,
+ ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0.0,
+ ('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'rate'): 0.0,
+ ('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'rate'): 0.0,
+ ('Import_EE', 'Distribute_EE', 'EE', 'effort'): 0.0}
+END FAULTS:
+{'Import_EE': {'nov'}}
+
+FAULT SCENARIO:  Distribute_EE   nov
+PROBABILITY:  high
+SCORE: 95757500.0  ( 39895000.0 - 151620000.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic', 'Export_LD': 'major'}
+REPAIR:  totaled
+FLOW EFFECTS:
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.0,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0.0,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0.0,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0.0,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0.0,
  ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'effort'): 0.0,
  ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.0,
  ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'effort'): 0.0,
@@ -69,22 +115,21 @@ SCORE: 95757500.0  ( 39895000.0 - 151620000.0 )
 SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic', 'Export_LD': 'major'}
 REPAIR:  totaled
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.0,
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.0,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
  ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
  ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
  ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.0,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.0,
- ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.0,
- ('Distribute_Signal', 'Affect_Drag_Left', 'SigDragL', 'ctl'): 0.0,
- ('Distribute_Signal', 'Affect_Drag_Right', 'SigDragR', 'ctl'): 0.0,
- ('Distribute_Signal', 'Affect_Lift_Left', 'SigLiftL', 'ctl'): 0.0,
- ('Distribute_Signal', 'Affect_Lift_Right', 'SigLiftR', 'ctl'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.0,
+ ('Distribute_Signal', 'Affect_Liftdn_Left', 'SigLiftdnL', 'ctl'): 0.0,
+ ('Distribute_Signal', 'Affect_Liftdn_Right', 'SigLiftdnR', 'ctl'): 0.0,
+ ('Distribute_Signal', 'Affect_Liftpr_Left', 'SigLiftprL', 'ctl'): 0.0,
+ ('Distribute_Signal', 'Affect_Liftpr_Right', 'SigLiftprR', 'ctl'): 0.0,
  ('Distribute_Signal', 'Affect_Pitch_Left', 'SigPitchL', 'ctl'): 0.0,
  ('Distribute_Signal', 'Affect_Pitch_Right', 'SigPitchR', 'ctl'): 0.0,
  ('Distribute_Signal', 'Affect_Roll_Left', 'SigRollL', 'ctl'): 0.0,
@@ -93,72 +138,24 @@ FLOW EFFECTS:
 END FAULTS:
 {'Distribute_Signal': {'nosig'}}
 
-FAULT SCENARIO:  Import_EE   nov
-PROBABILITY:  high
-SCORE: 92181500.0  ( 38405000.0 - 145958000.0 )
-SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic', 'Export_LD': 'noeffect'}
-REPAIR:  totaled
-FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.0,
- ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
- ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
- ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
- ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
- ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.0,
- ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
- ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.0,
- ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
- ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
- ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.0,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'rate'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'rate'): 0.0,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'rate'): 0.0,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'rate'): 0.0,
- ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.0,
- ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0.0,
- ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0.0,
- ('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'rate'): 0.0,
- ('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'rate'): 0.0,
- ('Import_EE', 'Distribute_EE', 'EE', 'effort'): 0.0}
-END FAULTS:
-{'Import_EE': {'nov'}}
-
 FAULT SCENARIO:  Import_Air   hivel
 PROBABILITY:  moderate
 SCORE: 9056050.0  ( 17929100.0 - 183000.0 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'major'}
 REPAIR:  totaled
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'ForcedragL', 'force'): 2.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 2.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 2.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'ForcedragR', 'force'): 2.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 2.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 2.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'ForceliftL', 'force'): 2.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 2.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 2.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'ForceliftR', 'force'): 2.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 2.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 2.0,
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'ForceliftdnL', 'force'): 2.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 2.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 2.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'ForceliftdnR', 'force'): 2.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 2.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 2.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'ForceliftprL', 'force'): 2.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 2.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 2.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'ForceliftprR', 'force'): 2.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 2.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 2.0,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 2.0,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 2.0,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 2.0,
@@ -173,44 +170,44 @@ FLOW EFFECTS:
  ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 2.0,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 2.0,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 2.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 2.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 2.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 2.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 2.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 2.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 2.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 2.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 2.0,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 2.0,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 2.0,
  ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 2.0,
  ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 2.0,
- ('Import_Air', 'Affect_Drag_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Drag_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Lift_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Lift_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 2.0,
  ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
  ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
  ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
  ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
  ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0}
 END FAULTS:
-{'Import_Air': {'hivel'}, 'Combine_Roll': {'damageL', 'damageR'}, 'Combine_Pitch': {'damageL', 'damageR'}, 'Combine_Drag': {'damageL', 'damageR'}, 'Combine_Lift': {'damageL', 'damageR'}}
+{'Import_Air': {'hivel'}, 'Combine_Roll': {'damageR', 'damageL'}, 'Combine_Pitch': {'damageR', 'damageL'}, 'Combine_Liftpr': {'damageR', 'damageL'}, 'Combine_Liftdn': {'damageR', 'damageL'}}
 
-FAULT SCENARIO:  Distribute_EE   infv
+FAULT SCENARIO:  Import_EE   infv
 PROBABILITY:  moderate
 SCORE: 9054555.0  ( 17926160.0 - 182950.0 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'major'}
 REPAIR:  major
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'ForcedragL', 'force'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): nan,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): nan,
- ('Affect_Drag_Right', 'Combine_Drag', 'ForcedragR', 'force'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): nan,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): nan,
- ('Affect_Lift_Left', 'Combine_Lift', 'ForceliftL', 'force'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): nan,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): nan,
- ('Affect_Lift_Right', 'Combine_Lift', 'ForceliftR', 'force'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): nan,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): nan,
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'ForceliftdnL', 'force'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): nan,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): nan,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'ForceliftdnR', 'force'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): nan,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): nan,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'ForceliftprL', 'force'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): nan,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): nan,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'ForceliftprR', 'force'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): nan,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): nan,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): nan,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): nan,
@@ -225,22 +222,132 @@ FLOW EFFECTS:
  ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): nan,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): nan,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): nan,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): nan,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): nan,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): nan,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): nan,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): nan,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): nan,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): nan,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): nan,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): nan,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): nan,
  ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): nan,
  ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): nan,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'effort'): inf,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'rate'): 0,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'effort'): inf,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'rate'): 0,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'effort'): inf,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'rate'): 0,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'effort'): inf,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'rate'): 0,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'effort'): inf,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'effort'): inf,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'effort'): inf,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'effort'): inf,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0,
+ ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'effort'): inf,
+ ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0,
+ ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'effort'): inf,
+ ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0,
+ ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'effort'): inf,
+ ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0,
+ ('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'effort'): inf,
+ ('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'rate'): 0,
+ ('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'effort'): inf,
+ ('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'rate'): 0,
+ ('Import_EE', 'Distribute_EE', 'EE', 'effort'): inf}
+END FAULTS:
+{'Import_EE': {'infv'}, 'Affect_Roll_Right': {'opencircuit'}, 'Affect_Roll_Left': {'opencircuit'}, 'Affect_Pitch_Right': {'opencircuit'}, 'Affect_Pitch_Left': {'opencircuit'}, 'Affect_Yaw': {'opencircuit'}, 'Affect_Liftpr_Right': {'opencircuit'}, 'Affect_Liftpr_Left': {'opencircuit'}, 'Affect_Liftdn_Right': {'opencircuit'}, 'Affect_Liftdn_Left': {'opencircuit'}}
+
+FAULT SCENARIO:  Import_EE   lowv
+PROBABILITY:  moderate
+SCORE: 9054555.0  ( 17926160.0 - 182950.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'major'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 0.5,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.5,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 0.5,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.5,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 0.5,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.5,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 0.5,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.5,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.5,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.5,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.5,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.5,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.5,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.5,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.5,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.5,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.5,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'effort'): 0.5,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0.5,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'effort'): 0.5,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0.5,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'effort'): 0.5,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0.5,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'effort'): 0.5,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0.5,
+ ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'effort'): 0.5,
+ ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.5,
+ ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'effort'): 0.5,
+ ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0.5,
+ ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'effort'): 0.5,
+ ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0.5,
+ ('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'effort'): 0.5,
+ ('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'rate'): 0.5,
+ ('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'effort'): 0.5,
+ ('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'rate'): 0.5,
+ ('Import_EE', 'Distribute_EE', 'EE', 'effort'): 0.5}
+END FAULTS:
+{'Import_EE': {'lowv'}}
+
+FAULT SCENARIO:  Distribute_EE   infv
+PROBABILITY:  moderate
+SCORE: 9054555.0  ( 17926160.0 - 182950.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'major'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'ForceliftdnL', 'force'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): nan,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): nan,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'ForceliftdnR', 'force'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): nan,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): nan,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'ForceliftprL', 'force'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): nan,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): nan,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'ForceliftprR', 'force'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): nan,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): nan,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): nan,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): nan,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): nan,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): nan,
+ ('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): nan,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): nan,
+ ('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.0,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): nan,
+ ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): nan,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): nan,
+ ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): nan,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): nan,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): nan,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): nan,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): nan,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): nan,
+ ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): nan,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): nan,
+ ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): nan,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'effort'): inf,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'effort'): inf,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'effort'): inf,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'effort'): inf,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0,
  ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'effort'): inf,
  ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0,
  ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'effort'): inf,
@@ -254,7 +361,7 @@ FLOW EFFECTS:
  ('Import_EE', 'Distribute_EE', 'EE', 'effort'): 0.0,
  ('Import_EE', 'Distribute_EE', 'EE', 'rate'): inf}
 END FAULTS:
-{'Import_EE': {'nov'}, 'Distribute_EE': {'infv'}, 'Affect_Roll_Right': {'opencircuit'}, 'Affect_Roll_Left': {'opencircuit'}, 'Affect_Pitch_Right': {'opencircuit'}, 'Affect_Pitch_Left': {'opencircuit'}, 'Affect_Yaw': {'opencircuit'}, 'Affect_Drag_Right': {'opencircuit'}, 'Affect_Drag_Left': {'opencircuit'}, 'Affect_Lift_Right': {'opencircuit'}, 'Affect_Lift_Left': {'opencircuit'}}
+{'Import_EE': {'nov'}, 'Distribute_EE': {'infv'}, 'Affect_Roll_Right': {'opencircuit'}, 'Affect_Roll_Left': {'opencircuit'}, 'Affect_Pitch_Right': {'opencircuit'}, 'Affect_Pitch_Left': {'opencircuit'}, 'Affect_Yaw': {'opencircuit'}, 'Affect_Liftpr_Right': {'opencircuit'}, 'Affect_Liftpr_Left': {'opencircuit'}, 'Affect_Liftdn_Right': {'opencircuit'}, 'Affect_Liftdn_Left': {'opencircuit'}}
 
 FAULT SCENARIO:  Distribute_EE   lowv
 PROBABILITY:  moderate
@@ -262,14 +369,14 @@ SCORE: 9054555.0  ( 17926160.0 - 182950.0 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'major'}
 REPAIR:  major
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 0.5,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.5,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 0.5,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.5,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 0.5,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.5,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 0.5,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.5,
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 0.5,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.5,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 0.5,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.5,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 0.5,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.5,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 0.5,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.5,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.5,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.5,
  ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.5,
@@ -280,20 +387,18 @@ FLOW EFFECTS:
  ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.5,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.5,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5,
- ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
- ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'effort'): 0.5,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'rate'): 0.5,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'effort'): 0.5,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'rate'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'effort'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'rate'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'effort'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'rate'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'effort'): 0.5,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0.5,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'effort'): 0.5,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0.5,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'effort'): 0.5,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0.5,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'effort'): 0.5,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0.5,
  ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'effort'): 0.5,
  ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.5,
  ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'effort'): 0.5,
@@ -314,18 +419,18 @@ SCORE: 9054555.0  ( 17926160.0 - 182950.0 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'major'}
 REPAIR:  major
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'ForcedragL', 'force'): 0.5,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 0.5,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.5,
- ('Affect_Drag_Right', 'Combine_Drag', 'ForcedragR', 'force'): 0.5,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 0.5,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.5,
- ('Affect_Lift_Left', 'Combine_Lift', 'ForceliftL', 'force'): 0.5,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 0.5,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.5,
- ('Affect_Lift_Right', 'Combine_Lift', 'ForceliftR', 'force'): 0.5,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 0.5,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.5,
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'ForceliftdnL', 'force'): 0.5,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 0.5,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.5,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'ForceliftdnR', 'force'): 0.5,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 0.5,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.5,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'ForceliftprL', 'force'): 0.5,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 0.5,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.5,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'ForceliftprR', 'force'): 0.5,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 0.5,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.5,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.5,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.5,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.5,
@@ -340,18 +445,18 @@ FLOW EFFECTS:
  ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.5,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.5,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5,
  ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
  ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5,
- ('Import_Air', 'Affect_Drag_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Drag_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Lift_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Lift_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0.5,
  ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
  ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
  ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
@@ -366,22 +471,21 @@ SCORE: 9054555.0  ( 17926160.0 - 182950.0 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'major'}
 REPAIR:  major
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.5,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.5,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.5,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.5,
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.5,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.5,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.5,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.5,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.5,
  ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.5,
  ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.5,
  ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.5,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5,
- ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5,
- ('Distribute_Signal', 'Affect_Drag_Left', 'SigDragL', 'ctl'): 0.5,
- ('Distribute_Signal', 'Affect_Drag_Right', 'SigDragR', 'ctl'): 0.5,
- ('Distribute_Signal', 'Affect_Lift_Left', 'SigLiftL', 'ctl'): 0.5,
- ('Distribute_Signal', 'Affect_Lift_Right', 'SigLiftR', 'ctl'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5,
+ ('Distribute_Signal', 'Affect_Liftdn_Left', 'SigLiftdnL', 'ctl'): 0.5,
+ ('Distribute_Signal', 'Affect_Liftdn_Right', 'SigLiftdnR', 'ctl'): 0.5,
+ ('Distribute_Signal', 'Affect_Liftpr_Left', 'SigLiftprL', 'ctl'): 0.5,
+ ('Distribute_Signal', 'Affect_Liftpr_Right', 'SigLiftprR', 'ctl'): 0.5,
  ('Distribute_Signal', 'Affect_Pitch_Left', 'SigPitchL', 'ctl'): 0.5,
  ('Distribute_Signal', 'Affect_Pitch_Right', 'SigPitchR', 'ctl'): 0.5,
  ('Distribute_Signal', 'Affect_Roll_Left', 'SigRollL', 'ctl'): 0.5,
@@ -389,114 +493,6 @@ FLOW EFFECTS:
  ('Distribute_Signal', 'Affect_Yaw', 'SigYaw', 'ctl'): 0.5}
 END FAULTS:
 {'Distribute_Signal': {'degsig'}}
-
-FAULT SCENARIO:  Import_EE   infv
-PROBABILITY:  moderate
-SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'ForcedragL', 'force'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): nan,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): nan,
- ('Affect_Drag_Right', 'Combine_Drag', 'ForcedragR', 'force'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): nan,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): nan,
- ('Affect_Lift_Left', 'Combine_Lift', 'ForceliftL', 'force'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): nan,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): nan,
- ('Affect_Lift_Right', 'Combine_Lift', 'ForceliftR', 'force'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): nan,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): nan,
- ('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
- ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): nan,
- ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): nan,
- ('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.0,
- ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): nan,
- ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): nan,
- ('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.0,
- ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): nan,
- ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): nan,
- ('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.0,
- ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): nan,
- ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): nan,
- ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): nan,
- ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): nan,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): nan,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): nan,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): nan,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): nan,
- ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): nan,
- ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): nan,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'effort'): inf,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'rate'): 0,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'effort'): inf,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'rate'): 0,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'effort'): inf,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'rate'): 0,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'effort'): inf,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'rate'): 0,
- ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'effort'): inf,
- ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0,
- ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'effort'): inf,
- ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0,
- ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'effort'): inf,
- ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0,
- ('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'effort'): inf,
- ('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'rate'): 0,
- ('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'effort'): inf,
- ('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'rate'): 0,
- ('Import_EE', 'Distribute_EE', 'EE', 'effort'): inf}
-END FAULTS:
-{'Import_EE': {'infv'}, 'Affect_Roll_Right': {'opencircuit'}, 'Affect_Roll_Left': {'opencircuit'}, 'Affect_Pitch_Right': {'opencircuit'}, 'Affect_Pitch_Left': {'opencircuit'}, 'Affect_Yaw': {'opencircuit'}, 'Affect_Drag_Right': {'opencircuit'}, 'Affect_Drag_Left': {'opencircuit'}, 'Affect_Lift_Right': {'opencircuit'}, 'Affect_Lift_Left': {'opencircuit'}}
-
-FAULT SCENARIO:  Import_EE   lowv
-PROBABILITY:  moderate
-SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 0.5,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.5,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 0.5,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.5,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 0.5,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.5,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 0.5,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.5,
- ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.5,
- ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.5,
- ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.5,
- ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.5,
- ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.5,
- ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.5,
- ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.5,
- ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.5,
- ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.5,
- ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'effort'): 0.5,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'rate'): 0.5,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'effort'): 0.5,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'rate'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'effort'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'rate'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'effort'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'rate'): 0.5,
- ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'effort'): 0.5,
- ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.5,
- ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'effort'): 0.5,
- ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0.5,
- ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'effort'): 0.5,
- ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0.5,
- ('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'effort'): 0.5,
- ('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'rate'): 0.5,
- ('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'effort'): 0.5,
- ('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'rate'): 0.5,
- ('Import_EE', 'Distribute_EE', 'EE', 'effort'): 0.5}
-END FAULTS:
-{'Import_EE': {'lowv'}}
 
 FAULT SCENARIO:  Affect_Roll_Right   friction
 PROBABILITY:  moderate
@@ -565,61 +561,61 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Yaw': {'friction'}}
 
-FAULT SCENARIO:  Affect_Drag_Right   friction
+FAULT SCENARIO:  Affect_Liftpr_Right   friction
 PROBABILITY:  moderate
 SCORE: 1475232.5  ( 2920645.0 - 29820.0 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Right', 'Combine_Drag', 'ForcedragR', 'force'): 0.5,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 0.5,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.75,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.75}
+{('Affect_Liftpr_Right', 'Combine_Liftpr', 'ForceliftprR', 'force'): 0.5,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 0.5,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.75,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.75}
 END FAULTS:
-{'Affect_Drag_Right': {'friction'}}
+{'Affect_Liftpr_Right': {'friction'}}
 
-FAULT SCENARIO:  Affect_Drag_Left   friction
+FAULT SCENARIO:  Affect_Liftpr_Left   friction
 PROBABILITY:  moderate
 SCORE: 1475232.5  ( 2920645.0 - 29820.0 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'ForcedragL', 'force'): 0.5,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 0.5,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.75,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.75}
+{('Affect_Liftpr_Left', 'Combine_Liftpr', 'ForceliftprL', 'force'): 0.5,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 0.5,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.75,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.75}
 END FAULTS:
-{'Affect_Drag_Left': {'friction'}}
+{'Affect_Liftpr_Left': {'friction'}}
 
-FAULT SCENARIO:  Affect_Lift_Right   friction
+FAULT SCENARIO:  Affect_Liftdn_Right   friction
 PROBABILITY:  moderate
 SCORE: 1475232.5  ( 2920645.0 - 29820.0 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Right', 'Combine_Lift', 'ForceliftR', 'force'): 0.5,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 0.5,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.75,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.75}
+{('Affect_Liftdn_Right', 'Combine_Liftdn', 'ForceliftdnR', 'force'): 0.5,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 0.5,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.75,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.75}
 END FAULTS:
-{'Affect_Lift_Right': {'friction'}}
+{'Affect_Liftdn_Right': {'friction'}}
 
-FAULT SCENARIO:  Affect_Lift_Left   friction
+FAULT SCENARIO:  Affect_Liftdn_Left   friction
 PROBABILITY:  moderate
 SCORE: 1475232.5  ( 2920645.0 - 29820.0 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Left', 'Combine_Lift', 'ForceliftL', 'force'): 0.5,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 0.5,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.75,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.75}
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'ForceliftdnL', 'force'): 0.5,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 0.5,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.75,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.75}
 END FAULTS:
-{'Affect_Lift_Left': {'friction'}}
+{'Affect_Liftdn_Left': {'friction'}}
 
 FAULT SCENARIO:  Import_Air   novel
 PROBABILITY:  low
@@ -627,18 +623,18 @@ SCORE: 201494.25  ( 11968.5 - 391020.0 )
 SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic', 'Export_LD': 'major'}
 REPAIR:  totaled
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'ForcedragL', 'force'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'ForcedragR', 'force'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'ForceliftL', 'force'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'ForceliftR', 'force'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.0,
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'ForceliftdnL', 'force'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'ForceliftdnR', 'force'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'ForceliftprL', 'force'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'ForceliftprR', 'force'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.0,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
@@ -653,18 +649,18 @@ FLOW EFFECTS:
  ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.0,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.0,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.0,
  ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.0,
  ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.0,
- ('Import_Air', 'Affect_Drag_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Drag_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Lift_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Lift_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0,
  ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
  ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
  ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
@@ -745,98 +741,19 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Yaw': {'opencircuit'}}
 
-FAULT SCENARIO:  Distribute_EE   opencRollL
-PROBABILITY:  low
-SCORE: 84864.8  ( 5040.6 - 164689.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.0,
- ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
- ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
- ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0.0}
-END FAULTS:
-{'Distribute_EE': {'opencRollL'}}
-
-FAULT SCENARIO:  Distribute_EE   opencPitchR
-PROBABILITY:  low
-SCORE: 84864.8  ( 5040.6 - 164689.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
- ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0.0}
-END FAULTS:
-{'Distribute_EE': {'opencPitchR'}}
-
-FAULT SCENARIO:  Distribute_EE   opencPitchL
-PROBABILITY:  low
-SCORE: 84864.8  ( 5040.6 - 164689.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
- ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.0}
-END FAULTS:
-{'Distribute_EE': {'opencPitchL'}}
-
-FAULT SCENARIO:  Distribute_Signal   nosigRollL
-PROBABILITY:  low
-SCORE: 84864.8  ( 5040.6 - 164689.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
- ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5,
- ('Distribute_Signal', 'Affect_Roll_Left', 'SigRollL', 'ctl'): 0.0}
-END FAULTS:
-{'Distribute_Signal': {'nosigRollL'}}
-
-FAULT SCENARIO:  Distribute_Signal   nosigPitchR
-PROBABILITY:  low
-SCORE: 84864.8  ( 5040.6 - 164689.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5,
- ('Distribute_Signal', 'Affect_Pitch_Right', 'SigPitchR', 'ctl'): 0.0}
-END FAULTS:
-{'Distribute_Signal': {'nosigPitchR'}}
-
-FAULT SCENARIO:  Distribute_Signal   nosigPitchL
-PROBABILITY:  low
-SCORE: 84864.8  ( 5040.6 - 164689.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
- ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5,
- ('Distribute_Signal', 'Affect_Pitch_Left', 'SigPitchL', 'ctl'): 0.0}
-END FAULTS:
-{'Distribute_Signal': {'nosigPitchL'}}
-
 FAULT SCENARIO:  Affect_Roll_Right   surfwarp
 PROBABILITY:  low
 SCORE: 84864.8  ( 5040.6 - 164689.0 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
 REPAIR:  major
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+{('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.5,
  ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.5,
  ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.5,
  ('Affect_Roll_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.75,
  ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.75}
 END FAULTS:
@@ -919,11 +836,13 @@ SCORE: 84864.8  ( 5040.6 - 164689.0 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
 REPAIR:  major
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+{('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.5,
  ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.5,
  ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.5,
  ('Affect_Roll_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.75,
  ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.75}
 END FAULTS:
@@ -1006,11 +925,13 @@ SCORE: 84864.8  ( 5040.6 - 164689.0 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
 REPAIR:  major
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+{('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.5,
  ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.5,
  ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.5,
  ('Affect_Pitch_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.75,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.75}
 END FAULTS:
@@ -1093,11 +1014,13 @@ SCORE: 84864.8  ( 5040.6 - 164689.0 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
 REPAIR:  major
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+{('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.5,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.5,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.5,
  ('Affect_Pitch_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.75,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.75}
 END FAULTS:
@@ -1180,7 +1103,8 @@ SCORE: 84864.8  ( 5040.6 - 164689.0 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
 REPAIR:  major
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+{('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.5,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.5}
@@ -1197,405 +1121,407 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Yaw': {'ctldrift'}}
 
-FAULT SCENARIO:  Distribute_EE   opencLiftR
+FAULT SCENARIO:  Distribute_EE   opencLiftdnL
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'rate'): 0.0}
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0.0}
 END FAULTS:
-{'Distribute_EE': {'opencLiftR'}}
+{'Distribute_EE': {'opencLiftdnL'}}
 
-FAULT SCENARIO:  Distribute_EE   opencLiftL
+FAULT SCENARIO:  Distribute_EE   opencLiftprR
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'rate'): 0.0}
+{('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0.0}
 END FAULTS:
-{'Distribute_EE': {'opencLiftL'}}
+{'Distribute_EE': {'opencLiftprR'}}
 
-FAULT SCENARIO:  Distribute_Signal   nosigLiftR
+FAULT SCENARIO:  Distribute_Signal   nosigLiftdnL
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5,
- ('Distribute_Signal', 'Affect_Lift_Right', 'SigLiftR', 'ctl'): 0.0}
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5,
+ ('Distribute_Signal', 'Affect_Liftdn_Left', 'SigLiftdnL', 'ctl'): 0.0}
 END FAULTS:
-{'Distribute_Signal': {'nosigLiftR'}}
+{'Distribute_Signal': {'nosigLiftdnL'}}
 
-FAULT SCENARIO:  Distribute_Signal   nosigLiftL
+FAULT SCENARIO:  Distribute_Signal   nosigLiftprR
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5,
- ('Distribute_Signal', 'Affect_Lift_Left', 'SigLiftL', 'ctl'): 0.0}
+{('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5,
+ ('Distribute_Signal', 'Affect_Liftpr_Right', 'SigLiftprR', 'ctl'): 0.0}
 END FAULTS:
-{'Distribute_Signal': {'nosigLiftL'}}
+{'Distribute_Signal': {'nosigLiftprR'}}
 
-FAULT SCENARIO:  Affect_Drag_Right   surfwarp
+FAULT SCENARIO:  Affect_Liftpr_Right   surfwarp
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Affect_Drag_Right', 'Combine_Drag', 'ForcedragR', 'force'): 0.5,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 0.5,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.5,
- ('Affect_Drag_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.75,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.75}
+{('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'ForceliftprR', 'force'): 0.5,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 0.5,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.5,
+ ('Affect_Liftpr_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.75,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.75}
 END FAULTS:
-{'Affect_Drag_Right': {'surfwarp'}}
+{'Affect_Liftpr_Right': {'surfwarp'}}
 
-FAULT SCENARIO:  Affect_Drag_Right   jamcl
+FAULT SCENARIO:  Affect_Liftpr_Right   jamcl
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Right', 'Combine_Drag', 'ForcedragR', 'force'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.5}
+{('Affect_Liftpr_Right', 'Combine_Liftpr', 'ForceliftprR', 'force'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Drag_Right': {'jamcl'}}
+{'Affect_Liftpr_Right': {'jamcl'}}
 
-FAULT SCENARIO:  Affect_Drag_Right   jamopen
+FAULT SCENARIO:  Affect_Liftpr_Right   jamopen
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Right', 'Combine_Drag', 'ForcedragR', 'force'): 2.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 2.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 1.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.5}
+{('Affect_Liftpr_Right', 'Combine_Liftpr', 'ForceliftprR', 'force'): 2.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 2.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 1.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Drag_Right': {'jamopen'}, 'Combine_Drag': {'damageR'}}
+{'Affect_Liftpr_Right': {'jamopen'}, 'Combine_Liftpr': {'damageR'}}
 
-FAULT SCENARIO:  Affect_Drag_Right   short
+FAULT SCENARIO:  Affect_Liftpr_Right   short
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Right', 'Combine_Drag', 'ForcedragR', 'force'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'rate'): inf,
- ('Distribute_Signal', 'Affect_Drag_Right', 'SigDragR', 'ctl'): 0.0}
+{('Affect_Liftpr_Right', 'Combine_Liftpr', 'ForceliftprR', 'force'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): inf,
+ ('Distribute_Signal', 'Affect_Liftpr_Right', 'SigLiftprR', 'ctl'): 0.0}
 END FAULTS:
-{'Distribute_EE': {'opencDragR'}, 'Affect_Drag_Right': {'short'}}
+{'Distribute_EE': {'opencLiftprR'}, 'Affect_Liftpr_Right': {'short'}}
 
-FAULT SCENARIO:  Affect_Drag_Right   opencircuit
+FAULT SCENARIO:  Affect_Liftpr_Right   opencircuit
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Right', 'Combine_Drag', 'ForcedragR', 'force'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'rate'): 0}
+{('Affect_Liftpr_Right', 'Combine_Liftpr', 'ForceliftprR', 'force'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0}
 END FAULTS:
-{'Affect_Drag_Right': {'opencircuit'}}
+{'Affect_Liftpr_Right': {'opencircuit'}}
 
-FAULT SCENARIO:  Affect_Drag_Right   ctldrift
+FAULT SCENARIO:  Affect_Liftpr_Right   ctldrift
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.75}
+{('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.75}
 END FAULTS:
-{'Affect_Drag_Right': {'ctldrift'}}
+{'Affect_Liftpr_Right': {'ctldrift'}}
 
-FAULT SCENARIO:  Affect_Drag_Left   surfwarp
+FAULT SCENARIO:  Affect_Liftpr_Left   surfwarp
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'ForcedragL', 'force'): 0.5,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 0.5,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.75,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.75}
+{('Affect_Liftpr_Left', 'Combine_Liftpr', 'ForceliftprL', 'force'): 0.5,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 0.5,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.75,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.75}
 END FAULTS:
-{'Affect_Drag_Left': {'surfwarp'}}
+{'Affect_Liftpr_Left': {'surfwarp'}}
 
-FAULT SCENARIO:  Affect_Drag_Left   jamcl
+FAULT SCENARIO:  Affect_Liftpr_Left   jamcl
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'ForcedragL', 'force'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.5}
+{('Affect_Liftpr_Left', 'Combine_Liftpr', 'ForceliftprL', 'force'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Drag_Left': {'jamcl'}}
+{'Affect_Liftpr_Left': {'jamcl'}}
 
-FAULT SCENARIO:  Affect_Drag_Left   jamopen
+FAULT SCENARIO:  Affect_Liftpr_Left   jamopen
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'ForcedragL', 'force'): 2.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 2.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 1.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.5}
+{('Affect_Liftpr_Left', 'Combine_Liftpr', 'ForceliftprL', 'force'): 2.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 2.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 1.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Drag_Left': {'jamopen'}, 'Combine_Drag': {'damageL'}}
+{'Affect_Liftpr_Left': {'jamopen'}, 'Combine_Liftpr': {'damageL'}}
 
-FAULT SCENARIO:  Affect_Drag_Left   short
+FAULT SCENARIO:  Affect_Liftpr_Left   short
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'ForcedragL', 'force'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'rate'): inf,
- ('Distribute_Signal', 'Affect_Drag_Left', 'SigDragL', 'ctl'): 0.0}
+{('Affect_Liftpr_Left', 'Combine_Liftpr', 'ForceliftprL', 'force'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): inf,
+ ('Distribute_Signal', 'Affect_Liftpr_Left', 'SigLiftprL', 'ctl'): 0.0}
 END FAULTS:
-{'Distribute_EE': {'opencDragL'}, 'Affect_Drag_Left': {'short'}}
+{'Distribute_EE': {'opencLiftprL'}, 'Affect_Liftpr_Left': {'short'}}
 
-FAULT SCENARIO:  Affect_Drag_Left   opencircuit
+FAULT SCENARIO:  Affect_Liftpr_Left   opencircuit
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'ForcedragL', 'force'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'rate'): 0}
+{('Affect_Liftpr_Left', 'Combine_Liftpr', 'ForceliftprL', 'force'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0}
 END FAULTS:
-{'Affect_Drag_Left': {'opencircuit'}}
+{'Affect_Liftpr_Left': {'opencircuit'}}
 
-FAULT SCENARIO:  Affect_Drag_Left   ctldrift
+FAULT SCENARIO:  Affect_Liftpr_Left   ctldrift
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.75}
+{('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.75}
 END FAULTS:
-{'Affect_Drag_Left': {'ctldrift'}}
+{'Affect_Liftpr_Left': {'ctldrift'}}
 
-FAULT SCENARIO:  Affect_Lift_Right   surfwarp
+FAULT SCENARIO:  Affect_Liftdn_Right   surfwarp
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Affect_Lift_Right', 'Combine_Lift', 'ForceliftR', 'force'): 0.5,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 0.5,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.5,
- ('Affect_Lift_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.75,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.75}
+{('Affect_Liftdn_Right', 'Combine_Liftdn', 'ForceliftdnR', 'force'): 0.5,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 0.5,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.75,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.75}
 END FAULTS:
-{'Affect_Lift_Right': {'surfwarp'}}
+{'Affect_Liftdn_Right': {'surfwarp'}}
 
-FAULT SCENARIO:  Affect_Lift_Right   jamcl
+FAULT SCENARIO:  Affect_Liftdn_Right   jamcl
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Right', 'Combine_Lift', 'ForceliftR', 'force'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5}
+{('Affect_Liftdn_Right', 'Combine_Liftdn', 'ForceliftdnR', 'force'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Lift_Right': {'jamcl'}}
+{'Affect_Liftdn_Right': {'jamcl'}}
 
-FAULT SCENARIO:  Affect_Lift_Right   jamopen
+FAULT SCENARIO:  Affect_Liftdn_Right   jamopen
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Right', 'Combine_Lift', 'ForceliftR', 'force'): 2.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 2.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 1.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5}
+{('Affect_Liftdn_Right', 'Combine_Liftdn', 'ForceliftdnR', 'force'): 2.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 2.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 1.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Lift_Right': {'jamopen'}, 'Combine_Lift': {'damageR'}}
+{'Affect_Liftdn_Right': {'jamopen'}, 'Combine_Liftdn': {'damageR'}}
 
-FAULT SCENARIO:  Affect_Lift_Right   short
+FAULT SCENARIO:  Affect_Liftdn_Right   short
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Right', 'Combine_Lift', 'ForceliftR', 'force'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'rate'): inf,
- ('Distribute_Signal', 'Affect_Lift_Right', 'SigLiftR', 'ctl'): 0.0}
+{('Affect_Liftdn_Right', 'Combine_Liftdn', 'ForceliftdnR', 'force'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): inf,
+ ('Distribute_Signal', 'Affect_Liftdn_Right', 'SigLiftdnR', 'ctl'): 0.0}
 END FAULTS:
-{'Distribute_EE': {'opencLiftR'}, 'Affect_Lift_Right': {'short'}}
+{'Distribute_EE': {'opencLiftdnR'}, 'Affect_Liftdn_Right': {'short'}}
 
-FAULT SCENARIO:  Affect_Lift_Right   opencircuit
+FAULT SCENARIO:  Affect_Liftdn_Right   opencircuit
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Right', 'Combine_Lift', 'ForceliftR', 'force'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Right', 'EELiftR', 'rate'): 0}
+{('Affect_Liftdn_Right', 'Combine_Liftdn', 'ForceliftdnR', 'force'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0}
 END FAULTS:
-{'Affect_Lift_Right': {'opencircuit'}}
+{'Affect_Liftdn_Right': {'opencircuit'}}
 
-FAULT SCENARIO:  Affect_Lift_Right   ctldrift
+FAULT SCENARIO:  Affect_Liftdn_Right   ctldrift
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.75}
+{('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.75}
 END FAULTS:
-{'Affect_Lift_Right': {'ctldrift'}}
+{'Affect_Liftdn_Right': {'ctldrift'}}
 
-FAULT SCENARIO:  Affect_Lift_Left   surfwarp
+FAULT SCENARIO:  Affect_Liftdn_Left   surfwarp
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Affect_Lift_Left', 'Combine_Lift', 'ForceliftL', 'force'): 0.5,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 0.5,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.5,
- ('Affect_Lift_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.75,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.75}
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'ForceliftdnL', 'force'): 0.5,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 0.5,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.5,
+ ('Affect_Liftdn_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.75,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.75}
 END FAULTS:
-{'Affect_Lift_Left': {'surfwarp'}}
+{'Affect_Liftdn_Left': {'surfwarp'}}
 
-FAULT SCENARIO:  Affect_Lift_Left   jamcl
+FAULT SCENARIO:  Affect_Liftdn_Left   jamcl
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Left', 'Combine_Lift', 'ForceliftL', 'force'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5}
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'ForceliftdnL', 'force'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Lift_Left': {'jamcl'}}
+{'Affect_Liftdn_Left': {'jamcl'}}
 
-FAULT SCENARIO:  Affect_Lift_Left   jamopen
+FAULT SCENARIO:  Affect_Liftdn_Left   jamopen
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Left', 'Combine_Lift', 'ForceliftL', 'force'): 2.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 2.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 1.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5}
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'ForceliftdnL', 'force'): 2.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 2.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 1.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Lift_Left': {'jamopen'}, 'Combine_Lift': {'damageL'}}
+{'Affect_Liftdn_Left': {'jamopen'}, 'Combine_Liftdn': {'damageL'}}
 
-FAULT SCENARIO:  Affect_Lift_Left   short
+FAULT SCENARIO:  Affect_Liftdn_Left   short
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Left', 'Combine_Lift', 'ForceliftL', 'force'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'rate'): inf,
- ('Distribute_Signal', 'Affect_Lift_Left', 'SigLiftL', 'ctl'): 0.0}
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'ForceliftdnL', 'force'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): inf,
+ ('Distribute_Signal', 'Affect_Liftdn_Left', 'SigLiftdnL', 'ctl'): 0.0}
 END FAULTS:
-{'Distribute_EE': {'opencLiftL'}, 'Affect_Lift_Left': {'short'}}
+{'Distribute_EE': {'opencLiftdnL'}, 'Affect_Liftdn_Left': {'short'}}
 
-FAULT SCENARIO:  Affect_Lift_Left   opencircuit
+FAULT SCENARIO:  Affect_Liftdn_Left   opencircuit
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Left', 'Combine_Lift', 'ForceliftL', 'force'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5,
- ('Distribute_EE', 'Affect_Lift_Left', 'EELiftL', 'rate'): 0}
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'ForceliftdnL', 'force'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0}
 END FAULTS:
-{'Affect_Lift_Left': {'opencircuit'}}
+{'Affect_Liftdn_Left': {'opencircuit'}}
 
-FAULT SCENARIO:  Affect_Lift_Left   ctldrift
+FAULT SCENARIO:  Affect_Liftdn_Left   ctldrift
 PROBABILITY:  low
 SCORE: 15058.8375  ( 894.075 - 29223.6 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.75}
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.75}
 END FAULTS:
-{'Affect_Lift_Left': {'ctldrift'}}
+{'Affect_Liftdn_Left': {'ctldrift'}}
 
 FAULT SCENARIO:  Affect_Yaw   surfbreak
 PROBABILITY:  remote
@@ -1603,7 +1529,8 @@ SCORE: 5723.09  ( 0.0 - 11446.18 )
 SEVERITY:  {'total': 'catastrophic', 'Export_DOF': 'catastrophic', 'Export_LD': 'noeffect'}
 REPAIR:  totaled
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
+{('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
  ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.0,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'amplitude'): 0.0,
  ('Affect_Yaw', 'Export_DOF', 'yaw', 'intent'): 0.0}
@@ -1626,11 +1553,13 @@ SCORE: 2503.945  ( 0.0 - 5007.89 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
 REPAIR:  major
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
+{('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
  ('Affect_Roll_Right', 'Combine_Roll', 'ForcerollR', 'force'): 0.0,
  ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'amplitude'): 0.0,
  ('Affect_Roll_Right', 'Combine_Roll', 'MomentrollR', 'intent'): 0.0,
  ('Affect_Roll_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.0,
  ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
  ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5}
 END FAULTS:
@@ -1653,11 +1582,13 @@ SCORE: 2503.945  ( 0.0 - 5007.89 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
 REPAIR:  major
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
+{('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
  ('Affect_Roll_Left', 'Combine_Roll', 'ForcerollL', 'force'): 0.0,
  ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.0,
  ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
  ('Affect_Roll_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.0,
  ('Combine_Roll', 'Export_DOF', 'roll', 'amplitude'): 0.5,
  ('Combine_Roll', 'Export_DOF', 'roll', 'intent'): 0.5}
 END FAULTS:
@@ -1680,11 +1611,13 @@ SCORE: 2503.945  ( 0.0 - 5007.89 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
 REPAIR:  major
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
+{('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
  ('Affect_Pitch_Right', 'Combine_Pitch', 'ForcepitchR', 'force'): 0.0,
  ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
  ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
  ('Affect_Pitch_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.0,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5}
 END FAULTS:
@@ -1707,11 +1640,13 @@ SCORE: 2503.945  ( 0.0 - 5007.89 )
 SEVERITY:  {'total': 'hazardous', 'Export_DOF': 'hazardous', 'Export_LD': 'noeffect'}
 REPAIR:  major
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
+{('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'ForcepitchL', 'force'): 0.0,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
  ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
  ('Affect_Pitch_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.0,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'amplitude'): 0.5,
  ('Combine_Pitch', 'Export_DOF', 'pitch', 'intent'): 0.5}
 END FAULTS:
@@ -1768,151 +1703,153 @@ FLOW EFFECTS:
 END FAULTS:
 {'Combine_Pitch': {'breakR'}}
 
-FAULT SCENARIO:  Affect_Drag_Right   surfbreak
+FAULT SCENARIO:  Affect_Liftpr_Right   surfbreak
 PROBABILITY:  remote
 SCORE: 444.318  ( 0.0 - 888.636 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'ForcedragR', 'force'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.0,
- ('Affect_Drag_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.5}
+{('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'ForceliftprR', 'force'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.0,
+ ('Affect_Liftpr_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Drag_Right': {'surfbreak'}}
+{'Affect_Liftpr_Right': {'surfbreak'}}
 
-FAULT SCENARIO:  Affect_Drag_Right   ctlbreak
+FAULT SCENARIO:  Affect_Liftpr_Right   ctlbreak
 PROBABILITY:  remote
 SCORE: 444.318  ( 0.0 - 888.636 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.5}
+{('Affect_Liftpr_Right', 'Combine_Liftpr', 'MomentliftprR', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Drag_Right': {'ctlbreak'}}
+{'Affect_Liftpr_Right': {'ctlbreak'}}
 
-FAULT SCENARIO:  Affect_Drag_Left   surfbreak
+FAULT SCENARIO:  Affect_Liftpr_Left   surfbreak
 PROBABILITY:  remote
 SCORE: 444.318  ( 0.0 - 888.636 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'ForcedragL', 'force'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.5,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.5}
+{('Affect_Liftpr_Left', 'Combine_Liftpr', 'ForceliftprL', 'force'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Drag_Left': {'surfbreak'}}
+{'Affect_Liftpr_Left': {'surfbreak'}}
 
-FAULT SCENARIO:  Affect_Drag_Left   ctlbreak
+FAULT SCENARIO:  Affect_Liftpr_Left   ctlbreak
 PROBABILITY:  remote
 SCORE: 444.318  ( 0.0 - 888.636 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.0,
- ('Combine_Drag', 'Export_LD', 'drag', 'intent'): 0.5}
+{('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.0,
+ ('Combine_Liftpr', 'Export_LD', 'liftpr', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Drag_Left': {'ctlbreak'}}
+{'Affect_Liftpr_Left': {'ctlbreak'}}
 
-FAULT SCENARIO:  Combine_Drag   breakL
+FAULT SCENARIO:  Combine_Liftpr   breakL
 PROBABILITY:  remote
 SCORE: 444.318  ( 0.0 - 888.636 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.5}
+{('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5}
 END FAULTS:
-{'Combine_Drag': {'breakL'}}
+{'Combine_Liftpr': {'breakL'}}
 
-FAULT SCENARIO:  Combine_Drag   breakR
+FAULT SCENARIO:  Combine_Liftpr   breakR
 PROBABILITY:  remote
 SCORE: 444.318  ( 0.0 - 888.636 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Combine_Drag', 'Export_LD', 'drag', 'amplitude'): 0.5}
+{('Combine_Liftpr', 'Export_LD', 'liftpr', 'amplitude'): 0.5}
 END FAULTS:
-{'Combine_Drag': {'breakR'}}
+{'Combine_Liftpr': {'breakR'}}
 
-FAULT SCENARIO:  Affect_Lift_Right   surfbreak
+FAULT SCENARIO:  Affect_Liftdn_Right   surfbreak
 PROBABILITY:  remote
 SCORE: 444.318  ( 0.0 - 888.636 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'ForceliftR', 'force'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'amplitude'): 0.0,
- ('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.0,
- ('Affect_Lift_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5}
+{('Affect_Liftdn_Right', 'Combine_Liftdn', 'ForceliftdnR', 'force'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Lift_Right': {'surfbreak'}}
+{'Affect_Liftdn_Right': {'surfbreak'}}
 
-FAULT SCENARIO:  Affect_Lift_Right   ctlbreak
+FAULT SCENARIO:  Affect_Liftdn_Right   ctlbreak
 PROBABILITY:  remote
 SCORE: 444.318  ( 0.0 - 888.636 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Right', 'Combine_Lift', 'MomentliftR', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5}
+{('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Lift_Right': {'ctlbreak'}}
+{'Affect_Liftdn_Right': {'ctlbreak'}}
 
-FAULT SCENARIO:  Affect_Lift_Left   surfbreak
+FAULT SCENARIO:  Affect_Liftdn_Left   surfbreak
 PROBABILITY:  remote
 SCORE: 444.318  ( 0.0 - 888.636 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'ForceliftL', 'force'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'amplitude'): 0.0,
- ('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.0,
- ('Affect_Lift_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5}
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'ForceliftdnL', 'force'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.0,
+ ('Affect_Liftdn_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.5,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Lift_Left': {'surfbreak'}}
+{'Affect_Liftdn_Left': {'surfbreak'}}
 
-FAULT SCENARIO:  Affect_Lift_Left   ctlbreak
+FAULT SCENARIO:  Affect_Liftdn_Left   ctlbreak
 PROBABILITY:  remote
 SCORE: 444.318  ( 0.0 - 888.636 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Affect_Lift_Left', 'Combine_Lift', 'MomentliftL', 'intent'): 0.0,
- ('Combine_Lift', 'Export_LD', 'lift', 'intent'): 0.5}
+{('Affect_Liftdn_Left', 'Combine_Liftdn', 'MomentliftdnL', 'intent'): 0.0,
+ ('Combine_Liftdn', 'Export_LD', 'liftdn', 'intent'): 0.5}
 END FAULTS:
-{'Affect_Lift_Left': {'ctlbreak'}}
+{'Affect_Liftdn_Left': {'ctlbreak'}}
 
-FAULT SCENARIO:  Combine_Lift   breakL
+FAULT SCENARIO:  Combine_Liftdn   breakL
 PROBABILITY:  remote
 SCORE: 444.318  ( 0.0 - 888.636 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5}
+{('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.5}
 END FAULTS:
-{'Combine_Lift': {'breakL'}}
+{'Combine_Liftdn': {'breakL'}}
 
-FAULT SCENARIO:  Combine_Lift   breakR
+FAULT SCENARIO:  Combine_Liftdn   breakR
 PROBABILITY:  remote
 SCORE: 444.318  ( 0.0 - 888.636 )
 SEVERITY:  {'total': 'major', 'Export_DOF': 'noeffect', 'Export_LD': 'major'}
 REPAIR:  moderate
 FLOW EFFECTS:
-{('Combine_Lift', 'Export_LD', 'lift', 'amplitude'): 0.5}
+{('Combine_Liftdn', 'Export_LD', 'liftdn', 'amplitude'): 0.5}
 END FAULTS:
-{'Combine_Lift': {'breakR'}}
+{'Combine_Liftdn': {'breakR'}}
 
 FAULT SCENARIO:  Combine_Roll   damageL
 PROBABILITY:  low
@@ -1954,7 +1891,7 @@ FLOW EFFECTS:
 END FAULTS:
 {'Combine_Pitch': {'damageR'}}
 
-FAULT SCENARIO:  Combine_Drag   damageL
+FAULT SCENARIO:  Combine_Liftpr   damageL
 PROBABILITY:  low
 SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
 SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
@@ -1962,9 +1899,9 @@ REPAIR:  moderate
 FLOW EFFECTS:
 {}
 END FAULTS:
-{'Combine_Drag': {'damageL'}}
+{'Combine_Liftpr': {'damageL'}}
 
-FAULT SCENARIO:  Combine_Drag   damageR
+FAULT SCENARIO:  Combine_Liftpr   damageR
 PROBABILITY:  low
 SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
 SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
@@ -1972,9 +1909,9 @@ REPAIR:  moderate
 FLOW EFFECTS:
 {}
 END FAULTS:
-{'Combine_Drag': {'damageR'}}
+{'Combine_Liftpr': {'damageR'}}
 
-FAULT SCENARIO:  Combine_Lift   damageL
+FAULT SCENARIO:  Combine_Liftdn   damageL
 PROBABILITY:  low
 SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
 SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
@@ -1982,9 +1919,9 @@ REPAIR:  moderate
 FLOW EFFECTS:
 {}
 END FAULTS:
-{'Combine_Lift': {'damageL'}}
+{'Combine_Liftdn': {'damageL'}}
 
-FAULT SCENARIO:  Combine_Lift   damageR
+FAULT SCENARIO:  Combine_Liftdn   damageR
 PROBABILITY:  low
 SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
 SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
@@ -1992,33 +1929,33 @@ REPAIR:  moderate
 FLOW EFFECTS:
 {}
 END FAULTS:
-{'Combine_Lift': {'damageR'}}
+{'Combine_Liftdn': {'damageR'}}
 
-FAULT SCENARIO:  Distribute_EE   opencDragR
+FAULT SCENARIO:  Distribute_EE   opencLiftdnR
 PROBABILITY:  low
 SCORE: 1.2325  ( 0.015000000000000001 - 2.4499999999999997 )
 SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
 REPAIR:  minor
 FLOW EFFECTS:
-{('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'amplitude'): 0.0,
- ('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Right', 'EEDragR', 'rate'): 0.0}
+{('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'amplitude'): 0.0,
+ ('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.0,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0.0}
 END FAULTS:
-{'Distribute_EE': {'opencDragR'}}
+{'Distribute_EE': {'opencLiftdnR'}}
 
-FAULT SCENARIO:  Distribute_EE   opencDragL
+FAULT SCENARIO:  Distribute_EE   opencLiftprL
 PROBABILITY:  low
 SCORE: 1.2325  ( 0.015000000000000001 - 2.4499999999999997 )
 SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
 REPAIR:  minor
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'amplitude'): 0.0,
- ('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'effort'): 0.0,
- ('Distribute_EE', 'Affect_Drag_Left', 'EEDragL', 'rate'): 0.0}
+{('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'amplitude'): 0.0,
+ ('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.0,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0.0}
 END FAULTS:
-{'Distribute_EE': {'opencDragL'}}
+{'Distribute_EE': {'opencLiftprL'}}
 
 FAULT SCENARIO:  Distribute_EE   opencRollR
 PROBABILITY:  low
@@ -2033,27 +1970,66 @@ FLOW EFFECTS:
 END FAULTS:
 {'Distribute_EE': {'opencRollR'}}
 
-FAULT SCENARIO:  Distribute_Signal   nosigDragR
+FAULT SCENARIO:  Distribute_EE   opencRollL
 PROBABILITY:  low
 SCORE: 1.2325  ( 0.015000000000000001 - 2.4499999999999997 )
 SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
 REPAIR:  minor
 FLOW EFFECTS:
-{('Affect_Drag_Right', 'Combine_Drag', 'MomentdragR', 'intent'): 0.0,
- ('Distribute_Signal', 'Affect_Drag_Right', 'SigDragR', 'ctl'): 0.0}
+{('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'amplitude'): 0.0,
+ ('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
+ ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0.0}
 END FAULTS:
-{'Distribute_Signal': {'nosigDragR'}}
+{'Distribute_EE': {'opencRollL'}}
 
-FAULT SCENARIO:  Distribute_Signal   nosigDragL
+FAULT SCENARIO:  Distribute_EE   opencPitchR
 PROBABILITY:  low
 SCORE: 1.2325  ( 0.015000000000000001 - 2.4499999999999997 )
 SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
 REPAIR:  minor
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Combine_Drag', 'MomentdragL', 'intent'): 0.0,
- ('Distribute_Signal', 'Affect_Drag_Left', 'SigDragL', 'ctl'): 0.0}
+{('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'amplitude'): 0.0,
+ ('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
+ ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0.0}
 END FAULTS:
-{'Distribute_Signal': {'nosigDragL'}}
+{'Distribute_EE': {'opencPitchR'}}
+
+FAULT SCENARIO:  Distribute_EE   opencPitchL
+PROBABILITY:  low
+SCORE: 1.2325  ( 0.015000000000000001 - 2.4499999999999997 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
+REPAIR:  minor
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'amplitude'): 0.0,
+ ('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
+ ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'effort'): 0.0,
+ ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.0}
+END FAULTS:
+{'Distribute_EE': {'opencPitchL'}}
+
+FAULT SCENARIO:  Distribute_Signal   nosigLiftdnR
+PROBABILITY:  low
+SCORE: 1.2325  ( 0.015000000000000001 - 2.4499999999999997 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
+REPAIR:  minor
+FLOW EFFECTS:
+{('Affect_Liftdn_Right', 'Combine_Liftdn', 'MomentliftdnR', 'intent'): 0.0,
+ ('Distribute_Signal', 'Affect_Liftdn_Right', 'SigLiftdnR', 'ctl'): 0.0}
+END FAULTS:
+{'Distribute_Signal': {'nosigLiftdnR'}}
+
+FAULT SCENARIO:  Distribute_Signal   nosigLiftprL
+PROBABILITY:  low
+SCORE: 1.2325  ( 0.015000000000000001 - 2.4499999999999997 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
+REPAIR:  minor
+FLOW EFFECTS:
+{('Affect_Liftpr_Left', 'Combine_Liftpr', 'MomentliftprL', 'intent'): 0.0,
+ ('Distribute_Signal', 'Affect_Liftpr_Left', 'SigLiftprL', 'ctl'): 0.0}
+END FAULTS:
+{'Distribute_Signal': {'nosigLiftprL'}}
 
 FAULT SCENARIO:  Distribute_Signal   nosigRollR
 PROBABILITY:  low
@@ -2066,25 +2042,58 @@ FLOW EFFECTS:
 END FAULTS:
 {'Distribute_Signal': {'nosigRollR'}}
 
+FAULT SCENARIO:  Distribute_Signal   nosigRollL
+PROBABILITY:  low
+SCORE: 1.2325  ( 0.015000000000000001 - 2.4499999999999997 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
+REPAIR:  minor
+FLOW EFFECTS:
+{('Affect_Roll_Left', 'Combine_Roll', 'MomentrollL', 'intent'): 0.0,
+ ('Distribute_Signal', 'Affect_Roll_Left', 'SigRollL', 'ctl'): 0.0}
+END FAULTS:
+{'Distribute_Signal': {'nosigRollL'}}
+
+FAULT SCENARIO:  Distribute_Signal   nosigPitchR
+PROBABILITY:  low
+SCORE: 1.2325  ( 0.015000000000000001 - 2.4499999999999997 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
+REPAIR:  minor
+FLOW EFFECTS:
+{('Affect_Pitch_Right', 'Combine_Pitch', 'MomentpitchR', 'intent'): 0.0,
+ ('Distribute_Signal', 'Affect_Pitch_Right', 'SigPitchR', 'ctl'): 0.0}
+END FAULTS:
+{'Distribute_Signal': {'nosigPitchR'}}
+
+FAULT SCENARIO:  Distribute_Signal   nosigPitchL
+PROBABILITY:  low
+SCORE: 1.2325  ( 0.015000000000000001 - 2.4499999999999997 )
+SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
+REPAIR:  minor
+FLOW EFFECTS:
+{('Affect_Pitch_Left', 'Combine_Pitch', 'MomentpitchL', 'intent'): 0.0,
+ ('Distribute_Signal', 'Affect_Pitch_Left', 'SigPitchL', 'ctl'): 0.0}
+END FAULTS:
+{'Distribute_Signal': {'nosigPitchL'}}
+
 FAULT SCENARIO:  Import_Air   gusts
 PROBABILITY:  veryhigh
 SCORE: 0.0  ( 0.0 - 0.0 )
 SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Affect_Drag_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Affect_Lift_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Affect_Lift_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+{('Affect_Liftdn_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftpr_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Pitch_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Pitch_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Roll_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Roll_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Import_Air', 'Affect_Drag_Left', 'Air', 'turbulence'): 0.5,
- ('Import_Air', 'Affect_Drag_Right', 'Air', 'turbulence'): 0.5,
- ('Import_Air', 'Affect_Lift_Left', 'Air', 'turbulence'): 0.5,
- ('Import_Air', 'Affect_Lift_Right', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'turbulence'): 0.5,
  ('Import_Air', 'Affect_Pitch_Left', 'Air', 'turbulence'): 0.5,
  ('Import_Air', 'Affect_Pitch_Right', 'Air', 'turbulence'): 0.5,
  ('Import_Air', 'Affect_Roll_Left', 'Air', 'turbulence'): 0.5,
@@ -2099,19 +2108,19 @@ SCORE: 0.0  ( 0.0 - 0.0 )
 SEVERITY:  {'total': 'noeffect', 'Export_DOF': 'noeffect', 'Export_LD': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
-{('Affect_Drag_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Affect_Drag_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Affect_Lift_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Affect_Lift_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+{('Affect_Liftdn_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftdn_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftpr_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
+ ('Affect_Liftpr_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Pitch_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Pitch_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Roll_Left', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Roll_Right', 'Export_Air', 'Air', 'turbulence'): 0.5,
  ('Affect_Yaw', 'Export_Air', 'Air', 'turbulence'): 0.5,
- ('Import_Air', 'Affect_Drag_Left', 'Air', 'turbulence'): 0.5,
- ('Import_Air', 'Affect_Drag_Right', 'Air', 'turbulence'): 0.5,
- ('Import_Air', 'Affect_Lift_Left', 'Air', 'turbulence'): 0.5,
- ('Import_Air', 'Affect_Lift_Right', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'turbulence'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'turbulence'): 0.5,
  ('Import_Air', 'Affect_Pitch_Left', 'Air', 'turbulence'): 0.5,
  ('Import_Air', 'Affect_Pitch_Right', 'Air', 'turbulence'): 0.5,
  ('Import_Air', 'Affect_Roll_Left', 'Air', 'turbulence'): 0.5,
