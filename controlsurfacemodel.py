@@ -437,7 +437,6 @@ class affectDOF:
         self.type='function'
         self.Airout={'velocity': 1.0, 'turbulence': 1.0}
         self.Forceout={'force': 1.0}
-        self.Momentout={'amplitude': 1.0, 'intent':1.0 }
         
         self.mechstate=1.0
         self.surfstate=1.0
@@ -535,83 +534,137 @@ class affectDOF:
         self.behavior()
         inputs={self.signame: self.Sigin, self.eename: self.EEin, 'Air':self.Airin}
         if self.side=='c' or self.side=='C':
-            outputs={'Air': self.Airout, self.momentname:self.Momentout}
+            outputs={'Air': self.Airout}
         else:
-            outputs={'Air': self.Airout, self.momentname:self.Momentout, self.forcename:self.Forceout}
+            outputs={'Air': self.Airout,self.forcename:self.Forceout}
         return {'outputs':outputs, 'inputs':inputs}
     
-class combineforceandmoment:
-    def __init__(self,dof):
+class combineforces:
+    def __init__(self):
         self.type='function'
-        self.ForceLin={'force': 1.0}
-        self.ForceRin={'force': 1.0}
-        self.MomentLin={'amplitude': 1.0, 'intent':1.0 }
-        self.MomentRin={'amplitude': 1.0, 'intent':1.0 }
-
-        self.Forceout={'force': 1.0}
-        self.Momentout={'amplitude': 1.0, 'intent':1.0 }
+        self.ForceLiftdnR={'dev': 1.0, 'exp': 1.0}
+        self.ForceLiftdnL={'dev': 1.0, 'exp': 1.0}
+        self.ForceLiftprR={'dev': 1.0, 'exp': 1.0}
+        self.ForceLiftprL={'dev': 1.0, 'exp': 1.0}
+        self.ForceYaw={'dev': 1.0, 'exp': 1.0}
+        self.ForceRollR={'dev': 1.0, 'exp': 1.0}
+        self.ForceRollL={'dev': 1.0, 'exp': 1.0}
+        self.ForcePitchR={'dev': 1.0, 'exp': 1.0}
+        self.ForcePitchL={'dev': 1.0, 'exp': 1.0}
         
-        self.structstateL=1.0
-        self.structstateR=1.0
-        
-        self.dof=dof
-        
-        self.faultmodes={'breakL':{'lprob':'remote', 'rcost':'moderate'}, \
-                         'breakR':{'lprob':'remote', 'rcost':'moderate'}, \
-                         'damageL':{'lprob':'low', 'rcost':'moderate'},\
-                         'damageR':{'lprob':'low', 'rcost':'moderate'}}
+        self.faultmodes={}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
     def condfaults(self):
-        if self.ForceLin['force']>2.0 or self.MomentLin['amplitude']>2.0 :
-            self.faults.update(['breakL'])
-        elif self.ForceLin['force']>1.5 or self.MomentLin['amplitude']>1.5:
-            self.faults.update(['damageL'])    
-        
-        if self.ForceRin['force']>2.0:
-            self.faults.update(['breakR'] or self.MomentRin['amplitude']>2.0)
-        elif self.ForceRin['force']>1.5:
-            self.faults.update(['damageR']  or self.MomentRin['amplitude']>2.0) 
         return 0
     def detbehav(self):
-        if self.faults.intersection(set(['breakL'])):
-            self.structstateL=0.0
-        if self.faults.intersection(set(['breakR'])):
-            self.structstateR=0.0
+        return 0
     def behavior(self):
-        self.Forceout['force']=.5*(self.structstateL*self.ForceLin['force']+self.structstateR*self.ForceRin['force'])
+                
+    def updatefxn(self,faults=['nom'],inputs={ \
+                  'ForceLiftdnR':{'dev': 1.0, 'exp': 1.0}, \
+                  'ForceLiftdnL':{'dev': 1.0, 'exp': 1.0}, 'ForceLiftprR':{'dev': 1.0, 'exp': 1.0}, \
+                  'ForceLiftprL':{'dev': 1.0, 'exp': 1.0}, 'ForceYaw':{'dev': 1.0, 'exp': 1.0}, \
+                  'ForceRollR':{'dev': 1.0, 'exp': 1.0}, 'ForceRollL':{'dev': 1.0, 'exp': 1.0}, \
+                  'ForcePitchR':{'dev': 1.0, 'exp': 1.0}, 'ForcePitchL':{'dev': 1.0, 'exp': 1.0}},\
+            outputs={}):
         
-        self.Momentout['amplitude']=.5*(self.structstateL*self.MomentLin['amplitude']+self.structstateR*self.MomentRin['amplitude'])
-        self.Momentout['intent']=.5*(self.MomentLin['intent']+self.MomentRin['intent'])
-        
-        #self.ForceLin['force']=self.structstateL*self.ForceLin['force']
-        #self.ForceRin['force']=self.structstateR*self.ForceRin['force']
-        #self.MomentLin['amplitude']=self.structstateL*self.MomentLin['amplitude']
-        #self.MomentRin['amplitude']=self.structstateR*self.MomentRin['amplitude']        
-    def updatefxn(self,faults=['nom'], inputs={}, outputs={}):
-        
-        if len(inputs)==0:
-            inputs={'Force'+self.dof+'L':{'force': 1.0},'Force'+self.dof+'R':{'force': 1.0}, 'Moment'+self.dof+'R':{'amplitude': 1.0, 'intent':1.0 }, 'Moment'+self.dof+'L':{'amplitude': 1.0, 'intent':1.0 } }
-        if len(outputs)==0:
-            outputs={ self.dof:{'amplitude': 1.0, 'intent':1.0 }}
-            
-        
-        self.ForceRin=inputs['Force'+self.dof+'R']
-        self.ForceLin=inputs['Force'+self.dof+'L']
-        #self.Forceout=outputs['Force']
-        self.MomentRin=inputs['Moment'+self.dof+'R']
-        self.MomentLin=inputs['Moment'+self.dof+'L']
-        self.Momentout=outputs[self.dof]
+        self.ForceLiftdnR=inputs['ForceLiftdnR']
+        self.ForceLiftdnL=inputs['ForceLiftdnL']
+        self.ForceLiftprR=inputs['ForceLiftprR']
+        self.ForceLiftprL=inputs['ForceLiftprL']
+        self.ForceYaw=inputs['ForceYaw']
+        self.ForceRollR=inputs['ForceRollR']
+        self.ForceRollL=inputs['ForceRollL']
+        self.ForcePitchR=inputs['ForcePitchR']
+        self.ForcePitchL=inputs['ForcePitchL']
         
         self.faults.update(faults)
         self.condfaults()
         self.resolvefaults()
         self.detbehav()
         self.behavior()
-        inputs={'Force'+self.dof+'L': self.ForceLin, 'Force'+self.dof+'R': self.ForceRin, 'Moment'+self.dof+'R': self.MomentRin, 'Moment'+self.dof+'L':self.MomentLin}
-        outputs={self.dof:self.Momentout}
-        return {'outputs':outputs, 'inputs':inputs} 
+        inputs={'ForceLiftdnR':self.ForceLiftdnR, \
+                  'ForceLiftdnL':self.ForceLiftdnL, 'ForceLiftprR':self.ForceLiftprR, \
+                  'ForceLiftprL':self.ForceLiftprL, 'ForceYaw':self.ForceYaw, \
+                  'ForceRollR':self.ForceRollR, 'ForceRollL':self.ForceRollL, \
+                  'ForcePitchR':self.ForcePitchR, 'ForcePitchL':self.ForcePitchL}
+        outputs={'Moment':{'roll':self.roll, 'pitch':self.pitch, 'yaw':self.yaw},'Force':{'drag':self.drag,'lift':self.lift}}
+        return {'outputs':outputs, 'inputs':inputs}
+    
+#class combineforceandmoment:
+#    def __init__(self,dof):
+#        self.type='function'
+#        self.ForceLin={'force': 1.0}
+#        self.ForceRin={'force': 1.0}
+#        self.MomentLin={'amplitude': 1.0, 'intent':1.0 }
+#        self.MomentRin={'amplitude': 1.0, 'intent':1.0 }
+#
+#        self.Forceout={'force': 1.0}
+#        self.Momentout={'amplitude': 1.0, 'intent':1.0 }
+#        
+#        self.structstateL=1.0
+#        self.structstateR=1.0
+#        
+#        self.dof=dof
+#        
+#        self.faultmodes={'breakL':{'lprob':'remote', 'rcost':'moderate'}, \
+#                         'breakR':{'lprob':'remote', 'rcost':'moderate'}, \
+#                         'damageL':{'lprob':'low', 'rcost':'moderate'},\
+#                         'damageR':{'lprob':'low', 'rcost':'moderate'}}
+#        self.faults=set(['nom'])
+#    def resolvefaults(self):
+#        return 0
+#    def condfaults(self):
+#        if self.ForceLin['force']>2.0 or self.MomentLin['amplitude']>2.0 :
+#            self.faults.update(['breakL'])
+#        elif self.ForceLin['force']>1.5 or self.MomentLin['amplitude']>1.5:
+#            self.faults.update(['damageL'])    
+#        
+#        if self.ForceRin['force']>2.0:
+#            self.faults.update(['breakR'] or self.MomentRin['amplitude']>2.0)
+#        elif self.ForceRin['force']>1.5:
+#            self.faults.update(['damageR']  or self.MomentRin['amplitude']>2.0) 
+#        return 0
+#    def detbehav(self):
+#        if self.faults.intersection(set(['breakL'])):
+#            self.structstateL=0.0
+#        if self.faults.intersection(set(['breakR'])):
+#            self.structstateR=0.0
+#    def behavior(self):
+#        self.Forceout['force']=.5*(self.structstateL*self.ForceLin['force']+self.structstateR*self.ForceRin['force'])
+#        
+#        self.Momentout['amplitude']=.5*(self.structstateL*self.MomentLin['amplitude']+self.structstateR*self.MomentRin['amplitude'])
+#        self.Momentout['intent']=.5*(self.MomentLin['intent']+self.MomentRin['intent'])
+#        
+#        #self.ForceLin['force']=self.structstateL*self.ForceLin['force']
+#        #self.ForceRin['force']=self.structstateR*self.ForceRin['force']
+#        #self.MomentLin['amplitude']=self.structstateL*self.MomentLin['amplitude']
+#        #self.MomentRin['amplitude']=self.structstateR*self.MomentRin['amplitude']        
+#    def updatefxn(self,faults=['nom'], inputs={}, outputs={}):
+#        
+#        if len(inputs)==0:
+#            inputs={'Force'+self.dof+'L':{'force': 1.0},'Force'+self.dof+'R':{'force': 1.0}, 'Moment'+self.dof+'R':{'amplitude': 1.0, 'intent':1.0 }, 'Moment'+self.dof+'L':{'amplitude': 1.0, 'intent':1.0 } }
+#        if len(outputs)==0:
+#            outputs={ self.dof:{'amplitude': 1.0, 'intent':1.0 }}
+#            
+#        
+#        self.ForceRin=inputs['Force'+self.dof+'R']
+#        self.ForceLin=inputs['Force'+self.dof+'L']
+#        #self.Forceout=outputs['Force']
+#        self.MomentRin=inputs['Moment'+self.dof+'R']
+#        self.MomentLin=inputs['Moment'+self.dof+'L']
+#        self.Momentout=outputs[self.dof]
+#        
+#        self.faults.update(faults)
+#        self.condfaults()
+#        self.resolvefaults()
+#        self.detbehav()
+#        self.behavior()
+#        inputs={'Force'+self.dof+'L': self.ForceLin, 'Force'+self.dof+'R': self.ForceRin, 'Moment'+self.dof+'R': self.MomentRin, 'Moment'+self.dof+'L':self.MomentLin}
+#        outputs={self.dof:self.Momentout}
+#        return {'outputs':outputs, 'inputs':inputs} 
 
     
 #class combinemoment:
