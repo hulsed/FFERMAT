@@ -24,12 +24,15 @@ def showgraph(g):
 def listinitfaults(g):
     faultlist=[]
     fxnnames=list(g.nodes)
-    for fxnname in fxnnames:
-        fxn=g.nodes(data='funcobj')[fxnname]
-        modes=fxn.faultmodes
-        for mode in modes:
-            prob=modes[mode]['lprob']
-            faultlist.append([fxnname,mode, prob])
+    try:
+        for fxnname in fxnnames:
+            fxn=g.nodes(data='funcobj')[fxnname]
+            modes=fxn.faultmodes
+            for mode in modes:
+                prob=modes[mode]['lprob']
+                faultlist.append([fxnname,mode, prob])
+    except: 
+        print('Incomplete Function Definition, function: '+fxnname)
     return faultlist
 
 def runlist(mdl):
@@ -230,10 +233,17 @@ def propagate(forward, backward):
                         backward.nodes('outputs')[fxnname][key]=outputdict[key]
             except:
                 print('Poor graph definition. Check the edges of function: ', fxnname,', for Flow:', key)
-            #update outputs
+            
+            #try:
+                #update outputs
             fxncall=fxn.updatefxn(inputs=inputdict, outputs=outputdict)
             inputs=fxncall['inputs']
             outputs=fxncall['outputs']
+            #except:
+            #    print('Difficulty updating function: '+fxnname)
+            #    print(inputdict)
+            #    print(outputdict)
+            #    print(outputs)
             
             #if outputs==g.nodes('outputs')[fxnname]:
             #    activefxns.discard(fxnname)        

@@ -436,7 +436,7 @@ class affectDOF:
     def __init__(self, dof, side):
         self.type='function'
         self.Airout={'velocity': 1.0, 'turbulence': 1.0}
-        self.Forceout={'force': 1.0}
+        
         
         self.mechstate=1.0
         self.surfstate=1.0
@@ -446,7 +446,6 @@ class affectDOF:
         self.faultmodes={'surfbreak':{'lprob':'remote', 'rcost':'replacement'}, \
                          'surfwarp':{'lprob':'low', 'rcost':'replacement'}, \
                          'jamup':{'lprob':'low', 'rcost':'minor'}, \
-                         'jamdown':{'lprob':'low', 'rcost':'minor'}, \
                          'jamoff':{'lprob':'low', 'rcost':'minor'}, \
                          'friction':{'lprob':'moderate', 'rcost':'replacement'},\
                          'short':{'lprob':'low', 'rcost':'minor'}, \
@@ -455,20 +454,22 @@ class affectDOF:
                          'ctldrift':{'lprob':'low', 'rcost':'replacement'}}
         self.faults=set(['nom'])
         
+        if dof!='liftdn':
+            self.faultmodes['jamdown']={'lprob':'low', 'rcost':'minor'}
+        
         self.dof=dof
         self.side=side
         
         if side=='C':
             self.forcename='Force'+dof+side
-            self.momentname=dof
             self.eename='EE'+dof.capitalize()
             self.signame='Sig'+dof.capitalize()
         else:
             self.forcename='Force'+dof+side
-            self.momentname='Moment'+dof+side
             self.eename='EE'+dof.capitalize()+side
             self.signame='Sig'+dof.capitalize()+side
         
+        self.Forceout={self.forcename:{'force':{'dev':1.0, 'exp':1.0}}}
     def resolvefaults(self):
         return 0
     def condfaults(self):
@@ -508,7 +509,8 @@ class affectDOF:
     def behavior(self):
         self.Airout['turbulence']=self.Airin['turbulence']*self.surfstate
         
-        self.Forceout['dev']=self.Sigin['ctl']*self.Airin['velocity']*self.mechstate*self.surfstate*self.EEstate
+        power=1.0-aux.m2to1([self.EEstate,self.EEin['effort']])*(self.Sigin['ctl']-1.0)
+        self.Forceout['dev']=power*self.Airin['velocity']*self.mechstate*self.surfstate
         self.Forceout['exp']=self.Sigin['exp']
         
         
@@ -519,13 +521,13 @@ class affectDOF:
         
         if len(outputs)==0:
             outputs={self.forcename:{'force':{'dev':1.0, 'exp':1.0}}, 'Air': {'velocity': 1.0, 'turbulence': 1.0}}
-            self.Forceout=outputs[self.forcename]
+            self.Forceout=outputs[self.forcename]['force']
                 
         self.Airin=inputs['Air']
         self.EEin=inputs[self.eename]
         self.Sigin=inputs[self.signame]
         self.Airout=outputs['Air']
-        self.Forceout=outputs['force']
+        
 
         self.faults.update(faults)
         self.condfaults()
@@ -542,15 +544,20 @@ class affectDOF:
 class combineforces:
     def __init__(self):
         self.type='function'
-        self.ForceLiftdnR={'dev': 1.0, 'exp': 1.0}
-        self.ForceLiftdnL={'dev': 1.0, 'exp': 1.0}
-        self.ForceLiftprR={'dev': 1.0, 'exp': 1.0}
-        self.ForceLiftprL={'dev': 1.0, 'exp': 1.0}
-        self.ForceYaw={'dev': 1.0, 'exp': 1.0}
-        self.ForceRollR={'dev': 1.0, 'exp': 1.0}
-        self.ForceRollL={'dev': 1.0, 'exp': 1.0}
-        self.ForcePitchR={'dev': 1.0, 'exp': 1.0}
-        self.ForcePitchL={'dev': 1.0, 'exp': 1.0}
+        self.ForceLiftdnR={'force':{'dev': 1.0, 'exp': 1.0}}
+        self.ForceLiftdnL={'force':{'dev': 1.0, 'exp': 1.0}}
+        self.ForceLiftprR={'force':{'dev': 1.0, 'exp': 1.0}}
+        self.ForceLiftprL={'force':{'dev': 1.0, 'exp': 1.0}}
+        self.ForceYawC={'force':{'dev': 1.0, 'exp': 1.0}}
+        self.ForceRollR={'force':{'dev': 1.0, 'exp': 1.0}}
+        self.ForceRollL={'force':{'dev': 1.0, 'exp': 1.0}}
+        self.ForcePitchR={'force':{'dev': 1.0, 'exp': 1.0}}
+        self.ForcePitchL={'force':{'dev': 1.0, 'exp': 1.0}}
+        self.roll={'dev': 1.0, 'exp': 1.0}
+        self.pitch={'dev': 1.0, 'exp': 1.0}
+        self.yaw={'dev': 1.0, 'exp': 1.0}
+        self.lift={'dev': 1.0, 'exp': 1.0}
+        self.drag={'dev': 1.0, 'exp': 1.0}
         
         self.faultmodes={}
         self.faults=set(['nom'])
@@ -560,21 +567,52 @@ class combineforces:
         return 0
     def detbehav(self):
         return 0
-    def behavior(self):
-                
+    def behavior(self, calctype):
+        
+        liftdn=0.5*self.ForceLiftdnR['force'][calctype]+0.5*self.ForceLiftdnL['force'][calctype]
+        liftdnroll=self.ForceLiftdnR['force'][calctype]-self.ForceLiftdnL['force'][calctype]
+        liftdnyaw=self.ForceLiftdnR['force'][calctype]-self.ForceLiftdnL['force'][calctype]
+        liftdndrag=abs(1.0-self.ForceLiftdnR['force'][calctype])+abs(1.0-self.ForceLiftdnL['force'][calctype])
+        
+        liftpr=0.5*self.ForceLiftprR['force'][calctype]+0.5*self.ForceLiftprL['force'][calctype]
+        liftprroll=self.ForceLiftprR['force'][calctype]-self.ForceLiftprL['force'][calctype]
+        liftpryaw=self.ForceLiftprR['force'][calctype]-self.ForceLiftprL['force'][calctype]
+        liftprdrag=abs(1.0-self.ForceLiftprR['force'][calctype])+abs(1.0-self.ForceLiftprL['force'][calctype])
+        liftprpitch=-0.5*self.ForceLiftprR['force'][calctype]-0.5*self.ForceLiftprL['force'][calctype]
+        
+        primaryroll=self.ForceRollR['force'][calctype]-self.ForceRollL['force'][calctype]
+        rollyaw=self.ForceRollR['force'][calctype]-self.ForceRollL['force'][calctype]
+        rolldrag=abs(1.0-self.ForceRollR['force'][calctype])+abs(1.0-self.ForceRollL['force'][calctype])
+        
+        primaryyaw=self.ForceYawC['force'][calctype]
+        yawdrag=abs(1.0-self.ForceYawC['force'][calctype])
+        
+        primarypitch=0.5*self.ForcePitchR['force'][calctype]+0.5*self.ForcePitchL['force'][calctype]
+        pitchyaw=self.ForcePitchR['force'][calctype]-self.ForcePitchL['force'][calctype]
+        pitchroll=self.ForcePitchR['force'][calctype]-self.ForcePitchL['force'][calctype]
+        pitchdrag=abs(1.0-self.ForcePitchR['force'][calctype])+abs(1.0-self.ForcePitchL['force'][calctype])
+        
+        self.roll[calctype]=1.0+primaryroll+0.25*liftdnroll+0.5*liftprroll+0.1*pitchroll
+        self.yaw[calctype]=primaryyaw+0.1*pitchyaw+0.25*rollyaw+0.1*liftdnyaw+0.25*liftpryaw
+        self.pitch[calctype]=primarypitch+0.25*liftprpitch
+        
+        self.drag[calctype]=0.25*liftdndrag+0.5*liftprdrag+0.25*rolldrag+0.1*yawdrag+0.2*pitchdrag
+        self.lift=liftpr+(1-0.5*liftdn)
+        
     def updatefxn(self,faults=['nom'],inputs={ \
                   'ForceLiftdnR':{'dev': 1.0, 'exp': 1.0}, \
                   'ForceLiftdnL':{'dev': 1.0, 'exp': 1.0}, 'ForceLiftprR':{'dev': 1.0, 'exp': 1.0}, \
-                  'ForceLiftprL':{'dev': 1.0, 'exp': 1.0}, 'ForceYaw':{'dev': 1.0, 'exp': 1.0}, \
+                  'ForceLiftprL':{'dev': 1.0, 'exp': 1.0}, 'ForceYawC':{'dev': 1.0, 'exp': 1.0}, \
                   'ForceRollR':{'dev': 1.0, 'exp': 1.0}, 'ForceRollL':{'dev': 1.0, 'exp': 1.0}, \
                   'ForcePitchR':{'dev': 1.0, 'exp': 1.0}, 'ForcePitchL':{'dev': 1.0, 'exp': 1.0}},\
-            outputs={}):
+            outputs={'Moment':{'roll':{'dev': 1.0, 'exp': 1.0}, 'pitch':{'dev': 1.0, 'exp': 1.0},\
+                               'yaw':{'dev': 1.0, 'exp': 1.0}},'Force':{'drag':{'dev': 1.0, 'exp': 1.0}, 'lift':{'dev': 1.0, 'exp': 1.0}}}):
         
         self.ForceLiftdnR=inputs['ForceLiftdnR']
         self.ForceLiftdnL=inputs['ForceLiftdnL']
         self.ForceLiftprR=inputs['ForceLiftprR']
         self.ForceLiftprL=inputs['ForceLiftprL']
-        self.ForceYaw=inputs['ForceYaw']
+        self.ForceYawC=inputs['ForceYawC']
         self.ForceRollR=inputs['ForceRollR']
         self.ForceRollL=inputs['ForceRollL']
         self.ForcePitchR=inputs['ForcePitchR']
@@ -584,187 +622,51 @@ class combineforces:
         self.condfaults()
         self.resolvefaults()
         self.detbehav()
-        self.behavior()
+        self.behavior('exp')
+        self.behavior('dev')
         inputs={'ForceLiftdnR':self.ForceLiftdnR, \
                   'ForceLiftdnL':self.ForceLiftdnL, 'ForceLiftprR':self.ForceLiftprR, \
-                  'ForceLiftprL':self.ForceLiftprL, 'ForceYaw':self.ForceYaw, \
+                  'ForceLiftprL':self.ForceLiftprL, 'ForceYawC':self.ForceYawC, \
                   'ForceRollR':self.ForceRollR, 'ForceRollL':self.ForceRollL, \
                   'ForcePitchR':self.ForcePitchR, 'ForcePitchL':self.ForcePitchL}
         outputs={'Moment':{'roll':self.roll, 'pitch':self.pitch, 'yaw':self.yaw},'Force':{'drag':self.drag,'lift':self.lift}}
         return {'outputs':outputs, 'inputs':inputs}
     
-#class combineforceandmoment:
-#    def __init__(self,dof):
-#        self.type='function'
-#        self.ForceLin={'force': 1.0}
-#        self.ForceRin={'force': 1.0}
-#        self.MomentLin={'amplitude': 1.0, 'intent':1.0 }
-#        self.MomentRin={'amplitude': 1.0, 'intent':1.0 }
-#
-#        self.Forceout={'force': 1.0}
-#        self.Momentout={'amplitude': 1.0, 'intent':1.0 }
-#        
-#        self.structstateL=1.0
-#        self.structstateR=1.0
-#        
-#        self.dof=dof
-#        
-#        self.faultmodes={'breakL':{'lprob':'remote', 'rcost':'moderate'}, \
-#                         'breakR':{'lprob':'remote', 'rcost':'moderate'}, \
-#                         'damageL':{'lprob':'low', 'rcost':'moderate'},\
-#                         'damageR':{'lprob':'low', 'rcost':'moderate'}}
-#        self.faults=set(['nom'])
-#    def resolvefaults(self):
-#        return 0
-#    def condfaults(self):
-#        if self.ForceLin['force']>2.0 or self.MomentLin['amplitude']>2.0 :
-#            self.faults.update(['breakL'])
-#        elif self.ForceLin['force']>1.5 or self.MomentLin['amplitude']>1.5:
-#            self.faults.update(['damageL'])    
-#        
-#        if self.ForceRin['force']>2.0:
-#            self.faults.update(['breakR'] or self.MomentRin['amplitude']>2.0)
-#        elif self.ForceRin['force']>1.5:
-#            self.faults.update(['damageR']  or self.MomentRin['amplitude']>2.0) 
-#        return 0
-#    def detbehav(self):
-#        if self.faults.intersection(set(['breakL'])):
-#            self.structstateL=0.0
-#        if self.faults.intersection(set(['breakR'])):
-#            self.structstateR=0.0
-#    def behavior(self):
-#        self.Forceout['force']=.5*(self.structstateL*self.ForceLin['force']+self.structstateR*self.ForceRin['force'])
-#        
-#        self.Momentout['amplitude']=.5*(self.structstateL*self.MomentLin['amplitude']+self.structstateR*self.MomentRin['amplitude'])
-#        self.Momentout['intent']=.5*(self.MomentLin['intent']+self.MomentRin['intent'])
-#        
-#        #self.ForceLin['force']=self.structstateL*self.ForceLin['force']
-#        #self.ForceRin['force']=self.structstateR*self.ForceRin['force']
-#        #self.MomentLin['amplitude']=self.structstateL*self.MomentLin['amplitude']
-#        #self.MomentRin['amplitude']=self.structstateR*self.MomentRin['amplitude']        
-#    def updatefxn(self,faults=['nom'], inputs={}, outputs={}):
-#        
-#        if len(inputs)==0:
-#            inputs={'Force'+self.dof+'L':{'force': 1.0},'Force'+self.dof+'R':{'force': 1.0}, 'Moment'+self.dof+'R':{'amplitude': 1.0, 'intent':1.0 }, 'Moment'+self.dof+'L':{'amplitude': 1.0, 'intent':1.0 } }
-#        if len(outputs)==0:
-#            outputs={ self.dof:{'amplitude': 1.0, 'intent':1.0 }}
-#            
-#        
-#        self.ForceRin=inputs['Force'+self.dof+'R']
-#        self.ForceLin=inputs['Force'+self.dof+'L']
-#        #self.Forceout=outputs['Force']
-#        self.MomentRin=inputs['Moment'+self.dof+'R']
-#        self.MomentLin=inputs['Moment'+self.dof+'L']
-#        self.Momentout=outputs[self.dof]
-#        
-#        self.faults.update(faults)
-#        self.condfaults()
-#        self.resolvefaults()
-#        self.detbehav()
-#        self.behavior()
-#        inputs={'Force'+self.dof+'L': self.ForceLin, 'Force'+self.dof+'R': self.ForceRin, 'Moment'+self.dof+'R': self.MomentRin, 'Moment'+self.dof+'L':self.MomentLin}
-#        outputs={self.dof:self.Momentout}
-#        return {'outputs':outputs, 'inputs':inputs} 
-
     
-#class combinemoment:
-#    def __init__(self):
-#        self.MomentLin={'amplitude': 1.0, 'intent':1.0 }
-#        self.MomentRin={'amplitude': 1.0, 'intent':1.0 }
-#        
-#        self.structstateL=1.0
-#        self.structstateR=1.0
-#        
-#        self.faultmodes=['breakL','breakR','damageL','damageR']
-#        self.faults=set(['nom'])
-#    def resolvefaults(self):
-#        return 0
-#    def condfaults(self):
-#        if self.MomentLin['force']>2.0 or self.MomentRin['force']>2.0:
-#            self.faults.update(['break'])
-#        elif self.MomentLin['force']>1.5 or self.MomentRin['force']>1.5:
-#            self.faults.update(['damage'])    
-#        
-#        return 0
-#    def detbehav(self):
-#        if self.faults.intersection(set(['break'])):
-#            self.structstate=0.0
-#
-#    def behavior(self):
-#        self.Forceout['force']=self.structstate*0.5*(self.Momentin['force']+self.Momentin['force'])
-#        
-#    def updatefxn(self,faults=['nom'],inputs={'MomentL':{'amplitude': 1.0, 'intent':1.0 },'MomentR':{'amplitude': 1.0, 'intent':1.0 }}, outputs={'Moment':{'amplitude': 1.0, 'intent':1.0 }}):
-#        self.ForceLin=inputs['Force_L']
-#        self.ForceRin=inputs['Force_R']
-#        self.Forceout=outputs['Force']
-#
-#        self.faults.update(faults)
-#        self.condfaults()
-#        self.resolvefaults()
-#        self.detbehav()
-#        self.behavior()
-#        inputs={'Force_L': self.ForceLin, 'Force_R': self.ForceRin}
-#        outputs={'Force':self.Forceout}
-#        return {'outputs':outputs, 'inputs':inputs} 
-        
-class exportLD:
+class exportForcesandMoments:
     def __init__(self):
-        self.liftpr={'amplitude': 1.0, 'intent':1.0 }
-        self.liftdn={'amplitude': 1.0, 'intent':1.0 }
+        self.roll={'dev': 1.0, 'exp': 1.0}
+        self.pitch={'dev': 1.0, 'exp': 1.0}
+        self.yaw={'dev': 1.0, 'exp': 1.0}
+        self.lift={'dev': 1.0, 'exp': 1.0}
+        self.drag={'dev': 1.0, 'exp': 1.0}
+        
         self.type='classifier'
         
-        self.Severity={'noeffect'}
+        self.Severity='noeffect'
         self.faultmodes={}
         self.faults=set(['nom'])
     def classify(self):
-        if self.liftpr['intent']!=1 or self.liftpr['amplitude']!=1 or self.liftdn['intent']!=1 or self.liftdn['amplitude']!=1:
-            self.Severity='major'
-        else:
-            self.Severity='noeffect'
-    def returnvalue(self):
-        return self.Severity
-    
-    def updatefxn(self,faults=['nom'],inputs={'liftdn':{'amplitude': 1.0, 'intent':1.0 }, 'liftpr':{'amplitude': 1.0, 'intent':1.0 }, 'yaw':{'amplitude': 1.0, 'intent':1.0 } }, outputs={}):
-        self.liftdn=inputs['liftdn']
-        self.liftpr=inputs['liftpr']
-        
-        self.classify()
-        
-        inputs={'liftdn': self.liftdn, 'liftpr': self.liftpr}
-        outputs={}
-        return {'outputs':outputs, 'inputs':inputs} 
-    
-class export6dof:
-    def __init__(self):
-        self.Roll={'amplitude': 1.0, 'intent':1.0 }
-        self.Pitch={'amplitude': 1.0, 'intent':1.0 }
-        self.Yaw={'amplitude': 1.0, 'intent':1.0 }
-        self.type='classifier'
-        
-        self.Severity={'noeffect'}
-        self.faultmodes={}
-        self.faults=set(['nom'])
-    def classify(self):
-        if self.Roll['intent']==0 or self.Pitch['intent']==0 or self.Yaw['intent']==0 or self.Roll['amplitude']==0:
+        if self.Moment['roll']['exp']!=self.Moment['roll']['exp']:
             self.Severity='catastrophic'
-        elif self.Roll['intent']!=1 or self.Pitch['intent']!=1 or self.Yaw['intent']!=1:
-            self.Severity='hazardous'
-        elif self.Roll['amplitude']!=1 or self.Pitch['amplitude']!=1 or self.Yaw['amplitude']!=1:
-            self.Severity='major'
-        else:
-            self.Severity='noeffect'
-        
     def returnvalue(self):
         return self.Severity
     
-    def updatefxn(self,faults=['nom'],inputs={'roll':{'amplitude': 1.0, 'intent':1.0 }, 'pitch':{'amplitude': 1.0, 'intent':1.0 }, 'yaw':{'amplitude': 1.0, 'intent':1.0 } }, outputs={}):
-        self.Roll=inputs['roll']
-        self.Pitch=inputs['pitch']
-        self.Yaw=inputs['yaw']
+    def updatefxn(self,faults=['nom'],inputs={'Moment':{'roll':{'dev': 1.0, 'exp': 1.0}, 'pitch':{'dev': 1.0, 'exp': 1.0},\
+                               'yaw':{'dev': 1.0, 'exp': 1.0}},'Force':{'drag':{'dev': 1.0, 'exp': 1.0}, 'lift':{'dev': 1.0, 'exp': 1.0}}}, outputs={}):
+        self.Force=inputs['Force']
+        self.Moment=inputs['Moment']
+        
+        self.roll=inputs['Moment']['roll']
+        self.pitch=inputs['Moment']['pitch']
+        self.yaw=inputs['Moment']['yaw']
+        self.lift=inputs['Force']['lift']
+        self.drag=inputs['Force']['drag']
         
         self.classify()
         
-        inputs={'Roll': self.Roll, 'Pitch': self.Pitch, 'Yaw': self.Yaw}
+        inputs={'Moment':{'roll':self.roll, 'pitch':self.pitch,\
+                               'yaw':self.yaw},'Force':{'drag':self.drag, 'lift':self.lift}}
         outputs={}
         return {'outputs':outputs, 'inputs':inputs} 
 
@@ -795,12 +697,6 @@ class exportAir:
         inputs={'Air': self.Airin}
         return {'outputs':outputs, 'inputs':inputs}
     
-
-#To do: 
-#add import signal function
-#graph with multiple control surfaces
-#functions to combine force, moment, etc
-        
 ##MODEL GRAPH AND INITIALIZATION   
 
 def initialize():
@@ -854,89 +750,67 @@ def initialize():
     
     #Init Affect Roll Right
     Affect_Roll_r=affectDOF('roll','R')
-    MomentrollR={'MomentrollR':{'amplitude': 1.0, 'intent':1.0 }}
-    ForcerollR={'ForcerollR':{'force':1.0}}
-    g.add_node('Affect_Roll_Right', funcobj=Affect_Roll_r, inputs={**EERollR,**Air,**SigRollR}, outputs={**Air, **MomentrollR, **ForcerollR})
+    ForceRollR={'ForceRollR':{'force':{'dev':1.0, 'exp':1.0}}}
+    g.add_node('Affect_Roll_Right', funcobj=Affect_Roll_r, inputs={**EERollR,**Air,**SigRollR}, outputs={**Air, **ForceRollR})
     
     #Init Affect Roll Left
     Affect_Roll_l=affectDOF('roll','L')
-    MomentrollL={'MomentrollL':{'amplitude': 1.0, 'intent':1.0 }}
-    ForcerollL={'ForcerollL':{'force':1.0}}
-    g.add_node('Affect_Roll_Left', funcobj=Affect_Roll_l, inputs={**EERollL,**Air,**SigRollL}, outputs={**Air, **MomentrollL, **ForcerollL})
-    
-    #Init Combine Roll 
-    Combine_Roll=combineforceandmoment('roll')
-    roll={'roll':{'amplitude': 1.0, 'intent':1.0 }}
-    g.add_node('Combine_Roll', funcobj=Combine_Roll, inputs={**MomentrollL,**ForcerollL,**MomentrollR,**ForcerollR}, outputs={**roll})
+    ForceRollL={'ForceRollL':{'force':{'dev':1.0, 'exp':1.0}}}
+    g.add_node('Affect_Roll_Left', funcobj=Affect_Roll_l, inputs={**EERollL,**Air,**SigRollL}, outputs={**Air, **ForceRollL})
     
     #Init Affect Pitch Right
     Affect_Pitch_r=affectDOF('pitch','R')
-    MomentpitchR={'MomentpitchR':{'amplitude': 1.0, 'intent':1.0 }}
-    ForcepitchR={'ForcepitchR':{'force':1.0}}
-    g.add_node('Affect_Pitch_Right', funcobj=Affect_Pitch_r, inputs={**EEPitchR,**Air,**SigPitchR}, outputs={**Air, **MomentpitchR, **ForcepitchR})
+    ForcePitchR={'ForcePitchR':{'force':{'dev':1.0, 'exp':1.0}}}
+    g.add_node('Affect_Pitch_Right', funcobj=Affect_Pitch_r, inputs={**EEPitchR,**Air,**SigPitchR}, outputs={**Air, **ForcePitchR})
     
     #Init Affect Pitch Left
     Affect_Pitch_l=affectDOF('pitch','L')
-    MomentpitchL={'MomentpitchL':{'amplitude': 1.0, 'intent':1.0 }}
-    ForcepitchL={'ForcepitchL':{'force':1.0}}
-    g.add_node('Affect_Pitch_Left',  funcobj=Affect_Pitch_l, inputs={**EEPitchL,**Air,**SigPitchL}, outputs={**Air,**MomentpitchL , **ForcepitchL})
-    
-    #Init Combine Pitch 
-    Combine_Pitch=combineforceandmoment('pitch')
-    pitch={'pitch':{'amplitude': 1.0, 'intent':1.0 }}
-    g.add_node('Combine_Pitch', funcobj=Combine_Pitch, inputs={**MomentpitchL, **ForcepitchL,**MomentpitchR, **ForcepitchR}, outputs={**pitch})
+    ForcePitchL={'ForcePitchL':{'force':{'dev':1.0, 'exp':1.0}}}
+    g.add_node('Affect_Pitch_Left',  funcobj=Affect_Pitch_l, inputs={**EEPitchL,**Air,**SigPitchL}, outputs={**Air, **ForcePitchL})
     
     #Init Affect Yaw
     Affect_Yaw=affectDOF('yaw','C')  
-    yaw={'yaw':{'amplitude': 1.0, 'intent':1.0 }}
-    #ForceyawC={'ForceyawC':{'force':1.0}}
-    g.add_node('Affect_Yaw', funcobj=Affect_Yaw, inputs={**EEYaw,**Air,**SigYaw}, outputs={**Air, **yaw})
+    ForceYawC={'ForceYawC':{'force':{'dev':1.0, 'exp':1.0}}}
+    #ForceYawC={'ForceYawC':{'force':1.0}}
+    g.add_node('Affect_Yaw', funcobj=Affect_Yaw, inputs={**EEYaw,**Air,**SigYaw}, outputs={**Air, **ForceYawC})
     
     #Init Affect liftpr Right
     Affect_Liftpr_r=affectDOF('liftpr','R')
-    MomentliftprR={'MomentliftprR':{'amplitude': 1.0, 'intent':1.0 }}
-    ForceliftprR={'ForceliftprR':{'force':1.0}}
-    g.add_node('Affect_Liftpr_Right', funcobj=Affect_Liftpr_r, inputs={**EELiftprR,**Air,**SigLiftprR}, outputs={**Air, **MomentliftprR, **ForceliftprR})
+    ForceLiftprR={'ForceLiftprR':{'force':{'dev':1.0, 'exp':1.0}}}
+    g.add_node('Affect_Liftpr_Right', funcobj=Affect_Liftpr_r, inputs={**EELiftprR,**Air,**SigLiftprR}, outputs={**Air, **ForceLiftprR})
     
     #Init Affect liftpr Left
     Affect_Liftpr_l=affectDOF('liftpr','L')
-    MomentliftprL={'MomentliftprL':{'amplitude': 1.0, 'intent':1.0 }}
-    ForceliftprL={'ForceliftprL':{'force':1.0}}
-    g.add_node('Affect_Liftpr_Left', funcobj=Affect_Liftpr_l, inputs={**EELiftprL,**Air,**SigLiftprL}, outputs={**Air, **MomentliftprL, **ForceliftprL})
-    
-    #Init Combine liftpr
-    Combine_Liftpr=combineforceandmoment('liftpr')
-    liftpr={'liftpr':{'amplitude': 1.0, 'intent':1.0 }}
-    g.add_node('Combine_Liftpr', funcobj=Combine_Liftpr, inputs={**MomentliftprL, **ForceliftprL,**MomentliftprR, **ForceliftprR}, outputs={**liftpr})
+    ForceLiftprL={'ForceLiftprL':{'force':{'dev':1.0, 'exp':1.0}}}
+    g.add_node('Affect_Liftpr_Left', funcobj=Affect_Liftpr_l, inputs={**EELiftprL,**Air,**SigLiftprL}, outputs={**Air, **ForceLiftprL})
     
     #Init Affect liftdn Right
     Affect_Liftdn_r=affectDOF('liftdn','R')
-    MomentliftdnR={'MomentliftdnR':{'amplitude': 1.0, 'intent':1.0 }}
-    ForceliftdnR={'ForceliftdnR':{'force':1.0}}
-    g.add_node('Affect_Liftdn_Right', funcobj=Affect_Liftdn_r, inputs={**EELiftdnR,**Air,**SigLiftdnR}, outputs={**Air, **MomentliftdnR, **ForceliftdnR})
+    ForceLiftdnR={'ForceLiftdnR':{'force':{'dev':1.0, 'exp':1.0}}}
+    g.add_node('Affect_Liftdn_Right', funcobj=Affect_Liftdn_r, inputs={**EELiftdnR,**Air,**SigLiftdnR}, outputs={**Air, **ForceLiftdnR})
     
     #Init Affect liftdn Left
     Affect_Liftdn_l=affectDOF('liftdn','L')
-    MomentliftdnL={'MomentliftdnL':{'amplitude': 1.0, 'intent':1.0 }}
-    ForceliftdnL={'ForceliftdnL':{'force':1.0}}
-    g.add_node('Affect_Liftdn_Left', funcobj=Affect_Liftdn_l, inputs={**EELiftdnL,**Air,**SigLiftdnL}, outputs={**Air, **MomentliftdnL, **ForceliftdnL})
+    ForceLiftdnL={'ForceLiftdnL':{'force':{'dev':1.0, 'exp':1.0}}}
+    g.add_node('Affect_Liftdn_Left', funcobj=Affect_Liftdn_l, inputs={**EELiftdnL,**Air,**SigLiftdnL}, outputs={**Air, **ForceLiftdnL})
     
-    #Init Combine liftpr
-    Combine_Liftdn=combineforceandmoment('liftdn')
-    liftdn={'liftdn':{'amplitude': 1.0, 'intent':1.0 }}
-    g.add_node('Combine_Liftdn', funcobj=Combine_Liftdn, inputs={**MomentliftdnL, **ForceliftdnL,**MomentliftdnR, **ForceliftdnR}, outputs={**liftdn})
-        
+    #Init Combine Forces
+    Combine_Forces=combineforces()
+    Moment={'Moment':{'roll':{'dev': 1.0, 'exp': 1.0}, 'pitch':{'dev': 1.0, 'exp': 1.0},'yaw':{'dev': 1.0, 'exp': 1.0}}}
+    Force={'Force':{'drag':{'dev': 1.0, 'exp': 1.0}, 'lift':{'dev': 1.0, 'exp': 1.0}}}
+    g.add_node('Combine_Forces', funcobj=Combine_Forces,\
+               inputs={**ForceRollR,**ForceRollL,**ForcePitchR,**ForcePitchL,**ForceYawC,\
+                       **ForceLiftprR,**ForceLiftprL,**ForceLiftdnR, **ForceLiftdnL},\
+            outputs={**Moment, **Force})
+      
     #Init Export Air
     Export_Air=exportAir()
     g.add_node('Export_Air', funcobj=Export_Air, inputs={**Air}, outputs={})
     
-    #Init Export DOF
-    Export_DOF=export6dof()
-    g.add_node('Export_DOF', funcobj=Export_DOF, inputs={**roll, **pitch, **yaw}, outputs={})
     
     #Init Explort liftdn/liftpr
-    Export_LD=exportLD()
-    g.add_node('Export_LD',funcobj=Export_LD, inputs={**liftdn,**liftpr}, outputs={})
+    Export_FM=exportForcesandMoments()
+    g.add_node('Export_FM',funcobj=Export_FM, inputs={**Moment,**Force}, outputs={})
     
     
     ##INITIALIZE EDGES
@@ -965,7 +839,6 @@ def initialize():
     #Signal flows
     g.add_edge('Import_Signal', 'Distribute_Signal', Signal=Sig['Signal'])
     
-    
     g.add_edge('Distribute_Signal', 'Affect_Roll_Right', SigRollR=SigRollR['SigRollR'])
     g.add_edge('Distribute_Signal', 'Affect_Roll_Left', SigRollL=SigRollL['SigRollL'])    
     g.add_edge('Distribute_Signal', 'Affect_Pitch_Right', SigPitchR=SigPitchR['SigPitchR'])    
@@ -976,24 +849,20 @@ def initialize():
     g.add_edge('Distribute_Signal', 'Affect_Liftpr_Right', SigLiftprR=SigLiftprR['SigLiftprR'])
     g.add_edge('Distribute_Signal', 'Affect_Liftpr_Left', SigLiftprL=SigLiftprL['SigLiftprL'])
     #Roll flows
-    g.add_edge('Affect_Roll_Right','Combine_Roll',ForcerollR=ForcerollR['ForcerollR'], MomentrollR=MomentrollR['MomentrollR'])     
-    g.add_edge('Affect_Roll_Left','Combine_Roll',ForcerollL=ForcerollL['ForcerollL'], MomentrollL=MomentrollL['MomentrollL'])
+    g.add_edge('Affect_Roll_Right','Combine_Forces',ForceRollR=ForceRollR['ForceRollR'])     
+    g.add_edge('Affect_Roll_Left','Combine_Forces',ForceRollL=ForceRollL['ForceRollL'])
     #Pitch flows
-    g.add_edge('Affect_Pitch_Right','Combine_Pitch',ForcepitchR=ForcepitchR['ForcepitchR'], MomentpitchR=MomentpitchR['MomentpitchR'])  
-    g.add_edge('Affect_Pitch_Left','Combine_Pitch',ForcepitchL=ForcepitchL['ForcepitchL'], MomentpitchL=MomentpitchL['MomentpitchL'])
+    g.add_edge('Affect_Pitch_Right','Combine_Forces',ForcePitchR=ForcePitchR['ForcePitchR'])  
+    g.add_edge('Affect_Pitch_Left','Combine_Forces',ForcePitchL=ForcePitchL['ForcePitchL'])
     #liftpr flows
-    g.add_edge('Affect_Liftpr_Right','Combine_Liftpr',ForceliftprR=ForceliftprR['ForceliftprR'], MomentliftprR=MomentliftprR['MomentliftprR'])  
-    g.add_edge('Affect_Liftpr_Left','Combine_Liftpr',ForceliftprL=ForceliftprL['ForceliftprL'], MomentliftprL=MomentliftprL['MomentliftprL'])
+    g.add_edge('Affect_Liftpr_Right','Combine_Forces',ForceLiftprR=ForceLiftprR['ForceLiftprR'])  
+    g.add_edge('Affect_Liftpr_Left','Combine_Forces',ForceLiftprL=ForceLiftprL['ForceLiftprL'])
     #liftdn flows
-    g.add_edge('Affect_Liftdn_Right','Combine_Liftdn',ForceliftdnR=ForceliftdnR['ForceliftdnR'], MomentliftdnR=MomentliftdnR['MomentliftdnR'])  
-    g.add_edge('Affect_Liftdn_Left','Combine_Liftdn',ForceliftdnL=ForceliftdnL['ForceliftdnL'], MomentliftdnL=MomentliftdnL['MomentliftdnL'])
+    g.add_edge('Affect_Liftdn_Right','Combine_Forces',ForceLiftdnR=ForceLiftdnR['ForceLiftdnR'])  
+    g.add_edge('Affect_Liftdn_Left','Combine_Forces',ForceLiftdnL=ForceLiftdnL['ForceLiftdnL'])
     #roll, pitch, yaw flows
-    g.add_edge('Combine_Pitch', 'Export_DOF',pitch=pitch['pitch'])
-    g.add_edge('Combine_Roll', 'Export_DOF',roll=roll['roll'])
-    g.add_edge('Affect_Yaw', 'Export_DOF', yaw=yaw['yaw'])
-    #liftdn,liftpr flows
-    g.add_edge('Combine_Liftdn', 'Export_LD', liftdn=liftdn['liftdn'])
-    g.add_edge('Combine_Liftpr', 'Export_LD', liftpr=liftpr['liftpr'])
+    g.add_edge('Affect_Yaw','Combine_Forces',ForceYawC=ForceYawC['ForceYawC'])
+    g.add_edge('Combine_Forces', 'Export_FM',Force=Force['Force'], Moment=Moment['Moment'])
     #Air flows 
     g.add_edge('Affect_Roll_Right', 'Export_Air', Air=Air['Air'])
     g.add_edge('Affect_Roll_Left', 'Export_Air', Air=Air['Air'])    
