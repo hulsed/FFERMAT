@@ -520,8 +520,8 @@ class affectDOF:
             inputs={self.signame:{'ctl': 1.0, 'exp': 1.0},self.eename:{'rate': 1.0, 'effort': 1.0},'Air': {'velocity': 1.0, 'turbulence': 1.0}}
         
         if len(outputs)==0:
-            outputs={self.forcename:{'force':{'dev':1.0, 'exp':1.0}}, 'Air': {'velocity': 1.0, 'turbulence': 1.0}}
-            self.Forceout=outputs[self.forcename]['force']
+            outputs={self.forcename:{'dev':1.0, 'exp':1.0}, 'Air': {'velocity': 1.0, 'turbulence': 1.0}}
+            self.Forceout=outputs[self.forcename]
                 
         self.Airin=inputs['Air']
         self.EEin=inputs[self.eename]
@@ -544,15 +544,15 @@ class affectDOF:
 class combineforces:
     def __init__(self):
         self.type='function'
-        self.ForceLiftdnR={'force':{'dev': 1.0, 'exp': 1.0}}
-        self.ForceLiftdnL={'force':{'dev': 1.0, 'exp': 1.0}}
-        self.ForceLiftprR={'force':{'dev': 1.0, 'exp': 1.0}}
-        self.ForceLiftprL={'force':{'dev': 1.0, 'exp': 1.0}}
-        self.ForceYawC={'force':{'dev': 1.0, 'exp': 1.0}}
-        self.ForceRollR={'force':{'dev': 1.0, 'exp': 1.0}}
-        self.ForceRollL={'force':{'dev': 1.0, 'exp': 1.0}}
-        self.ForcePitchR={'force':{'dev': 1.0, 'exp': 1.0}}
-        self.ForcePitchL={'force':{'dev': 1.0, 'exp': 1.0}}
+        self.ForceLiftdnR={'dev': 1.0, 'exp': 1.0}
+        self.ForceLiftdnL={'dev': 1.0, 'exp': 1.0}
+        self.ForceLiftprR={'dev': 1.0, 'exp': 1.0}
+        self.ForceLiftprL={'dev': 1.0, 'exp': 1.0}
+        self.ForceYawC={'dev': 1.0, 'exp': 1.0}
+        self.ForceRollR={'dev': 1.0, 'exp': 1.0}
+        self.ForceRollL={'dev': 1.0, 'exp': 1.0}
+        self.ForcePitchR={'dev': 1.0, 'exp': 1.0}
+        self.ForcePitchL={'dev': 1.0, 'exp': 1.0}
         self.roll={'dev': 1.0, 'exp': 1.0}
         self.pitch={'dev': 1.0, 'exp': 1.0}
         self.yaw={'dev': 1.0, 'exp': 1.0}
@@ -569,28 +569,28 @@ class combineforces:
         return 0
     def behavior(self, calctype):
         
-        liftdn=0.5*self.ForceLiftdnR['force'][calctype]+0.5*self.ForceLiftdnL['force'][calctype]
-        liftdnroll=self.ForceLiftdnR['force'][calctype]-self.ForceLiftdnL['force'][calctype]
-        liftdnyaw=self.ForceLiftdnR['force'][calctype]-self.ForceLiftdnL['force'][calctype]
-        liftdndrag=abs(1.0-self.ForceLiftdnR['force'][calctype])+abs(1.0-self.ForceLiftdnL['force'][calctype])
+        liftdn=0.5*self.ForceLiftdnR[calctype]+0.5*self.ForceLiftdnL[calctype]
+        liftdnroll=self.ForceLiftdnR[calctype]-self.ForceLiftdnL[calctype]
+        liftdnyaw=self.ForceLiftdnR[calctype]-self.ForceLiftdnL[calctype]
+        liftdndrag=abs(1.0-self.ForceLiftdnR[calctype])+abs(1.0-self.ForceLiftdnL[calctype])
         
-        liftpr=0.5*self.ForceLiftprR['force'][calctype]+0.5*self.ForceLiftprL['force'][calctype]
-        liftprroll=self.ForceLiftprR['force'][calctype]-self.ForceLiftprL['force'][calctype]
-        liftpryaw=self.ForceLiftprR['force'][calctype]-self.ForceLiftprL['force'][calctype]
-        liftprdrag=abs(1.0-self.ForceLiftprR['force'][calctype])+abs(1.0-self.ForceLiftprL['force'][calctype])
-        liftprpitch=-0.5*self.ForceLiftprR['force'][calctype]-0.5*self.ForceLiftprL['force'][calctype]
+        liftpr=0.5*self.ForceLiftprR[calctype]+0.5*self.ForceLiftprL[calctype]
+        liftprroll=self.ForceLiftprR[calctype]-self.ForceLiftprL[calctype]
+        liftpryaw=self.ForceLiftprR[calctype]-self.ForceLiftprL[calctype]
+        liftprdrag=abs(1.0-self.ForceLiftprR[calctype])+abs(1.0-self.ForceLiftprL[calctype])
+        liftprpitch=-0.5*self.ForceLiftprR[calctype]-0.5*self.ForceLiftprL[calctype]
         
-        primaryroll=self.ForceRollR['force'][calctype]-self.ForceRollL['force'][calctype]
-        rollyaw=self.ForceRollR['force'][calctype]-self.ForceRollL['force'][calctype]
-        rolldrag=abs(1.0-self.ForceRollR['force'][calctype])+abs(1.0-self.ForceRollL['force'][calctype])
+        primaryroll=self.ForceRollR[calctype]-self.ForceRollL[calctype]
+        rollyaw=self.ForceRollR[calctype]-self.ForceRollL[calctype]
+        rolldrag=abs(1.0-self.ForceRollR[calctype])+abs(1.0-self.ForceRollL[calctype])
         
-        primaryyaw=self.ForceYawC['force'][calctype]
-        yawdrag=abs(1.0-self.ForceYawC['force'][calctype])
+        primaryyaw=self.ForceYawC[calctype]
+        yawdrag=abs(1.0-self.ForceYawC[calctype])
         
-        primarypitch=0.5*self.ForcePitchR['force'][calctype]+0.5*self.ForcePitchL['force'][calctype]
-        pitchyaw=self.ForcePitchR['force'][calctype]-self.ForcePitchL['force'][calctype]
-        pitchroll=self.ForcePitchR['force'][calctype]-self.ForcePitchL['force'][calctype]
-        pitchdrag=abs(1.0-self.ForcePitchR['force'][calctype])+abs(1.0-self.ForcePitchL['force'][calctype])
+        primarypitch=0.5*self.ForcePitchR[calctype]+0.5*self.ForcePitchL[calctype]
+        pitchyaw=self.ForcePitchR[calctype]-self.ForcePitchL[calctype]
+        pitchroll=self.ForcePitchR[calctype]-self.ForcePitchL[calctype]
+        pitchdrag=abs(1.0-self.ForcePitchR[calctype])+abs(1.0-self.ForcePitchL[calctype])
         
         self.roll[calctype]=1.0+primaryroll+0.25*liftdnroll+0.5*liftprroll+0.1*pitchroll
         self.yaw[calctype]=primaryyaw+0.1*pitchyaw+0.25*rollyaw+0.1*liftdnyaw+0.25*liftpryaw
@@ -750,48 +750,48 @@ def initialize():
     
     #Init Affect Roll Right
     Affect_Roll_r=affectDOF('roll','R')
-    ForceRollR={'ForceRollR':{'force':{'dev':1.0, 'exp':1.0}}}
+    ForceRollR={'ForceRollR':{'dev':1.0, 'exp':1.0}}
     g.add_node('Affect_Roll_Right', funcobj=Affect_Roll_r, inputs={**EERollR,**Air,**SigRollR}, outputs={**Air, **ForceRollR})
     
     #Init Affect Roll Left
     Affect_Roll_l=affectDOF('roll','L')
-    ForceRollL={'ForceRollL':{'force':{'dev':1.0, 'exp':1.0}}}
+    ForceRollL={'ForceRollL':{'dev':1.0, 'exp':1.0}}
     g.add_node('Affect_Roll_Left', funcobj=Affect_Roll_l, inputs={**EERollL,**Air,**SigRollL}, outputs={**Air, **ForceRollL})
     
     #Init Affect Pitch Right
     Affect_Pitch_r=affectDOF('pitch','R')
-    ForcePitchR={'ForcePitchR':{'force':{'dev':1.0, 'exp':1.0}}}
+    ForcePitchR={'ForcePitchR':{'dev':1.0, 'exp':1.0}}
     g.add_node('Affect_Pitch_Right', funcobj=Affect_Pitch_r, inputs={**EEPitchR,**Air,**SigPitchR}, outputs={**Air, **ForcePitchR})
     
     #Init Affect Pitch Left
     Affect_Pitch_l=affectDOF('pitch','L')
-    ForcePitchL={'ForcePitchL':{'force':{'dev':1.0, 'exp':1.0}}}
+    ForcePitchL={'ForcePitchL':{'dev':1.0, 'exp':1.0}}
     g.add_node('Affect_Pitch_Left',  funcobj=Affect_Pitch_l, inputs={**EEPitchL,**Air,**SigPitchL}, outputs={**Air, **ForcePitchL})
     
     #Init Affect Yaw
     Affect_Yaw=affectDOF('yaw','C')  
-    ForceYawC={'ForceYawC':{'force':{'dev':1.0, 'exp':1.0}}}
+    ForceYawC={'ForceYawC':{'dev':1.0, 'exp':1.0}}
     #ForceYawC={'ForceYawC':{'force':1.0}}
     g.add_node('Affect_Yaw', funcobj=Affect_Yaw, inputs={**EEYaw,**Air,**SigYaw}, outputs={**Air, **ForceYawC})
     
     #Init Affect liftpr Right
     Affect_Liftpr_r=affectDOF('liftpr','R')
-    ForceLiftprR={'ForceLiftprR':{'force':{'dev':1.0, 'exp':1.0}}}
+    ForceLiftprR={'ForceLiftprR':{'dev':1.0, 'exp':1.0}}
     g.add_node('Affect_Liftpr_Right', funcobj=Affect_Liftpr_r, inputs={**EELiftprR,**Air,**SigLiftprR}, outputs={**Air, **ForceLiftprR})
     
     #Init Affect liftpr Left
     Affect_Liftpr_l=affectDOF('liftpr','L')
-    ForceLiftprL={'ForceLiftprL':{'force':{'dev':1.0, 'exp':1.0}}}
+    ForceLiftprL={'ForceLiftprL':{'dev':1.0, 'exp':1.0}}
     g.add_node('Affect_Liftpr_Left', funcobj=Affect_Liftpr_l, inputs={**EELiftprL,**Air,**SigLiftprL}, outputs={**Air, **ForceLiftprL})
     
     #Init Affect liftdn Right
     Affect_Liftdn_r=affectDOF('liftdn','R')
-    ForceLiftdnR={'ForceLiftdnR':{'force':{'dev':1.0, 'exp':1.0}}}
+    ForceLiftdnR={'ForceLiftdnR':{'dev':1.0, 'exp':1.0}}
     g.add_node('Affect_Liftdn_Right', funcobj=Affect_Liftdn_r, inputs={**EELiftdnR,**Air,**SigLiftdnR}, outputs={**Air, **ForceLiftdnR})
     
     #Init Affect liftdn Left
     Affect_Liftdn_l=affectDOF('liftdn','L')
-    ForceLiftdnL={'ForceLiftdnL':{'force':{'dev':1.0, 'exp':1.0}}}
+    ForceLiftdnL={'ForceLiftdnL':{'dev':1.0, 'exp':1.0}}
     g.add_node('Affect_Liftdn_Left', funcobj=Affect_Liftdn_l, inputs={**EELiftdnL,**Air,**SigLiftdnL}, outputs={**Air, **ForceLiftdnL})
     
     #Init Combine Forces
