@@ -17,14 +17,16 @@ endstatekey={'noeffect': {'pfh_allow': 0, 'cost': 0, 'repair':'NA' },\
              'minor': {'pfh_allow': 1e-3, 'cost': 0.118e7, 'repair':'minor'},\
              'major': {'pfh_allow': 1e-5, 'cost': 2.98e7, 'repair':'moderate' } , \
              'hazardous': {'pfh_allow': 1e-6, 'cost': 16.8e7, 'repair':'major' } , \
-             'catastrophic': {'pfh_allow': 1e-7, 'cost': 38.4e7, 'repair':'totaled' } }
+             'catastrophic': {'pfh_allow': 1e-7, 'cost': 38.4e7, 'repair':'totaled' }, \
+             'NA': {'pfh_allow': 0, 'cost': 0, 'repair':'NA' }}
 
 #subjective lifecycle probabilities for various faults
 lifecycleprob={'veryhigh':{'lb': 0.2, 'ub': 1.0 }, \
                'high':{'lb': 0.05, 'ub': 0.19}, \
                'moderate': {'lb': 0.049, 'ub':0.0005}, \
                'low': {'lb':1.5/1e5, 'ub':0.00049}, \
-               'remote': {'lb':0, 'ub':1.49/1e5}}
+               'remote': {'lb':0, 'ub':1.49/1e5},\
+               'NA':{'lb':0, 'ub':0}}
 # see scenario-based FMEA paper http://www.medicalhealthcarefmea.com/papers/kmenta.pdf
 
 # repair costs for 
@@ -404,7 +406,7 @@ class importSignal:
                         'liftdn':{'roll':1.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':2.0, 'liftpr':1.0},\
                         'liftup':{'roll':1.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':1.0, 'liftpr':2.0}}
         
-        self.opermode=['forward']
+        self.opermode='forward' 
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -428,7 +430,7 @@ class importSignal:
         self.Sigout['liftprctl']=self.sigstate*self.opermodes[self.opermode]['liftdn']
         self.Sigout['liftdnctl']=self.sigstate*self.opermodes[self.opermode]['liftpr']
         
-    def updatefxn(self,faults=['nom'], opermode=['forward'],inputs={}, outputs={'Signal': {'rollctl': 1.0, \
+    def updatefxn(self,faults=['nom'], opermode='forward',inputs={}, outputs={'Signal': {'rollctl': 1.0, \
                   'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,'liftdnctl': 1.0, \
                   'rollexp': 1.0, 'pitchexp':1.0, 'yawexp':1.0, 'liftprexp':1.0, 'liftdnexp':1.0}}):
         self.Sigout=outputs['Signal']

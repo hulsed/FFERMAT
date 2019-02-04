@@ -43,9 +43,10 @@ def listscens(g):
         for fxnname in fxnnames:
             fxn=g.nodes(data='funcobj')[fxnname]
             try: 
-                opmodes={fxnname:list(fxn.opermodes.keys())}
-                for opmode in opmodes:
-                    scenlist.append([fxn,opmode,'NA','nom','NA'])
+                opmodelist=list(fxn.opermodes.keys())
+                opmodes={fxnname:opmodelist}
+                for opmode in list(opmodelist):
+                    scenlist.append([fxnname,opmode,'NA','nom','NA'])
             except:
                 foo=1
             
@@ -156,36 +157,39 @@ def savereport(fullresults,summary, filename='report.txt'):
 
 def runonefault(mdl, forwardgraph,backgraph,fullgraph,opfxn, opmode, fxnname, mode):
     
-    #findfxn
-    if fxnname=='NA':
-        foo=1
-    else:
+    opfxnobj=fullgraph.nodes(data='funcobj')[opfxn]
+    opfxncall=opfxnobj.updatefxn(faults=['nom'], opermode=opmode)
+    oneprop(forwardgraph,backgraph,fullgraph,opfxncall,opfxn)
+    
+    if fxnname!='NA':
         fxn=fullgraph.nodes(data='funcobj')[fxnname]
         #inject fault
-        fxncall=fxn.updatefxn(faults=[mode], opermode=opmode)
-        outputs=fxncall['outputs']
-        inputs=fxncall['inputs']
-    
-        #propogate effect to immediate node edges (forward)
-        for edge in forwardgraph.edges(fxnname): 
-            for outflow in outputs:
-                if outflow in forwardgraph.edges[edge]:
-                    forwardgraph.edges[edge][outflow]=outputs[outflow]
-        #propogate effect to immediate node edges (backward)          
-        for edge in backgraph.edges(fxnname):
-            for inflow in inputs:
-                if inflow in fullgraph.edges[edge]:
-                    backgraph.edges[edge][inflow]=inputs[inflow]
-                
+        fxncall=fxn.updatefxn(faults=[mode])
+        oneprop(forwardgraph,backgraph,fullgraph,fxncall,fxnname)
     
     #propfaults(forwardgraph)
-    propagate(forwardgraph, backgraph, opmode)
+    propagate(forwardgraph, backgraph, opfxn, opmode)
     endflows=findfaultflows(forwardgraph)
     endfaults=findfaults(forwardgraph)
     endclass=findclassification(mdl, forwardgraph)
     
     return endflows,endfaults,endclass
 
+def oneprop(forwardgraph, backgraph,fullgraph, fxncall,fxnname):
+    outputs=fxncall['outputs']
+    inputs=fxncall['inputs']
+    #propogate effect to immediate node edges (forward)
+    for edge in forwardgraph.edges(fxnname): 
+        for outflow in outputs:
+            if outflow in forwardgraph.edges[edge]:
+                forwardgraph.edges[edge][outflow]=outputs[outflow]
+    #propogate effect to immediate node edges (backward)          
+    for edge in backgraph.edges(fxnname):
+        for inflow in inputs:
+            if inflow in fullgraph.edges[edge]:
+                backgraph.edges[edge][inflow]=inputs[inflow]
+        
+    return 
 #goal:
 #if an edge has changed, adjacent nodes now active
 #if a node has changed, it is also now active
@@ -233,7 +237,7 @@ def propfaultsforward(g):
                     activefxns.update(edge)                 
     return
 
-def propagate(forward, backward, opmode):
+def propagate(forward, backward, opfxn, opmode):
 
     fxnnames=list(forward.nodes())
     activefxns=set(fxnnames)
@@ -268,7 +272,10 @@ def propagate(forward, backward, opmode):
             
             #try:
                 #update outputs
-            fxncall=fxn.updatefxn(inputs=inputdict, outputs=outputdict, opermode=opmode)
+            if fxnname==opfxn:
+                fxncall=fxn.updatefxn(inputs=inputdict, outputs=outputdict, opermode=opmode)
+            else:
+                fxncall=fxn.updatefxn(inputs=inputdict, outputs=outputdict)
             inputs=fxncall['inputs']
             outputs=fxncall['outputs']
             #except:
