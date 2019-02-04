@@ -35,10 +35,38 @@ def listinitfaults(g):
         print('Incomplete Function Definition, function: '+fxnname)
     return faultlist
 
+def listscens(g):
+    scenlist=[]
+    opmodes={}
+    fxnnames=list(g.nodes)
+    try:
+        for fxnname in fxnnames:
+            fxn=g.nodes(data='funcobj')[fxnname]
+            try: 
+                opmodes={fxnname:list(fxn.opermodes.keys())}
+                for opmode in opmodes:
+                    scenlist.append([fxn,opmode,'NA','nom','NA'])
+            except:
+                foo=1
+            
+            
+        for fxnname in fxnnames:
+            fxn=g.nodes(data='funcobj')[fxnname]
+            modes=fxn.faultmodes
+            for opfxn, opmodelist in opmodes.items():
+                for opmode in opmodelist:
+                    for mode in modes:
+                        prob=modes[mode]['lprob']
+                        scenlist.append([opfxn, opmode, fxnname, mode, prob])
+        
+    except: 
+        print('Incomplete Function Definition, function: '+fxnname)
+    return scenlist
+
 def runlist(mdl):
     
     [forwardgraph,backgraph,fullgraph]=mdl.initialize()
-    faultlist=listinitfaults(fullgraph)
+    scenlist=listscens(fullgraph)
     
     fullresults={}
     summary={}
@@ -49,16 +77,16 @@ def runlist(mdl):
     allowprobs={'catastrophic': 0.0,'hazardous': 0.0,'major': 0.0,'minor': 0.0,'noeffect': 0.0}
     feasibility='feasible'
     
-    for [fxnname, mode, prob] in faultlist:
+    for [opfxn, opmode, fxnname, mode, prob] in scenlist:
         [forwardgraph,backgraph,fullgraph]=mdl.initialize()
         
-        endflows,endfaults,endclass=runonefault(mdl, forwardgraph,backgraph,fullgraph,fxnname,mode)
+        endflows,endfaults,endclass=runonefault(mdl, forwardgraph,backgraph,fullgraph,opfxn, opmode, fxnname, mode)
         
         repairtype, lowrcost, highrcost=calcrepair(mdl,forwardgraph, endfaults, endclass)
         
         lowscore, highscore, avescore, cost,lowprob,highprob=calcscore(mdl, prob,endclass,repairtype)
                
-        fullresults[fxnname, mode]={'flow effects': endflows, 'faults':endfaults, \
+        fullresults[opfxn, opmode, fxnname, mode]={'flow effects': endflows, 'faults':endfaults, \
                    'classification':endclass, 'repair type': repairtype, \
                    'low score': lowscore, 'high score': highscore, \
                    'average score': avescore, 'probability':prob}
@@ -98,9 +126,10 @@ def displayresults(fullresults, summary, descending=True, justsummary=False):
         print()
         print('FULL RESULTS:')
         print('--------------------------------------------')
-        for fxnname, mode in sorted(fullresults, key=lambda x: fullresults[x]['average score'], reverse=descending):
-            result=fullresults[fxnname, mode]
-            print('FAULT SCENARIO: ', fxnname, ' ', mode)
+        for opfxn, opmode, fxnname, mode in sorted(fullresults, key=lambda x: fullresults[x]['average score'], reverse=descending):
+            result=fullresults[opfxn, opmode, fxnname, mode]
+            print('OPERATIONAL SCENARIO: ', opfxn, ' ', opmode)
+            print('FAULT SCENARIO: ', fxnname, ' ', mode, 'during', opmode)
             print('PROBABILITY: ', result['probability'])
             print('SCORE:', result['average score'], ' (', result['low score'], '-', result['high score'], ')')
             print('SEVERITY: ', result['classification'])
@@ -125,29 +154,32 @@ def savereport(fullresults,summary, filename='report.txt'):
     file.close()
     return
 
-def runonefault(mdl, forwardgraph,backgraph,fullgraph,fxnname,mode):
+def runonefault(mdl, forwardgraph,backgraph,fullgraph,opfxn, opmode, fxnname, mode):
     
     #findfxn
-    fxn=fullgraph.nodes(data='funcobj')[fxnname]
-    #inject fault
-    fxncall=fxn.updatefxn(faults=[mode])
-    outputs=fxncall['outputs']
-    inputs=fxncall['inputs']
+    if fxnname=='NA':
+        foo=1
+    else:
+        fxn=fullgraph.nodes(data='funcobj')[fxnname]
+        #inject fault
+        fxncall=fxn.updatefxn(faults=[mode], opermode=opmode)
+        outputs=fxncall['outputs']
+        inputs=fxncall['inputs']
     
-    #propogate effect to immediate node edges (forward)
-    for edge in forwardgraph.edges(fxnname): 
-        for outflow in outputs:
-            if outflow in forwardgraph.edges[edge]:
-                forwardgraph.edges[edge][outflow]=outputs[outflow]
-    #propogate effect to immediate node edges (backward)          
-    for edge in backgraph.edges(fxnname):
-        for inflow in inputs:
-            if inflow in fullgraph.edges[edge]:
-                backgraph.edges[edge][inflow]=inputs[inflow]
+        #propogate effect to immediate node edges (forward)
+        for edge in forwardgraph.edges(fxnname): 
+            for outflow in outputs:
+                if outflow in forwardgraph.edges[edge]:
+                    forwardgraph.edges[edge][outflow]=outputs[outflow]
+        #propogate effect to immediate node edges (backward)          
+        for edge in backgraph.edges(fxnname):
+            for inflow in inputs:
+                if inflow in fullgraph.edges[edge]:
+                    backgraph.edges[edge][inflow]=inputs[inflow]
                 
     
     #propfaults(forwardgraph)
-    propagate(forwardgraph, backgraph)
+    propagate(forwardgraph, backgraph, opmode)
     endflows=findfaultflows(forwardgraph)
     endfaults=findfaults(forwardgraph)
     endclass=findclassification(mdl, forwardgraph)
@@ -201,7 +233,7 @@ def propfaultsforward(g):
                     activefxns.update(edge)                 
     return
 
-def propagate(forward, backward):
+def propagate(forward, backward, opmode):
 
     fxnnames=list(forward.nodes())
     activefxns=set(fxnnames)
@@ -236,7 +268,7 @@ def propagate(forward, backward):
             
             #try:
                 #update outputs
-            fxncall=fxn.updatefxn(inputs=inputdict, outputs=outputdict)
+            fxncall=fxn.updatefxn(inputs=inputdict, outputs=outputdict, opermode=opmode)
             inputs=fxncall['inputs']
             outputs=fxncall['outputs']
             #except:

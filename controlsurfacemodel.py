@@ -59,7 +59,7 @@ class importEE:
             self.elecstate=0.5
     def behavior(self):
         self.EEout['effort']=self.elecstate
-    def updatefxn(self,faults=['nom'],inputs={}, outputs={'EE': {'rate': 1.0, 'effort': 1.0}}):
+    def updatefxn(self,faults=['nom'],opermode=[],inputs={}, outputs={'EE': {'rate': 1.0, 'effort': 1.0}}):
         self.EEout['rate']=outputs['EE']['rate']
         self.faults.update(faults)
         self.condfaults()
@@ -169,7 +169,7 @@ class distributeEE:
         
         self.EEin['rate']=self.elecstate
         
-    def updatefxn(self,faults=['nom'],inputs={'EE':{'rate': 1.0, 'effort': 1.0}}, outputs={ \
+    def updatefxn(self,faults=['nom'],opermode=[],inputs={'EE':{'rate': 1.0, 'effort': 1.0}}, outputs={ \
                   'EELiftdnR':{'rate': 1.0, 'effort': 1.0}, \
                   'EELiftdnL':{'rate': 1.0, 'effort': 1.0}, 'EELiftprR':{'rate': 1.0, 'effort': 1.0}, \
                   'EELiftprL':{'rate': 1.0, 'effort': 1.0}, 'EEYaw':{'rate': 1.0, 'effort': 1.0}, \
@@ -309,7 +309,7 @@ class distributeSig:
         
         self.Sigin['rate']=self.sigstate
         
-    def updatefxn(self,faults=['nom'],inputs={'Signal':{'rollctl': 1.0,\
+    def updatefxn(self,faults=['nom'],opermode=[],inputs={'Signal':{'rollctl': 1.0,\
                   'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,'liftdnctl': 1.0,}}, outputs={ \
                   'SigLiftdnR':{'ctl': 1.0, 'exp': 1.0}, \
                   'SigLiftdnL':{'ctl': 1.0, 'exp': 1.0}, 'SigLiftprR':{'ctl': 1.0, 'exp': 1.0}, \
@@ -377,7 +377,7 @@ class importAir:
         self.Airout['velocity']=self.velstate
         self.Airout['turbulence']=self.turbstate
         
-    def updatefxn(self,faults=['nom'],inputs={}, outputs={'Air': {'velocity': 1.0, 'turbulence': 1.0}}):
+    def updatefxn(self,faults=['nom'],inputs={},opermode=[], outputs={'Air': {'velocity': 1.0, 'turbulence': 1.0}}):
         self.Airout=outputs['Air']
         self.faults.update(faults)
         self.condfaults()
@@ -396,6 +396,15 @@ class importSignal:
         self.sigstate=1.0
         self.faultmodes={'nosig':{'lprob':'low' , 'rcost':'NA'},\
                          'degsig':{'lprob':'low', 'rcost':'NA'}}
+        
+        self.opermodes={'forward': {'roll':2.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':1.0, 'liftpr':1.0},\
+                        'roll':{'roll':2.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':1.0, 'liftpr':1.0}, \
+                        'pitch':{'roll':1.0, 'pitch':2.0, 'yaw':1.0, 'liftdn':1.0, 'liftpr':1.0}, \
+                        'yaw':{'roll':1.0, 'pitch':1.0, 'yaw':2.0, 'liftdn':1.0, 'liftpr':1.0},\
+                        'liftdn':{'roll':1.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':2.0, 'liftpr':1.0},\
+                        'liftup':{'roll':1.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':1.0, 'liftpr':2.0}}
+        
+        self.opermode=['forward']
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -413,17 +422,18 @@ class importSignal:
             self.sigstate=0.5
         
     def behavior(self):
-        self.Sigout['rollctl']=self.sigstate
-        self.Sigout['pitchctl']=self.sigstate
-        self.Sigout['yawctl']=self.sigstate
-        self.Sigout['liftprctl']=self.sigstate
-        self.Sigout['liftdnctl']=self.sigstate
+        self.Sigout['rollctl']=self.sigstate*self.opermodes[self.opermode]['roll']
+        self.Sigout['pitchctl']=self.sigstate*self.opermodes[self.opermode]['pitch']
+        self.Sigout['yawctl']=self.sigstate*self.opermodes[self.opermode]['yaw']
+        self.Sigout['liftprctl']=self.sigstate*self.opermodes[self.opermode]['liftdn']
+        self.Sigout['liftdnctl']=self.sigstate*self.opermodes[self.opermode]['liftpr']
         
-    def updatefxn(self,faults=['nom'],inputs={}, outputs={'Signal': {'rollctl': 1.0, \
+    def updatefxn(self,faults=['nom'], opermode=['forward'],inputs={}, outputs={'Signal': {'rollctl': 1.0, \
                   'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,'liftdnctl': 1.0, \
                   'rollexp': 1.0, 'pitchexp':1.0, 'yawexp':1.0, 'liftprexp':1.0, 'liftdnexp':1.0}}):
         self.Sigout=outputs['Signal']
         self.faults.update(faults)
+        self.opermode=opermode
         self.condfaults()
         self.resolvefaults()
         self.detbehav()
@@ -514,7 +524,7 @@ class affectDOF:
         self.Forceout['exp']=self.Sigin['exp']
         
         
-    def updatefxn(self,faults=['nom'],inputs={}, outputs={}):
+    def updatefxn(self,faults=['nom'],opermode=[],inputs={}, outputs={}):
         
         if len(inputs)==0:
             inputs={self.signame:{'ctl': 1.0, 'exp': 1.0},self.eename:{'rate': 1.0, 'effort': 1.0},'Air': {'velocity': 1.0, 'turbulence': 1.0}}
@@ -599,7 +609,7 @@ class combineforces:
         self.drag[calctype]=0.25*liftdndrag+0.5*liftprdrag+0.25*rolldrag+0.1*yawdrag+0.2*pitchdrag
         self.lift=liftpr+(1-0.5*liftdn)
         
-    def updatefxn(self,faults=['nom'],inputs={ \
+    def updatefxn(self,faults=['nom'],opermode=[],inputs={ \
                   'ForceLiftdnR':{'dev': 1.0, 'exp': 1.0}, \
                   'ForceLiftdnL':{'dev': 1.0, 'exp': 1.0}, 'ForceLiftprR':{'dev': 1.0, 'exp': 1.0}, \
                   'ForceLiftprL':{'dev': 1.0, 'exp': 1.0}, 'ForceYawC':{'dev': 1.0, 'exp': 1.0}, \
@@ -652,7 +662,7 @@ class exportForcesandMoments:
     def returnvalue(self):
         return self.Severity
     
-    def updatefxn(self,faults=['nom'],inputs={'Moment':{'roll':{'dev': 1.0, 'exp': 1.0}, 'pitch':{'dev': 1.0, 'exp': 1.0},\
+    def updatefxn(self,faults=['nom'],opermode=[],inputs={'Moment':{'roll':{'dev': 1.0, 'exp': 1.0}, 'pitch':{'dev': 1.0, 'exp': 1.0},\
                                'yaw':{'dev': 1.0, 'exp': 1.0}},'Force':{'drag':{'dev': 1.0, 'exp': 1.0}, 'lift':{'dev': 1.0, 'exp': 1.0}}}, outputs={}):
         self.Force=inputs['Force']
         self.Moment=inputs['Moment']
@@ -687,7 +697,7 @@ class exportAir:
     def behavior(self):
         return 0
         
-    def updatefxn(self,faults=['nom'],inputs={'Air':{'velocity': 1.0, 'turbulence': 1.0}}, outputs={}):
+    def updatefxn(self,faults=['nom'],opermode=[],inputs={'Air':{'velocity': 1.0, 'turbulence': 1.0}}, outputs={}):
         self.Airin=inputs['Air']
         self.faults.update(faults)
         self.condfaults()
