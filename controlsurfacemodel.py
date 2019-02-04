@@ -340,7 +340,7 @@ class distributeSig:
         self.resolvefaults()
         self.detbehav()
         self.behavior()
-        inputs={'Sig':self.Sigin}
+        inputs={'Signal':self.Sigin}
         outputs={'SigLiftdnR':self.SigLiftdnR, \
                   'SigLiftdnL':self.SigLiftdnL, 'SigLiftprR':self.SigLiftprR, \
                   'SigLiftprL':self.SigLiftprL, 'SigYaw':self.SigYaw, \
@@ -479,15 +479,15 @@ class affectDOF:
         self.side=side
         
         if side=='C':
-            self.forcename='Force'+dof+side
+            self.forcename='Force'+dof.capitalize()+side
             self.eename='EE'+dof.capitalize()
             self.signame='Sig'+dof.capitalize()
         else:
-            self.forcename='Force'+dof+side
+            self.forcename='Force'+dof.capitalize()+side
             self.eename='EE'+dof.capitalize()+side
             self.signame='Sig'+dof.capitalize()+side
         
-        self.Forceout={self.forcename:{'force':{'dev':1.0, 'exp':1.0}}}
+        self.Forceout={self.forcename:{'dev':1.0, 'exp':1.0}}
     def resolvefaults(self):
         return 0
     def condfaults(self):
@@ -527,7 +527,7 @@ class affectDOF:
     def behavior(self):
         self.Airout['turbulence']=self.Airin['turbulence']*self.surfstate
         
-        power=1.0-aux.m2to1([self.EEstate,self.EEin['effort']])*(self.Sigin['ctl']-1.0)
+        power=1.0+aux.m2to1([self.EEstate,self.EEin['effort']])*(self.Sigin['ctl']-1.0)
         self.Forceout['dev']=power*self.Airin['velocity']*self.mechstate*self.surfstate
         self.Forceout['exp']=self.Sigin['exp']
         
@@ -553,10 +553,7 @@ class affectDOF:
         self.detbehav()
         self.behavior()
         inputs={self.signame: self.Sigin, self.eename: self.EEin, 'Air':self.Airin}
-        if self.side=='c' or self.side=='C':
-            outputs={'Air': self.Airout}
-        else:
-            outputs={'Air': self.Airout,self.forcename:self.Forceout}
+        outputs={'Air': self.Airout,self.forcename:self.Forceout}
         return {'outputs':outputs, 'inputs':inputs}
     
 class combineforces:
