@@ -206,7 +206,8 @@ class distributeEE:
 class distributeSig:
     def __init__(self):
         self.type='function'
-        self.Sigin={'ctl': 1.0, 'exp': 1.0}
+        self.Sigin={'rollctl': 1.0, 'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,\
+                   'liftdnexp': 1.0,'rollexp': 1.0, 'pitchexp': 1.0,'yawexp': 1.0,'liftprexp': 1.0,'liftdnexp': 1.0}
         self.SigLiftdnR={'ctl': 1.0, 'exp': 1.0}
         self.SigLiftdnL={'ctl': 1.0, 'exp': 1.0}
         self.SigLiftprR={'ctl': 1.0, 'exp': 1.0}
@@ -298,21 +299,21 @@ class distributeSig:
         self.SigPitchR['ctl']=aux.m2to1([self.pitchrstate,self.sigstate,self.Sigin['pitchctl']])
         self.SigPitchL['ctl']=aux.m2to1([self.pitchlstate,self.sigstate,self.Sigin['pitchctl']])
         
-        self.SigLiftdnR['exp']=self.Sigin['liftdnctl']
-        self.SigLiftdnL['exp']=self.Sigin['liftdnctl']
-        self.SigLiftprR['exp']=self.Sigin['liftprctl']
-        self.SigLiftprL['exp']=self.Sigin['liftprctl']
-        self.SigYaw['exp']=self.Sigin['yawctl']
-        self.SigRollR['exp']=self.Sigin['rollctl']
-        self.SigRollL['exp']=self.Sigin['rollctl']
-        self.SigPitchR['exp']=self.Sigin['pitchctl']
-        self.SigPitchL['exp']=self.Sigin['pitchctl']      
+        self.SigLiftdnR['exp']=self.Sigin['liftdnexp']
+        self.SigLiftdnL['exp']=self.Sigin['liftdnexp']
+        self.SigLiftprR['exp']=self.Sigin['liftprexp']
+        self.SigLiftprL['exp']=self.Sigin['liftprexp']
+        self.SigYaw['exp']=self.Sigin['yawexp']
+        self.SigRollR['exp']=self.Sigin['rollexp']
+        self.SigRollL['exp']=self.Sigin['rollexp']
+        self.SigPitchR['exp']=self.Sigin['pitchexp']
+        self.SigPitchL['exp']=self.Sigin['pitchexp']      
         
         
         self.Sigin['rate']=self.sigstate
         
-    def updatefxn(self,faults=['nom'],opermode=[],inputs={'Signal':{'rollctl': 1.0,\
-                  'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,'liftdnctl': 1.0,}}, outputs={ \
+    def updatefxn(self,faults=['nom'],opermode=[],inputs={'Signal':{'rollctl': 1.0, 'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,\
+                   'liftdnctl': 1.0,'rollexp': 1.0, 'pitchexp': 1.0,'yawexp': 1.0,'liftprexp': 1.0,'liftdnexp': 1.0}}, outputs={ \
                   'SigLiftdnR':{'ctl': 1.0, 'exp': 1.0}, \
                   'SigLiftdnL':{'ctl': 1.0, 'exp': 1.0}, 'SigLiftprR':{'ctl': 1.0, 'exp': 1.0}, \
                   'SigLiftprL':{'ctl': 1.0, 'exp': 1.0}, 'SigYaw':{'ctl': 1.0, 'exp': 1.0}, \
@@ -393,13 +394,13 @@ class importAir:
 class importSignal:
     def __init__(self):
         self.type='function'
-        self.Sigout={'rollctl': 1.0,'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,'liftdnctl': 1.0, \
-                     'rollexp': 1.0, 'pitchexp':1.0, 'yawexp':1.0, 'liftprexp':1.0, 'liftdnexp':1.0},
+        self.Sigout={'Signal':{'rollctl': 1.0,'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,'liftdnctl': 1.0, \
+                     'rollexp': 1.0, 'pitchexp':1.0, 'yawexp':1.0, 'liftprexp':1.0, 'liftdnexp':1.0}},
         self.sigstate=1.0
         self.faultmodes={'nosig':{'lprob':'low' , 'rcost':'NA'},\
                          'degsig':{'lprob':'low', 'rcost':'NA'}}
         
-        self.opermodes={'forward': {'roll':2.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':1.0, 'liftpr':1.0},\
+        self.opermodes={'forward': {'roll':1.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':1.0, 'liftpr':1.0},\
                         'roll':{'roll':2.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':1.0, 'liftpr':1.0}, \
                         'pitch':{'roll':1.0, 'pitch':2.0, 'yaw':1.0, 'liftdn':1.0, 'liftpr':1.0}, \
                         'yaw':{'roll':1.0, 'pitch':1.0, 'yaw':2.0, 'liftdn':1.0, 'liftpr':1.0},\
@@ -411,7 +412,7 @@ class importSignal:
     def resolvefaults(self):
         return 0
     def condfaults(self):
-        signals=list(self.Sigout.values())
+        signals=list(self.Sigout['Signal'].values())
         
         if any(signal>2.0 for signal in signals):
             self.faults.update(['nosig'])
@@ -424,16 +425,21 @@ class importSignal:
             self.sigstate=0.5
         
     def behavior(self):
-        self.Sigout['rollctl']=self.sigstate*self.opermodes[self.opermode]['roll']
-        self.Sigout['pitchctl']=self.sigstate*self.opermodes[self.opermode]['pitch']
-        self.Sigout['yawctl']=self.sigstate*self.opermodes[self.opermode]['yaw']
-        self.Sigout['liftprctl']=self.sigstate*self.opermodes[self.opermode]['liftdn']
-        self.Sigout['liftdnctl']=self.sigstate*self.opermodes[self.opermode]['liftpr']
+        self.Sigout['Signal']['rollctl']=self.sigstate*self.opermodes[self.opermode]['roll']
+        self.Sigout['Signal']['pitchctl']=self.sigstate*self.opermodes[self.opermode]['pitch']
+        self.Sigout['Signal']['yawctl']=self.sigstate*self.opermodes[self.opermode]['yaw']
+        self.Sigout['Signal']['liftprctl']=self.sigstate*self.opermodes[self.opermode]['liftdn']
+        self.Sigout['Signal']['liftdnctl']=self.sigstate*self.opermodes[self.opermode]['liftpr']
         
+        self.Sigout['Signal']['rollexp']=self.opermodes[self.opermode]['roll']
+        self.Sigout['Signal']['pitchexp']=self.opermodes[self.opermode]['pitch']
+        self.Sigout['Signal']['yawexp']=self.opermodes[self.opermode]['yaw']
+        self.Sigout['Signal']['liftprexp']=self.opermodes[self.opermode]['liftdn']
+        self.Sigout['Signal']['liftdnexp']=self.opermodes[self.opermode]['liftpr']
     def updatefxn(self,faults=['nom'], opermode='forward',inputs={}, outputs={'Signal': {'rollctl': 1.0, \
                   'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,'liftdnctl': 1.0, \
                   'rollexp': 1.0, 'pitchexp':1.0, 'yawexp':1.0, 'liftprexp':1.0, 'liftdnexp':1.0}}):
-        self.Sigout=outputs['Signal']
+        self.Sigout=outputs
         self.faults.update(faults)
         self.opermode=opermode
         self.condfaults()
@@ -743,7 +749,8 @@ def initialize():
     
     #Init Import Signal
     Import_Signal=importSignal()
-    Sig={'Signal':{'rollctl': 1.0, 'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,'liftdnctl': 1.0,}}
+    Sig={'Signal':{'rollctl': 1.0, 'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,\
+                   'liftdnctl': 1.0,'rollexp': 1.0, 'pitchexp': 1.0,'yawexp': 1.0,'liftprexp': 1.0,'liftdnexp': 1.0}}
     g.add_node('Import_Signal', funcobj=Import_Signal, inputs={}, outputs={**Sig})
     
     #Init Distribute Signal

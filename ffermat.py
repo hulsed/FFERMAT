@@ -244,7 +244,6 @@ def propagate(forward, backward, opfxn, opmode):
     '''
     '''
     while activefxns:
-        
         for fxnname in list(activefxns):
             fxn=forward.nodes(data='funcobj')[fxnname]
             
