@@ -428,14 +428,14 @@ class importSignal:
         self.Sigout['Signal']['rollctl']=self.sigstate*self.opermodes[self.opermode]['roll']
         self.Sigout['Signal']['pitchctl']=self.sigstate*self.opermodes[self.opermode]['pitch']
         self.Sigout['Signal']['yawctl']=self.sigstate*self.opermodes[self.opermode]['yaw']
-        self.Sigout['Signal']['liftprctl']=self.sigstate*self.opermodes[self.opermode]['liftdn']
-        self.Sigout['Signal']['liftdnctl']=self.sigstate*self.opermodes[self.opermode]['liftpr']
+        self.Sigout['Signal']['liftprctl']=self.sigstate*self.opermodes[self.opermode]['liftpr']
+        self.Sigout['Signal']['liftdnctl']=self.sigstate*self.opermodes[self.opermode]['liftdn']
         
         self.Sigout['Signal']['rollexp']=self.opermodes[self.opermode]['roll']
         self.Sigout['Signal']['pitchexp']=self.opermodes[self.opermode]['pitch']
         self.Sigout['Signal']['yawexp']=self.opermodes[self.opermode]['yaw']
-        self.Sigout['Signal']['liftprexp']=self.opermodes[self.opermode]['liftdn']
-        self.Sigout['Signal']['liftdnexp']=self.opermodes[self.opermode]['liftpr']
+        self.Sigout['Signal']['liftprexp']=self.opermodes[self.opermode]['liftpr']
+        self.Sigout['Signal']['liftdnexp']=self.opermodes[self.opermode]['liftdn']
     def updatefxn(self,faults=['nom'], opermode='forward',inputs={}, outputs={'Signal': {'rollctl': 1.0, \
                   'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,'liftdnctl': 1.0, \
                   'rollexp': 1.0, 'pitchexp':1.0, 'yawexp':1.0, 'liftprexp':1.0, 'liftdnexp':1.0}}):

@@ -19,6 +19,6 @@ import controlsurfacemodel
 #ffermat.runonefault(controlsurfacemodel, forwardgraph, backgraph, fullgraph, 'Import_Signal','roll','NA','NA')
 endflows,endfaults,endclass=ffermat.runonefault(controlsurfacemodel, forwardgraph, backgraph, fullgraph, 'Import_Signal','liftdn','NA','NA')
 
-ffermat.savereport(fullresults,summary, filename='report.txt')
+#ffermat.savereport(fullresults,summary, filename='report.txt')
 
 #ffermat.runonefault(forwardgraph,backgraph,fullgraph,'Import_Signal','nosig')
