@@ -289,15 +289,15 @@ class distributeSig:
             self.pitchlstate=0.0
     def behavior(self):
         
-        self.SigLiftdnR['ctl']=aux.m2to1([self.liftdnrstate,self.sigstate,self.Sigin['liftdnctl']])
-        self.SigLiftdnL['ctl']=aux.m2to1([self.liftdnlstate,self.sigstate,self.Sigin['liftdnctl']])
-        self.SigLiftprR['ctl']=aux.m2to1([self.liftprrstate,self.sigstate,self.Sigin['liftprctl']])
-        self.SigLiftprL['ctl']=aux.m2to1([self.liftprlstate,self.sigstate,self.Sigin['liftprctl']])
-        self.SigYaw['ctl']=aux.m2to1([self.yawstate,self.sigstate,self.Sigin['yawctl']])
-        self.SigRollR['ctl']=aux.m2to1([self.rollrstate,self.sigstate,self.Sigin['rollctl']])
-        self.SigRollL['ctl']=aux.m2to1([self.rolllstate,self.sigstate,2.0-self.Sigin['rollctl']])
-        self.SigPitchR['ctl']=aux.m2to1([self.pitchrstate,self.sigstate,self.Sigin['pitchctl']])
-        self.SigPitchL['ctl']=aux.m2to1([self.pitchlstate,self.sigstate,self.Sigin['pitchctl']])
+        self.SigLiftdnR['ctl']=1.0+aux.m2to1([self.liftdnrstate,self.sigstate])*(self.Sigin['liftdnctl']-1.0)
+        self.SigLiftdnL['ctl']=1.0+aux.m2to1([self.liftdnlstate,self.sigstate])*(self.Sigin['liftdnctl']-1.0)
+        self.SigLiftprR['ctl']=1.0+aux.m2to1([self.liftprrstate,self.sigstate])*(self.Sigin['liftprctl']-1.0)
+        self.SigLiftprL['ctl']=1.0+aux.m2to1([self.liftprlstate,self.sigstate])*(self.Sigin['liftprctl']-1.0)
+        self.SigYaw['ctl']=1.0+aux.m2to1([self.yawstate,self.sigstate])*(self.Sigin['yawctl']-1.0)
+        self.SigRollR['ctl']=1.0+aux.m2to1([self.rollrstate,self.sigstate])*(self.Sigin['rollctl']-1.0)
+        self.SigRollL['ctl']=1.0+aux.m2to1([self.rolllstate,self.sigstate])*(1.0-self.Sigin['rollctl'])
+        self.SigPitchR['ctl']=1.0+aux.m2to1([self.pitchrstate,self.sigstate])*(self.Sigin['pitchctl']-1.0)
+        self.SigPitchL['ctl']=1.0+aux.m2to1([self.pitchlstate,self.sigstate])*(self.Sigin['pitchctl']-1.0)
         
         self.SigLiftdnR['exp']=self.Sigin['liftdnexp']
         self.SigLiftdnL['exp']=self.Sigin['liftdnexp']
