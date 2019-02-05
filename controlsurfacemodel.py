@@ -295,7 +295,7 @@ class distributeSig:
         self.SigLiftprL['ctl']=aux.m2to1([self.liftprlstate,self.sigstate,self.Sigin['liftprctl']])
         self.SigYaw['ctl']=aux.m2to1([self.yawstate,self.sigstate,self.Sigin['yawctl']])
         self.SigRollR['ctl']=aux.m2to1([self.rollrstate,self.sigstate,self.Sigin['rollctl']])
-        self.SigRollL['ctl']=aux.m2to1([self.rolllstate,self.sigstate,self.Sigin['rollctl']])
+        self.SigRollL['ctl']=aux.m2to1([self.rolllstate,self.sigstate,2.0-self.Sigin['rollctl']])
         self.SigPitchR['ctl']=aux.m2to1([self.pitchrstate,self.sigstate,self.Sigin['pitchctl']])
         self.SigPitchL['ctl']=aux.m2to1([self.pitchlstate,self.sigstate,self.Sigin['pitchctl']])
         
@@ -305,7 +305,7 @@ class distributeSig:
         self.SigLiftprL['exp']=self.Sigin['liftprexp']
         self.SigYaw['exp']=self.Sigin['yawexp']
         self.SigRollR['exp']=self.Sigin['rollexp']
-        self.SigRollL['exp']=self.Sigin['rollexp']
+        self.SigRollL['exp']=2.0-self.Sigin['rollexp']
         self.SigPitchR['exp']=self.Sigin['pitchexp']
         self.SigPitchL['exp']=self.Sigin['pitchexp']      
         
@@ -528,8 +528,8 @@ class affectDOF:
         self.Airout['turbulence']=self.Airin['turbulence']*self.surfstate
         
         power=1.0+aux.m2to1([self.EEstate,self.EEin['effort']])*(self.Sigin['ctl']-1.0)
-        self.Forceout['dev']=power*self.Airin['velocity']*self.mechstate*self.surfstate
-        self.Forceout['exp']=self.Sigin['exp']
+        self.Forceout[self.forcename]['dev']=power*self.Airin['velocity']*self.mechstate*self.surfstate
+        self.Forceout[self.forcename]['exp']=self.Sigin['exp']
         
         
     def updatefxn(self,faults=['nom'],opermode=[],inputs={}, outputs={}):
@@ -553,7 +553,7 @@ class affectDOF:
         self.detbehav()
         self.behavior()
         inputs={self.signame: self.Sigin, self.eename: self.EEin, 'Air':self.Airin}
-        outputs={'Air': self.Airout,self.forcename:self.Forceout}
+        outputs={'Air': self.Airout,self.forcename:self.Forceout[self.forcename]}
         return {'outputs':outputs, 'inputs':inputs}
     
 class combineforces:
