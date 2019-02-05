@@ -585,7 +585,7 @@ class combineforces:
         return 0
     def behavior(self, calctype):
         
-        liftdn=0.5*self.ForceLiftdnR[calctype]+0.5*self.ForceLiftdnL[calctype]
+        liftdn=1.0-0.5*self.ForceLiftdnR[calctype]-0.5*self.ForceLiftdnL[calctype]
         liftdnroll=self.ForceLiftdnR[calctype]-self.ForceLiftdnL[calctype]
         liftdnyaw=self.ForceLiftdnR[calctype]-self.ForceLiftdnL[calctype]
         liftdndrag=abs(1.0-self.ForceLiftdnR[calctype])+abs(1.0-self.ForceLiftdnL[calctype])
@@ -594,7 +594,7 @@ class combineforces:
         liftprroll=self.ForceLiftprR[calctype]-self.ForceLiftprL[calctype]
         liftpryaw=self.ForceLiftprR[calctype]-self.ForceLiftprL[calctype]
         liftprdrag=abs(1.0-self.ForceLiftprR[calctype])+abs(1.0-self.ForceLiftprL[calctype])
-        liftprpitch=-0.5*self.ForceLiftprR[calctype]-0.5*self.ForceLiftprL[calctype]
+        liftprpitch=-1.0+0.5*self.ForceLiftprR[calctype]+0.5*self.ForceLiftprL[calctype]
         
         primaryroll=self.ForceRollR[calctype]-self.ForceRollL[calctype]
         rollyaw=self.ForceRollR[calctype]-self.ForceRollL[calctype]
@@ -612,8 +612,8 @@ class combineforces:
         self.yaw[calctype]=primaryyaw+0.1*pitchyaw+0.25*rollyaw+0.1*liftdnyaw+0.25*liftpryaw
         self.pitch[calctype]=primarypitch+0.25*liftprpitch
         
-        self.drag[calctype]=0.25*liftdndrag+0.5*liftprdrag+0.25*rolldrag+0.1*yawdrag+0.2*pitchdrag
-        self.lift=liftpr+(1-0.5*liftdn)
+        self.drag[calctype]=1.0+0.25*liftdndrag+0.5*liftprdrag+0.25*rolldrag+0.1*yawdrag+0.2*pitchdrag
+        self.lift=liftpr+liftdn
         
     def updatefxn(self,faults=['nom'],opermode=[],inputs={ \
                   'ForceLiftdnR':{'dev': 1.0, 'exp': 1.0}, \
