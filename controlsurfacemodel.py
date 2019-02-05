@@ -487,7 +487,7 @@ class affectDOF:
             self.eename='EE'+dof.capitalize()+side
             self.signame='Sig'+dof.capitalize()+side
         
-        self.Forceout={self.forcename:{'dev':1.0, 'exp':1.0}}
+        self.Forceout={'dev':1.0, 'exp':1.0}
     def resolvefaults(self):
         return 0
     def condfaults(self):
@@ -528,9 +528,10 @@ class affectDOF:
         self.Airout['turbulence']=self.Airin['turbulence']*self.surfstate
         
         power=1.0+aux.m2to1([self.EEstate,self.EEin['effort']])*(self.Sigin['ctl']-1.0)
-        self.Forceout[self.forcename]['dev']=power*self.Airin['velocity']*self.mechstate*self.surfstate
-        self.Forceout[self.forcename]['exp']=self.Sigin['exp']
-        
+        #self.Forceout[self.forcename]['dev']=power*self.Airin['velocity']*self.mechstate*self.surfstate
+        #self.Forceout[self.forcename]['exp']=self.Sigin['exp']
+        self.Forceout['dev']=power*self.Airin['velocity']*self.mechstate*self.surfstate
+        self.Forceout['exp']=self.Sigin['exp']
         
     def updatefxn(self,faults=['nom'],opermode=[],inputs={}, outputs={}):
         
@@ -553,7 +554,7 @@ class affectDOF:
         self.detbehav()
         self.behavior()
         inputs={self.signame: self.Sigin, self.eename: self.EEin, 'Air':self.Airin}
-        outputs={'Air': self.Airout,self.forcename:self.Forceout[self.forcename]}
+        outputs={'Air': self.Airout,self.forcename:self.Forceout}
         return {'outputs':outputs, 'inputs':inputs}
     
 class combineforces:
