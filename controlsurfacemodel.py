@@ -586,17 +586,17 @@ class combineforces:
     def behavior(self, calctype):
         
         liftdn=1.0-0.5*self.ForceLiftdnR[calctype]-0.5*self.ForceLiftdnL[calctype]
-        liftdnroll=self.ForceLiftdnR[calctype]-self.ForceLiftdnL[calctype]
+        liftdnroll=0.5*(self.ForceLiftdnR[calctype]-self.ForceLiftdnL[calctype])
         liftdnyaw=self.ForceLiftdnR[calctype]-self.ForceLiftdnL[calctype]
         liftdndrag=abs(1.0-self.ForceLiftdnR[calctype])+abs(1.0-self.ForceLiftdnL[calctype])
         
         liftpr=0.5*self.ForceLiftprR[calctype]+0.5*self.ForceLiftprL[calctype]
-        liftprroll=self.ForceLiftprR[calctype]-self.ForceLiftprL[calctype]
+        liftprroll=0.5*(self.ForceLiftprR[calctype]-self.ForceLiftprL[calctype])
         liftpryaw=self.ForceLiftprR[calctype]-self.ForceLiftprL[calctype]
         liftprdrag=abs(1.0-self.ForceLiftprR[calctype])+abs(1.0-self.ForceLiftprL[calctype])
         liftprpitch=-1.0+0.5*self.ForceLiftprR[calctype]+0.5*self.ForceLiftprL[calctype]
         
-        primaryroll=self.ForceRollR[calctype]-self.ForceRollL[calctype]
+        primaryroll=0.5*(self.ForceRollR[calctype]-self.ForceRollL[calctype])
         rollyaw=self.ForceRollR[calctype]-self.ForceRollL[calctype]
         rolldrag=abs(1.0-self.ForceRollR[calctype])+abs(1.0-self.ForceRollL[calctype])
         
@@ -605,7 +605,7 @@ class combineforces:
         
         primarypitch=0.5*self.ForcePitchR[calctype]+0.5*self.ForcePitchL[calctype]
         pitchyaw=self.ForcePitchR[calctype]-self.ForcePitchL[calctype]
-        pitchroll=self.ForcePitchR[calctype]-self.ForcePitchL[calctype]
+        pitchroll=0.5*(self.ForcePitchR[calctype]-self.ForcePitchL[calctype])
         pitchdrag=abs(1.0-self.ForcePitchR[calctype])+abs(1.0-self.ForcePitchL[calctype])
         
         self.roll[calctype]=1.0+primaryroll+0.25*liftdnroll+0.5*liftprroll+0.1*pitchroll
@@ -613,7 +613,7 @@ class combineforces:
         self.pitch[calctype]=primarypitch+0.25*liftprpitch
         
         self.drag[calctype]=1.0+0.25*liftdndrag+0.5*liftprdrag+0.25*rolldrag+0.1*yawdrag+0.2*pitchdrag
-        self.lift=liftpr+liftdn
+        self.lift[calctype]=liftpr+liftdn
         
     def updatefxn(self,faults=['nom'],opermode=[],inputs={ \
                   'ForceLiftdnR':{'dev': 1.0, 'exp': 1.0}, \
