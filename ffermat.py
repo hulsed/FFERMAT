@@ -324,10 +324,24 @@ def findfaultflows(g):
         flows=list(g.get_edge_data(edge[0],edge[1]).keys())
         for flow in flows:
             states=list(g.get_edge_data(edge[0],edge[1])[flow])
-            for state in states:
-                value=g.get_edge_data(edge[0],edge[1])[flow][state]
-                if value!=1.0:
-                    endflows[edge[0],edge[1],flow,state]=value
+            
+            if 'dev' in states:
+                devval=g.get_edge_data(edge[0],edge[1])[flow]['dev']
+                expval=g.get_edge_data(edge[0],edge[1])[flow]['exp']
+                deviation=expval-devval
+            elif 'ctl' in states:
+                ctlval=g.get_edge_data(edge[0],edge[1])[flow]['ctl']
+                expval=g.get_edge_data(edge[0],edge[1])[flow]['exp']
+                deviation=expval-ctlval
+            else:
+                for state in states:
+                    value=g.get_edge_data(edge[0],edge[1])[flow][state]
+                    if type(value) is dict:
+                        deviation=value['exp']-value['dev']
+                        if deviation!=0.0:
+                            endflows[edge[0],edge[1],flow,state]=deviation
+                    elif value!=1.0:
+                        endflows[edge[0],edge[1],flow,state]=value
     return endflows
 
 #generates lists of faults present
