@@ -612,8 +612,10 @@ class combineforces:
         self.yaw[calctype]=primaryyaw+0.1*pitchyaw+0.25*rollyaw+0.1*liftdnyaw+0.25*liftpryaw
         self.pitch[calctype]=primarypitch+0.25*liftprpitch
         
-        self.drag[calctype]=1.0+0.25*liftdndrag+0.5*liftprdrag+0.25*rolldrag+0.1*yawdrag+0.2*pitchdrag
+        self.drag[calctype]=1.0+0.5*(0.25*liftdndrag+0.5*liftprdrag+0.25*rolldrag+0.1*yawdrag+0.2*pitchdrag)
         self.lift[calctype]=liftpr+liftdn
+        
+
         
     def updatefxn(self,faults=['nom'],opermode=[],inputs={ \
                   'ForceLiftdnR':{'dev': 1.0, 'exp': 1.0}, \
@@ -663,8 +665,23 @@ class exportForcesandMoments:
         self.faultmodes={}
         self.faults=set(['nom'])
     def classify(self):
-        if self.Moment['roll']['exp']!=self.Moment['roll']['exp']:
+        rolldiff=self.Moment['roll']['dev']-self.Moment['roll']['exp']
+        pitchdiff=self.Moment['pitch']['dev']-self.Moment['pitch']['exp']
+        yawdiff=self.Moment['yaw']['dev']-self.Moment['yaw']['exp']
+        liftdiff=self.Force['lift']['dev']-self.Force['lift']['exp']
+        dragdiff=self.Force['drag']['dev']-self.Force['drag']['exp']
+        
+        
+        if any(1.0<=abs(x) for x in [rolldiff, pitchdiff,yawdiff,liftdiff,dragdiff]):
             self.Severity='catastrophic'
+        elif any(0.5<=abs(x) for x in [rolldiff, pitchdiff,yawdiff,liftdiff,dragdiff]):
+            self.Severity='hazardous'
+        elif any(0.25<=abs(x) for x in [rolldiff, pitchdiff,yawdiff,liftdiff,dragdiff]):
+            self.Severity='major'
+        elif any(0.0!=x for x in [rolldiff, pitchdiff,yawdiff,liftdiff,dragdiff]):
+            self.Severity='minor'
+        else:
+            self.Severity='noeffect'
     def returnvalue(self):
         return self.Severity
     
