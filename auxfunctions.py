@@ -41,4 +41,4 @@ def truncn(x, n):
 def dev(x):
     y=abs(abs(x-1.0)-1.0)
     return y
-    
+

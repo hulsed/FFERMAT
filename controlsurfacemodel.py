@@ -310,8 +310,6 @@ class distributeSig:
         self.SigPitchL['exp']=self.Sigin['pitchexp']      
         
         
-        self.Sigin['rate']=self.sigstate
-        
     def updatefxn(self,faults=['nom'],opermode=[],inputs={'Signal':{'rollctl': 1.0, 'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,\
                    'liftdnctl': 1.0,'rollexp': 1.0, 'pitchexp': 1.0,'yawexp': 1.0,'liftprexp': 1.0,'liftdnexp': 1.0}}, outputs={ \
                   'SigLiftdnR':{'ctl': 1.0, 'exp': 1.0}, \
@@ -422,14 +420,15 @@ class importSignal:
         if self.faults.intersection(set(['nosig'])):
             self.sigstate=0
         elif self.faults.intersection(set(['degsig'])):
-            self.sigstate=0.5
+            self.sigstate=1.5
         
     def behavior(self):
-        self.Sigout['Signal']['rollctl']=self.sigstate*self.opermodes[self.opermode]['roll']
-        self.Sigout['Signal']['pitchctl']=self.sigstate*self.opermodes[self.opermode]['pitch']
-        self.Sigout['Signal']['yawctl']=self.sigstate*self.opermodes[self.opermode]['yaw']
-        self.Sigout['Signal']['liftprctl']=self.sigstate*self.opermodes[self.opermode]['liftpr']
-        self.Sigout['Signal']['liftdnctl']=self.sigstate*self.opermodes[self.opermode]['liftdn']
+        
+        self.Sigout['Signal']['rollctl']=1.0+self.sigstate*(self.opermodes[self.opermode]['roll']-1.0)
+        self.Sigout['Signal']['pitchctl']=1.0+self.sigstate*(self.opermodes[self.opermode]['pitch']-1.0)
+        self.Sigout['Signal']['yawctl']=1.0+self.sigstate*(self.opermodes[self.opermode]['yaw']-1.0)
+        self.Sigout['Signal']['liftprctl']=1.0+self.sigstate*(self.opermodes[self.opermode]['liftpr']-1.0)
+        self.Sigout['Signal']['liftdnctl']=1.0+self.sigstate*(self.opermodes[self.opermode]['liftdn']-1.0)
         
         self.Sigout['Signal']['rollexp']=self.opermodes[self.opermode]['roll']
         self.Sigout['Signal']['pitchexp']=self.opermodes[self.opermode]['pitch']
@@ -527,10 +526,13 @@ class affectDOF:
     def behavior(self):
         self.Airout['turbulence']=self.Airin['turbulence']*self.surfstate
         
-        power=1.0+aux.m2to1([self.EEstate,self.EEin['effort']])*(self.Sigin['ctl']-1.0)
+        aforce=self.mechstate*self.surfstate
+        
+        power=1.0+aux.m2to1([self.Airin['velocity'], self.EEstate,self.EEin['effort']])*(self.Sigin['ctl']-1.0)
         #self.Forceout[self.forcename]['dev']=power*self.Airin['velocity']*self.mechstate*self.surfstate
         #self.Forceout[self.forcename]['exp']=self.Sigin['exp']
-        self.Forceout['dev']=power*self.Airin['velocity']*self.mechstate*self.surfstate
+        
+        self.Forceout['dev']=aforce*power
         self.Forceout['exp']=self.Sigin['exp']
         
     def updatefxn(self,faults=['nom'],opermode=[],inputs={}, outputs={}):

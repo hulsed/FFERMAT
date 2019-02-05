@@ -1,13 +1,13 @@
 SUMMARY
 --------------------------------------------
-TOTAL SCORE: 1476895582.6781013
+TOTAL SCORE: 1311766766.1555967
 FEASIBILITY: infeasible
 Failure Type 	 	 Expected Number 	 Allowable
-catastrophic 	 	 1.5604850000000052 	 0.002          
-hazardous   	 	 0.7922475000000007 	 0.02           
+catastrophic 	 	 1.4104700000000046 	 0.002          
+hazardous   	 	 0.6437475       	 0.02           
 major       	 	 0.20027249999999996 	 0.2            
 minor       	 	 0.0002525       	 20.0           
-noeffect    	 	 6.576277099999901 	 0              
+noeffect    	 	 6.874792099999952 	 0              
 
 FULL RESULTS:
 --------------------------------------------
@@ -20,8 +20,7 @@ REPAIR:  totaled
 FLOW EFFECTS:
 {('Combine_Forces', 'Export_FM', 'Force', 'drag'): -1.25,
  ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 1.25,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rate'): 0.0}
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.0}
 END FAULTS:
 {'Distribute_Signal': {'nosig'}}
 
@@ -36,7 +35,6 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 1.25,
  ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 1.0,
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rate'): 0.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
 END FAULTS:
@@ -53,8 +51,7 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 2.25,
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rate'): 0.0}
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Distribute_Signal': {'nosig'}}
 
@@ -68,7 +65,6 @@ FLOW EFFECTS:
 {('Combine_Forces', 'Export_FM', 'Force', 'drag'): -1.2,
  ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 1.25,
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rate'): 0.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
@@ -86,8 +82,7 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 1.25,
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rate'): 0.0}
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Distribute_Signal': {'nosig'}}
 
@@ -103,156 +98,9 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 1.5,
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rate'): 0.0}
-END FAULTS:
-{'Distribute_Signal': {'nosig'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   forward
-FAULT SCENARIO:  Import_Air   hivel during forward
-PROBABILITY:  moderate
-SCORE: 19010500.0  ( 37636900.0 - 384100.0 )
-SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
-REPAIR:  totaled
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -1.25,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): -1.25,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -1.0,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0}
-END FAULTS:
-{'Import_Air': {'hivel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Import_Air   hivel during roll
-PROBABILITY:  moderate
-SCORE: 19010500.0  ( 37636900.0 - 384100.0 )
-SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
-REPAIR:  totaled
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -1.25,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): -1.25,
- ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -1.0,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -1.5,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'hivel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Import_Air   hivel during pitch
-PROBABILITY:  moderate
-SCORE: 19010500.0  ( 37636900.0 - 384100.0 )
-SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
-REPAIR:  totaled
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -1.5500000000000003,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): -2.75,
- ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.050000000000000044,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.8999999999999999,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'hivel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Import_Air   hivel during yaw
-PROBABILITY:  moderate
-SCORE: 19010500.0  ( 37636900.0 - 384100.0 )
-SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
-REPAIR:  totaled
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -1.2999999999999996,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): -1.25,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -2.0,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'hivel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Import_Air   hivel during liftdn
-PROBABILITY:  moderate
-SCORE: 19010500.0  ( 37636900.0 - 384100.0 )
-SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
-REPAIR:  totaled
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -1.5,
- ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 1.0,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): -1.25,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -1.0,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'hivel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Import_Air   hivel during liftup
-PROBABILITY:  moderate
-SCORE: 19010500.0  ( 37636900.0 - 384100.0 )
-SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
-REPAIR:  totaled
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -1.75,
- ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -1.0,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): -1.5,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -1.0,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
-{'Import_Air': {'hivel'}}
+{'Distribute_Signal': {'nosig'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Distribute_Signal   degsig during yaw
@@ -264,7 +112,6 @@ FLOW EFFECTS:
 {('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.55,
  ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.625,
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rate'): 0.5,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
@@ -671,152 +518,6 @@ END FAULTS:
 {'Affect_Liftdn_Left': {'friction'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   forward
-FAULT SCENARIO:  Import_Air   lowvel during forward
-PROBABILITY:  moderate
-SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.625,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.625,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.5,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0.5}
-END FAULTS:
-{'Import_Air': {'lowvel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Import_Air   lowvel during roll
-PROBABILITY:  moderate
-SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.375,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.625,
- ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.5,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.75,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'lowvel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Import_Air   lowvel during pitch
-PROBABILITY:  moderate
-SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.4249999999999998,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.625,
- ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.050000000000000044,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.6000000000000001,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'lowvel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Import_Air   lowvel during yaw
-PROBABILITY:  moderate
-SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.55,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.625,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.0,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'lowvel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Import_Air   lowvel during liftdn
-PROBABILITY:  moderate
-SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.25,
- ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.5,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.625,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.5,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'lowvel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Import_Air   lowvel during liftup
-PROBABILITY:  moderate
-SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
-SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
-REPAIR:  major
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.125,
- ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.5,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.75,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.5,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0.5,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'lowvel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Distribute_Signal   degsig during forward
 PROBABILITY:  moderate
 SCORE: 8317005.0  ( 16465960.0 - 168050.0 )
@@ -825,8 +526,7 @@ REPAIR:  major
 FLOW EFFECTS:
 {('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.625,
  ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.625,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rate'): 0.5}
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.5}
 END FAULTS:
 {'Distribute_Signal': {'degsig'}}
 
@@ -841,7 +541,6 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.625,
  ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.5,
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.75,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rate'): 0.5,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
 END FAULTS:
@@ -858,8 +557,7 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 1.125,
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.5,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rate'): 0.5}
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Distribute_Signal': {'degsig'}}
 
@@ -875,8 +573,7 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.625,
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.5,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rate'): 0.5}
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Distribute_Signal': {'degsig'}}
 
@@ -892,8 +589,7 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.75,
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.5,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rate'): 0.5}
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Distribute_Signal': {'degsig'}}
 
@@ -1331,152 +1027,6 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.050000000000000044}
 END FAULTS:
 {'Affect_Liftdn_Left': {'friction'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   forward
-FAULT SCENARIO:  Import_Air   novel during forward
-PROBABILITY:  low
-SCORE: 193969.75  ( 11521.5 - 376418.0 )
-SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
-REPAIR:  totaled
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -1.25,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 1.25,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.0,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0}
-END FAULTS:
-{'Import_Air': {'novel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Import_Air   novel during roll
-PROBABILITY:  low
-SCORE: 193969.75  ( 11521.5 - 376418.0 )
-SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
-REPAIR:  totaled
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -1.0,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 1.25,
- ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 1.0,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.5,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'novel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Import_Air   novel during pitch
-PROBABILITY:  low
-SCORE: 193969.75  ( 11521.5 - 376418.0 )
-SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
-REPAIR:  totaled
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -1.15,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 1.75,
- ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.050000000000000044,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.1,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'novel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Import_Air   novel during yaw
-PROBABILITY:  low
-SCORE: 193969.75  ( 11521.5 - 376418.0 )
-SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
-REPAIR:  totaled
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -1.2,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 1.25,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 2.0,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'novel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Import_Air   novel during liftdn
-PROBABILITY:  low
-SCORE: 193969.75  ( 11521.5 - 376418.0 )
-SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
-REPAIR:  totaled
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -1.0,
- ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -1.0,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 1.25,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.0,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'novel'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Import_Air   novel during liftup
-PROBABILITY:  low
-SCORE: 193969.75  ( 11521.5 - 376418.0 )
-SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
-REPAIR:  totaled
-FLOW EFFECTS:
-{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.75,
- ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 1.0,
- ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 1.5,
- ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.0,
- ('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0,
- ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
-END FAULTS:
-{'Import_Air': {'novel'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Distribute_Signal   nosigYaw during forward
@@ -5685,6 +5235,39 @@ FLOW EFFECTS:
 END FAULTS:
 {'Distribute_EE': {'lowv'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Import_Signal   degsig during pitch
+PROBABILITY:  low
+SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Import_Signal': {'degsig', 'nosig'}, 'Distribute_Signal': {'nosigPitchR', 'nosigPitchL'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Import_Signal   degsig during liftdn
+PROBABILITY:  low
+SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Import_Signal': {'degsig', 'nosig'}, 'Distribute_Signal': {'nosigLiftdnR', 'nosigLiftdnL'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Import_Signal   degsig during liftup
+PROBABILITY:  low
+SCORE: 9.837499999999999  ( 0.075 - 19.599999999999998 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Import_Signal': {'degsig', 'nosig'}, 'Distribute_Signal': {'nosigLiftprR', 'nosigLiftprL'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Roll_Right   short during forward
 PROBABILITY:  low
@@ -7160,6 +6743,28 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Distribute_EE': {'opencPitchL'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Import_Signal   degsig during roll
+PROBABILITY:  low
+SCORE: 1.2325  ( 0.015000000000000001 - 2.4499999999999997 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  minor
+FLOW EFFECTS:
+{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Import_Signal': {'degsig', 'nosig'}, 'Distribute_Signal': {'nosigRollR'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Import_Signal   degsig during yaw
+PROBABILITY:  low
+SCORE: 1.2325  ( 0.015000000000000001 - 2.4499999999999997 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  minor
+FLOW EFFECTS:
+{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Import_Signal': {'degsig', 'nosig'}, 'Distribute_Signal': {'nosigYaw'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Distribute_Signal   nosigPitchL during forward
@@ -10578,6 +10183,63 @@ END FAULTS:
 {}
 
 OPERATIONAL SCENARIO:  Import_Signal   forward
+FAULT SCENARIO:  Import_Air   novel during forward
+PROBABILITY:  low
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0}
+END FAULTS:
+{'Import_Air': {'novel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   forward
+FAULT SCENARIO:  Import_Air   lowvel during forward
+PROBABILITY:  moderate
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0.5}
+END FAULTS:
+{'Import_Air': {'lowvel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   forward
+FAULT SCENARIO:  Import_Air   hivel during forward
+PROBABILITY:  moderate
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0}
+END FAULTS:
+{'Import_Air': {'hivel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Import_Air   gusts during forward
 PROBABILITY:  veryhigh
 SCORE: 0.0  ( 0.0 - 0.0 )
@@ -10643,6 +10305,69 @@ FLOW EFFECTS:
 {}
 END FAULTS:
 {'Import_Air': {'turb'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Import_Air   novel during roll
+PROBABILITY:  low
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'novel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Import_Air   lowvel during roll
+PROBABILITY:  moderate
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0.5,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'lowvel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Import_Air   hivel during roll
+PROBABILITY:  moderate
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'hivel'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Import_Air   gusts during roll
@@ -10717,6 +10442,69 @@ END FAULTS:
 {'Import_Air': {'turb'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Import_Air   novel during pitch
+PROBABILITY:  low
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'novel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Import_Air   lowvel during pitch
+PROBABILITY:  moderate
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0.5,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'lowvel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Import_Air   hivel during pitch
+PROBABILITY:  moderate
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'hivel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Import_Air   gusts during pitch
 PROBABILITY:  veryhigh
 SCORE: 0.0  ( 0.0 - 0.0 )
@@ -10787,6 +10575,69 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Import_Air': {'turb'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Import_Air   novel during yaw
+PROBABILITY:  low
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'novel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Import_Air   lowvel during yaw
+PROBABILITY:  moderate
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0.5,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'lowvel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Import_Air   hivel during yaw
+PROBABILITY:  moderate
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'hivel'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Import_Air   gusts during yaw
@@ -10861,6 +10712,69 @@ END FAULTS:
 {'Import_Air': {'turb'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Import_Air   novel during liftdn
+PROBABILITY:  low
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'novel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Import_Air   lowvel during liftdn
+PROBABILITY:  moderate
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0.5,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'lowvel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Import_Air   hivel during liftdn
+PROBABILITY:  moderate
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'hivel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Import_Air   gusts during liftdn
 PROBABILITY:  veryhigh
 SCORE: 0.0  ( 0.0 - 0.0 )
@@ -10931,6 +10845,69 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Import_Air': {'turb'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Import_Air   novel during liftup
+PROBABILITY:  low
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'novel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Import_Air   lowvel during liftup
+PROBABILITY:  moderate
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 0.5,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 0.5,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'lowvel'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Import_Air   hivel during liftup
+PROBABILITY:  moderate
+SCORE: 0.0  ( 0.0 - 0.0 )
+SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
+REPAIR:  NA
+FLOW EFFECTS:
+{('Import_Air', 'Affect_Liftdn_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftdn_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Liftpr_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Pitch_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Left', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Roll_Right', 'Air', 'velocity'): 2.0,
+ ('Import_Air', 'Affect_Yaw', 'Air', 'velocity'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Import_Air': {'hivel'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Import_Air   gusts during liftup
@@ -11011,11 +10988,7 @@ SCORE: 0.0  ( 0.0 - 0.0 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 0.0}
+{}
 END FAULTS:
 {'Import_Signal': {'nosig'}}
 
@@ -11026,11 +10999,7 @@ SCORE: 0.0  ( 0.0 - 0.0 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 0.5}
+{}
 END FAULTS:
 {'Import_Signal': {'degsig'}}
 
@@ -11041,29 +11010,9 @@ SCORE: 0.0  ( 0.0 - 0.0 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 0.0}
+{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
 END FAULTS:
 {'Import_Signal': {'nosig'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Import_Signal   degsig during roll
-PROBABILITY:  low
-SCORE: 0.0  ( 0.0 - 0.0 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  NA
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 0.5}
-END FAULTS:
-{'Import_Signal': {'degsig'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Import_Signal   nosig during pitch
@@ -11072,29 +11021,9 @@ SCORE: 0.0  ( 0.0 - 0.0 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 0.0}
+{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Import_Signal': {'nosig'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Import_Signal   degsig during pitch
-PROBABILITY:  low
-SCORE: 0.0  ( 0.0 - 0.0 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  NA
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 0.5}
-END FAULTS:
-{'Import_Signal': {'degsig'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Import_Signal   nosig during yaw
@@ -11103,29 +11032,9 @@ SCORE: 0.0  ( 0.0 - 0.0 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Import_Signal': {'nosig'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Import_Signal   degsig during yaw
-PROBABILITY:  low
-SCORE: 0.0  ( 0.0 - 0.0 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  NA
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Import_Signal': {'degsig'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Import_Signal   nosig during liftdn
@@ -11134,29 +11043,9 @@ SCORE: 0.0  ( 0.0 - 0.0 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 0.0}
+{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Import_Signal': {'nosig'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Import_Signal   degsig during liftdn
-PROBABILITY:  low
-SCORE: 0.0  ( 0.0 - 0.0 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  NA
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 0.5}
-END FAULTS:
-{'Import_Signal': {'degsig'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Import_Signal   nosig during liftup
@@ -11165,27 +11054,7 @@ SCORE: 0.0  ( 0.0 - 0.0 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  NA
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 0.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 0.0}
+{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Import_Signal': {'nosig'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Import_Signal   degsig during liftup
-PROBABILITY:  low
-SCORE: 0.0  ( 0.0 - 0.0 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  NA
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 0.5,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 0.5}
-END FAULTS:
-{'Import_Signal': {'degsig'}}
 
