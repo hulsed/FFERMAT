@@ -248,7 +248,6 @@ def propagate(forward, backward, opfxn, opmode):
     '''
     '''
     while activefxns:
-        print(activefxns)
         for fxnname in list(activefxns):
             fxn=forward.nodes(data='funcobj')[fxnname]
             
@@ -262,12 +261,10 @@ def propagate(forward, backward, opfxn, opmode):
             for edge in backward.in_edges(fxnname):
                 edgeoutputs=backward.edges[edge]
                 outputdict.update(edgeoutputs)
-                
+            
             #if same inputs and outputs, remove from active functions, otherwise update inputs    
             if inputdict==forward.nodes('inputs')[fxnname] and outputdict==backward.nodes('outputs')[fxnname]:
                 activefxns.discard(fxnname)
-                if fxnname=='Export_FM':
-                    foo=1.0
             else:
                 activefxns.update([fxnname])
                 for key in forward.nodes('inputs')[fxnname]:
@@ -284,30 +281,16 @@ def propagate(forward, backward, opfxn, opmode):
             inputs=fxncall['inputs']
             outputs=fxncall['outputs']
             
-            print(forward.edges['Combine_Forces','Export_FM'])
-            foo=1
-            #except:
-            #    print('Difficulty updating function: '+fxnname)
-            #    print(outputs)
-            
-            #if outputs==g.nodes('outputs')[fxnname]:
-            #    activefxns.discard(fxnname)        
-            #iterate over output edges
+            #checkedges(forward,outputs)
+
             for edge in forward.out_edges(fxnname):
                 active_edge=False
-            #iterate over flows
-                if edge==('Combine_Forces','Export_FM'):
-                    foo=1
-                    
-            
+            #iterate over flows            
                 for outflow in outputs:
                     if outflow in forward.edges[edge]:
-                        #print(outputs[outflow])
-                        #print(forward.edges[edge][outflow])
-                        #print(forward.edges[edge][outflow]!=outputs[outflow])
                         if forward.edges[edge][outflow]!=outputs[outflow]:
                             active_edge=True
-                        forward.edges[edge][outflow]=outputs[outflow]
+                            forward.edges[edge][outflow]=outputs[outflow]
 
             #if a new value, functions are now active?
                 if active_edge:
@@ -318,19 +301,16 @@ def propagate(forward, backward, opfxn, opmode):
             #iterate over flows
                 for inflow in inputs:
                     if inflow in backward.edges[edge]:
-                        #print(inputs[inflow])
-                        #print(backward.edges[edge][inflow])
-                        #print(backward.edges[edge][inflow]!=inputs[inflow])
                         if backward.edges[edge][inflow]!=inputs[inflow]:
                             active_edge=True
-                        backward.edges[edge][inflow]=inputs[inflow]
+                            backward.edges[edge][inflow]=inputs[inflow]
                 #if a new value, functions are now active?
                 if active_edge:
                     activefxns.update(edge) 
-            
-            print(forward.edges['Combine_Forces','Export_FM'])
-            foo=1
     return 
+
+#def checkedges(forward, outputs):
+    
         
 #extract end-state of interest
 #endstate=g.edges['Move_Water','Export_Water']
