@@ -362,8 +362,7 @@ class importAir:
                          'lowvel': {'lprob':'moderate', 'rcost':'NA'},\
                          'hivel': {'lprob':'moderate', 'rcost':'NA'},\
                          'gusts': {'lprob':'veryhigh', 'rcost':'NA'},\
-                         'flowsep': {'lprob':'moderate', 'rcost':'NA'},\
-                         'turb': {'lprob':'high', 'rcost':'NA'}}
+                         'flowsep': {'lprob':'moderate', 'rcost':'NA'}}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -378,7 +377,7 @@ class importAir:
             self.velstate=2.0
         
         if self.faults.intersection(set(['gusts', 'flowsep'])):
-            self.turbstate=0.5
+            self.turbstate=0.85
 
     def behavior(self):
         self.Airout['velocity']=self.velstate
@@ -532,7 +531,7 @@ class affectDOF:
     def behavior(self):
         self.Airout['turbulence']=self.Airin['turbulence']*self.surfstate
         
-        aforce=self.mechstate*self.surfstate
+        aforce=self.mechstate*self.surfstate*self.Airin['turbulence']
         
         power=1.0+aux.m2to1([self.Airin['velocity'], self.EEstate, self.EEin['effort']])*(self.ctlstate*self.Sigin['ctl']-1.0)
         #self.Forceout[self.forcename]['dev']=power*self.Airin['velocity']*self.mechstate*self.surfstate
