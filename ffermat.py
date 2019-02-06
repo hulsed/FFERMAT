@@ -254,66 +254,52 @@ def propagate(forward, backward, opfxn, opmode):
             #iterate over input edges
             inputdict={}
             outputdict={}
-            for edge in forward.in_edges(fxnname):
-                edgeinputs=forward.edges[edge]
-                inputdict.update(edgeinputs)
-
-            for edge in backward.in_edges(fxnname):
-                edgeoutputs=backward.edges[edge]
-                outputdict.update(edgeoutputs)
+            #find any new inputs from the edges going in and out
+            collectfxnedgevals(forward, inputdict, fxnname)
+            collectfxnedgevals(backward, outputdict, fxnname)
+            #if same inputs and outputs, remove from active functions, otherwise update inputs
+            checkandupdatenodes(inputdict, outputdict,fxnname, forward, backward, activefxns)
             
-            #if same inputs and outputs, remove from active functions, otherwise update inputs    
-            if inputdict==forward.nodes('inputs')[fxnname] and outputdict==backward.nodes('outputs')[fxnname]:
-                activefxns.discard(fxnname)
-            else:
-                activefxns.update([fxnname])
-                for key in forward.nodes('inputs')[fxnname]:
-                    forward.nodes('inputs')[fxnname][key]=inputdict[key]
-                for key in backward.nodes('outputs')[fxnname]:
-                    backward.nodes('outputs')[fxnname][key]=outputdict[key]
-            
-            #try:
-                #update outputs
+            #update outputs
             if fxnname==opfxn:
                 fxncall=fxn.updatefxn(inputs=inputdict, outputs=outputdict, opermode=opmode)
             else:
                 fxncall=fxn.updatefxn(inputs=inputdict, outputs=outputdict)
+                
             inputs=fxncall['inputs']
             outputs=fxncall['outputs']
-            
-            #checkedges(forward,outputs)
+            #update edges with new input/output values from the update function and add related functions to list
+            checkandupdateedges(forward, outputs,fxnname, activefxns)
+            checkandupdateedges(backward, inputs,fxnname, activefxns)
+    return
 
-            for edge in forward.out_edges(fxnname):
-                active_edge=False
+def checkandupdatenodes(inputdict, outputdict,fxnname, forward, backward, activefxns):
+    #if same inputs and outputs, remove from active functions, otherwise update inputs    
+    if inputdict==forward.nodes('inputs')[fxnname] and outputdict==backward.nodes('outputs')[fxnname]:
+        activefxns.discard(fxnname)
+    else:
+        activefxns.update([fxnname])
+        for key in forward.nodes('inputs')[fxnname]:
+            forward.nodes('inputs')[fxnname][key]=inputdict[key]
+        for key in backward.nodes('outputs')[fxnname]:
+            backward.nodes('outputs')[fxnname][key]=outputdict[key]
+
+def collectfxnedgevals(forward, inputdict, fxnname):
+    #find any new inputs from the edges going in and out
+    for edge in forward.in_edges(fxnname):
+        edgeinputs=forward.edges[edge]
+        inputdict.update(edgeinputs)
+
+def checkandupdateedges(forward, outputs,fxnname, activefxns):
+    #use new input/output values from function to update edges
+    for edge in forward.out_edges(fxnname):
             #iterate over flows            
                 for outflow in outputs:
                     if outflow in forward.edges[edge]:
                         if forward.edges[edge][outflow]!=outputs[outflow]:
-                            active_edge=True
                             forward.edges[edge][outflow]=outputs[outflow]
-
-            #if a new value, functions are now active?
-                if active_edge:
-                    activefxns.update(edge) 
-            
-            for edge in backward.out_edges(fxnname):
-                active_edge=False
-            #iterate over flows
-                for inflow in inputs:
-                    if inflow in backward.edges[edge]:
-                        if backward.edges[edge][inflow]!=inputs[inflow]:
-                            active_edge=True
-                            backward.edges[edge][inflow]=inputs[inflow]
-                #if a new value, functions are now active?
-                if active_edge:
-                    activefxns.update(edge) 
-    return 
-
-#def checkedges(forward, outputs):
-    
-        
-#extract end-state of interest
-#endstate=g.edges['Move_Water','Export_Water']
+                            #if a new value, add connected function to list of active functions
+                            activefxns.update(edge)
 
 
 #extract non-nominal flow paths
