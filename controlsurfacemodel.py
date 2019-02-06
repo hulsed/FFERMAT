@@ -317,11 +317,17 @@ class distributeSig:
                   'SigLiftprL':{'ctl': 1.0, 'exp': 1.0}, 'SigYaw':{'ctl': 1.0, 'exp': 1.0}, \
                   'SigRollR':{'ctl': 1.0, 'exp': 1.0}, 'SigRollL':{'ctl': 1.0, 'exp': 1.0}, \
                   'SigPitchR':{'ctl': 1.0, 'exp': 1.0}, 'SigPitchL':{'ctl': 1.0, 'exp': 1.0}}):
+            
         self.Sigin['rollctl']=inputs['Signal']['rollctl']
         self.Sigin['pitchctl']=inputs['Signal']['pitchctl']
         self.Sigin['yawctl']=inputs['Signal']['yawctl']
         self.Sigin['liftprctl']=inputs['Signal']['liftprctl']
         self.Sigin['liftdnctl']=inputs['Signal']['liftdnctl']
+        self.Sigin['rollexp']=inputs['Signal']['rollexp']
+        self.Sigin['pitchexp']=inputs['Signal']['pitchexp']
+        self.Sigin['yawexp']=inputs['Signal']['yawexp']
+        self.Sigin['liftprexp']=inputs['Signal']['liftprexp']
+        self.Sigin['liftdnexp']=inputs['Signal']['liftdnexp']
         
         self.SigLiftdnR['ctl']=outputs['SigLiftdnR']['ctl']
         self.SigLiftdnL['ctl']=outputs['SigLiftdnL']['ctl']
@@ -540,14 +546,14 @@ class affectDOF:
         if len(inputs)==0:
             inputs={self.signame:{'ctl': 1.0, 'exp': 1.0},self.eename:{'rate': 1.0, 'effort': 1.0},'Air': {'velocity': 1.0, 'turbulence': 1.0}}
         
-        if len(outputs)==0:
-            outputs={self.forcename:{'dev':1.0, 'exp':1.0}, 'Air': {'velocity': 1.0, 'turbulence': 1.0}}
-            self.Forceout=outputs[self.forcename]
+        #if len(outputs)==0:
+        #    outputs={self.forcename:{'dev':1.0, 'exp':1.0}, 'Air': {'velocity': 1.0, 'turbulence': 1.0}}
+        #    self.Forceout=outputs[self.forcename]
                 
         self.Airin=inputs['Air']
         self.EEin=inputs[self.eename]
         self.Sigin=inputs[self.signame]
-        self.Airout=outputs['Air']
+        #self.Airout=outputs['Air']
         
 
         self.faults.update(faults)

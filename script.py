@@ -16,6 +16,7 @@ import controlsurfacemodel
 [forwardgraph,backgraph,fullgraph]=controlsurfacemodel.initialize()
 #fullresults, summary = ffermat.runlist(controlsurfacemodel)
 
+#[forwardgraph,backgraph,fullgraph]=controlsurfacemodel.initialize()
 ffermat.runonefault(controlsurfacemodel, forwardgraph, backgraph, fullgraph, 'Import_Signal','liftup','Import_Signal','nosig')
 
 #ffermat.runonefault(controlsurfacemodel, forwardgraph, backgraph, fullgraph, 'Import_Signal','roll','NA','NA')
