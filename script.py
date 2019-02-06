@@ -29,3 +29,5 @@ fullresults, summary = ffermat.runlist(controlsurfacemodel)
 ffermat.savereport(fullresults,summary, filename='report.txt')
 
 #ffermat.runonefault(forwardgraph,backgraph,fullgraph,'Import_Signal','nosig')
+
+#ffermat.runonefault(forwardgraph,backgraph,fullgraph,'Affect_Liftdn_Left')

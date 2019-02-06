@@ -525,7 +525,7 @@ class affectDOF:
             self.EEin['rate']=self.EEin['effort']*self.EEstate
         
         if self.faults.intersection(set(['ctlbreak'])):
-            self.ctlstate=0.0
+            self.EEstate=0.0
         elif self.faults.intersection(set(['ctldrift'])):
             self.ctlstate=0.5
 
@@ -534,7 +534,7 @@ class affectDOF:
         
         aforce=self.mechstate*self.surfstate
         
-        power=1.0+aux.m2to1([self.Airin['velocity'], self.EEstate,self.EEin['effort']])*(self.Sigin['ctl']-1.0)
+        power=1.0+aux.m2to1([self.Airin['velocity'], self.EEstate, self.EEin['effort']])*(self.ctlstate*self.Sigin['ctl']-1.0)
         #self.Forceout[self.forcename]['dev']=power*self.Airin['velocity']*self.mechstate*self.surfstate
         #self.Forceout[self.forcename]['exp']=self.Sigin['exp']
         

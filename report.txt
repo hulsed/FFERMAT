@@ -1,13 +1,13 @@
 SUMMARY
 --------------------------------------------
-TOTAL SCORE: 1961483815.1621163
+TOTAL SCORE: 1963324257.5703206
 FEASIBILITY: infeasible
 Failure Type 	 	 Expected Number 	 Allowable
-catastrophic 	 	 2.062360000000004 	 0.002          
-hazardous   	 	 0.940785000000004 	 0.02           
-major       	 	 1.0248500000000003 	 0.2            
+catastrophic 	 	 2.0626199500000038 	 0.002          
+hazardous   	 	 0.9438746000000046 	 0.02           
+major       	 	 1.0349500000000011 	 0.2            
 minor       	 	 0.0             	 20.0           
-noeffect    	 	 5.101539599999999 	 0              
+noeffect    	 	 5.088090049999999 	 0              
 
 FULL RESULTS:
 --------------------------------------------
@@ -2728,6 +2728,20 @@ END FAULTS:
 {'Affect_Yaw': {'opencircuit'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Affect_Yaw   ctldrift during yaw
+PROBABILITY:  low
+SCORE: 193969.75  ( 11521.5 - 376418.0 )
+SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
+REPAIR:  totaled
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Affect_Yaw': {'ctldrift'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Yaw   jamdown during yaw
 PROBABILITY:  low
 SCORE: 193969.75  ( 11521.5 - 376418.0 )
@@ -3241,6 +3255,21 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Roll_Right': {'opencircuit'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Affect_Roll_Right   ctldrift during roll
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.25,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Affect_Roll_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Roll_Right   jamup during pitch
 PROBABILITY:  low
@@ -3652,6 +3681,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Right': {'opencircuit'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Affect_Pitch_Right   ctldrift during pitch
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.09999999999999987,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.09999999999999998,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Affect_Pitch_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Pitch_Right   jamup during yaw
 PROBABILITY:  low
@@ -3860,6 +3905,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Left': {'opencircuit'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Affect_Pitch_Left   ctldrift during pitch
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.09999999999999987,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.10000000000000009,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Affect_Pitch_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Pitch_Left   jamup during yaw
 PROBABILITY:  low
@@ -3969,6 +4030,18 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Yaw': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   forward
+FAULT SCENARIO:  Affect_Yaw   ctldrift during forward
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.02499999999999991,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.5}
+END FAULTS:
+{'Affect_Yaw': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Yaw   surfwarp during roll
 PROBABILITY:  low
@@ -3983,6 +4056,20 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
 END FAULTS:
 {'Affect_Yaw': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Affect_Yaw   ctldrift during roll
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.02499999999999991,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.5,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Affect_Yaw': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Yaw   surfwarp during pitch
@@ -3999,6 +4086,20 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Yaw': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Affect_Yaw   ctldrift during pitch
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.025000000000000133,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.5,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Affect_Yaw': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Yaw   surfwarp during liftdn
 PROBABILITY:  low
@@ -4014,6 +4115,20 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Yaw': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Affect_Yaw   ctldrift during liftdn
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.02499999999999991,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.5,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Affect_Yaw': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Yaw   surfwarp during liftup
 PROBABILITY:  low
@@ -4028,6 +4143,20 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Affect_Yaw': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Affect_Yaw   ctldrift during liftup
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.02499999999999991,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.5,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Affect_Yaw': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Liftpr_Right   jamup during forward
@@ -4250,6 +4379,23 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Right': {'opencircuit'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Affect_Liftpr_Right   ctldrift during liftup
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.25,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Affect_Liftpr_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Liftpr_Left   jamup during forward
 PROBABILITY:  low
@@ -4471,6 +4617,23 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Left': {'opencircuit'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Affect_Liftpr_Left   ctldrift during liftup
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.25,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Affect_Liftpr_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Liftdn_Right   jamup during forward
 PROBABILITY:  low
@@ -4584,6 +4747,22 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Right': {'opencircuit'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Affect_Liftdn_Right   ctldrift during liftdn
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.09999999999999998,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Affect_Liftdn_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Liftdn_Right   jamup during liftup
@@ -4715,6 +4894,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftdn_Left': {'opencircuit'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Affect_Liftdn_Left   ctldrift during liftdn
+PROBABILITY:  low
+SCORE: 84864.8  ( 5040.6 - 164689.0 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.10000000000000009,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Affect_Liftdn_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Liftdn_Left   jamup during liftup
 PROBABILITY:  low
@@ -4745,6 +4940,19 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Roll_Right': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   forward
+FAULT SCENARIO:  Affect_Roll_Right   ctldrift during forward
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.125}
+END FAULTS:
+{'Affect_Roll_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Roll_Right   surfwarp during pitch
 PROBABILITY:  low
@@ -4760,6 +4968,21 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Right': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Affect_Roll_Right   ctldrift during pitch
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Affect_Roll_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Roll_Right   surfwarp during yaw
@@ -4777,6 +5000,21 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Roll_Right': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Affect_Roll_Right   ctldrift during yaw
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Affect_Roll_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Roll_Right   surfwarp during liftdn
 PROBABILITY:  low
@@ -4792,6 +5030,21 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Right': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Affect_Roll_Right   ctldrift during liftdn
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Affect_Roll_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Roll_Right   surfwarp during liftup
@@ -4809,6 +5062,21 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Roll_Right': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Affect_Roll_Right   ctldrift during liftup
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Affect_Roll_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Roll_Left   surfwarp during forward
 PROBABILITY:  low
@@ -4822,6 +5090,19 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.125}
 END FAULTS:
 {'Affect_Roll_Left': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   forward
+FAULT SCENARIO:  Affect_Roll_Left   ctldrift during forward
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.125}
+END FAULTS:
+{'Affect_Roll_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Roll_Left   surfwarp during pitch
@@ -4839,6 +5120,21 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Roll_Left': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Affect_Roll_Left   ctldrift during pitch
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Affect_Roll_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Roll_Left   surfwarp during yaw
 PROBABILITY:  low
@@ -4854,6 +5150,21 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Left': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Affect_Roll_Left   ctldrift during yaw
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Affect_Roll_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Roll_Left   surfwarp during liftdn
@@ -4871,6 +5182,21 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Roll_Left': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Affect_Roll_Left   ctldrift during liftdn
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Affect_Roll_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Roll_Left   surfwarp during liftup
 PROBABILITY:  low
@@ -4887,6 +5213,21 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Roll_Left': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Affect_Roll_Left   ctldrift during liftup
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Affect_Roll_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Pitch_Right   surfwarp during forward
 PROBABILITY:  low
@@ -4901,6 +5242,20 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.050000000000000044}
 END FAULTS:
 {'Affect_Pitch_Right': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   forward
+FAULT SCENARIO:  Affect_Pitch_Right   ctldrift during forward
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.025000000000000022,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.050000000000000044}
+END FAULTS:
+{'Affect_Pitch_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Pitch_Right   surfwarp during roll
@@ -4919,6 +5274,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Right': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Affect_Pitch_Right   ctldrift during roll
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.02499999999999991,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Affect_Pitch_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Pitch_Right   surfwarp during yaw
 PROBABILITY:  low
@@ -4935,6 +5306,22 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Right': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Affect_Pitch_Right   ctldrift during yaw
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.025000000000000022,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Affect_Pitch_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Pitch_Right   surfwarp during liftdn
@@ -4953,6 +5340,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Right': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Affect_Pitch_Right   ctldrift during liftdn
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.025000000000000022,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Affect_Pitch_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Pitch_Right   surfwarp during liftup
 PROBABILITY:  low
@@ -4970,6 +5373,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Right': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Affect_Pitch_Right   ctldrift during liftup
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.025000000000000022,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Affect_Pitch_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Pitch_Left   surfwarp during forward
 PROBABILITY:  low
@@ -4984,6 +5403,20 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.050000000000000044}
 END FAULTS:
 {'Affect_Pitch_Left': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   forward
+FAULT SCENARIO:  Affect_Pitch_Left   ctldrift during forward
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.02499999999999991,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.050000000000000044}
+END FAULTS:
+{'Affect_Pitch_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Pitch_Left   surfwarp during roll
@@ -5002,6 +5435,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Left': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Affect_Pitch_Left   ctldrift during roll
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.02499999999999991,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Affect_Pitch_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Pitch_Left   surfwarp during yaw
 PROBABILITY:  low
@@ -5018,6 +5467,22 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Left': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Affect_Pitch_Left   ctldrift during yaw
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.02499999999999991,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.04999999999999982,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Affect_Pitch_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Pitch_Left   surfwarp during liftdn
@@ -5036,6 +5501,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Left': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Affect_Pitch_Left   ctldrift during liftdn
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.02499999999999991,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Affect_Pitch_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Pitch_Left   surfwarp during liftup
 PROBABILITY:  low
@@ -5053,6 +5534,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Left': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Affect_Pitch_Left   ctldrift during liftup
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.02499999999999991,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Affect_Pitch_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Liftpr_Right   surfwarp during forward
 PROBABILITY:  low
@@ -5068,6 +5565,21 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.125}
 END FAULTS:
 {'Affect_Liftpr_Right': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   forward
+FAULT SCENARIO:  Affect_Liftpr_Right   ctldrift during forward
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.125}
+END FAULTS:
+{'Affect_Liftpr_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Liftpr_Right   surfwarp during roll
@@ -5087,6 +5599,23 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Right': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Affect_Liftpr_Right   ctldrift during roll
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Affect_Liftpr_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Liftpr_Right   surfwarp during pitch
 PROBABILITY:  low
@@ -5104,6 +5633,23 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Right': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Affect_Liftpr_Right   ctldrift during pitch
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Affect_Liftpr_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Liftpr_Right   surfwarp during yaw
@@ -5123,6 +5669,23 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Right': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Affect_Liftpr_Right   ctldrift during yaw
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Affect_Liftpr_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Liftpr_Right   surfwarp during liftdn
 PROBABILITY:  low
@@ -5141,6 +5704,23 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Right': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Affect_Liftpr_Right   ctldrift during liftdn
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Affect_Liftpr_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Liftpr_Left   surfwarp during forward
 PROBABILITY:  low
@@ -5156,6 +5736,21 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.125}
 END FAULTS:
 {'Affect_Liftpr_Left': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   forward
+FAULT SCENARIO:  Affect_Liftpr_Left   ctldrift during forward
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.125}
+END FAULTS:
+{'Affect_Liftpr_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Liftpr_Left   surfwarp during roll
@@ -5175,6 +5770,23 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Left': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Affect_Liftpr_Left   ctldrift during roll
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Affect_Liftpr_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Liftpr_Left   surfwarp during pitch
 PROBABILITY:  low
@@ -5192,6 +5804,23 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Left': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Affect_Liftpr_Left   ctldrift during pitch
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Affect_Liftpr_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Liftpr_Left   surfwarp during yaw
@@ -5211,6 +5840,23 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Left': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Affect_Liftpr_Left   ctldrift during yaw
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Affect_Liftpr_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Liftpr_Left   surfwarp during liftdn
 PROBABILITY:  low
@@ -5229,6 +5875,23 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Left': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Affect_Liftpr_Left   ctldrift during liftdn
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.125,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Affect_Liftpr_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Liftdn_Right   surfwarp during forward
 PROBABILITY:  low
@@ -5243,6 +5906,20 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.050000000000000044}
 END FAULTS:
 {'Affect_Liftdn_Right': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   forward
+FAULT SCENARIO:  Affect_Liftdn_Right   ctldrift during forward
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.050000000000000044}
+END FAULTS:
+{'Affect_Liftdn_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Liftdn_Right   surfwarp during roll
@@ -5261,6 +5938,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftdn_Right': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Affect_Liftdn_Right   ctldrift during roll
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Affect_Liftdn_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Liftdn_Right   surfwarp during pitch
 PROBABILITY:  low
@@ -5277,6 +5970,22 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Right': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Affect_Liftdn_Right   ctldrift during pitch
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Affect_Liftdn_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Liftdn_Right   surfwarp during yaw
@@ -5295,6 +6004,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftdn_Right': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Affect_Liftdn_Right   ctldrift during yaw
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Affect_Liftdn_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Liftdn_Right   surfwarp during liftup
 PROBABILITY:  low
@@ -5312,6 +6037,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftdn_Right': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Affect_Liftdn_Right   ctldrift during liftup
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Affect_Liftdn_Right': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Liftdn_Left   surfwarp during forward
 PROBABILITY:  low
@@ -5326,6 +6067,20 @@ FLOW EFFECTS:
  ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.050000000000000044}
 END FAULTS:
 {'Affect_Liftdn_Left': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   forward
+FAULT SCENARIO:  Affect_Liftdn_Left   ctldrift during forward
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.050000000000000044}
+END FAULTS:
+{'Affect_Liftdn_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Liftdn_Left   surfwarp during roll
@@ -5344,6 +6099,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftdn_Left': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Affect_Liftdn_Left   ctldrift during roll
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Affect_Liftdn_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Liftdn_Left   surfwarp during pitch
 PROBABILITY:  low
@@ -5360,6 +6131,22 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Left': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Affect_Liftdn_Left   ctldrift during pitch
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Affect_Liftdn_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Liftdn_Left   surfwarp during yaw
@@ -5378,6 +6165,22 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftdn_Left': {'surfwarp'}}
 
+OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Affect_Liftdn_Left   ctldrift during yaw
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.04999999999999982,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Affect_Liftdn_Left': {'ctldrift'}}
+
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Liftdn_Left   surfwarp during liftup
 PROBABILITY:  low
@@ -5394,6 +6197,37 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Left': {'surfwarp'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Affect_Liftdn_Left   ctldrift during liftup
+PROBABILITY:  low
+SCORE: 15058.8375  ( 894.075 - 29223.6 )
+SEVERITY:  {'total': 'major', 'Export_FM': 'major'}
+REPAIR:  moderate
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.0625,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.050000000000000044,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Affect_Liftdn_Left': {'ctldrift'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   yaw
+FAULT SCENARIO:  Affect_Yaw   ctlbreak during yaw
+PROBABILITY:  remote
+SCORE: 5723.09  ( 0.0 - 11446.18 )
+SEVERITY:  {'total': 'catastrophic', 'Export_FM': 'catastrophic'}
+REPAIR:  totaled
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 1.0,
+ ('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
+END FAULTS:
+{'Affect_Yaw': {'ctlbreak'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Import_EE   nov during forward
@@ -5463,6 +6297,142 @@ FLOW EFFECTS:
 {}
 END FAULTS:
 {'Distribute_Signal': {'nosig'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Affect_Roll_Right   ctlbreak during roll
+PROBABILITY:  remote
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.25,
+ ('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Affect_Roll_Right': {'ctlbreak'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   roll
+FAULT SCENARIO:  Affect_Roll_Left   ctlbreak during roll
+PROBABILITY:  remote
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.25,
+ ('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
+END FAULTS:
+{'Affect_Roll_Left': {'ctlbreak'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Affect_Pitch_Right   ctlbreak during pitch
+PROBABILITY:  remote
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.09999999999999987,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.09999999999999998,
+ ('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Affect_Pitch_Right': {'ctlbreak'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   pitch
+FAULT SCENARIO:  Affect_Pitch_Left   ctlbreak during pitch
+PROBABILITY:  remote
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.09999999999999987,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.050000000000000044,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.10000000000000009,
+ ('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
+END FAULTS:
+{'Affect_Pitch_Left': {'ctlbreak'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Affect_Liftpr_Right   ctlbreak during liftup
+PROBABILITY:  remote
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.25,
+ ('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Affect_Liftpr_Right': {'ctlbreak'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftup
+FAULT SCENARIO:  Affect_Liftpr_Left   ctlbreak during liftup
+PROBABILITY:  remote
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.25,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): 0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'pitch'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.25,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.25,
+ ('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
+END FAULTS:
+{'Affect_Liftpr_Left': {'ctlbreak'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Affect_Liftdn_Right   ctlbreak during liftdn
+PROBABILITY:  remote
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): 0.09999999999999998,
+ ('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Affect_Liftdn_Right': {'ctlbreak'}}
+
+OPERATIONAL SCENARIO:  Import_Signal   liftdn
+FAULT SCENARIO:  Affect_Liftdn_Left   ctlbreak during liftdn
+PROBABILITY:  remote
+SCORE: 2503.945  ( 0.0 - 5007.89 )
+SEVERITY:  {'total': 'hazardous', 'Export_FM': 'hazardous'}
+REPAIR:  major
+FLOW EFFECTS:
+{('Combine_Forces', 'Export_FM', 'Force', 'drag'): 0.125,
+ ('Combine_Forces', 'Export_FM', 'Force', 'lift'): -0.5,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'roll'): -0.125,
+ ('Combine_Forces', 'Export_FM', 'Moment', 'yaw'): -0.10000000000000009,
+ ('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
+END FAULTS:
+{'Affect_Liftdn_Left': {'ctlbreak'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Import_EE   infv during forward
@@ -8033,29 +9003,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Roll_Right': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   forward
-FAULT SCENARIO:  Affect_Roll_Right   ctldrift during forward
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{}
-END FAULTS:
-{'Affect_Roll_Right': {'ctldrift'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Affect_Roll_Right   ctldrift during roll
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
-END FAULTS:
-{'Affect_Roll_Right': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Roll_Right   opencircuit during pitch
 PROBABILITY:  low
@@ -8068,18 +9015,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Right': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Affect_Roll_Right   ctldrift during pitch
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Affect_Roll_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Roll_Right   opencircuit during yaw
@@ -8094,18 +9029,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Roll_Right': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Affect_Roll_Right   ctldrift during yaw
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Affect_Roll_Right': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Roll_Right   opencircuit during liftdn
 PROBABILITY:  low
@@ -8118,18 +9041,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Right': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Affect_Roll_Right   ctldrift during liftdn
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Affect_Roll_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Roll_Right   opencircuit during liftup
@@ -8144,18 +9055,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Roll_Right': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Affect_Roll_Right   ctldrift during liftup
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
-END FAULTS:
-{'Affect_Roll_Right': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Roll_Left   opencircuit during forward
 PROBABILITY:  low
@@ -8166,17 +9065,6 @@ FLOW EFFECTS:
 {('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0}
 END FAULTS:
 {'Affect_Roll_Left': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   forward
-FAULT SCENARIO:  Affect_Roll_Left   ctldrift during forward
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{}
-END FAULTS:
-{'Affect_Roll_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Roll_Left   surfwarp during roll
@@ -8216,18 +9104,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Roll_Left': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Affect_Roll_Left   ctldrift during pitch
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Affect_Roll_Left': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Roll_Left   opencircuit during yaw
 PROBABILITY:  low
@@ -8240,18 +9116,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Left': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Affect_Roll_Left   ctldrift during yaw
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Affect_Roll_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Roll_Left   opencircuit during liftdn
@@ -8266,18 +9130,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Roll_Left': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Affect_Roll_Left   ctldrift during liftdn
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Affect_Roll_Left': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Roll_Left   opencircuit during liftup
 PROBABILITY:  low
@@ -8291,18 +9143,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Roll_Left': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Affect_Roll_Left   ctldrift during liftup
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
-END FAULTS:
-{'Affect_Roll_Left': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Pitch_Right   opencircuit during forward
 PROBABILITY:  low
@@ -8313,17 +9153,6 @@ FLOW EFFECTS:
 {('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0}
 END FAULTS:
 {'Affect_Pitch_Right': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   forward
-FAULT SCENARIO:  Affect_Pitch_Right   ctldrift during forward
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{}
-END FAULTS:
-{'Affect_Pitch_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Pitch_Right   opencircuit during roll
@@ -8338,30 +9167,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Right': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Affect_Pitch_Right   ctldrift during roll
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
-END FAULTS:
-{'Affect_Pitch_Right': {'ctldrift'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Affect_Pitch_Right   ctldrift during pitch
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Affect_Pitch_Right': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Pitch_Right   opencircuit during yaw
 PROBABILITY:  low
@@ -8374,18 +9179,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Right': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Affect_Pitch_Right   ctldrift during yaw
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Affect_Pitch_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Pitch_Right   opencircuit during liftdn
@@ -8400,18 +9193,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Right': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Affect_Pitch_Right   ctldrift during liftdn
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Affect_Pitch_Right': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Pitch_Right   opencircuit during liftup
 PROBABILITY:  low
@@ -8425,18 +9206,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Right': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Affect_Pitch_Right   ctldrift during liftup
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
-END FAULTS:
-{'Affect_Pitch_Right': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Pitch_Left   opencircuit during forward
 PROBABILITY:  low
@@ -8447,17 +9216,6 @@ FLOW EFFECTS:
 {('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0}
 END FAULTS:
 {'Affect_Pitch_Left': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   forward
-FAULT SCENARIO:  Affect_Pitch_Left   ctldrift during forward
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{}
-END FAULTS:
-{'Affect_Pitch_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Pitch_Left   opencircuit during roll
@@ -8472,30 +9230,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Left': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Affect_Pitch_Left   ctldrift during roll
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
-END FAULTS:
-{'Affect_Pitch_Left': {'ctldrift'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Affect_Pitch_Left   ctldrift during pitch
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Affect_Pitch_Left': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Pitch_Left   opencircuit during yaw
 PROBABILITY:  low
@@ -8508,18 +9242,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Left': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Affect_Pitch_Left   ctldrift during yaw
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Affect_Pitch_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Pitch_Left   opencircuit during liftdn
@@ -8534,18 +9256,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Left': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Affect_Pitch_Left   ctldrift during liftdn
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Affect_Pitch_Left': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Pitch_Left   opencircuit during liftup
 PROBABILITY:  low
@@ -8559,18 +9269,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Pitch_Left': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Affect_Pitch_Left   ctldrift during liftup
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
-END FAULTS:
-{'Affect_Pitch_Left': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Yaw   opencircuit during forward
 PROBABILITY:  low
@@ -8581,17 +9279,6 @@ FLOW EFFECTS:
 {('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'rate'): 0}
 END FAULTS:
 {'Affect_Yaw': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   forward
-FAULT SCENARIO:  Affect_Yaw   ctldrift during forward
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{}
-END FAULTS:
-{'Affect_Yaw': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Yaw   opencircuit during roll
@@ -8606,18 +9293,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Yaw': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Affect_Yaw   ctldrift during roll
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
-END FAULTS:
-{'Affect_Yaw': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Yaw   opencircuit during pitch
 PROBABILITY:  low
@@ -8630,30 +9305,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Yaw': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Affect_Yaw   ctldrift during pitch
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Affect_Yaw': {'ctldrift'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Affect_Yaw   ctldrift during yaw
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Affect_Yaw': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Yaw   opencircuit during liftdn
@@ -8668,18 +9319,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Yaw': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Affect_Yaw   ctldrift during liftdn
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Affect_Yaw': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Yaw   opencircuit during liftup
 PROBABILITY:  low
@@ -8693,18 +9332,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Yaw': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Affect_Yaw   ctldrift during liftup
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
-END FAULTS:
-{'Affect_Yaw': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Liftpr_Right   opencircuit during forward
 PROBABILITY:  low
@@ -8715,17 +9342,6 @@ FLOW EFFECTS:
 {('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0}
 END FAULTS:
 {'Affect_Liftpr_Right': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   forward
-FAULT SCENARIO:  Affect_Liftpr_Right   ctldrift during forward
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{}
-END FAULTS:
-{'Affect_Liftpr_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Liftpr_Right   opencircuit during roll
@@ -8740,18 +9356,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Right': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Affect_Liftpr_Right   ctldrift during roll
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
-END FAULTS:
-{'Affect_Liftpr_Right': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Liftpr_Right   opencircuit during pitch
 PROBABILITY:  low
@@ -8764,18 +9368,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Right': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Affect_Liftpr_Right   ctldrift during pitch
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Affect_Liftpr_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Liftpr_Right   opencircuit during yaw
@@ -8790,18 +9382,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Right': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Affect_Liftpr_Right   ctldrift during yaw
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Affect_Liftpr_Right': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Liftpr_Right   opencircuit during liftdn
 PROBABILITY:  low
@@ -8815,30 +9395,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Right': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Affect_Liftpr_Right   ctldrift during liftdn
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Affect_Liftpr_Right': {'ctldrift'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Affect_Liftpr_Right   ctldrift during liftup
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
-END FAULTS:
-{'Affect_Liftpr_Right': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Liftpr_Left   opencircuit during forward
 PROBABILITY:  low
@@ -8849,17 +9405,6 @@ FLOW EFFECTS:
 {('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0}
 END FAULTS:
 {'Affect_Liftpr_Left': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   forward
-FAULT SCENARIO:  Affect_Liftpr_Left   ctldrift during forward
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{}
-END FAULTS:
-{'Affect_Liftpr_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Liftpr_Left   opencircuit during roll
@@ -8874,18 +9419,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Left': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Affect_Liftpr_Left   ctldrift during roll
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
-END FAULTS:
-{'Affect_Liftpr_Left': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Liftpr_Left   opencircuit during pitch
 PROBABILITY:  low
@@ -8898,18 +9431,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Left': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Affect_Liftpr_Left   ctldrift during pitch
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Affect_Liftpr_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Liftpr_Left   opencircuit during yaw
@@ -8924,18 +9445,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Left': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Affect_Liftpr_Left   ctldrift during yaw
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Affect_Liftpr_Left': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Liftpr_Left   opencircuit during liftdn
 PROBABILITY:  low
@@ -8949,30 +9458,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftpr_Left': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Affect_Liftpr_Left   ctldrift during liftdn
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Affect_Liftpr_Left': {'ctldrift'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Affect_Liftpr_Left   ctldrift during liftup
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
-END FAULTS:
-{'Affect_Liftpr_Left': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Liftdn_Right   opencircuit during forward
 PROBABILITY:  low
@@ -8983,17 +9468,6 @@ FLOW EFFECTS:
 {('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0}
 END FAULTS:
 {'Affect_Liftdn_Right': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   forward
-FAULT SCENARIO:  Affect_Liftdn_Right   ctldrift during forward
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{}
-END FAULTS:
-{'Affect_Liftdn_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Liftdn_Right   opencircuit during roll
@@ -9008,18 +9482,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftdn_Right': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Affect_Liftdn_Right   ctldrift during roll
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
-END FAULTS:
-{'Affect_Liftdn_Right': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Liftdn_Right   opencircuit during pitch
 PROBABILITY:  low
@@ -9032,18 +9494,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Right': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Affect_Liftdn_Right   ctldrift during pitch
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Affect_Liftdn_Right': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Liftdn_Right   opencircuit during yaw
@@ -9058,30 +9508,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftdn_Right': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Affect_Liftdn_Right   ctldrift during yaw
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Affect_Liftdn_Right': {'ctldrift'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Affect_Liftdn_Right   ctldrift during liftdn
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Affect_Liftdn_Right': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Liftdn_Right   opencircuit during liftup
 PROBABILITY:  low
@@ -9095,18 +9521,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftdn_Right': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Affect_Liftdn_Right   ctldrift during liftup
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
-END FAULTS:
-{'Affect_Liftdn_Right': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Liftdn_Left   opencircuit during forward
 PROBABILITY:  low
@@ -9117,17 +9531,6 @@ FLOW EFFECTS:
 {('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0}
 END FAULTS:
 {'Affect_Liftdn_Left': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   forward
-FAULT SCENARIO:  Affect_Liftdn_Left   ctldrift during forward
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{}
-END FAULTS:
-{'Affect_Liftdn_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   roll
 FAULT SCENARIO:  Affect_Liftdn_Left   opencircuit during roll
@@ -9142,18 +9545,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftdn_Left': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Affect_Liftdn_Left   ctldrift during roll
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
-END FAULTS:
-{'Affect_Liftdn_Left': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Liftdn_Left   opencircuit during pitch
 PROBABILITY:  low
@@ -9166,18 +9557,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Left': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Affect_Liftdn_Left   ctldrift during pitch
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Affect_Liftdn_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Liftdn_Left   opencircuit during yaw
@@ -9192,30 +9571,6 @@ FLOW EFFECTS:
 END FAULTS:
 {'Affect_Liftdn_Left': {'opencircuit'}}
 
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Affect_Liftdn_Left   ctldrift during yaw
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Affect_Liftdn_Left': {'ctldrift'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Affect_Liftdn_Left   ctldrift during liftdn
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Affect_Liftdn_Left': {'ctldrift'}}
-
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Liftdn_Left   opencircuit during liftup
 PROBABILITY:  low
@@ -9228,18 +9583,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Left': {'opencircuit'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Affect_Liftdn_Left   ctldrift during liftup
-PROBABILITY:  low
-SCORE: 0.24575  ( 0.0015 - 0.49 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
-END FAULTS:
-{'Affect_Liftdn_Left': {'ctldrift'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Roll_Right   surfbreak during forward
@@ -9259,7 +9602,7 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{}
+{('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'rate'): 0.0}
 END FAULTS:
 {'Affect_Roll_Right': {'ctlbreak'}}
 
@@ -9274,18 +9617,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Right': {'surfbreak'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Affect_Roll_Right   ctlbreak during roll
-PROBABILITY:  remote
-SCORE: 0.00745  ( 0.0 - 0.0149 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
-END FAULTS:
-{'Affect_Roll_Right': {'ctlbreak'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Roll_Right   surfbreak during pitch
@@ -9306,7 +9637,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+{('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Right': {'ctlbreak'}}
@@ -9330,7 +9662,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+{('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Right': {'ctlbreak'}}
@@ -9354,7 +9687,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+{('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Right': {'ctlbreak'}}
@@ -9378,7 +9712,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+{('Distribute_EE', 'Affect_Roll_Right', 'EERollR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Right': {'ctlbreak'}}
@@ -9401,7 +9736,7 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{}
+{('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0.0}
 END FAULTS:
 {'Affect_Roll_Left': {'ctlbreak'}}
 
@@ -9416,18 +9751,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Left': {'surfbreak'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   roll
-FAULT SCENARIO:  Affect_Roll_Left   ctlbreak during roll
-PROBABILITY:  remote
-SCORE: 0.00745  ( 0.0 - 0.0149 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
-END FAULTS:
-{'Affect_Roll_Left': {'ctlbreak'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   pitch
 FAULT SCENARIO:  Affect_Roll_Left   surfbreak during pitch
@@ -9448,7 +9771,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+{('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Left': {'ctlbreak'}}
@@ -9472,7 +9796,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+{('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Left': {'ctlbreak'}}
@@ -9496,7 +9821,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+{('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Left': {'ctlbreak'}}
@@ -9520,7 +9846,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+{('Distribute_EE', 'Affect_Roll_Left', 'EERollL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Affect_Roll_Left': {'ctlbreak'}}
@@ -9543,7 +9870,7 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{}
+{('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0.0}
 END FAULTS:
 {'Affect_Pitch_Right': {'ctlbreak'}}
 
@@ -9566,7 +9893,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+{('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Right': {'ctlbreak'}}
@@ -9582,18 +9910,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Right': {'surfbreak'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Affect_Pitch_Right   ctlbreak during pitch
-PROBABILITY:  remote
-SCORE: 0.00745  ( 0.0 - 0.0149 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Affect_Pitch_Right': {'ctlbreak'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Pitch_Right   surfbreak during yaw
@@ -9614,7 +9930,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+{('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Right': {'ctlbreak'}}
@@ -9638,7 +9955,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+{('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Right': {'ctlbreak'}}
@@ -9662,7 +9980,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+{('Distribute_EE', 'Affect_Pitch_Right', 'EEPitchR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Right': {'ctlbreak'}}
@@ -9685,7 +10004,7 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{}
+{('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.0}
 END FAULTS:
 {'Affect_Pitch_Left': {'ctlbreak'}}
 
@@ -9708,7 +10027,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+{('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Left': {'ctlbreak'}}
@@ -9724,18 +10044,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Left': {'surfbreak'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   pitch
-FAULT SCENARIO:  Affect_Pitch_Left   ctlbreak during pitch
-PROBABILITY:  remote
-SCORE: 0.00745  ( 0.0 - 0.0149 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
-END FAULTS:
-{'Affect_Pitch_Left': {'ctlbreak'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   yaw
 FAULT SCENARIO:  Affect_Pitch_Left   surfbreak during yaw
@@ -9756,7 +10064,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+{('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Left': {'ctlbreak'}}
@@ -9780,7 +10089,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+{('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Left': {'ctlbreak'}}
@@ -9804,7 +10114,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+{('Distribute_EE', 'Affect_Pitch_Left', 'EEPitchL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Affect_Pitch_Left': {'ctlbreak'}}
@@ -9827,7 +10138,7 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{}
+{('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'rate'): 0.0}
 END FAULTS:
 {'Affect_Yaw': {'ctlbreak'}}
 
@@ -9850,7 +10161,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+{('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
 END FAULTS:
 {'Affect_Yaw': {'ctlbreak'}}
@@ -9874,7 +10186,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+{('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Yaw': {'ctlbreak'}}
@@ -9890,18 +10203,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Yaw': {'surfbreak'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   yaw
-FAULT SCENARIO:  Affect_Yaw   ctlbreak during yaw
-PROBABILITY:  remote
-SCORE: 0.00745  ( 0.0 - 0.0149 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
-END FAULTS:
-{'Affect_Yaw': {'ctlbreak'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftdn
 FAULT SCENARIO:  Affect_Yaw   surfbreak during liftdn
@@ -9922,7 +10223,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+{('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Affect_Yaw': {'ctlbreak'}}
@@ -9946,7 +10248,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+{('Distribute_EE', 'Affect_Yaw', 'EEYaw', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Affect_Yaw': {'ctlbreak'}}
@@ -9969,7 +10272,7 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{}
+{('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0.0}
 END FAULTS:
 {'Affect_Liftpr_Right': {'ctlbreak'}}
 
@@ -9992,7 +10295,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Right': {'ctlbreak'}}
@@ -10016,7 +10320,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Right': {'ctlbreak'}}
@@ -10040,7 +10345,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Right': {'ctlbreak'}}
@@ -10064,7 +10370,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftpr_Right', 'EELiftprR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Right': {'ctlbreak'}}
@@ -10080,18 +10387,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Right': {'surfbreak'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Affect_Liftpr_Right   ctlbreak during liftup
-PROBABILITY:  remote
-SCORE: 0.00745  ( 0.0 - 0.0149 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
-END FAULTS:
-{'Affect_Liftpr_Right': {'ctlbreak'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Liftpr_Left   surfbreak during forward
@@ -10111,7 +10406,7 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{}
+{('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0.0}
 END FAULTS:
 {'Affect_Liftpr_Left': {'ctlbreak'}}
 
@@ -10134,7 +10429,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Left': {'ctlbreak'}}
@@ -10158,7 +10454,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Left': {'ctlbreak'}}
@@ -10182,7 +10479,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Left': {'ctlbreak'}}
@@ -10206,7 +10504,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftpr_Left', 'EELiftprL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Left': {'ctlbreak'}}
@@ -10222,18 +10521,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Affect_Liftpr_Left': {'surfbreak'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftup
-FAULT SCENARIO:  Affect_Liftpr_Left   ctlbreak during liftup
-PROBABILITY:  remote
-SCORE: 0.00745  ( 0.0 - 0.0149 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
-END FAULTS:
-{'Affect_Liftpr_Left': {'ctlbreak'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   forward
 FAULT SCENARIO:  Affect_Liftdn_Right   surfbreak during forward
@@ -10253,7 +10540,7 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{}
+{('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0.0}
 END FAULTS:
 {'Affect_Liftdn_Right': {'ctlbreak'}}
 
@@ -10276,7 +10563,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Right': {'ctlbreak'}}
@@ -10300,7 +10588,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Right': {'ctlbreak'}}
@@ -10324,7 +10613,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Right': {'ctlbreak'}}
@@ -10340,18 +10630,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Right': {'surfbreak'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Affect_Liftdn_Right   ctlbreak during liftdn
-PROBABILITY:  remote
-SCORE: 0.00745  ( 0.0 - 0.0149 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Affect_Liftdn_Right': {'ctlbreak'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Liftdn_Right   surfbreak during liftup
@@ -10372,7 +10650,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftdn_Right', 'EELiftdnR', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Right': {'ctlbreak'}}
@@ -10395,7 +10674,7 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{}
+{('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0.0}
 END FAULTS:
 {'Affect_Liftdn_Left': {'ctlbreak'}}
 
@@ -10418,7 +10697,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'rollexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Left': {'ctlbreak'}}
@@ -10442,7 +10722,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'pitchexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Left': {'ctlbreak'}}
@@ -10466,7 +10747,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'yawexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Left': {'ctlbreak'}}
@@ -10482,18 +10764,6 @@ FLOW EFFECTS:
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Left': {'surfbreak'}}
-
-OPERATIONAL SCENARIO:  Import_Signal   liftdn
-FAULT SCENARIO:  Affect_Liftdn_Left   ctlbreak during liftdn
-PROBABILITY:  remote
-SCORE: 0.00745  ( 0.0 - 0.0149 )
-SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
-REPAIR:  replacement
-FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnctl'): 2.0,
- ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftdnexp'): 2.0}
-END FAULTS:
-{'Affect_Liftdn_Left': {'ctlbreak'}}
 
 OPERATIONAL SCENARIO:  Import_Signal   liftup
 FAULT SCENARIO:  Affect_Liftdn_Left   surfbreak during liftup
@@ -10514,7 +10784,8 @@ SCORE: 0.00745  ( 0.0 - 0.0149 )
 SEVERITY:  {'total': 'noeffect', 'Export_FM': 'noeffect'}
 REPAIR:  replacement
 FLOW EFFECTS:
-{('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
+{('Distribute_EE', 'Affect_Liftdn_Left', 'EELiftdnL', 'rate'): 0.0,
+ ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprctl'): 2.0,
  ('Import_Signal', 'Distribute_Signal', 'Signal', 'liftprexp'): 2.0}
 END FAULTS:
 {'Affect_Liftdn_Left': {'ctlbreak'}}
