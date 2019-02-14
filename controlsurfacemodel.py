@@ -11,6 +11,7 @@ import numpy as np
 import auxfunctions as aux
 
 lifehours=20000
+lifedays=lifehours/4
 
 #costs of various end-states to be used
 endstatekey={'noeffect': {'pfh_allow': 0, 'cost': 0, 'repair':'NA' },\
@@ -21,13 +22,20 @@ endstatekey={'noeffect': {'pfh_allow': 0, 'cost': 0, 'repair':'NA' },\
              'NA': {'pfh_allow': 0, 'cost': 0, 'repair':'NA' }}
 
 #subjective lifecycle probabilities for various faults
-lifecycleprob={'veryhigh':{'lb': 0.2, 'ub': 1.0 }, \
-               'high':{'lb': 0.05, 'ub': 0.19}, \
-               'moderate': {'lb': 0.049, 'ub':0.0005}, \
-               'low': {'lb':1.5/1e5, 'ub':0.00049}, \
-               'remote': {'lb':0, 'ub':1.49/1e5},\
-               'NA':{'lb':0, 'ub':0}}
+#lifecycleprob={'veryhigh':{'lb': 0.2, 'ub': 1.0 }, \
+#               'high':{'lb': 0.05, 'ub': 0.19}, \
+#               'moderate': {'lb': 0.049, 'ub':0.0005}, \
+#               'low': {'lb':1.5/1e5, 'ub':0.00049}, \
+#               'remote': {'lb':0, 'ub':1.49/1e5},\
+#               'NA':{'lb':0, 'ub':0}}
 # see scenario-based FMEA paper http://www.medicalhealthcarefmea.com/papers/kmenta.pdf
+
+#rates for various faults:
+rates={'veryrare':{'av':.2,'lb':0.05,'ub':1},\
+       'rare':{'av':5,'lb':1,'ub':10},\
+       'moderate':{'av':50,'lb':10,'ub':100},\
+       'common':{'av':200,'lb':100,'ub':500}}
+
 
 # repair costs for 
 repaircosts={'totaled':{'lb': 100000, 'ub': 200000}, \
@@ -36,6 +44,17 @@ repaircosts={'totaled':{'lb': 100000, 'ub': 200000}, \
              'minor':{'lb':1000 ,'ub': 5000}, \
              'replacement':{'lb':100, 'ub': 1000}, \
              'NA':{'lb':0, 'ub': 0} }
+
+maintenancecosts={'minorinspection': {'av':50, 'lb':10,'ub':100}, \
+                 'majorinspection': {'av': 200, 'lb': 50, 'ub':400}, \
+                 'minormaintenance': {'av': 150, 'lb': 50, 'ub':200}, \
+                  'majormaintenance': {'av': 400, 'lb': 100, 'ub':700}, \
+                  'replacement': {'av':800, 'lb':200, 'ub': 2000}}
+
+maintenancesched={'daily':{'av':1.0, 'lb':0.25, 'ub':10}, \
+                  'monthly':{'av':30, 'lb':10,'ub':60}, '90day':{'av':90, 'lb':60,'ub':120},\
+                  '6mo':{'av':180,'lb':120,'ub':270}, 'yearly':{'av':365,'lb':270,'ub':2*365},\
+                  '5year':{'av':5*365,'lb':2*365,'ub':10*365}}
 
 class importEE:
     def __init__(self):
