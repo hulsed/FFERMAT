@@ -406,4 +406,28 @@ def calcscore(mdl, lprob, endclass, repair):
     
     
     return lowscore,highscore,avescore,rawcost,lowprob,highprob
+
+
+def calcprob(rate,maint,hours):
     
+    ratehrs=rate/10e6
+    hrsperday=3
+    
+    weardayprob=1-np.exp(ratehrs*hrsperday)
+    
+    eff=0.5
+    prop=0.5
+    
+    newweardayprob=weardayprob*(1-prop)+prop*eff
+    
+    weardayrate=-np.log(-weardayprob)
+    
+    l_rand=0.5*hours*ratehrs
+    l_wear=0.5*hours*ratehrs
+    
+    p_wear=1-np.exp(ratehrs)
+    
+    prob_tot=1-np.exp(-l_occ_tot)
+    
+    return l_occ_tot, prob_tot
+
