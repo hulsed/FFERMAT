@@ -5,6 +5,8 @@ Created on Fri Feb 15 13:10:03 2019
 @author: Daniel Hulse
 """
 
+import numpy as np
+
 wear_rate=50.0
 rand_rate=25.0
 
@@ -53,6 +55,3 @@ lifecyclerand_rate=rand_ratehrs*hours
 total_exp=lifecyclerate+lifecyclerand_rate
 
 total_prob=1-np.exp(-total_exp)
-
-    
-#prob_tot=1-np.exp(-l_occ_tot)
