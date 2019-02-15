@@ -5,14 +5,18 @@ Created on Fri Feb 15 13:10:03 2019
 @author: Daniel Hulse
 """
 
-rate=50.0
+wear_rate=50.0
+rand_rate=25.0
+
 hours=26000
 
 
-ratehrs=rate/10e6
+wear_ratehrs=wear_rate/1e6
+rand_ratehrs=rand_rate/1e6
+
 hrsperday=3
     
-weardayprob=1-np.exp(-ratehrs*hrsperday)
+weardayprob=1-np.exp(-wear_ratehrs*hrsperday)
     
 eff=0.9
 prop=0.5
@@ -43,10 +47,12 @@ newwear5yrrate=1-np.exp(-newwear5yrprob)
 
 lifecyclerate=newwear5yrrate*hours/(3*30*60)
 
-    
-l_rand=0.5*hours*ratehrs
-l_wear=0.5*hours*ratehrs
-    
-p_wear=1-np.exp(ratehrs)
+lifecyclerand_rate=rand_ratehrs*hours
+
+
+total_exp=lifecyclerate+lifecyclerand_rate
+
+total_prob=1-np.exp(-total_exp)
+
     
 #prob_tot=1-np.exp(-l_occ_tot)
