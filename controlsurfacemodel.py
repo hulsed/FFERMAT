@@ -61,9 +61,13 @@ class importEE:
         self.type='function'
         self.EEout={'rate': 1.0, 'effort': 1.0}
         self.elecstate=1.0
-        self.faultmodes={'infv':{'lprob':'moderate', 'rcost':'major'}, \
-                         'lowv':{'lprob':'moderate', 'rcost':'minor'}, \
-                         'nov':{'lprob':'high', 'rcost':'moderate'}}
+        self.faultmodes={'infv':{'rate':'moderate', 'rcost':'major'}, \
+                         'lowv':{'rate':'moderate', 'rcost':'minor'}, \
+                         'nov':{'rate':'common', 'rcost':'moderate'}}
+        self.maint={'check':{'type':'minorinspection', 'sched':'daily', 'eff':{'infv':0.3,'lowv':0.9, 'nov':0.9}}, \
+                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'infv':0.3,'lowv':0.9, 'nov':0.9}}, \
+                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'infv':1.0,'lowv':1.0, 'nov':1.0}} 
+                    }
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -114,19 +118,31 @@ class distributeEE:
         self.rolllstate=1.0
         self.pitchrstate=1.0
         self.pitchlstate=1.0
-        self.faultmodes={'infv':{'lprob':'moderate', 'rcost':'major'}, \
-                         'lowv':{'lprob':'moderate', 'rcost':'minor'}, \
-                         'nov':{'lprob':'high', 'rcost':'moderate'}, \
-                         'opencLiftdnR':{'lprob':'low', 'rcost':'minor'}, \
-                         'opencLiftdnL':{'lprob':'low', 'rcost':'minor'}, \
-                         'opencLiftprR':{'lprob':'low', 'rcost':'minor'}, \
-                         'opencLiftprL':{'lprob':'low', 'rcost':'minor'}, \
-                         'opencYaw':{'lprob':'low', 'rcost':'minor'}, \
-                         'opencRollR':{'lprob':'low', 'rcost':'minor'}, \
-                         'opencRollL':{'lprob':'low', 'rcost':'minor'}, \
-                         'opencPitchR':{'lprob':'low', 'rcost':'minor'}, \
-                         'opencPitchL':{'lprob':'low', 'rcost':'minor'}, \
+        self.faultmodes={'infv':{'rate':'moderate', 'rcost':'major'}, \
+                         'lowv':{'rate':'moderate', 'rcost':'minor'}, \
+                         'nov':{'rate':'high', 'rcost':'moderate'}, \
+                         'opencLiftdnR':{'rate':'low', 'rcost':'minor'}, \
+                         'opencLiftdnL':{'rate':'low', 'rcost':'minor'}, \
+                         'opencLiftprR':{'rate':'low', 'rcost':'minor'}, \
+                         'opencLiftprL':{'rate':'low', 'rcost':'minor'}, \
+                         'opencYaw':{'rate':'low', 'rcost':'minor'}, \
+                         'opencRollR':{'rate':'low', 'rcost':'minor'}, \
+                         'opencRollL':{'rate':'low', 'rcost':'minor'}, \
+                         'opencPitchR':{'rate':'low', 'rcost':'minor'}, \
+                         'opencPitchL':{'rate':'low', 'rcost':'minor'}, \
                          }
+        
+        self.maint={'check':{'type':'minorinspection', 'sched':'daily', 'eff':{'infv':0.3,'lowv':0.9, 'nov':0.9,'opencLiftdnR':0.8,\
+                                                                               'opencLiftdnL':0.8,'opencLiftprR':0.8, 'opencLiftprL':0.8,'opencYaw':0.8, \
+                                                                               'opencRollR':0.8,'opencRollL':0.8,'opencPitchR':0.8, 'opencPitchL':0.8  }}, \
+                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'infv':0.9,'lowv':0.99, 'nov':0.99,'opencLiftdnR':0.99,\
+                                                                               'opencLiftdnL':0.99,'opencLiftprR':0.99, 'opencLiftprL':0.99,'opencYaw':0.99, \
+                                                                               'opencRollR':0.99,'opencRollL':0.99,'opencPitchR':0.99, 'opencPitchL':0.99  }}, \
+                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'infv':1.0,'lowv':1.0, 'nov':1.0,'opencLiftdnR':1.0,\
+                                                                               'opencLiftdnL':1.0,'opencLiftprR':1.0, 'opencLiftprL':1.0,'opencYaw':1.0, \
+                                                                               'opencRollR':1.0,'opencRollL':1.0,'opencPitchR':1.0, 'opencPitchL':1.0  }} 
+                    }
+        
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -247,18 +263,26 @@ class distributeSig:
         self.rolllstate=1.0
         self.pitchrstate=1.0
         self.pitchlstate=1.0
-        self.faultmodes={'degsig':{'lprob':'moderate', 'rcost':'minor'}, \
-                         'nosig':{'lprob':'high', 'rcost':'moderate'}, \
-                         'nosigLiftdnR':{'lprob':'low', 'rcost':'minor'}, \
-                         'nosigLiftdnL':{'lprob':'low', 'rcost':'minor'}, \
-                         'nosigLiftprR':{'lprob':'low', 'rcost':'minor'}, \
-                         'nosigLiftprL':{'lprob':'low', 'rcost':'minor'}, \
-                         'nosigYaw':{'lprob':'low', 'rcost':'minor'}, \
-                         'nosigRollR':{'lprob':'low', 'rcost':'minor'}, \
-                         'nosigRollL':{'lprob':'low', 'rcost':'minor'}, \
-                         'nosigPitchR':{'lprob':'low', 'rcost':'minor'}, \
-                         'nosigPitchL':{'lprob':'low', 'rcost':'minor'}, \
+        self.faultmodes={'degsig':{'rate':'moderate', 'rcost':'minor'}, \
+                         'nosig':{'rate':'common', 'rcost':'moderate'}, \
+                         'nosigLiftdnR':{'rate':'rare', 'rcost':'minor'}, \
+                         'nosigLiftdnL':{'rate':'rare', 'rcost':'minor'}, \
+                         'nosigLiftprR':{'rate':'rare', 'rcost':'minor'}, \
+                         'nosigLiftprL':{'rate':'rare', 'rcost':'minor'}, \
+                         'nosigYaw':{'rate':'rare', 'rcost':'minor'}, \
+                         'nosigRollR':{'rate':'rare', 'rcost':'minor'}, \
+                         'nosigRollL':{'rate':'rare', 'rcost':'minor'}, \
+                         'nosigPitchR':{'rate':'rare', 'rcost':'minor'}, \
+                         'nosigPitchL':{'rate':'rare', 'rcost':'minor'}, \
                          }
+        
+        self.maint={'check':{'type':'minorinspection', 'sched':'daily', 'eff':{'degsig':0.2,'nosig':0.9, 'nosigLiftdnR':0.3, 'nosigLiftdnL':0.3,'nosigLiftprR':0.3, \
+                                                                               'nosigLiftprL':0.3,'nosigYaw':0.3,'nosigRollR':0.3,'nosigRollL':0.3,'nosigPitchR':0.3,'nosigPitchL':0.3 }}, \
+                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'degsig':0.9,'nosig':0.99, 'nosigLiftdnR':0.8, 'nosigLiftdnL':0.8,'nosigLiftprR':0.8, \
+                                                                               'nosigLiftprL':0.8,'nosigYaw':0.8,'nosigRollR':0.8,'nosigRollL':0.8,'nosigPitchR':0.8,'nosigPitchL':0.8 }}, \
+                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'degsig':1.0,'nosig':1.0, 'nosigLiftdnR':1.0, 'nosigLiftdnL':1.0,'nosigLiftprR':1.0, \
+                                                                               'nosigLiftprL':1.0,'nosigYaw':1.0,'nosigRollR':1.0,'nosigRollL':1.0,'nosigPitchR':1.0,'nosigPitchL':1.0 }}} 
+        
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -377,11 +401,15 @@ class importAir:
         self.Airout={'velocity': 1.0, 'turbulence': 1.0}
         self.velstate=1.0
         self.turbstate=1.0
-        self.faultmodes={'novel': {'lprob':'low', 'rcost':'NA'},
-                         'lowvel': {'lprob':'moderate', 'rcost':'NA'},\
-                         'hivel': {'lprob':'moderate', 'rcost':'NA'},\
-                         'gusts': {'lprob':'veryhigh', 'rcost':'NA'},\
-                         'flowsep': {'lprob':'moderate', 'rcost':'NA'}}
+        self.faultmodes={'novel': {'rate':'rare', 'rcost':'NA'},
+                         'lowvel': {'rate':'rare', 'rcost':'NA'},\
+                         'hivel': {'rate':'rare', 'rcost':'NA'},\
+                         'gusts': {'rate':'rare', 'rcost':'NA'},\
+                         'flowsep': {'rate':'rare', 'rcost':'NA'}}
+        
+        self.maint={'check':{'type':'minorinspection', 'sched':'daily', 'eff':{'novel':0.0,'lowvel':0.0,'hivel':0.0,'gusts':0.9, 'flowsep':0.9 }}, \
+                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'novel':0.0,'lowvel':0.0,'hivel':0.0,'gusts':0.0, 'flowsep':0.9 }}, \
+                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'novel':0.0,'lowvel':0.0,'hivel':0.0,'gusts':0.0, 'flowsep':1.0 }}}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -419,8 +447,8 @@ class importSignal:
         self.Sigout={'Signal':{'rollctl': 1.0,'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,'liftdnctl': 1.0, \
                      'rollexp': 1.0, 'pitchexp':1.0, 'yawexp':1.0, 'liftprexp':1.0, 'liftdnexp':1.0}},
         self.sigstate=1.0
-        self.faultmodes={'nosig':{'lprob':'low' , 'rcost':'NA'},\
-                         'degsig':{'lprob':'low', 'rcost':'NA'}}
+        self.faultmodes={'nosig':{'rate':'rare' , 'rcost':'NA'},\
+                         'degsig':{'rate':'rare', 'rcost':'NA'}}
         
         self.opermodes={'forward': {'roll':1.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':1.0, 'liftpr':1.0},\
                         'roll':{'roll':2.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':1.0, 'liftpr':1.0}, \
@@ -428,6 +456,11 @@ class importSignal:
                         'yaw':{'roll':1.0, 'pitch':1.0, 'yaw':2.0, 'liftdn':1.0, 'liftpr':1.0},\
                         'liftdn':{'roll':1.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':2.0, 'liftpr':1.0},\
                         'liftup':{'roll':1.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':1.0, 'liftpr':2.0}}
+        
+        self.maint={'check':{'type':'minorinspection', 'sched':'daily', 'eff':{'degsig':0.2,'nosig':0.9}}, \
+                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'degsig':0.9,'nosig':0.99}}, \
+                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'degsig':1.0,'nosig':1.0}}} 
+        
         
         self.opermode='forward' 
         self.faults=set(['nom'])
@@ -484,19 +517,27 @@ class affectDOF:
         self.EEstate=1.0
         self.ctlstate=1.0
         
-        self.faultmodes={'surfbreak':{'lprob':'remote', 'rcost':'replacement'}, \
-                         'surfwarp':{'lprob':'low', 'rcost':'replacement'}, \
-                         'jamup':{'lprob':'low', 'rcost':'minor'}, \
-                         'jamoff':{'lprob':'low', 'rcost':'minor'}, \
-                         'friction':{'lprob':'moderate', 'rcost':'replacement'},\
-                         'short':{'lprob':'low', 'rcost':'minor'}, \
-                         'opencircuit':{'lprob':'low', 'rcost':'replacement'}, \
-                         'ctlbreak':{'lprob':'remote', 'rcost':'replacement'}, \
-                         'ctldrift':{'lprob':'low', 'rcost':'replacement'}}
+        self.faultmodes={'surfbreak':{'rate':'veryrare', 'rcost':'replacement'}, \
+                         'surfwarp':{'rate':'rare', 'rcost':'replacement'}, \
+                         'jamup':{'rate':'rare', 'rcost':'minor'}, \
+                         'jamoff':{'rate':'rare', 'rcost':'minor'}, \
+                         'friction':{'rate':'moderate', 'rcost':'replacement'},\
+                         'short':{'rate':'rare', 'rcost':'minor'}, \
+                         'opencircuit':{'rate':'veryrare', 'rcost':'replacement'}, \
+                         'ctlbreak':{'rate':'rare', 'rcost':'replacement'}, \
+                         'ctldrift':{'rate':'veryrare', 'rcost':'replacement'}}
         self.faults=set(['nom'])
         
-        if dof!='liftdn':
-            self.faultmodes['jamdown']={'lprob':'low', 'rcost':'minor'}
+        self.maint={'check':{'type':'minorinspection', 'sched':'daily', 'eff':{'surfbreak':0.9,'surfwarp':0.9,'jamup':0.8,'jamoff':0.8,'friction':0.5, \
+                                                                               'short':0.5,'opencircuit':0.5,'ctlbreak':0.5,'ctldrift':0.5}}, \
+                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'surfbreak':0.99,'surfwarp':0.99,'jamup':0.99,'jamoff':0.99,'friction':0.9, \
+                                                                               'short':0.9,'opencircuit':0.9,'ctlbreak':0.9,'ctldrift':0.9}}, \
+                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'surfbreak':1.0,'surfwarp':1.0,'jamup':1.0,'jamoff':1.0,'friction':1.0, \
+                                                                               'short':1.0,'opencircuit':1.0,'ctlbreak':1.0,'ctldrift':1.0}}} 
+        
+        
+        if dof!='liftdn':1.0
+            self.faultmodes['jamdown']={'rate':'low', 'rcost':'minor'}
         
         self.dof=dof
         self.side=side
