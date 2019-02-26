@@ -45,13 +45,15 @@ repaircosts={'totaled':{'lb': 100000, 'ub': 200000}, \
              'replacement':{'lb':100, 'ub': 1000}, \
              'NA':{'lb':0, 'ub': 0} }
 
-maintenancecosts={'minorinspection': {'av':50, 'lb':10,'ub':100}, \
+maintenancecosts={'sensing': {'av':0.5, 'lb':0,'ub':1}, \
+                'minorinspection': {'av':50, 'lb':10,'ub':100}, \
                  'majorinspection': {'av': 200, 'lb': 50, 'ub':400}, \
                  'minormaintenance': {'av': 150, 'lb': 50, 'ub':200}, \
                   'majormaintenance': {'av': 400, 'lb': 100, 'ub':700}, \
                   'replacement': {'av':800, 'lb':200, 'ub': 2000}}
 
-maintenancesched={'daily':{'av':1.0, 'lb':0.25, 'ub':10}, \
+maintenancesched={'continuous':{'av':0.1, 'lb':0.01, 'ub':0.5}, \
+                  'daily':{'av':1.0, 'lb':0.25, 'ub':10}, \
                   'monthly':{'av':30, 'lb':10,'ub':60}, '90day':{'av':90, 'lb':60,'ub':120},\
                   '6mo':{'av':180,'lb':120,'ub':270}, 'yearly':{'av':365,'lb':270,'ub':2*365},\
                   '5year':{'av':5*365,'lb':2*365,'ub':10*365}}
@@ -120,16 +122,16 @@ class distributeEE:
         self.pitchlstate=1.0
         self.faultmodes={'infv':{'rate':'moderate', 'rcost':'major'}, \
                          'lowv':{'rate':'moderate', 'rcost':'minor'}, \
-                         'nov':{'rate':'high', 'rcost':'moderate'}, \
-                         'opencLiftdnR':{'rate':'low', 'rcost':'minor'}, \
-                         'opencLiftdnL':{'rate':'low', 'rcost':'minor'}, \
-                         'opencLiftprR':{'rate':'low', 'rcost':'minor'}, \
-                         'opencLiftprL':{'rate':'low', 'rcost':'minor'}, \
-                         'opencYaw':{'rate':'low', 'rcost':'minor'}, \
-                         'opencRollR':{'rate':'low', 'rcost':'minor'}, \
-                         'opencRollL':{'rate':'low', 'rcost':'minor'}, \
-                         'opencPitchR':{'rate':'low', 'rcost':'minor'}, \
-                         'opencPitchL':{'rate':'low', 'rcost':'minor'}, \
+                         'nov':{'rate':'common', 'rcost':'moderate'}, \
+                         'opencLiftdnR':{'rate':'rare', 'rcost':'minor'}, \
+                         'opencLiftdnL':{'rate':'rare', 'rcost':'minor'}, \
+                         'opencLiftprR':{'rate':'rare', 'rcost':'minor'}, \
+                         'opencLiftprL':{'rate':'rare', 'rcost':'minor'}, \
+                         'opencYaw':{'rate':'rare', 'rcost':'minor'}, \
+                         'opencRollR':{'rate':'rare', 'rcost':'minor'}, \
+                         'opencRollL':{'rate':'rare', 'rcost':'minor'}, \
+                         'opencPitchR':{'rate':'rare', 'rcost':'minor'}, \
+                         'opencPitchL':{'rate':'rare', 'rcost':'minor'}, \
                          }
         
         self.maint={'check':{'type':'minorinspection', 'sched':'daily', 'eff':{'infv':0.3,'lowv':0.9, 'nov':0.9,'opencLiftdnR':0.8,\
@@ -536,8 +538,8 @@ class affectDOF:
                                                                                'short':1.0,'opencircuit':1.0,'ctlbreak':1.0,'ctldrift':1.0}}} 
         
         
-        if dof!='liftdn':1.0
-            self.faultmodes['jamdown']={'rate':'low', 'rcost':'minor'}
+        if dof!='liftdn':
+            self.faultmodes['jamdown']={'rate':'rare', 'rcost':'minor'}
         
         self.dof=dof
         self.side=side

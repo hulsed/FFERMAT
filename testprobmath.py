@@ -55,3 +55,56 @@ lifecyclerand_rate=rand_ratehrs*hours
 total_exp=lifecyclerate+lifecyclerand_rate
 
 total_prob=1-np.exp(-total_exp)
+
+import controlsurfacemodel
+
+[forwardgraph,backgraph,fullgraph]=controlsurfacemodel.initialize()
+
+fxn=forwardgraph.nodes(data='funcobj')['Distribute_EE']
+
+def calcmaint(fxn, mdl):
+    
+    newrate=0.0
+    totcost=0.0
+    lifehrs=mdl.lifehours*1.0
+    
+    faults=fxn.faultmodes
+    maint=fxn.maint
+    
+    faultrates={}
+    
+    for fault in faults:
+        
+        ratetype=fxn.faultmodes[fault]['rate']
+        newrate=mdl.rates[ratetype]['av']
+        faultrates['unmit_rate']=newrate
+        
+        for strattype in maint:
+            strat=maint[strattype]
+                    
+            sched=mdl.maintenancesched[strat['sched']]['av']
+            
+            eff=strat['eff'][fault]
+            
+            oldprob=1-np.exp(-sched*newrate)
+            newprob=oldprob*eff
+            newrate=-np.log(1-newprob)/sched
+        
+        faultrates['mit_rate']=newrate
+        faultrates['mit_prob']=1-np.exp(-lifehrs*newrate)
+        faultrates['life_exp']=lifehrs*newrate    
+    
+    for strattype in maint:
+        strat=maint[strattype]
+        
+        cost=mdl.maintenancecosts[strat['type']]['av']
+        sched=mdl.maintenancesched[strat['sched']]['av']
+        lifecost=cost*lifehrs/sched
+        totcost+=lifecost
+    
+    maintcost=totcost
+    
+    return faultrates, maintcost
+    
+    
+    
