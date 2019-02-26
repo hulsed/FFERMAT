@@ -31,19 +31,19 @@ endstatekey={'noeffect': {'pfh_allow': 0, 'cost': 0, 'repair':'NA' },\
 # see scenario-based FMEA paper http://www.medicalhealthcarefmea.com/papers/kmenta.pdf
 
 #rates for various faults:
-rates={'veryrare':{'av':.2,'lb':0.05,'ub':1},\
-       'rare':{'av':5,'lb':1,'ub':10},\
-       'moderate':{'av':50,'lb':10,'ub':100},\
-       'common':{'av':200,'lb':100,'ub':500}}
+rates={'veryrare':{'av':.2e-6,'lb':0.05e-6,'ub':1e-6},\
+       'rare':{'av':5e-6,'lb':1e-6,'ub':10e-6},\
+       'moderate':{'av':50e-6,'lb':10e-6,'ub':100e-6},\
+       'common':{'av':200e-6,'lb':100e-6,'ub':500e-6}}
 
 
 # repair costs for 
-repaircosts={'totaled':{'lb': 100000, 'ub': 200000}, \
-             'major':{'lb':40000, 'ub': 100000}, \
-             'moderate':{'lb':5000, 'ub': 40000}, \
-             'minor':{'lb':1000 ,'ub': 5000}, \
-             'replacement':{'lb':100, 'ub': 1000}, \
-             'NA':{'lb':0, 'ub': 0} }
+repaircosts={'totaled':{'lb': 100000, 'ub': 200000, 'av':150000}, \
+             'major':{'lb':40000, 'ub': 100000, 'av':70000}, \
+             'moderate':{'lb':5000, 'ub': 40000, 'av':20000}, \
+             'minor':{'lb':1000 ,'ub': 5000, 'av':2000}, \
+             'replacement':{'lb':100, 'ub': 1000, 'av':500}, \
+             'NA':{'lb':0, 'ub': 0, 'av':0.0} }
 
 maintenancecosts={'sensing': {'av':0.5, 'lb':0,'ub':1}, \
                 'minorinspection': {'av':50, 'lb':10,'ub':100}, \
@@ -67,8 +67,8 @@ class importEE:
                          'lowv':{'rate':'moderate', 'rcost':'minor'}, \
                          'nov':{'rate':'common', 'rcost':'moderate'}}
         self.maint={'check':{'type':'minorinspection', 'sched':'daily', 'eff':{'infv':0.3,'lowv':0.9, 'nov':0.9}}, \
-                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'infv':0.3,'lowv':0.9, 'nov':0.9}}, \
-                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'infv':1.0,'lowv':1.0, 'nov':1.0}} 
+                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'infv':0.5,'lowv':0.5, 'nov':0.5}}, \
+                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'infv':0.1,'lowv':0.1, 'nov':0.1}} 
                     }
         self.faults=set(['nom'])
     def resolvefaults(self):
@@ -134,15 +134,15 @@ class distributeEE:
                          'opencPitchL':{'rate':'rare', 'rcost':'minor'}, \
                          }
         
-        self.maint={'check':{'type':'minorinspection', 'sched':'daily', 'eff':{'infv':0.3,'lowv':0.9, 'nov':0.9,'opencLiftdnR':0.8,\
-                                                                               'opencLiftdnL':0.8,'opencLiftprR':0.8, 'opencLiftprL':0.8,'opencYaw':0.8, \
-                                                                               'opencRollR':0.8,'opencRollL':0.8,'opencPitchR':0.8, 'opencPitchL':0.8  }}, \
-                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'infv':0.9,'lowv':0.99, 'nov':0.99,'opencLiftdnR':0.99,\
-                                                                               'opencLiftdnL':0.99,'opencLiftprR':0.99, 'opencLiftprL':0.99,'opencYaw':0.99, \
-                                                                               'opencRollR':0.99,'opencRollL':0.99,'opencPitchR':0.99, 'opencPitchL':0.99  }}, \
-                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'infv':1.0,'lowv':1.0, 'nov':1.0,'opencLiftdnR':1.0,\
-                                                                               'opencLiftdnL':1.0,'opencLiftprR':1.0, 'opencLiftprL':1.0,'opencYaw':1.0, \
-                                                                               'opencRollR':1.0,'opencRollL':1.0,'opencPitchR':1.0, 'opencPitchL':1.0  }} 
+        self.maint={'check':{'type':'minorinspection', 'sched':'daily', 'eff':{'infv':0.3,'lowv':0.5, 'nov':0.5,'opencLiftdnR':0.5,\
+                                                                               'opencLiftdnL':0.5,'opencLiftprR':0.5, 'opencLiftprL':0.5,'opencYaw':0.5, \
+                                                                               'opencRollR':0.5,'opencRollL':0.5,'opencPitchR':0.5, 'opencPitchL':0.5  }}, \
+                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'infv':0.1,'lowv':0.1, 'nov':0.1,'opencLiftdnR':0.1,\
+                                                                               'opencLiftdnL':0.2,'opencLiftprR':0.2, 'opencLiftprL':0.2,'opencYaw':0.2, \
+                                                                               'opencRollR':0.2,'opencRollL':0.2,'opencPitchR':0.2, 'opencPitchL':0.2  }}, \
+                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'infv':0.2,'lowv':0.2, 'nov':0.2,'opencLiftdnR':0.2,\
+                                                                               'opencLiftdnL':0.2,'opencLiftprR':0.2, 'opencLiftprL':0.2,'opencYaw':0.2, \
+                                                                               'opencRollR':0.2,'opencRollL':0.2,'opencPitchR':0.2, 'opencPitchL':0.2  }} 
                     }
         
         self.faults=set(['nom'])
@@ -280,10 +280,10 @@ class distributeSig:
         
         self.maint={'check':{'type':'minorinspection', 'sched':'daily', 'eff':{'degsig':0.2,'nosig':0.9, 'nosigLiftdnR':0.3, 'nosigLiftdnL':0.3,'nosigLiftprR':0.3, \
                                                                                'nosigLiftprL':0.3,'nosigYaw':0.3,'nosigRollR':0.3,'nosigRollL':0.3,'nosigPitchR':0.3,'nosigPitchL':0.3 }}, \
-                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'degsig':0.9,'nosig':0.99, 'nosigLiftdnR':0.8, 'nosigLiftdnL':0.8,'nosigLiftprR':0.8, \
+                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'degsig':0.6,'nosig':0.2, 'nosigLiftdnR':0.6, 'nosigLiftdnL':0.6,'nosigLiftprR':0.8, \
                                                                                'nosigLiftprL':0.8,'nosigYaw':0.8,'nosigRollR':0.8,'nosigRollL':0.8,'nosigPitchR':0.8,'nosigPitchL':0.8 }}, \
-                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'degsig':1.0,'nosig':1.0, 'nosigLiftdnR':1.0, 'nosigLiftdnL':1.0,'nosigLiftprR':1.0, \
-                                                                               'nosigLiftprL':1.0,'nosigYaw':1.0,'nosigRollR':1.0,'nosigRollL':1.0,'nosigPitchR':1.0,'nosigPitchL':1.0 }}} 
+                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'degsig':0.2,'nosig':0.2, 'nosigLiftdnR':0.2, 'nosigLiftdnL':0.2,'nosigLiftprR':0.2, \
+                                                                               'nosigLiftprL':0.2,'nosigYaw':0.2,'nosigRollR':0.2,'nosigRollL':0.2,'nosigPitchR':0.2,'nosigPitchL':0.2 }}} 
         
         self.faults=set(['nom'])
     def resolvefaults(self):
@@ -540,6 +540,9 @@ class affectDOF:
         
         if dof!='liftdn':
             self.faultmodes['jamdown']={'rate':'rare', 'rcost':'minor'}
+            self.maint['check']['eff']['jamdown']=0.5
+            self.maint['evaluation']['eff']['jamdown']=0.3
+            self.maint['endoflife']['eff']['jamdown']=0.1
         
         self.dof=dof
         self.side=side

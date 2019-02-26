@@ -28,9 +28,10 @@ def listinitfaults(g):
         for fxnname in fxnnames:
             fxn=g.nodes(data='funcobj')[fxnname]
             modes=fxn.faultmodes
+            
             for mode in modes:
                 prob=modes[mode]['lprob']
-                faultlist.append([fxnname,mode, prob])
+                faultlist.append([fxnname,mode])
     except: 
         print('Incomplete Function Definition, function: '+fxnname)
     return faultlist
@@ -46,7 +47,7 @@ def listscens(g):
                 opmodelist=list(fxn.opermodes.keys())
                 opmodes={fxnname:opmodelist}
                 for opmode in list(opmodelist):
-                    scenlist.append([fxnname,opmode,'NA','nom','NA'])
+                    scenlist.append([fxnname,opmode,'NA','nom'])
             except:
                 foo=1
             
@@ -57,8 +58,7 @@ def listscens(g):
             for opfxn, opmodelist in opmodes.items():
                 for opmode in opmodelist:
                     for mode in modes:
-                        prob=modes[mode]['lprob']
-                        scenlist.append([opfxn, opmode, fxnname, mode, prob])
+                        scenlist.append([opfxn, opmode, fxnname, mode])
         
     except: 
         print('Incomplete Function Definition, function: '+fxnname)
@@ -69,41 +69,46 @@ def runlist(mdl):
     [forwardgraph,backgraph,fullgraph]=mdl.initialize()
     scenlist=listscens(fullgraph)
     
+    faultrates={}
     fullresults={}
     summary={}
     totalscore=0.0
-    totalprobs_low={'catastrophic': 0.0,'hazardous': 0.0,'major': 0.0,'minor': 0.0,'noeffect': 0.0}
-    totalprobs_high={'catastrophic': 0.0,'hazardous': 0.0,'major': 0.0,'minor': 0.0,'noeffect': 0.0}
-    totalprobs_ave={'catastrophic': 0.0,'hazardous': 0.0,'major': 0.0,'minor': 0.0,'noeffect': 0.0}
+    totalprobs={'catastrophic': 0.0,'hazardous': 0.0,'major': 0.0,'minor': 0.0,'noeffect': 0.0}
     allowprobs={'catastrophic': 0.0,'hazardous': 0.0,'major': 0.0,'minor': 0.0,'noeffect': 0.0}
     feasibility='feasible'
     
-    for [opfxn, opmode, fxnname, mode, prob] in scenlist:
+    for [opfxn, opmode, fxnname, mode] in scenlist:
         [forwardgraph,backgraph,fullgraph]=mdl.initialize()
         
         endflows,endfaults,endclass=runonefault(mdl, forwardgraph,backgraph,fullgraph,opfxn, opmode, fxnname, mode)
         
+        if fxnname !='NA':
+        
+            fxn=getfxn(fxnname,forwardgraph)
+            faultrates=calcrate(mode,fxn,mdl)
+        else:
+            faultrates['life_exp']=0.0
+            faultrates['mit_prob']=0.0
+            
+        lexp=faultrates['life_exp']    
         repairtype, lowrcost, highrcost=calcrepair(mdl,forwardgraph, endfaults, endclass)
         
-        lowscore, highscore, avescore, cost,lowprob,highprob=calcscore(mdl, prob,endclass,repairtype)
+        score,eventcost=calcscore(mdl,lexp, endclass,repairtype)
                
         fullresults[opfxn, opmode, fxnname, mode]={'flow effects': endflows, 'faults':endfaults, \
                    'classification':endclass, 'repair type': repairtype, \
-                   'low score': lowscore, 'high score': highscore, \
-                   'average score': avescore, 'probability':prob}
+                   'estimated score': score, 'expected amount':lexp}
         
-        totalscore+=avescore
-        totalprobs_low[endclass['total']]+=lowprob
-        totalprobs_high[endclass['total']]+=highprob
+        totalscore+=score
+        totalprobs[endclass['total']]+=faultrates['mit_prob']
     
-    for classification in totalprobs_low:
-        totalprobs_ave[classification]=np.mean([totalprobs_low[classification],totalprobs_high[classification]])
+    for classification in totalprobs:
         allowprobs[classification]=mdl.endstatekey[classification]['pfh_allow']*mdl.lifehours
-        if totalprobs_ave[classification]> allowprobs[classification]:
+        if totalprobs[classification]> allowprobs[classification]:
             feasibility='infeasible'
     
     summary['totalscore']=totalscore
-    summary['expectednum']=totalprobs_ave    
+    summary['expectednum']=totalprobs  
     summary['expectednum_allow']=allowprobs
     summary['feasibility']=feasibility
     
@@ -127,12 +132,12 @@ def displayresults(fullresults, summary, descending=True, justsummary=False):
         print()
         print('FULL RESULTS:')
         print('--------------------------------------------')
-        for opfxn, opmode, fxnname, mode in sorted(fullresults, key=lambda x: fullresults[x]['average score'], reverse=descending):
+        for opfxn, opmode, fxnname, mode in sorted(fullresults, key=lambda x: fullresults[x]['estimated score'], reverse=descending):
             result=fullresults[opfxn, opmode, fxnname, mode]
             print('OPERATIONAL SCENARIO: ', opfxn, ' ', opmode)
             print('FAULT SCENARIO: ', fxnname, ' ', mode, 'during', opmode)
-            print('PROBABILITY: ', result['probability'])
-            print('SCORE:', result['average score'], ' (', result['low score'], '-', result['high score'], ')')
+            print('EXPECTED NUM: ', result['expected amount'])
+            print('SCORE:', result['estimated score'])
             print('SEVERITY: ', result['classification'])
             print('REPAIR: ', result['repair type'])
             print('FLOW EFFECTS:')
@@ -392,42 +397,66 @@ def calcrepair(mdl,g, endfaults, endclass):
     
     return totalrepair, lowcost, highcost
 
-def calcscore(mdl, lprob, endclass, repair):
-    lowprob=mdl.lifecycleprob[lprob]['lb']
-    highprob=mdl.lifecycleprob[lprob]['ub']
+def calcscore(mdl, lexp, endclass, repair):
     rawcost=0.0
     for classfxn in endclass:
         cost=mdl.endstatekey[endclass[classfxn]]['cost']
         rawcost+=cost
+        
+    score=lexp*(rawcost+mdl.repaircosts[repair]['av'])
+    return score, cost
+
+def calcrate(fault,fxn,mdl):
+    ratetype=fxn.faultmodes[fault]['rate']
+    newrate=mdl.rates[ratetype]['av']
+    origrate=mdl.rates[ratetype]['av']
+    maint=fxn.maint
+    lifehrs=mdl.lifehours*1.0
     
-    lowscore=lowprob*(rawcost+mdl.repaircosts[repair]['lb'])
-    highscore=highprob*(rawcost+mdl.repaircosts[repair]['ub'])
-    avescore=np.mean([highscore, lowscore])
+    for strattype in maint:
+        strat=maint[strattype]
+                
+        sched=mdl.maintenancesched[strat['sched']]['av']
+        
+        eff=strat['eff'][fault]
+        
+        oldprob=1-np.exp(-sched*newrate)
+        newprob=oldprob*(1-eff)
+        newrate=-np.log(1-newprob)/sched
     
-    
-    return lowscore,highscore,avescore,rawcost,lowprob,highprob
+    faultrates={'mit_rate':newrate,'mit_prob':1-np.exp(-lifehrs*newrate),\
+              'life_exp':lifehrs*newrate, 'unmit_rate':origrate, 'unmit_exp':origrate*lifehrs}
+    return faultrates
 
 
-def calcprob(rate,maint,hours):
-    
-    ratehrs=rate/10e6
-    hrsperday=3
-    
-    weardayprob=1-np.exp(ratehrs*hrsperday)
-    
-    eff=0.5
-    prop=0.5
-    
-    newweardayprob=weardayprob*(1-prop)+prop*eff
-    
-    weardayrate=-np.log(-weardayprob)
-    
-    l_rand=0.5*hours*ratehrs
-    l_wear=0.5*hours*ratehrs
-    
-    p_wear=1-np.exp(ratehrs)
-    
-    prob_tot=1-np.exp(-l_occ_tot)
-    
-    return l_occ_tot, prob_tot
+def getfxn(fxnname, graph):
+    fxn=graph.nodes(data='funcobj')[fxnname]
+    return fxn
 
+def calcmaint(fxn, mdl):
+    
+    newrate=0.0
+    totcost=0.0
+    lifehrs=mdl.lifehours*1.0
+    
+    faults=fxn.faultmodes
+    maint=fxn.maint
+    
+    faultrates={}
+    
+    for fault in faults:
+        
+        faultrates[fault]=calcrate(fault,fxn,mdl)
+        
+    
+    for strattype in maint:
+        strat=maint[strattype]
+        
+        cost=mdl.maintenancecosts[strat['type']]['av']
+        sched=mdl.maintenancesched[strat['sched']]['av']
+        lifecost=cost*lifehrs/sched
+        totcost+=lifecost
+    
+    maintcost=totcost
+    
+    return faultrates, maintcost
