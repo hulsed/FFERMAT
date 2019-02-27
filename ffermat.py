@@ -89,8 +89,10 @@ def runlist(mdl):
         else:
             faultrates['life_exp']=0.0
             faultrates['mit_prob']=0.0
-            
-        lexp=faultrates['life_exp']    
+        
+        lexp=faultrates['life_exp']*mdl.opfrac[opmode]
+        pfh=faultrates['mit_prob']*mdl.opfrac[opmode]
+        
         repairtype, lowrcost, highrcost=calcrepair(mdl,forwardgraph, endfaults, endclass)
         
         score,eventcost=calcscore(mdl,lexp, endclass,repairtype)
@@ -100,7 +102,7 @@ def runlist(mdl):
                    'estimated score': score, 'expected amount':lexp}
         
         totalscore+=score
-        totalprobs[endclass['total']]+=faultrates['mit_prob']
+        totalprobs[endclass['total']]+=pfh
     
     for classification in totalprobs:
         allowprobs[classification]=mdl.endstatekey[classification]['pfh_allow']*mdl.lifehours

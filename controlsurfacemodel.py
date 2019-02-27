@@ -13,6 +13,8 @@ import auxfunctions as aux
 lifehours=20000
 lifedays=lifehours/4
 
+opfrac={'forward': 0.6, 'roll':0.05, 'pitch':0.15, 'yaw':0.01, 'liftdn':0.15, 'liftup':0.04}
+
 #costs of various end-states to be used
 endstatekey={'noeffect': {'pfh_allow': 0, 'cost': 0, 'repair':'NA' },\
              'minor': {'pfh_allow': 1e-3, 'cost': 0.118e7, 'repair':'minor'},\
@@ -460,8 +462,8 @@ class importSignal:
                         'liftup':{'roll':1.0, 'pitch':1.0, 'yaw':1.0, 'liftdn':1.0, 'liftpr':2.0}}
         
         self.maint={'check':{'type':'minorinspection', 'sched':'daily', 'eff':{'degsig':0.2,'nosig':0.9}}, \
-                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'degsig':0.9,'nosig':0.99}}, \
-                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'degsig':1.0,'nosig':1.0}}} 
+                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'degsig':0.9,'nosig':0.5}}, \
+                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'degsig':0.7,'nosig':0.7}}} 
         
         
         self.opermode='forward' 
@@ -532,10 +534,10 @@ class affectDOF:
         
         self.maint={'check':{'type':'minorinspection', 'sched':'daily', 'eff':{'surfbreak':0.9,'surfwarp':0.9,'jamup':0.8,'jamoff':0.8,'friction':0.5, \
                                                                                'short':0.5,'opencircuit':0.5,'ctlbreak':0.5,'ctldrift':0.5}}, \
-                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'surfbreak':0.99,'surfwarp':0.99,'jamup':0.99,'jamoff':0.99,'friction':0.9, \
-                                                                               'short':0.9,'opencircuit':0.9,'ctlbreak':0.9,'ctldrift':0.9}}, \
-                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'surfbreak':1.0,'surfwarp':1.0,'jamup':1.0,'jamoff':1.0,'friction':1.0, \
-                                                                               'short':1.0,'opencircuit':1.0,'ctlbreak':1.0,'ctldrift':1.0}}} 
+                    'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'surfbreak':0.5,'surfwarp':0.5,'jamup':0.5,'jamoff':0.5,'friction':0.8, \
+                                                                               'short':0.7,'opencircuit':0.7,'ctlbreak':0.7,'ctldrift':0.7}}, \
+                    'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'surfbreak':0.2,'surfwarp':0.2,'jamup':0.2,'jamoff':0.2,'friction':0.2, \
+                                                                               'short':0.2,'opencircuit':0.2,'ctlbreak':0.2,'ctldrift':0.2}}} 
         
         
         if dof!='liftdn':
