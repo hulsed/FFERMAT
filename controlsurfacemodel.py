@@ -62,6 +62,7 @@ maintenancesched={'continuous':{'av':0.1, 'lb':0.01, 'ub':0.5}, \
 
 class importEE:
     def __init__(self):
+        self.useprop=1.0
         self.type='function'
         self.EEout={'rate': 1.0, 'effort': 1.0}
         self.elecstate=1.0
@@ -100,6 +101,7 @@ class importEE:
     
 class distributeEE:
     def __init__(self):
+        self.useprop=1.0
         self.type='function'
         self.EEin={'rate': 1.0, 'effort': 1.0}
         self.EELiftdnR={'rate': 1.0, 'effort': 1.0}
@@ -244,6 +246,7 @@ class distributeEE:
    
 class distributeSig:
     def __init__(self):
+        self.useprop=1.0
         self.type='function'
         self.Sigin={'rollctl': 1.0, 'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,\
                    'liftdnexp': 1.0,'rollexp': 1.0, 'pitchexp': 1.0,'yawexp': 1.0,'liftprexp': 1.0,'liftdnexp': 1.0}
@@ -268,7 +271,7 @@ class distributeSig:
         self.pitchrstate=1.0
         self.pitchlstate=1.0
         self.faultmodes={'degsig':{'rate':'moderate', 'rcost':'minor'}, \
-                         'nosig':{'rate':'common', 'rcost':'moderate'}, \
+                         'nosig':{'rate':'moderate', 'rcost':'moderate'}, \
                          'nosigLiftdnR':{'rate':'rare', 'rcost':'minor'}, \
                          'nosigLiftdnL':{'rate':'rare', 'rcost':'minor'}, \
                          'nosigLiftprR':{'rate':'rare', 'rcost':'minor'}, \
@@ -401,6 +404,7 @@ class distributeSig:
     
 class importAir:
     def __init__(self):
+        self.useprop=1.0
         self.type='function'
         self.Airout={'velocity': 1.0, 'turbulence': 1.0}
         self.velstate=1.0
@@ -447,6 +451,7 @@ class importAir:
 
 class importSignal:
     def __init__(self):
+        self.useprop=1.0
         self.type='function'
         self.Sigout={'Signal':{'rollctl': 1.0,'pitchctl': 1.0,'yawctl': 1.0,'liftprctl': 1.0,'liftdnctl': 1.0, \
                      'rollexp': 1.0, 'pitchexp':1.0, 'yawexp':1.0, 'liftprexp':1.0, 'liftdnexp':1.0}},
@@ -538,7 +543,17 @@ class affectDOF:
                                                                                'short':0.7,'opencircuit':0.7,'ctlbreak':0.7,'ctldrift':0.7}}, \
                     'endoflife':{'type':'replacement', 'sched':'5year', 'eff':{'surfbreak':0.2,'surfwarp':0.2,'jamup':0.2,'jamoff':0.2,'friction':0.2, \
                                                                                'short':0.2,'opencircuit':0.2,'ctlbreak':0.2,'ctldrift':0.2}}} 
-        
+                
+        if dof=='liftdn':
+            self.useprop=0.2
+        if dof=='liftpr':
+            self.useprop=0.2
+        if dof=='roll':
+            self.useprop=0.05
+        if dof=='pitch':
+            self.useprop=0.15
+        if dof=='yaw':
+            self.useprop=0.06
         
         if dof!='liftdn':
             self.faultmodes['jamdown']={'rate':'rare', 'rcost':'minor'}
@@ -633,6 +648,7 @@ class affectDOF:
     
 class combineforces:
     def __init__(self):
+        self.useprop=1.0
         self.type='function'
         self.ForceLiftdnR={'dev': 1.0, 'exp': 1.0}
         self.ForceLiftdnL={'dev': 1.0, 'exp': 1.0}
@@ -727,6 +743,7 @@ class combineforces:
     
 class exportForcesandMoments:
     def __init__(self):
+        self.useprop=1.0
         self.roll={'dev': 1.0, 'exp': 1.0}
         self.pitch={'dev': 1.0, 'exp': 1.0}
         self.yaw={'dev': 1.0, 'exp': 1.0}
@@ -779,6 +796,7 @@ class exportForcesandMoments:
 
 class exportAir:
     def __init__(self):
+        self.useprop=1.0
         self.type='function'
         self.Airin={'velocity': 1.0, 'turbulence': 1.0}
         self.velstate=1.0

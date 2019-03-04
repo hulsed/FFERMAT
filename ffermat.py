@@ -413,7 +413,7 @@ def calcrate(fault,fxn,mdl):
     newrate=mdl.rates[ratetype]['av']
     origrate=mdl.rates[ratetype]['av']
     maint=fxn.maint
-    lifehrs=mdl.lifehours*1.0
+    lifehrs=mdl.lifehours*fxn.useprop
     
     for strattype in maint:
         strat=maint[strattype]
