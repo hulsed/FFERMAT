@@ -11,10 +11,10 @@ import ffermat
 
 #ffermat.runlist(pumpmodel)
 
-import controlsurfacemodel
+import controlsurfacemodel_baseline as mdl
 
-[forwardgraph,backgraph,fullgraph]=controlsurfacemodel.initialize()
-fullresults, summary = ffermat.runlist(controlsurfacemodel)
+[forwardgraph,backgraph,fullgraph]=mdl.initialize()
+fullresults, summary = ffermat.runlist(mdl)
 
 #[forwardgraph,backgraph,fullgraph]=controlsurfacemodel.initialize()
 #ffermat.runonefault(controlsurfacemodel, forwardgraph, backgraph, fullgraph, 'Import_Signal','liftup','Import_Signal','nosig')

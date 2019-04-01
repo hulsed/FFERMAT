@@ -36,12 +36,19 @@ def listinitfaults(g):
         print('Incomplete Function Definition, function: '+fxnname)
     return faultlist
 
-def listscens(g):
+def listscens(mdl,g):
     scenlist=[]
     opmodes={}
-    fxnnames=list(g.nodes)
+    
+    operfxnnames=list(g.nodes)
+    
+    if mdl.scope=='full':
+        faultfxnnames=list(g.nodes)
+    else:
+        faultfxnnames=mdl.scope['functions']
+
     try:
-        for fxnname in fxnnames:
+        for fxnname in operfxnnames:
             fxn=g.nodes(data='funcobj')[fxnname]
             try: 
                 opmodelist=list(fxn.opermodes.keys())
@@ -52,7 +59,7 @@ def listscens(g):
                 foo=1
             
             
-        for fxnname in fxnnames:
+        for fxnname in faultfxnnames:
             fxn=g.nodes(data='funcobj')[fxnname]
             modes=fxn.faultmodes
             for opfxn, opmodelist in opmodes.items():
@@ -67,7 +74,7 @@ def listscens(g):
 def runlist(mdl):
     
     [forwardgraph,backgraph,fullgraph]=mdl.initialize()
-    scenlist=listscens(fullgraph)
+    scenlist=listscens(mdl,fullgraph)
     
     faultrates={}
     fullresults={}
