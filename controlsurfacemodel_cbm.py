@@ -13,6 +13,9 @@ import auxfunctions as aux
 lifehours=20000
 lifedays=lifehours/4
 
+scope={'functions':['Affect_Roll_Right','Affect_Roll_Left','Affect_Pitch_Right','Affect_Pitch_Left',\
+                    'Affect_Yaw','Affect_Liftdn_Right', 'Affect_Liftdn_Left','Affect_Liftpr_Right', 'Affect_Liftpr_Left']}
+
 opfrac={'forward': 0.6, 'roll':0.05, 'pitch':0.15, 'yaw':0.01, 'liftdn':0.15, 'liftup':0.04}
 
 #costs of various end-states to be used
@@ -519,6 +522,7 @@ class affectDOF:
     def __init__(self, dof, side):
         self.type='function'
         self.Airout={'velocity': 1.0, 'turbulence': 1.0}
+        self.Healthout={'state':1.0}
         
         
         self.mechstate=1.0
@@ -568,10 +572,12 @@ class affectDOF:
             self.forcename='Force'+dof.capitalize()+side
             self.eename='EE'+dof.capitalize()
             self.signame='Sig'+dof.capitalize()
+            self.healthname='Health'+dof.capitalize()
         else:
             self.forcename='Force'+dof.capitalize()+side
             self.eename='EE'+dof.capitalize()+side
             self.signame='Sig'+dof.capitalize()+side
+            self.healthname='Health'+dof.capitalize()+side
         
         self.Forceout={'dev':1.0, 'exp':1.0}
     def resolvefaults(self):
@@ -609,6 +615,11 @@ class affectDOF:
             self.EEstate=0.0
         elif self.faults.intersection(set(['ctldrift'])):
             self.ctlstate=0.5
+            
+        if len(self.faults.difference(set(['nom'])))>0:
+            self.healthstate=0.5
+        else:
+            self.healthstate=1.0
 
     def behavior(self):
         self.Airout['turbulence']=self.Airin['turbulence']*self.surfstate
@@ -621,6 +632,8 @@ class affectDOF:
         
         self.Forceout['dev']=aforce*power
         self.Forceout['exp']=self.Sigin['exp']
+        
+        self.Healthout['state']=self.healthstate
         
     def updatefxn(self,faults=['nom'],opermode=[],inputs={}, outputs={}):
         
@@ -643,7 +656,7 @@ class affectDOF:
         self.detbehav()
         self.behavior()
         inputs={self.signame: self.Sigin, self.eename: self.EEin, 'Air':self.Airin}
-        outputs={'Air': self.Airout,self.forcename:self.Forceout}
+        outputs={'Air': self.Airout,self.forcename:self.Forceout, self.healthname:self.Healthout}
         return {'outputs':outputs, 'inputs':inputs}
     
 class combineforces:
@@ -823,13 +836,23 @@ class exportAir:
         return {'outputs':outputs, 'inputs':inputs}
     
 class senseHealth:
-    def __init(self):
+    def __init__(self, dof, side):
         self.type= 'safetyfeature'
         self.faultmodes={'falsepositive':{'rate':'veryrare', 'rcost':'replacement'}, \
                          'falsenegative':{'rate':'rare', 'rcost':'replacement'}}
         
         self.detectstate=1.0
         
+        self.Sigout={'maint':1.0}
+        
+        if side=='C':
+            self.signame='MSig'+dof.capitalize()
+            self.healthname='Health'+dof.capitalize()+side
+        else:
+            self.signame='MSig'+dof.capitalize()+side
+            self.healthname='Health'+dof.capitalize()+side
+        
+        self.Healthin={'state': 1.0}
         self.faults=set(['nom'])
     def resolvefaults(self):
         return 0
@@ -846,31 +869,47 @@ class senseHealth:
         self.Sigout['maint']=self.detectstate*self.Healthin['state']
         
         return 0
-    def updatefxn(self,faults=['nom'],opermode=[],inputs={'Health':{'state': 1.0}}, outputs={'Signal':{'maint':1.0}}):
-        self.Healthin=inputs['Health']
+    def updatefxn(self,faults=['nom'],opermode=[],inputs={}, outputs={}):
+        
+        if len(inputs)==0:
+            inputs={self.healthname:{'state': 1.0}}
+        if len(outputs)==0:
+            outputs={self.signame:{'maint':10.}}
+        
+        
+        self.Healthin=inputs[self.healthname]
         self.faults.update(faults)
         self.condfaults()
         self.resolvefaults()
         self.detbehav()
         self.behavior()
         
-        outputs={'Signal': self.Sigout}        
+        outputs={self.signame: self.Sigout}        
         return {'outputs':outputs, 'inputs':inputs}
     
 class exportMaint:
-    def __init(self):
+    def __init__(self):
         self.type= 'classifier'
-        self.command='operational'     
+        self.Severity='operational'
+        self.faultmodes={}
+        self.faults=set(['nom'])
     def classify(self):
-        if self.Signal['maint'] <= 0.5:
-            self.command='maintenance'
-        else:
-            self.command='operational'
+        
+        self.command='operational'
+        
+        for thisinput in self.inputs:
+            if self.inputs[thisinput]['maint']<=0.5:
+                self.Severity='detected'
+
         return 0
     def returnvalue(self):
-        return self.command
-    def updatefxn(self,faults=['nom'],opermode=[], inputs={'Signal':{'maint':1.0}}, outputs={}):
-        self.Signal=inputs['Signal']
+        return self.Severity
+    def updatefxn(self,faults=['nom'],opermode=[], inputs={'MSigYaw':{'maint':1.0},'MSigRollL':{'maint':1.0},\
+                  'MSigRollR':{'maint':1.0},'MSigPitchL':{'maint':1.0},'MSigPitchR':{'maint':1.0},\
+                  'MSigLiftdnR':{'maint':1.0}, 'MSigLiftdnL':{'maint':1.0}, 'MSigLiftprR':{'maint':1.0},\
+                  'MSigLiftprL':{'maint':1.0}}, outputs={}):
+        self.inputs=inputs
+        
         self.classify()
        
         return {'outputs':outputs, 'inputs':inputs}
@@ -930,48 +969,93 @@ def initialize():
     #Init Affect Roll Right
     Affect_Roll_r=affectDOF('roll','R')
     ForceRollR={'ForceRollR':{'dev':1.0, 'exp':1.0}}
-    g.add_node('Affect_Roll_Right', funcobj=Affect_Roll_r, inputs={**EERollR,**Air,**SigRollR}, outputs={**Air, **ForceRollR})
+    HealthRollR={'HealthRollR':{'state':1.0}}
+    MSigRollR={'MSigRollR':{'maint':1.0}}
+    g.add_node('Affect_Roll_Right', funcobj=Affect_Roll_r, inputs={**EERollR,**Air,**SigRollR}, outputs={**Air, **ForceRollR, **HealthRollR})
+    
+    Sense_Health_Roll_r=senseHealth('roll','R')
+    g.add_node('Sense_Health_Roll_Right',funcobj=Sense_Health_Roll_r, inputs={**HealthRollR}, outputs={**MSigRollR})
     
     #Init Affect Roll Left
     Affect_Roll_l=affectDOF('roll','L')
     ForceRollL={'ForceRollL':{'dev':1.0, 'exp':1.0}}
-    g.add_node('Affect_Roll_Left', funcobj=Affect_Roll_l, inputs={**EERollL,**Air,**SigRollL}, outputs={**Air, **ForceRollL})
+    HealthRollL={'HealthRollL':{'state':1.0}}
+    MSigRollL={'MSigRollL':{'maint':1.0}}
+    g.add_node('Affect_Roll_Left', funcobj=Affect_Roll_l, inputs={**EERollL,**Air,**SigRollL}, outputs={**Air, **ForceRollL, **HealthRollL})
+    
+    Sense_Health_Roll_l=senseHealth('roll','L')
+    g.add_node('Sense_Health_Roll_Left',funcobj=Sense_Health_Roll_l, inputs={**HealthRollL}, outputs={**MSigRollL})
     
     #Init Affect Pitch Right
     Affect_Pitch_r=affectDOF('pitch','R')
     ForcePitchR={'ForcePitchR':{'dev':1.0, 'exp':1.0}}
-    g.add_node('Affect_Pitch_Right', funcobj=Affect_Pitch_r, inputs={**EEPitchR,**Air,**SigPitchR}, outputs={**Air, **ForcePitchR})
+    HealthPitchR={'HealthPitchR':{'state':1.0}}
+    MSigPitchR={'MSigPitchR':{'maint':1.0}}
+    g.add_node('Affect_Pitch_Right', funcobj=Affect_Pitch_r, inputs={**EEPitchR,**Air,**SigPitchR}, outputs={**Air, **ForcePitchR, **HealthPitchR})
+    
+    Sense_Health_Pitch_r=senseHealth('pitch','R')
+    g.add_node('Sense_Health_Pitch_Right',funcobj=Sense_Health_Pitch_r, inputs={**HealthPitchR}, outputs={**MSigPitchR})
     
     #Init Affect Pitch Left
     Affect_Pitch_l=affectDOF('pitch','L')
     ForcePitchL={'ForcePitchL':{'dev':1.0, 'exp':1.0}}
-    g.add_node('Affect_Pitch_Left',  funcobj=Affect_Pitch_l, inputs={**EEPitchL,**Air,**SigPitchL}, outputs={**Air, **ForcePitchL})
+    HealthPitchL={'HealthPitchL':{'state':1.0}}
+    MSigPitchL={'MSigPitchL':{'maint':1.0}}
+    g.add_node('Affect_Pitch_Left',  funcobj=Affect_Pitch_l, inputs={**EEPitchL,**Air,**SigPitchL}, outputs={**Air, **ForcePitchL, **HealthPitchL})
+    
+    Sense_Health_Pitch_l=senseHealth('pitch','L')
+    g.add_node('Sense_Health_Pitch_Left',funcobj=Sense_Health_Pitch_l, inputs={**HealthPitchL}, outputs={**MSigPitchL})
     
     #Init Affect Yaw
     Affect_Yaw=affectDOF('yaw','C')  
     ForceYawC={'ForceYawC':{'dev':1.0, 'exp':1.0}}
+    HealthYawC={'HealthYawC':{'state':1.0}}
+    MSigYaw={'MSigYaw':{'maint':1.0}}
     #ForceYawC={'ForceYawC':{'force':1.0}}
-    g.add_node('Affect_Yaw', funcobj=Affect_Yaw, inputs={**EEYaw,**Air,**SigYaw}, outputs={**Air, **ForceYawC})
+    g.add_node('Affect_Yaw', funcobj=Affect_Yaw, inputs={**EEYaw,**Air,**SigYaw}, outputs={**Air, **ForceYawC, **HealthYawC})
+    
+    Sense_Health_Yaw=senseHealth('yaw','C')
+    g.add_node('Sense_Health_Yaw',funcobj=Sense_Health_Yaw, inputs={**HealthYawC}, outputs={**MSigYaw})
     
     #Init Affect liftpr Right
     Affect_Liftpr_r=affectDOF('liftpr','R')
     ForceLiftprR={'ForceLiftprR':{'dev':1.0, 'exp':1.0}}
-    g.add_node('Affect_Liftpr_Right', funcobj=Affect_Liftpr_r, inputs={**EELiftprR,**Air,**SigLiftprR}, outputs={**Air, **ForceLiftprR})
+    HealthLiftprR={'HealthLiftprR':{'state':1.0}}
+    MSigLiftprR={'MSigLiftprR':{'maint':1.0}}
+    g.add_node('Affect_Liftpr_Right', funcobj=Affect_Liftpr_r, inputs={**EELiftprR,**Air,**SigLiftprR}, outputs={**Air, **ForceLiftprR, **HealthLiftprR})
+    
+    Sense_Health_Liftpr_r=senseHealth('liftpr','R')
+    g.add_node('Sense_Health_Liftpr_Right',funcobj=Sense_Health_Liftpr_r, inputs={**HealthLiftprR}, outputs={**MSigLiftprR})
     
     #Init Affect liftpr Left
     Affect_Liftpr_l=affectDOF('liftpr','L')
     ForceLiftprL={'ForceLiftprL':{'dev':1.0, 'exp':1.0}}
-    g.add_node('Affect_Liftpr_Left', funcobj=Affect_Liftpr_l, inputs={**EELiftprL,**Air,**SigLiftprL}, outputs={**Air, **ForceLiftprL})
+    HealthLiftprL={'HealthLiftprL':{'state':1.0}}
+    MSigLiftprL={'MSigLiftprL':{'maint':1.0}}
+    g.add_node('Affect_Liftpr_Left', funcobj=Affect_Liftpr_l, inputs={**EELiftprL,**Air,**SigLiftprL}, outputs={**Air, **ForceLiftprL, **HealthLiftprL})
+    
+    Sense_Health_Liftpr_l=senseHealth('liftpr','L')
+    g.add_node('Sense_Health_Liftpr_Left',funcobj=Sense_Health_Liftpr_l, inputs={**HealthLiftprL}, outputs={**MSigLiftprL})
     
     #Init Affect liftdn Right
     Affect_Liftdn_r=affectDOF('liftdn','R')
     ForceLiftdnR={'ForceLiftdnR':{'dev':1.0, 'exp':1.0}}
-    g.add_node('Affect_Liftdn_Right', funcobj=Affect_Liftdn_r, inputs={**EELiftdnR,**Air,**SigLiftdnR}, outputs={**Air, **ForceLiftdnR})
+    HealthLiftdnR={'HealthLiftdnR':{'state':1.0}}
+    MSigLiftdnR={'MSigLiftdnR':{'maint':1.0}}
+    g.add_node('Affect_Liftdn_Right', funcobj=Affect_Liftdn_r, inputs={**EELiftdnR,**Air,**SigLiftdnR}, outputs={**Air, **ForceLiftdnR, **HealthLiftdnR})
+    
+    Sense_Health_Liftdn_r=senseHealth('liftdn','R')
+    g.add_node('Sense_Health_Liftdn_Right',funcobj=Sense_Health_Liftdn_r, inputs={**HealthLiftdnR}, outputs={**MSigLiftdnR})
     
     #Init Affect liftdn Left
     Affect_Liftdn_l=affectDOF('liftdn','L')
     ForceLiftdnL={'ForceLiftdnL':{'dev':1.0, 'exp':1.0}}
-    g.add_node('Affect_Liftdn_Left', funcobj=Affect_Liftdn_l, inputs={**EELiftdnL,**Air,**SigLiftdnL}, outputs={**Air, **ForceLiftdnL})
+    HealthLiftdnL={'HealthLiftdnL':{'state':1.0}}
+    MSigLiftdnL={'MSigLiftdnL':{'maint':1.0}}
+    g.add_node('Affect_Liftdn_Left', funcobj=Affect_Liftdn_l, inputs={**EELiftdnL,**Air,**SigLiftdnL}, outputs={**Air, **ForceLiftdnL, **HealthLiftdnL})
+    
+    Sense_Health_Liftdn_l=senseHealth('liftdn','L')
+    g.add_node('Sense_Health_Liftdn_Left',funcobj=Sense_Health_Liftdn_l, inputs={**HealthLiftdnL}, outputs={**MSigLiftdnL})
     
     #Init Combine Forces
     Combine_Forces=combineforces()
@@ -987,10 +1071,16 @@ def initialize():
     g.add_node('Export_Air', funcobj=Export_Air, inputs={**Air}, outputs={})
     
     
-    #Init Explort liftdn/liftpr
+    #Init Export liftdn/liftpr
     Export_FM=exportForcesandMoments()
     g.add_node('Export_FM',funcobj=Export_FM, inputs={**Moment,**Force}, outputs={})
     
+    #Init Sense health
+    
+    Export_Maint=exportMaint()
+    g.add_node('Export_Maintenance', funcobj=Export_Maint, inputs={**MSigYaw,**MSigRollL, **MSigRollR, **MSigPitchL,\
+                                                                   **MSigPitchR, **MSigLiftdnR, **MSigLiftdnL, **MSigLiftprR, \
+                                                                   **MSigLiftprL}, outputs={})
     
     ##INITIALIZE EDGES
     #Air in flows
@@ -1052,6 +1142,28 @@ def initialize():
     g.add_edge('Affect_Liftdn_Left', 'Export_Air', Air=Air['Air']) 
     g.add_edge('Affect_Liftpr_Right', 'Export_Air', Air=Air['Air']) 
     g.add_edge('Affect_Liftpr_Left', 'Export_Air', Air=Air['Air']) 
+    
+    #Health flows
+    g.add_edge('Affect_Roll_Right', 'Sense_Health_Roll_Right', HealthRollR=HealthRollR['HealthRollR'])
+    g.add_edge('Affect_Roll_Left',  'Sense_Health_Roll_Left', HealthRollL=HealthRollL['HealthRollL'])   
+    g.add_edge('Affect_Pitch_Right',  'Sense_Health_Pitch_Right', HealthPitchR=HealthPitchR['HealthPitchR'])   
+    g.add_edge('Affect_Pitch_Left', 'Sense_Health_Pitch_Left', HealthPitchL=HealthPitchL['HealthPitchL'])
+    g.add_edge('Affect_Yaw', 'Sense_Health_Yaw', HealthYawC=HealthYawC['HealthYawC'])
+    g.add_edge('Affect_Liftdn_Right', 'Sense_Health_Liftdn_Right', HealthLiftdnR=HealthLiftdnR['HealthLiftdnR']) 
+    g.add_edge('Affect_Liftdn_Left', 'Sense_Health_Liftdn_Left', HealthLiftdnL=HealthLiftdnL['HealthLiftdnL']) 
+    g.add_edge('Affect_Liftpr_Right', 'Sense_Health_Liftpr_Right', HealthLiftprR=HealthLiftprR['HealthLiftprR']) 
+    g.add_edge('Affect_Liftpr_Left', 'Sense_Health_Liftpr_Left', HealthLiftprL=HealthLiftprL['HealthLiftprL']) 
+    
+    #Maintenance Signal flows
+    g.add_edge('Sense_Health_Roll_Right', 'Export_Maintenance', MSigRollR=MSigRollR['MSigRollR'])
+    g.add_edge('Sense_Health_Roll_Left', 'Export_Maintenance', MSigRollL=MSigRollL['MSigRollL'])   
+    g.add_edge('Sense_Health_Pitch_Right', 'Export_Maintenance', MSigPitchR=MSigPitchR['MSigPitchR'])   
+    g.add_edge('Sense_Health_Pitch_Left', 'Export_Maintenance', MSigPitchL=MSigPitchL['MSigPitchL'])
+    g.add_edge('Sense_Health_Yaw', 'Export_Maintenance', MSigYaw=MSigYaw['MSigYaw'])
+    g.add_edge('Sense_Health_Liftdn_Right', 'Export_Maintenance', MSigLiftdnR=MSigLiftdnR['MSigLiftdnR']) 
+    g.add_edge('Sense_Health_Liftdn_Left', 'Export_Maintenance', MSigLiftdnL=MSigLiftdnL['MSigLiftdnL']) 
+    g.add_edge('Sense_Health_Liftpr_Right', 'Export_Maintenance', MSigLiftprR=MSigLiftprR['MSigLiftprR']) 
+    g.add_edge('Sense_Health_Liftpr_Left', 'Export_Maintenance', MSigLiftprL=MSigLiftprL['MSigLiftprL']) 
     
     ##INITALIZE PROPOGATION GRAPHS
     backgraph=g.reverse(copy=True)

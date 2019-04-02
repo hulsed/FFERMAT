@@ -367,7 +367,11 @@ def findclassification(mdl, g):
         fxn=g.nodes(data='funcobj')[fxnname]
         if fxn.type=='classifier':
             endclass[fxnname]=fxn.returnvalue()
-            if mdl.endstatekey[endclass[fxnname]]['cost']>totclass:
+            if endclass[fxnname]=='detected':
+                break
+            elif  endclass[fxnname]=='operational':
+                a=1
+            elif mdl.endstatekey[endclass[fxnname]]['cost']>totclass:
                 endclass['total']=endclass[fxnname]
                 totclass=mdl.endstatekey[endclass[fxnname]]['cost']
             
@@ -388,12 +392,32 @@ def calcrepair(mdl,g, endfaults, endclass):
             repair=fxn.faultmodes[mode]['rcost']
             totalcost+=np.mean([mdl.repaircosts[repair]['lb'], mdl.repaircosts[repair]['ub']])
  
-#costs from end-state classification           
-    for classfxn in endclass:
-        repairtype= mdl.repaircosts[mdl.endstatekey[endclass[classfxn]]['repair']]
-        classcost=np.mean([repairtype['lb'], repairtype['ub']])
-        if classcost > totalcost:
-            totalcost=classcost
+#costs from end-state classification 
+            
+    if 'detected' in endclass:
+        
+        for k,v in endclass.items():
+            if v=='detected':
+                endclass[k]='noeffect'
+            elif v=='operational':
+                endclass[k]='noeffect'
+        
+        
+        for classfxn in endclass:
+            repairtype= mdl.repaircosts[mdl.endstatekey[endclass[classfxn]]['repair']]
+            classcost=np.mean([repairtype['lb'], repairtype['ub']])
+            if classcost > totalcost:
+                totalcost=classcost
+                    
+    else:
+        for k,v in endclass.items():
+            if v=='detected':
+                endclass[k]='noeffect'
+            elif v=='operational':
+                endclass[k]='noeffect'
+        for classfxn in endclass:
+             repairtype= mdl.repaircosts[mdl.endstatekey[endclass[classfxn]]['repair']]
+             classcost=np.mean([repairtype['lb'], repairtype['ub']])
     
     if totalcost > mdl.repaircosts['totaled']['ub']:
         totalcost=mdl.repaircosts['totaled']['ub']

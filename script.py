@@ -11,7 +11,7 @@ import ffermat
 
 #ffermat.runlist(pumpmodel)
 
-import controlsurfacemodel_baseline as mdl
+import controlsurfacemodel_cbm as mdl
 
 [forwardgraph,backgraph,fullgraph]=mdl.initialize()
 fullresults, summary = ffermat.runlist(mdl)
