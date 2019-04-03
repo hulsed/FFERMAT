@@ -550,16 +550,22 @@ class affectDOF:
                 
         if dof=='liftdn':
             self.useprop=0.2
+            self.operscens=['roll','forward']
         if dof=='liftpr':
             self.useprop=0.2
+            self.operscens=['liftup','forward']
         if dof=='roll':
             self.useprop=0.05
+            self.operscens=['roll','forward']
         if dof=='pitch':
             self.useprop=0.15
+            self.operscens=['pitch','forward']
         if dof=='yaw':
             self.useprop=0.06
+            self.operscens=['yaw','forward']
         
         if dof!='liftdn':
+            self.operscens=['liftdn','forward']
             self.faultmodes['jamdown']={'rate':'rare', 'rcost':'minor'}
             self.maint['check']['eff']['jamdown']=0.5
             self.maint['evaluation']['eff']['jamdown']=0.3
@@ -848,9 +854,11 @@ class senseHealth:
         if side=='C':
             self.signame='MSig'+dof.capitalize()
             self.healthname='Health'+dof.capitalize()+side
+            self.assocfxn='Affect_'+dof.capitalize()
         else:
             self.signame='MSig'+dof.capitalize()+side
             self.healthname='Health'+dof.capitalize()+side
+            self.assocfxn='Affect_'+dof.capitalize()+'_'+aux.rlc(side)
         
         self.Healthin={'state': 1.0}
         self.faults=set(['nom'])

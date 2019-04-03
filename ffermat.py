@@ -62,8 +62,9 @@ def listscens(mdl,g):
         for fxnname in faultfxnnames:
             fxn=g.nodes(data='funcobj')[fxnname]
             modes=fxn.faultmodes
+            opermodes=fxn.operscens
             for opfxn, opmodelist in opmodes.items():
-                for opmode in opmodelist:
+                for opmode in opermodes:
                     for mode in modes:
                         scenlist.append([opfxn, opmode, fxnname, mode])
         

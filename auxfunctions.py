@@ -42,3 +42,12 @@ def dev(x):
     y=abs(abs(x-1.0)-1.0)
     return y
 
+def rlc(x):
+    y='NA'
+    if x=='R':
+        y='Right'
+    if x=='L':
+        y='Left'
+    if x=='C':
+        y='Center'
+    return y
