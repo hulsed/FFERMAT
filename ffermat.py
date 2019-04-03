@@ -54,7 +54,7 @@ def listscens(mdl,g):
                 opmodelist=list(fxn.opermodes.keys())
                 opmodes={fxnname:opmodelist}
                 for opmode in list(opmodelist):
-                    scenlist.append([fxnname,opmode,'NA','nom'])
+                    scenlist.append([fxnname,opmode,'NA','nom', 'NA','nom'])
             except:
                 foo=1
             
@@ -63,10 +63,19 @@ def listscens(mdl,g):
             fxn=g.nodes(data='funcobj')[fxnname]
             modes=fxn.faultmodes
             opermodes=fxn.operscens
+            pffxnname=fxn.pffxn
+            pffxn=g.nodes(data='funcobj')[pffxnname]
+            
             for opfxn, opmodelist in opmodes.items():
                 for opmode in opermodes:
                     for mode in modes:
-                        scenlist.append([opfxn, opmode, fxnname, mode])
+                        condmodes=pffxn.condmodes
+                        indmodes=pffxn.indmodes
+                            
+                        for pfmode in condmodes:
+                            scenlist.append([opfxn, opmode, fxnname, mode, pffxnname, pfmode])
+            for pfmode in indmodes:
+                scenlist.append([opfxn, opmode, pffxnname, pfmode, 'NA', 'nom'])
         
     except: 
         print('Incomplete Function Definition, function: '+fxnname)

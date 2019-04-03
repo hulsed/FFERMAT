@@ -579,11 +579,13 @@ class affectDOF:
             self.eename='EE'+dof.capitalize()
             self.signame='Sig'+dof.capitalize()
             self.healthname='Health'+dof.capitalize()
+            self.pffxn='Sense_Health_'+dof.capitalize()
         else:
             self.forcename='Force'+dof.capitalize()+side
             self.eename='EE'+dof.capitalize()+side
             self.signame='Sig'+dof.capitalize()+side
             self.healthname='Health'+dof.capitalize()+side
+            self.pffxn='Sense_Health_'+dof.capitalize()+'_'+aux.rlc(side)
         
         self.Forceout={'dev':1.0, 'exp':1.0}
     def resolvefaults(self):
@@ -844,8 +846,11 @@ class exportAir:
 class senseHealth:
     def __init__(self, dof, side):
         self.type= 'safetyfeature'
-        self.faultmodes={'falsepositive':{'rate':'veryrare', 'rcost':'replacement'}, \
-                         'falsenegative':{'rate':'rare', 'rcost':'replacement'}}
+        
+        self.condmodes={'falsenegative':{'rate':'rare', 'rcost':'replacement'}}
+        
+        self.indmodes={'falsepositive':{'rate':'veryrare', 'rcost':'replacement'}}, \
+                         
         
         self.detectstate=1.0
         
