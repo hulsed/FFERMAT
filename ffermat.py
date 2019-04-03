@@ -71,7 +71,9 @@ def listscens(mdl,g):
                     for mode in modes:
                         condmodes=pffxn.condmodes
                         indmodes=pffxn.indmodes
-                            
+                        
+                        scenlist.append([opfxn, opmode, fxnname, mode, 'NA', 'nom'])
+                        
                         for pfmode in condmodes:
                             scenlist.append([opfxn, opmode, fxnname, mode, pffxnname, pfmode])
             for pfmode in indmodes:

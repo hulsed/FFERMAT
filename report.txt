@@ -1,13 +1,13 @@
 SUMMARY
 --------------------------------------------
-TOTAL SCORE: 8753881.698013956
+TOTAL SCORE: 17507741.381958086
 FEASIBILITY: infeasible
 Failure Type 	 	 Expected Number 	 Allowable
-catastrophic 	 	 0.0015059096688942453 	 0.002          
-hazardous   	 	 0.021021585418624474 	 0.02           
-major       	 	 0.008662676064533937 	 0.2            
+catastrophic 	 	 0.0030118193377884905 	 0.002          
+hazardous   	 	 0.04204317083724894 	 0.02           
+major       	 	 0.017325352129067877 	 0.2            
 minor       	 	 0.0             	 20.0           
-noeffect    	 	 0.016362929905237956 	 0              
+noeffect    	 	 0.021936668781544096 	 0              
 
 FULL RESULTS:
 --------------------------------------------
