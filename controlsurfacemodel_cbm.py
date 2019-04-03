@@ -846,11 +846,16 @@ class exportAir:
 class senseHealth:
     def __init__(self, dof, side):
         self.type= 'safetyfeature'
+        self.useprop=1.0
         
-        self.condmodes={'falsenegative':{'rate':'rare', 'rcost':'replacement'}}
+        a={'falsenegative':{'rate':'rare', 'rcost':'replacement'}}
+        self.condmodes=a
+        b= {'falsepositive':{'rate':'veryrare', 'rcost':'replacement'}}
+        self.indmodes=b
         
-        self.indmodes={'falsepositive':{'rate':'veryrare', 'rcost':'replacement'}}, \
-                         
+        self.maint={'evaluation':{'type':'majorinspection', 'sched':'monthly', 'eff':{'falsenegative':0.5, 'falsepositive':0.5}}}
+        
+        self.faultmodes={**self.condmodes,**self.indmodes}
         
         self.detectstate=1.0
         

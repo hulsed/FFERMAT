@@ -94,10 +94,10 @@ def runlist(mdl):
     allowprobs={'catastrophic': 0.0,'hazardous': 0.0,'major': 0.0,'minor': 0.0,'noeffect': 0.0}
     feasibility='feasible'
     
-    for [opfxn, opmode, fxnname, mode] in scenlist:
+    for [opfxn, opmode, fxnname, mode, pffxnname, pfmode] in scenlist:
         [forwardgraph,backgraph,fullgraph]=mdl.initialize()
         
-        endflows,endfaults,endclass=runonefault(mdl, forwardgraph,backgraph,fullgraph,opfxn, opmode, fxnname, mode)
+        endflows,endfaults,endclass=runonefault(mdl, forwardgraph,backgraph,fullgraph,opfxn, opmode, fxnname, mode, pffxnname, pfmode)
         
         if fxnname !='NA':
         
@@ -179,11 +179,16 @@ def savereport(fullresults,summary, filename='report.txt'):
     file.close()
     return
 
-def runonefault(mdl, forwardgraph,backgraph,fullgraph,opfxn, opmode, fxnname, mode):
+def runonefault(mdl, forwardgraph,backgraph,fullgraph,opfxn, opmode, fxnname, mode, pffxnname, pfmode):
     
     opfxnobj=fullgraph.nodes(data='funcobj')[opfxn]
     opfxncall=opfxnobj.updatefxn(faults=['nom'], opermode=opmode)
     oneprop(forwardgraph,backgraph,fullgraph,opfxncall,opfxn)
+    
+    if pffxnname!='NA':
+        pffxnobj=fullgraph.nodes(data='funcobj')[pffxnname]
+        pffxncall=pffxnobj.updatefxn(faults=[pfmode], opermode=opmode)
+        oneprop(forwardgraph, backgraph,fullgraph,pffxncall,pffxnname)
     
     if fxnname!='NA':
         fxn=fullgraph.nodes(data='funcobj')[fxnname]
