@@ -83,7 +83,23 @@ def listscens(mdl,g):
         print('Incomplete Function Definition, function: '+fxnname)
     return scenlist
 
-def runlist(mdl):
+#propogates 
+def proplist(mdl):
+    
+    [forwardgraph,backgraph,fullgraph]=mdl.initialize()
+    scenlist=listscens(mdl,fullgraph)
+    fullresults={}
+    
+    for [opfxn, opmode, fxnname, mode, pffxnname, pfmode] in scenlist:
+        [forwardgraph,backgraph,fullgraph]=mdl.initialize()
+        
+        endflows,endfaults,endclass=runonefault(mdl, forwardgraph,backgraph,fullgraph,opfxn, opmode, fxnname, mode, pffxnname, pfmode)
+               
+        fullresults[opfxn, opmode, fxnname, mode]={'flow effects': endflows, 'faults':endfaults}
+    return fullresults
+
+
+def runsummary(mdl):
     
     [forwardgraph,backgraph,fullgraph]=mdl.initialize()
     scenlist=listscens(mdl,fullgraph)
@@ -104,7 +120,7 @@ def runlist(mdl):
         if fxnname !='NA':
         
             fxn=getfxn(fxnname,forwardgraph)
-            faultrates=calcrate(mode,fxn,mdl)
+            faultrates=mdl.calcrate(mode,fxn,mdl)
         else:
             faultrates['life_exp']=0.0
             faultrates['mit_prob']=0.0
@@ -112,9 +128,9 @@ def runlist(mdl):
         lexp=faultrates['life_exp']*mdl.opfrac[opmode]
         pfh=faultrates['mit_prob']*mdl.opfrac[opmode]
         
-        repairtype, lowrcost, highrcost=calcrepair(mdl,forwardgraph, endfaults, endclass)
+        repairtype, lowrcost, highrcost=mdl.calcrepair(mdl,forwardgraph, endfaults, endclass)
         
-        score,eventcost=calcscore(mdl,lexp, endclass,repairtype)
+        score,eventcost=mdl.calcscore(mdl,lexp, endclass,repairtype)
                
         fullresults[opfxn, opmode, fxnname, mode]={'flow effects': endflows, 'faults':endfaults, \
                    'classification':endclass, 'repair type': repairtype, \
@@ -202,7 +218,7 @@ def runonefault(mdl, forwardgraph,backgraph,fullgraph,opfxn, opmode, fxnname, mo
     propagate(forwardgraph, backgraph, opfxn, opmode)
     endflows=findfaultflows(forwardgraph)
     endfaults=findfaults(forwardgraph)
-    endclass=findclassification(mdl, forwardgraph)
+    endclass=mdl.findclassification(mdl, forwardgraph)
     
     return endflows,endfaults,endclass
 
@@ -374,139 +390,7 @@ def findfaults(g):
             endfaults[fxnname]=fxn.faults
     return endfaults
 
-def findclassification(mdl, g):
-    endclass=dict()
-    fxnnames=list(g.nodes)
-    totclass=0.0
-    endclass['total']='noeffect'
-    #extract list of faults present
-    for fxnname in fxnnames:
-        fxn=g.nodes(data='funcobj')[fxnname]
-        if fxn.type=='classifier':
-            endclass[fxnname]=fxn.returnvalue()
-            if endclass[fxnname]=='detected':
-                break
-            elif  endclass[fxnname]=='operational':
-                a=1
-            elif mdl.endstatekey[endclass[fxnname]]['cost']>totclass:
-                endclass['total']=endclass[fxnname]
-                totclass=mdl.endstatekey[endclass[fxnname]]['cost']
-            
-    return endclass
-
-def calcrepair(mdl,g, endfaults, endclass):
-    
-    totalcost=0.0
-    totalrepair='NA'
-    lowcost=0.0
-    highcost=0.0
-    
- #costs from flow-based damage to functions   
-    for fxnname in endfaults:
-        fxn=g.nodes(data='funcobj')[fxnname]
-        modes=endfaults[fxnname]   
-        for mode in modes:
-            repair=fxn.faultmodes[mode]['rcost']
-            totalcost+=np.mean([mdl.repaircosts[repair]['lb'], mdl.repaircosts[repair]['ub']])
- 
-#costs from end-state classification 
-            
-    if 'detected' in endclass:
-        
-        for k,v in endclass.items():
-            if v=='detected':
-                endclass[k]='noeffect'
-            elif v=='operational':
-                endclass[k]='noeffect'
-        
-        
-        for classfxn in endclass:
-            repairtype= mdl.repaircosts[mdl.endstatekey[endclass[classfxn]]['repair']]
-            classcost=np.mean([repairtype['lb'], repairtype['ub']])
-            if classcost > totalcost:
-                totalcost=classcost
-                    
-    else:
-        for k,v in endclass.items():
-            if v=='detected':
-                endclass[k]='noeffect'
-            elif v=='operational':
-                endclass[k]='noeffect'
-        for classfxn in endclass:
-             repairtype= mdl.repaircosts[mdl.endstatekey[endclass[classfxn]]['repair']]
-             classcost=np.mean([repairtype['lb'], repairtype['ub']])
-    
-    if totalcost > mdl.repaircosts['totaled']['ub']:
-        totalcost=mdl.repaircosts['totaled']['ub']
-    
-    for repairtype in mdl.repaircosts:
-        if totalcost >=mdl.repaircosts[repairtype]['lb'] and totalcost < mdl.repaircosts[repairtype]['ub']:
-            totalrepair=repairtype
-            lowcost=mdl.repaircosts[repairtype]['lb']
-            highcost=mdl.repaircosts[repairtype]['ub']
-    
-    return totalrepair, lowcost, highcost
-
-def calcscore(mdl, lexp, endclass, repair):
-    rawcost=0.0
-    for classfxn in endclass:
-        cost=mdl.endstatekey[endclass[classfxn]]['cost']
-        rawcost+=cost
-        
-    score=lexp*(rawcost+mdl.repaircosts[repair]['av'])
-    return score, cost
-
-def calcrate(fault,fxn,mdl):
-    ratetype=fxn.faultmodes[fault]['rate']
-    newrate=mdl.rates[ratetype]['av']
-    origrate=mdl.rates[ratetype]['av']
-    maint=fxn.maint
-    lifehrs=mdl.lifehours*fxn.useprop
-    
-    for strattype in maint:
-        strat=maint[strattype]
-                
-        sched=mdl.maintenancesched[strat['sched']]['av']
-        
-        eff=strat['eff'][fault]
-        
-        oldprob=1-np.exp(-sched*newrate)
-        newprob=oldprob*(1-eff)
-        newrate=-np.log(1-newprob)/sched
-    
-    faultrates={'mit_rate':newrate,'mit_prob':1-np.exp(-lifehrs*newrate),\
-              'life_exp':lifehrs*newrate, 'unmit_rate':origrate, 'unmit_exp':origrate*lifehrs}
-    return faultrates
-
-
 def getfxn(fxnname, graph):
     fxn=graph.nodes(data='funcobj')[fxnname]
     return fxn
 
-def calcmaint(fxn, mdl):
-    
-    newrate=0.0
-    totcost=0.0
-    lifehrs=mdl.lifehours*1.0
-    
-    faults=fxn.faultmodes
-    maint=fxn.maint
-    
-    faultrates={}
-    
-    for fault in faults:
-        
-        faultrates[fault]=calcrate(fault,fxn,mdl)
-        
-    
-    for strattype in maint:
-        strat=maint[strattype]
-        
-        cost=mdl.maintenancecosts[strat['type']]['av']
-        sched=mdl.maintenancesched[strat['sched']]['av']
-        lifecost=cost*lifehrs/sched
-        totcost+=lifecost
-    
-    maintcost=totcost
-    
-    return faultrates, maintcost

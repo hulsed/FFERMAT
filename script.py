@@ -14,7 +14,9 @@ import ffermat
 import controlsurfacemodel_cbm as mdl
 
 [forwardgraph,backgraph,fullgraph]=mdl.initialize()
-fullresults, summary = ffermat.runlist(mdl)
+fullresults, summary = ffermat.runsummary(mdl)
+
+ffermat.savereport(fullresults,summary, filename='report.txt')
 
 #[forwardgraph,backgraph,fullgraph]=controlsurfacemodel.initialize()
 #ffermat.runonefault(controlsurfacemodel, forwardgraph, backgraph, fullgraph, 'Import_Signal','liftup','Import_Signal','nosig')
@@ -26,7 +28,7 @@ fullresults, summary = ffermat.runlist(mdl)
 #ffermat.runonefault(controlsurfacemodel, forwardgraph, backgraph, fullgraph, 'Import_Signal','forward','Import_Signal','nosig')
 #endflows,endfaults,endclass=ffermat.runonefault(controlsurfacemodel, forwardgraph, backgraph, fullgraph, 'Import_Signal','liftdn','NA','NA')
 
-ffermat.savereport(fullresults,summary, filename='report.txt')
+
 
 #ffermat.runonefault(forwardgraph,backgraph,fullgraph,'Import_Signal','nosig')
 
