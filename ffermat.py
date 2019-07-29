@@ -10,6 +10,12 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
+def makefullgraph(g):
+    backgraph=g.reverse(copy=True)
+    forwardgraph=g
+    fullgraph=nx.compose(backgraph, forwardgraph)
+    return backgraph, forwardgraph, fullgraph
+
 def showgraph(g):
     labels=dict()
     for edge in g.edges:
