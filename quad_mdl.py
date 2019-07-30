@@ -12,6 +12,7 @@ import numpy as np
 
 import auxfunctions as aux
 
+scope='full'
 
 rotorlist={'RR','LR','RF', 'LF'}
 ##Define flows for model
@@ -21,9 +22,10 @@ class EE:
         self.name=name
         self.rate=1.0
         self.effort=1.0
+        self.nominal={'rate':1.0, 'effort':1.0}
     def status(self):
         status={'rate':self.rate, 'effort':self.effort}
-        return status 
+        return status.copy() 
 
 nomEE=EE('nominal')
 
@@ -41,7 +43,7 @@ class storeEE:
                          'lowcharge':{'rate':'moderate','rcost':'minor'}}
         self.faults=set(['nom'])
     def condfaults(self):
-        if self.EEout['rate']>2:
+        if self.EEout.rate>2:
             self.faults.add('break')
         if self.soc<10:
             self.faults.add('lowcharge')
@@ -49,7 +51,7 @@ class storeEE:
             self.faults.remove('lowcharge')
             self.faults.add('nocharge')
         return 0
-    def detbehav(self, time):
+    def behavior(self, time):
         if self.faults.intersection(set(['short'])):
             self.effstate=0.0
         elif self.faults.intersection(set(['break'])):
@@ -57,7 +59,7 @@ class storeEE:
         elif self.faults.intersection(set(['degr'])):
             self.effstate=0.5
         
-        if self.faults.intersection(set['nocharge']):
+        if self.faults.intersection(set(['nocharge'])):
             self.soc=0.0
             self.effstate=0.0
             
@@ -66,7 +68,7 @@ class storeEE:
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
         self.faults.update(faults)
         self.condfaults()
-        self.behavior()
+        self.behavior(time)
         return 
 
 class distEE:
@@ -74,11 +76,11 @@ class distEE:
         self.useprop=1.0
         self.type='function'
         self.EEin=EEin
-        self.EErr=EErr,
-        self.EElr=EElr,
-        self.EErf=EErf,
-        self.EElf=EElf,
-        self.EEctl=EEctl,
+        self.EErr=EErr
+        self.EElr=EElr
+        self.EErf=EErf
+        self.EElf=EElf
+        self.EEctl=EEctl
         self.effstate=1.0
         self.ratestate=1.0
         self.faultmodes={'short':{'rate':'moderate', 'rcost':'major'}, \
@@ -86,6 +88,7 @@ class distEE:
                          'break':{'rate':'common', 'rcost':'moderate'}}
         self.faults=set(['nom'])
     def condfaults(self):
+        
         if max(self.EErr.rate,self.EElr.rate,self.EErf.rate,self.EElf.rate,self.EEctl.rate)>2:
             self.faults.add('nov') 
     def behavior(self, time):
@@ -102,12 +105,12 @@ class distEE:
         self.EElf.effort=self.effstate*self.EEin.effort
         self.EEctl.effort=self.effstate*self.EEin.effort
         
-        self.inputs['EE']['rate']=max(self.EErr.rate,self.EElr.rate,self.EErf.rate,self.EElf.rate,self.EEctl.rate)
+        self.EEin.rate=max(self.EErr.rate,self.EElr.rate,self.EErf.rate,self.EElf.rate,self.EEctl.rate)
         
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
         self.faults.update(faults)
         self.condfaults()
-        self.behavior()
+        self.behavior(time)
         return 
     
 class convEE:
@@ -178,3 +181,7 @@ def initialize():
     g.add_edge('DistEE','ConvEElf',EElf_1=EElf_1)
     
     return g
+
+def findclassification(forwardgraph):
+    endclass=1.0
+    return endclass
