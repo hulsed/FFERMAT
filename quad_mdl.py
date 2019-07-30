@@ -2,8 +2,6 @@
 """
 Created on Mon Jul 29 10:30:03 2019
 
-
-
 @author: dhulse
 """
 
@@ -12,9 +10,6 @@ import numpy as np
 
 import auxfunctions as aux
 
-scope='full'
-
-rotorlist={'RR','LR','RF', 'LF'}
 ##Define flows for model
 class EE:
     def __init__(self,name):
@@ -26,8 +21,6 @@ class EE:
     def status(self):
         status={'rate':self.rate, 'effort':self.effort}
         return status.copy() 
-
-nomEE=EE('nominal')
 
 class storeEE:
     def __init__(self, name,EEout):
