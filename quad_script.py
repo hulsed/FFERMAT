@@ -13,4 +13,6 @@ graph=mdl.initialize()
 
 scenlist=ffermat.listinitfaults(graph)
 
+ffermat.proponefault('ConvEEtoMElr', 'short', mdl)
+
 fullresults=ffermat.proplist(mdl)

@@ -20,13 +20,28 @@ def showgraph(g):
     nx.draw_networkx(g,pos)
     nx.draw_networkx_edge_labels(g,pos,edge_labels=labels)
     plt.show()
+    
+def constructnomscen(g):
+    fxnnames=list(g.nodes)
+    nomscen={}
+    for fxnname in fxnnames:
+        nomscen[fxnname]='nom'
+    return nomscen
+
+def proponefault(fxnname, faultmode, mdl):
+    graph=mdl.initialize()
+    nomscen=constructnomscen(graph)
+    scen=nomscen.copy()
+    scen[fxnname]=faultmode
+    
+    endflows,endfaults,endclass=runonefault(mdl, graph,scen)
+    
+    return endflows,endfaults,endclass
 
 def listinitfaults(g):
     faultlist=[]
-    nomscen={}
     fxnnames=list(g.nodes)
-    for fxnname in fxnnames:
-        nomscen[fxnname]='nom'
+    nomscen=constructnomscen(g)
         
     try:
         for fxnname in fxnnames:
@@ -70,13 +85,14 @@ def propagate(forward, scen):
 
     fxnnames=list(forward.nodes())
     activefxns=set(fxnnames)
-    
+
     #set up history of flows to see if any has changed
     tests={}
     flowhist={}
     for fxnname in fxnnames:
-        tests[fxnname]=0.0
-        for big, end in forward.edges(fxnname):
+        tests[fxnname]=0
+        edges=list(forward.in_edges(fxnname))+list(forward.out_edges(fxnname))
+        for big, end in edges:
             flows=forward.edges[big,end]
             for flow in flows:
                 flowhist[big, end,flow]=forward.edges[big, end][flow].status()
@@ -91,10 +107,11 @@ def propagate(forward, scen):
         n=0
         for fxnname in list(activefxns):
             fxn=forward.nodes(data='obj')[fxnname]
-                       
+                      
             fxn.updatefxn()
             test=0
-            for big, end in forward.edges(fxnname):
+            edges=list(forward.in_edges(fxnname))+list(forward.out_edges(fxnname))
+            for big, end in edges:
                 flows=forward.edges[big,end]
                 for flow in flows:
                     if forward.edges[big, end][flow].status()!=flowhist[big, end, flow]:
