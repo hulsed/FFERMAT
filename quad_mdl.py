@@ -210,7 +210,7 @@ class convEE:
                          'break':{'rate':'common', 'rcost':'moderate'}}
         self.faults=set(['nom'])
     def condfaults(self):
-        if self.EEout.rate>2:
+        if self.EEout.rate>5:
             self.faults.add('nov')
     def behavior(self):
         if self.faults.intersection(set(['short'])):
@@ -221,6 +221,9 @@ class convEE:
             self.EEout.effort=0.0
         elif self.faults.intersection(set(['degr'])):
             self.EEout.effort=0.5
+        else:
+            self.EEout.effort=self.EEin.effort
+            self.EEin.rate=self.EEout.rate
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
         self.faults.update(faults)
         self.condfaults()
@@ -243,7 +246,7 @@ class contEE:
                          }
         self.faults=set(['nom'])
     def condfaults(self):
-        if self.EEout.rate>2:
+        if self.EEout.rate>5:
             self.faults.add('break')
             self.faults.add('faildn')
     def behavior(self):
@@ -295,7 +298,7 @@ class convEEtoME:
                          'drift':{'rate':'veryrare', 'rcost':'replacement'}}
         self.faults=set(['nom'])
     def condfaults(self):
-        if self.EEin.rate>2:
+        if self.EEin.rate>5:
             self.faults.add('break')
             self.faults.add('faildn')
     def behavior(self):
@@ -376,7 +379,7 @@ class affectDOF:
         elif 0.0 in [self.Airrr.rate,self.Airlr.rate,self.Airrf.rate,self.Airlf.rate]:
             self.DOFs.stab=0.5
             self.vertvel=-10
-        elif 2.0:
+        elif 2.0 in [self.Airrr.rate,self.Airlr.rate,self.Airrf.rate,self.Airlf.rate]:
             self.DOFs.stab=2.0
             self.vertvel=2.0
         
@@ -385,11 +388,11 @@ class affectDOF:
         return 
     
 class ctlDOF:
-    def __init__(self, name, Dir, Ctlrr, Ctllr, Cltrf, Ctllf, DOFs):
+    def __init__(self, name, Dir, Ctlrr, Ctllr, Ctlrf, Ctllf, DOFs):
         self.type='classifier'
         self.Ctlrr=Ctlrr
         self.Ctllr=Ctllr
-        self.Cltrf=Cltrf
+        self.Ctlrf=Ctlrf
         self.Ctllf=Ctllf
         self.Dir=Dir
         self.DOFs=DOFs
@@ -411,7 +414,7 @@ class ctlDOF:
         elif self.Dir.traj[2]<=1:
             upthrottle=0.5
             
-        if self.Dir.traj[2]==0 and self.Dir.traj[1]==0:
+        if self.Dir.traj[0]==0 and self.Dir.traj[1]==0:
             forwardthrottle=1.0
         else:
             forwardthrottle=2.0
@@ -419,12 +422,12 @@ class ctlDOF:
         pwr=self.Dir.power
         self.Ctlrr.int=upthrottle*forwardthrottle*pwr
         self.Ctllr.int=upthrottle*forwardthrottle*pwr
-        self.Cltrf.int=upthrottle/forwardthrottle*pwr
+        self.Ctlrf.int=upthrottle/forwardthrottle*pwr
         self.Ctllf.int=upthrottle/forwardthrottle*pwr
         
         self.Ctlrr.act=self.ctlstate*upthrottle*forwardthrottle*pwr
         self.Ctllr.act=self.ctlstate*upthrottle*forwardthrottle*pwr
-        self.Cltrf.act=self.ctlstate*upthrottle/forwardthrottle*pwr
+        self.Ctlrf.act=self.ctlstate*upthrottle/forwardthrottle*pwr
         self.Ctllf.act=self.ctlstate*upthrottle/forwardthrottle*pwr
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
         self.faults.update(faults)
@@ -478,6 +481,7 @@ def initialize():
     EElr_1=EE('EElr_1')
     EErf_1=EE('EErf_1')
     EElf_1=EE('EElf_1')
+    
     EEclt_1=EE('EEclt_1')
     
     DistEE=distEE(EE_1,EErr_1,EElr_1,EErf_1,EElf_1,EEclt_1)
@@ -488,13 +492,13 @@ def initialize():
     EErf_2=EE('EErf_2')
     EElf_2=EE('EElf_2')
     
-    ConvEErr=convEE('Convert_EE_RR',EErr_1,EErr_2)
+    ConvEErr=convEE('ConvEErr',EErr_1,EErr_2)
     g.add_node('ConvEErr', obj=ConvEErr)
-    ConvEElr=convEE('Convert_EE_LR',EElr_1,EElr_2)
+    ConvEElr=convEE('ConvEElr',EElr_1,EElr_2)
     g.add_node('ConvEElr', obj=ConvEElr)
-    ConvEErf=convEE('Convert_EE_RF',EErf_1,EErf_2)
+    ConvEErf=convEE('ConvEErf',EErf_1,EErf_2)
     g.add_node('ConvEErf', obj=ConvEErf)
-    ConvEElf=convEE('Convert_EE_LF',EElf_1,EElf_2)
+    ConvEElf=convEE('ConvEElf',EElf_1,EElf_2)
     g.add_node('ConvEElf', obj=ConvEElf)
     
     g.add_edge('StoreEE','DistEE',EE_1=EE_1)
@@ -548,7 +552,7 @@ def initialize():
     
     g.add_edge('ContEErr', 'ConvEEtoMErr', EErr_3=EErr_3)
     g.add_edge('ContEElr', 'ConvEEtoMElr', EElr_3=EElr_3)
-    g.add_edge('ContEErf', 'ConvEEtoMErf', EErr_3=EErf_3)
+    g.add_edge('ContEErf', 'ConvEEtoMErf', EErf_3=EErf_3)
     g.add_edge('ContEElf', 'ConvEEtoMElf', EElf_3=EElf_3)
     
     Airrr=Air('Airrr')
@@ -571,7 +575,7 @@ def initialize():
     g.add_edge('ConvEEtoMElf','ConvMEtoAirlf',MElf=MElf)
     
     DOFs=DOF('DOFs')
-    AffectDOF=affectDOF('AffectDOF',Airrr,Airlf,Airrf,Airlf,DOFs)
+    AffectDOF=affectDOF('AffectDOF',Airrr,Airlr,Airrf,Airlf,DOFs)
     g.add_node('AffectDOF',obj=AffectDOF)
     
     g.add_edge('ConvMEtoAirrr','AffectDOF', Airrr=Airrr)

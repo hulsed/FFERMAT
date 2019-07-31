@@ -18,6 +18,10 @@ scenlist=ffermat.listinitfaults(graph, mdl.times)
 
 
 
-fullresults=ffermat.proplist(mdl)
+#fullresults=ffermat.proplist(mdl)
 
-ffermat.proponefault('CtlDOF', 'nom', mdl, time=40)
+ffermat.proponefault('CtlDOF', 'nom', mdl, time=0)
+
+#ffermat.showgraph(graph.subgraph(['ConvEErf','ContEErf', 'ConvEEtoMErf', 'CtlDOF']))
+
+#ffermat.showgraph(graph.subgraph(['ConvEElf','ContEElf', 'ConvEEtoMElf', 'CtlDOF']))

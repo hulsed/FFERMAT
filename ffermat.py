@@ -107,20 +107,21 @@ def propagate(forward, scen, time):
     n=0
     while activefxns:
         
-        for fxnname in list(activefxns):
+        funclist=list(activefxns).copy()
+        print(funclist)
+        for fxnname in funclist:
             fxn=forward.nodes(data='obj')[fxnname]
-            
             fxn.updatefxn(time=time)
             test=0
             edges=list(forward.in_edges(fxnname))+list(forward.out_edges(fxnname))
             for big, end in edges:
                 flows=forward.edges[big,end]
+                print(flows)
                 for flow in flows:
                     if forward.edges[big, end][flow].status()!=flowhist[big, end, flow]:
                         activefxns.add(big)
                         activefxns.add(end)
                     else:
-                        activefxns.discard(end)
                         test+=1
                     flowhist[big, end, flow]=forward.edges[big, end][flow].status()
                 if test>=tests[fxnname]:
@@ -140,6 +141,8 @@ def findfaultflows(g):
         flows=g.get_edge_data(edge[0],edge[1])
         #flows=list(g.get_edge_data(edge[0],edge[1]).keys())
         for flow in flows:
+            print(flows[flow].name)
+            print(flows[flow].status())
             if flows[flow].status()!=flows[flow].nominal:
                 endflows[flow]=flows[flow].status()
     return endflows
@@ -160,4 +163,14 @@ def findfaults(g):
 def getfxn(fxnname, graph):
     fxn=graph.nodes(data='obj')[fxnname]
     return fxn
+
+def getflow(flowname, g):
+    for edge in g.edges:
+        flows=g.get_edge_data(edge[0],edge[1])
+        #flows=list(g.get_edge_data(edge[0],edge[1]).keys())
+        for flow in flows:
+            if flows[flow].name==flowname:
+                flowobj=flows[flow]
+    return flowobj
+            
 
