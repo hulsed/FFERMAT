@@ -11,8 +11,13 @@ import quad_mdl as mdl
 
 graph=mdl.initialize()
 
-scenlist=ffermat.listinitfaults(graph)
+scenlist=ffermat.listinitfaults(graph, mdl.times)
 
-ffermat.proponefault('ConvEEtoMElr', 'short', mdl)
+#ffermat.proponefault('CtlDOF', 'noctl', mdl)
+#ffermat.proponefault('ConvEEtoMElr', 'short', mdl)
+
+
 
 fullresults=ffermat.proplist(mdl)
+
+ffermat.proponefault('CtlDOF', 'nom', mdl, time=40)

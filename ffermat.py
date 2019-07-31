@@ -28,30 +28,31 @@ def constructnomscen(g):
         nomscen[fxnname]='nom'
     return nomscen
 
-def proponefault(fxnname, faultmode, mdl):
+def proponefault(fxnname, faultmode, mdl, time=0):
     graph=mdl.initialize()
     nomscen=constructnomscen(graph)
     scen=nomscen.copy()
     scen[fxnname]=faultmode
     
-    endflows,endfaults,endclass=runonefault(mdl, graph,scen)
+    endflows,endfaults,endclass=runonefault(mdl, graph,scen, time)
     
     return endflows,endfaults,endclass
 
-def listinitfaults(g):
+def listinitfaults(g, times=[0]):
     faultlist=[]
     fxnnames=list(g.nodes)
     nomscen=constructnomscen(g)
         
     try:
-        for fxnname in fxnnames:
-            fxn=g.nodes(data='obj')[fxnname]
-            modes=fxn.faultmodes
-            
-            for mode in modes:
-                newscen=nomscen.copy()
-                newscen[fxnname]=mode
-                faultlist.append([fxnname,mode, newscen])
+        for time in times:
+            for fxnname in fxnnames:
+                fxn=g.nodes(data='obj')[fxnname]
+                modes=fxn.faultmodes
+                
+                for mode in modes:
+                    newscen=nomscen.copy()
+                    newscen[fxnname]=mode
+                    faultlist.append([fxnname,mode, newscen, time])
     except: 
         print('Incomplete Function Definition, function: '+fxnname)
     return faultlist
@@ -60,28 +61,29 @@ def listinitfaults(g):
 def proplist(mdl):
     
     graph=mdl.initialize()
-    scenlist=listinitfaults(graph)
+    times=mdl.times
+    scenlist=listinitfaults(graph, times)
     fullresults={}
     
-    for [fxnname, mode, scen] in scenlist:
+    for [fxnname, mode, scen, time] in scenlist:
         graph=mdl.initialize()
         
-        endflows,endfaults,endclass=runonefault(mdl, graph,scen)
+        endflows,endfaults,endclass=runonefault(mdl, graph,scen, time)
                
-        fullresults[fxnname, mode]={'flow effects': endflows, 'faults':endfaults}
+        fullresults[fxnname, mode, time]={'flow effects': endflows, 'faults':endfaults}
     return fullresults
 
-def runonefault(mdl, graph,scen):
+def runonefault(mdl, graph,scen, time=0):
 
     #propfaults(forwardgraph)
-    propagate(graph, scen)
+    propagate(graph, scen, time)
     endflows=findfaultflows(graph)
     endfaults=findfaults(graph)
     endclass=mdl.findclassification(graph)
     
     return endflows,endfaults,endclass
 
-def propagate(forward, scen):
+def propagate(forward, scen, time):
 
     fxnnames=list(forward.nodes())
     activefxns=set(fxnnames)
@@ -101,14 +103,14 @@ def propagate(forward, scen):
     for fxnname in scen:
         if scen[fxnname]!='nom':
             fxnobj=forward.nodes(data='obj')[fxnname]
-            fxnobj.updatefxn(faults=[scen[fxnname]])
-    
+            fxnobj.updatefxn(faults=[scen[fxnname]], time=time)
+    n=0
     while activefxns:
-        n=0
+        
         for fxnname in list(activefxns):
             fxn=forward.nodes(data='obj')[fxnname]
-                      
-            fxn.updatefxn()
+            
+            fxn.updatefxn(time=time)
             test=0
             edges=list(forward.in_edges(fxnname))+list(forward.out_edges(fxnname))
             for big, end in edges:
@@ -123,11 +125,12 @@ def propagate(forward, scen):
                     flowhist[big, end, flow]=forward.edges[big, end][flow].status()
                 if test>=tests[fxnname]:
                     activefxns.discard(fxnname)
-            n+=1
-            if n>1000:
-                print("Undesired looping in function")
-                print(scen)
-                break
+        n+=1
+        if n>1000:
+            print("Undesired looping in function")
+            print(scen)
+            print(fxnname)
+            break
     return
 
 #extract non-nominal flow paths

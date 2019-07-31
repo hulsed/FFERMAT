@@ -10,6 +10,8 @@ import numpy as np
 
 import auxfunctions as aux
 
+times=[0,10,20,30,40,50]
+
 ##Define flows for model
 class EE:
     def __init__(self,name):
@@ -21,7 +23,7 @@ class EE:
         self.act=1.0
         self.nominal={'rate':1.0, 'effort':1.0,'int':1.0, 'act':1.0}
     def status(self):
-        status={'rate':self.rate, 'effort':self.effort, 'int':1.0, 'act': 1.0}
+        status={'rate':self.rate, 'effort':self.effort, 'int':self.int, 'act': self.act}
         return status.copy() 
 
 class ME:
@@ -34,7 +36,7 @@ class ME:
         self.act=1.0
         self.nominal={'rate':1.0, 'effort':1.0,'int':1.0, 'act':1.0}
     def status(self):
-        status={'rate':self.rate, 'effort':self.effort, 'int':1.0, 'act': 1.0}
+        status={'rate':self.rate, 'effort':self.effort, 'int':self.int, 'act': self.act}
         return status.copy() 
 class Air:
     def __init__(self,name):
@@ -46,7 +48,7 @@ class Air:
         self.act=1.0
         self.nominal={'rate':1.0, 'effort':1.0,'int':1.0, 'act':1.0}
     def status(self):
-        status={'rate':self.rate, 'effort':self.effort, 'int':1.0, 'act': 1.0}
+        status={'rate':self.rate, 'effort':self.effort, 'int':self.int, 'act': self.act}
         return status.copy() 
 
 class Sig:
@@ -64,14 +66,54 @@ class DOF:
     def __init__(self,name):
         self.flowtype='DOF'
         self.name=name
-        self.elev=1.0
         self.stab=1.0
         self.vertvel=1.0
         self.planvel=1.0
-        self.nominal={'elev':1.0, 'stab':1.0, 'vertvel':1.0, 'planvel':1.0}
+        self.nominal={'stab':1.0, 'vertvel':1.0, 'planvel':1.0}
     def status(self):
-        status={'elev':self.elev, 'stab':self.stab, 'vertvel':self.vertvel, 'planvel':self.planvel}
+        status={'stab':self.stab, 'vertvel':self.vertvel, 'planvel':self.planvel}
         return status.copy() 
+
+class Env:
+    def __init__(self,name):
+        self.flowtype='DOF'
+        self.name=name
+        self.elev=0.0
+        self.x=0.0
+        self.y=0.0
+        self.start=[0.0,0.0]
+        self.flyelev=30
+        self.poi_center=[0,150]
+        self.poi_xw=50
+        self.poi_yw=50
+        self.poi_area=aux.square(self.poi_center, self.poi_xw, self.poi_yw)
+        self.dang_center=[0,150]
+        self.dang_xw=150
+        self.dang_yw=150
+        self.dang_area=aux.square(self.dang_center, self.dang_xw, self.dang_yw)
+        self.safe1_center=[-25,100]
+        self.safe1_xw=10
+        self.safe1_yw=10
+        self.safe1_area=aux.square(self.safe1_center, self.safe1_xw, self.safe1_yw)
+        self.safe2_center=[25,50]
+        self.safe2_xw=10
+        self.safe2_yw=10
+        self.safe2_area=aux.square(self.safe2_center, self.safe2_xw, self.safe2_yw)
+        self.nominal={'elev':1.0, 'x':1.0, 'y':1.0}
+    def status(self):
+        status={'elev':self.elev, 'x':self.x, 'y':self.y}
+        return status.copy()
+
+class Direc:
+    def __init__(self,name):
+        self.flowtype='Dir'
+        self.name=name
+        self.traj=[0,0,0]
+        self.power=1
+        self.nominal={'x': self.traj[0], 'y': self.traj[1], 'z': self.traj[2], 'power': 1}
+    def status(self):
+        status={'x': self.traj[0], 'y': self.traj[1], 'z': self.traj[2], 'power': self.power}
+        return status.copy()
 
 class storeEE:
     def __init__(self, name,EEout):
@@ -206,6 +248,7 @@ class contEE:
             self.faults.add('faildn')
     def behavior(self):
         if self.faults.intersection(set(['short'])):
+            self.elecstate=0.0
             self.EEin.rate=np.inf
             self.EEout.effort=0.0
             self.EEout.act=0.0
@@ -217,7 +260,7 @@ class contEE:
             self.EEout.effort=0.5
             self.EEout.act=0.5
         elif self.faults.intersection(set(['failup'])):
-            self.EEout.act=np.inf
+            self.EEout.act=4.0
         elif self.faults.intersection(set(['faildn'])):
             self.EEout.act=0.0
         elif self.faults.intersection(set(['degup'])):
@@ -228,6 +271,7 @@ class contEE:
             self.EEin.rate=self.EEout.rate
             self.EEout.act=self.Sigin.act
         self.EEout.int=self.Sigin.int
+        self.EEout.effort=self.EEin.effort*self.Sigin.act
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
         self.faults.update(faults)
         self.condfaults()
@@ -339,6 +383,87 @@ class affectDOF:
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
         self.behavior(time)
         return 
+    
+class ctlDOF:
+    def __init__(self, name, Dir, Ctlrr, Ctllr, Cltrf, Ctllf, DOFs):
+        self.type='classifier'
+        self.Ctlrr=Ctlrr
+        self.Ctllr=Ctllr
+        self.Cltrf=Cltrf
+        self.Ctllf=Ctllf
+        self.Dir=Dir
+        self.DOFs=DOFs
+        self.ctlstate=1.0
+        self.faultmodes={'noctl':{'rate':'rare', 'rcost':'high'}, \
+                         'degctl':{'rate':'rare', 'rcost':'high'}}
+        self.faults=set(['nom'])
+    def behavior(self, time):
+        if self.faults.intersection(set(['noctl'])):
+            self.ctlstate=0.0
+        elif self.faults.intersection(set(['degctl'])):
+            self.ctlstate=0.5
+        
+        upthrottle=1.0
+        if self.Dir.traj[2]>=1:
+            upthrottle=2.0
+        elif self.Dir.traj[2]==0:
+            upthrottle=1.0
+        elif self.Dir.traj[2]<=1:
+            upthrottle=0.5
+            
+        if self.Dir.traj[2]==0 and self.Dir.traj[1]==0:
+            forwardthrottle=1.0
+        else:
+            forwardthrottle=2.0
+        
+        pwr=self.Dir.power
+        self.Ctlrr.int=upthrottle*forwardthrottle*pwr
+        self.Ctllr.int=upthrottle*forwardthrottle*pwr
+        self.Cltrf.int=upthrottle/forwardthrottle*pwr
+        self.Ctllf.int=upthrottle/forwardthrottle*pwr
+        
+        self.Ctlrr.act=self.ctlstate*upthrottle*forwardthrottle*pwr
+        self.Ctllr.act=self.ctlstate*upthrottle*forwardthrottle*pwr
+        self.Cltrf.act=self.ctlstate*upthrottle/forwardthrottle*pwr
+        self.Ctllf.act=self.ctlstate*upthrottle/forwardthrottle*pwr
+    def updatefxn(self,faults=['nom'],opermode=[], time=0):
+        self.faults.update(faults)
+        self.behavior(time)
+
+class planpath:
+    def __init__(self, name, Env, Dir):
+        self.type='classifier'
+        self.Env=Env
+        self.Dir=Dir
+
+        self.faultmodes={'noloc':{'rate':'rare', 'rcost':'high'}, \
+                         'degloc':{'rate':'rare', 'rcost':'high'}}
+        self.faults=set(['nom'])
+    def behavior(self, t):
+        if self.faults.intersection(set(['noloc'])):
+            self.Dir.traj=[0,0,0]
+        elif self.faults.intersection(set(['degloc'])):
+            self.Dir.traj=[0,0,-1]
+        
+        if t>40:
+            self.Dir.power=0
+        elif t<1:
+            self.Dir.power=0
+        else:
+            self.Dir.power=1
+
+        if t>=30:
+            self.Dir.traj=[0,0,-1]
+        elif t>=20:
+            self.Dir.traj=[0,-1,0]
+        elif t>=10:
+            self.Dir.traj=[0,1,0]
+        elif t>=0:
+            self.Dir.traj=[0,0,1]
+    def updatefxn(self,faults=['nom'],opermode=[], time=0):
+        self.faults.update(faults)
+        self.behavior(time)
+
 ##future: try to automate this part so you don't have to do it in a wierd order
 def initialize():
     
@@ -454,9 +579,24 @@ def initialize():
     g.add_edge('ConvMEtoAirrf', 'AffectDOF', Airrf=Airrf)
     g.add_edge('ConvMEtoAirlf', 'AffectDOF', Airlf=Airlf)
     
+    Dir1=Direc('Dir1')
+    CtlDOF=ctlDOF('CtlDOF',Dir1, Sigrr_1, Siglr_1, Sigrf_1, Siglf_1, DOFs)
+    g.add_node('CtlDOF', obj=CtlDOF)
+    g.add_edge('CtlDOF','ContEErr', Sigrr_1=Sigrr_1)
+    g.add_edge('CtlDOF','ContEElr', Siglr_1=Siglr_1)
+    g.add_edge('CtlDOF','ContEErf', Sigrf_1=Sigrf_1)
+    g.add_edge('CtlDOF','ContEElf', Siglf_1=Siglf_1)
+    
+    Env1=Env('Env1')
+    Planpath=planpath('Planpath',Env1,Dir1)
+    g.add_node('Planpath', obj=Planpath)
+    g.add_edge('Planpath','CtlDOF', Dir1=Dir1)
     
     return g
 
+#def environment(DOF,t):
+#    if DOF.stab
+    
 def findclassification(forwardgraph):
     endclass=1.0
     return endclass

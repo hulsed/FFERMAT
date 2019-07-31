@@ -52,5 +52,18 @@ def rlc(x):
         y='Center'
     return y
 
+def square(center,xw,yw):
+    square=[[center[0]-xw/2,center[1]-yw/2],\
+            [center[0]+xw/2,center[1]-yw/2], \
+            [center[0]+xw/2,center[1]+yw/2],\
+            [center[0]-xw/2,center[1]+yw/2]]
+    return square
 
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
+
+def inrange(area, x, y):
+    point=Point(x,y)
+    polygon=Polygon(area)
+    return polygon.contains(point)
 
