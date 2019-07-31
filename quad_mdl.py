@@ -10,7 +10,7 @@ import numpy as np
 
 import auxfunctions as aux
 
-times=[0,10,20,30,40,50]
+times=[0]
 
 ##Define flows for model
 class EE:

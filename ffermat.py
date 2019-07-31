@@ -52,7 +52,8 @@ def listinitfaults(g, times=[0]):
                 for mode in modes:
                     newscen=nomscen.copy()
                     newscen[fxnname]=mode
-                    faultlist.append([fxnname,mode, newscen, time])
+                    timerange=[time,times[-1]]
+                    faultlist.append([fxnname,mode, newscen, timerange])
     except: 
         print('Incomplete Function Definition, function: '+fxnname)
     return faultlist
@@ -65,18 +66,19 @@ def proplist(mdl):
     scenlist=listinitfaults(graph, times)
     fullresults={}
     
-    for [fxnname, mode, scen, time] in scenlist:
+    for [fxnname, mode, scen, timerange] in scenlist:
         graph=mdl.initialize()
         
-        endflows,endfaults,endclass=runonefault(mdl, graph,scen, time)
+        endflows,endfaults,endclass=runonefault(mdl, graph,scen, timerange)
                
-        fullresults[fxnname, mode, time]={'flow effects': endflows, 'faults':endfaults}
+        fullresults[fxnname, mode, timerange[0]]={'flow effects': endflows, 'faults':endfaults}
     return fullresults
 
-def runonefault(mdl, graph,scen, time=0):
 
-    #propfaults(forwardgraph)
-    propagate(graph, scen, time)
+def runonefault(mdl, graph,scen, timerange=[0]):
+    for time in range(timerange[0], timerange[-1]+1):
+        propagate(graph, scen, time)
+        
     endflows=findfaultflows(graph)
     endfaults=findfaults(graph)
     endclass=mdl.findclassification(graph)
@@ -108,7 +110,6 @@ def propagate(forward, scen, time):
     while activefxns:
         
         funclist=list(activefxns).copy()
-        print(funclist)
         for fxnname in funclist:
             fxn=forward.nodes(data='obj')[fxnname]
             fxn.updatefxn(time=time)
@@ -116,7 +117,6 @@ def propagate(forward, scen, time):
             edges=list(forward.in_edges(fxnname))+list(forward.out_edges(fxnname))
             for big, end in edges:
                 flows=forward.edges[big,end]
-                print(flows)
                 for flow in flows:
                     if forward.edges[big, end][flow].status()!=flowhist[big, end, flow]:
                         activefxns.add(big)
@@ -141,8 +141,6 @@ def findfaultflows(g):
         flows=g.get_edge_data(edge[0],edge[1])
         #flows=list(g.get_edge_data(edge[0],edge[1]).keys())
         for flow in flows:
-            print(flows[flow].name)
-            print(flows[flow].status())
             if flows[flow].status()!=flows[flow].nominal:
                 endflows[flow]=flows[flow].status()
     return endflows
