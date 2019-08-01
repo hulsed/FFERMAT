@@ -73,15 +73,28 @@ class DOF:
     def status(self):
         status={'stab':self.stab, 'vertvel':self.vertvel, 'planvel':self.planvel}
         return status.copy() 
+class Land:
+    def __init__(self,name):
+        self.flowtype='Land'
+        self.name=name
+        self.status='landed'
+        self.area='start'
+        self.nominal={'status':'landed', 'area':'start'}
+    def status(self):
+        status={'status':self.status, 'area':self.area}
+        return status.copy() 
 
 class Env:
     def __init__(self,name):
-        self.flowtype='DOF'
+        self.flowtype='Env'
         self.name=name
         self.elev=0.0
         self.x=0.0
         self.y=0.0
         self.start=[0.0,0.0]
+        self.start_xw=5
+        self.start_yw=5
+        self.start_area=aux.square(self.start,self.start_xw, self.start_yw)
         self.flyelev=30
         self.poi_center=[0,150]
         self.poi_xw=50
@@ -435,7 +448,7 @@ class ctlDOF:
 
 class planpath:
     def __init__(self, name, Env, Dir):
-        self.type='classifier'
+        self.type='function'
         self.Env=Env
         self.Dir=Dir
 
@@ -466,6 +479,51 @@ class planpath:
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
         self.faults.update(faults)
         self.behavior(time)
+
+class trajectory:
+    def __init__(self, name, Env, DOF, Land, Dir):
+        self.type='dynamics'
+        self.Env=Env
+        self.DOF=DOF
+        self.Land=Land
+        self.Dir=Dir
+        self.lasttime=0
+        self.faultmodes={'nom':{'rate':'common', 'rcost':'NA'}}
+        self.faults=set(['nom'])
+    def condfaults(self):
+        if self.Env.elev<=0:
+            if  self.DOF.vertvel>5:
+                self.Land.status='majorcrash'
+            elif self.DOF.planvel>5:
+                self.Land.status='majorcrash'
+            elif self.DOF.stab<0.5:
+                self.Land.status='minorcrash'
+            else:
+                self.Land.status='landed'
+            
+            if  aux.inrange(self.Env.start_area, self.Env.x, self.Env.y):
+                self.Land.area='nominal'
+            elif aux.inrange(self.Env.safe1_area, self.Env.x, self.Env.y) or aux.inrange(self.Env.safe2_area, self.Env.x, self.Env.y):
+                self.Land.area='nonnominal_safe'
+            elif aux.inrange(self.Env.dang_area, self.Env.x, self.Env.y):
+                self.Land.area='nonnominal_dangerous'
+            else:
+                self.Land.area='nonnominal_unsanctioned'
+        else:
+            self.Land.status='flying'
+            self.Land.area='NA'
+    def behavior(self):
+        if self.DOF.stab<0.5:
+            self.DOF.vertvel=-10
+            self.DOF.planvel=3
+        self.Env.elev=self.Env.elev+self.DOF.vertvel
+        self.Env.x=self.Env.x*self.DOF.planvel*self.Dir.traj[0]
+        self.Env.y=self.Env.y*self.DOF.planvel*self.Dir.traj[1]
+    def updatefxn(self,faults=['nom'],opermode=[], time=0):
+        if time>self.lasttime:
+            self.behavior()
+            self.lasttime=time
+        self.condfaults()
 
 ##future: try to automate this part so you don't have to do it in a wierd order
 def initialize():
@@ -596,6 +654,12 @@ def initialize():
     g.add_node('Planpath', obj=Planpath)
     g.add_edge('Planpath','CtlDOF', Dir1=Dir1)
     
+    Land1=Land('Land')
+    Trajectory=trajectory('Trajectory',Env1,DOFs,Land1,Dir1)
+    g.add_node('Trajectory', obj=Trajectory)
+    g.add_edge('Trajectory','AffectDOF',DOFS=DOFs)
+    g.add_edge('Planpath', 'Trajectory', Dir1=Dir1, Env1=Env1)
+    
     return g
 
 #def environment(DOF,t):
@@ -603,4 +667,6 @@ def initialize():
     
 def findclassification(forwardgraph):
     endclass=1.0
+    
+    
     return endclass

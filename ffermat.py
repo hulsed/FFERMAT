@@ -74,7 +74,6 @@ def proplist(mdl):
         fullresults[fxnname, mode, timerange[0]]={'flow effects': endflows, 'faults':endfaults}
     return fullresults
 
-
 def runonefault(mdl, graph,scen, timerange=[0]):
     for time in range(timerange[0], timerange[-1]+1):
         propagate(graph, scen, time)
