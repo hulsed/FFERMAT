@@ -5,9 +5,9 @@ Created on Tue Jul 30 14:41:50 2019
 @author: dhulse
 """
 
-#import PyGnuplot as gp
+import PyGnuplot as gp
 
-from mayavi import mlab
+#from mayavi import mlab
 import numpy as np
 
 import matplotlib.pyplot as plt

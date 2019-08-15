@@ -34,7 +34,7 @@ def proponefault(fxnname, faultmode, mdl, time=0):
     scen=nomscen.copy()
     scen[fxnname]=faultmode
     
-    endflows,endfaults,endclass=runonefault(mdl, graph,scen, time)
+    endflows,endfaults,endclass=runonefault(mdl, graph,scen, [time])
     
     return endflows,endfaults,endclass
 
@@ -107,7 +107,6 @@ def propagate(forward, scen, time):
             fxnobj.updatefxn(faults=[scen[fxnname]], time=time)
     n=0
     while activefxns:
-        
         funclist=list(activefxns).copy()
         for fxnname in funclist:
             fxn=forward.nodes(data='obj')[fxnname]

@@ -7,18 +7,20 @@ Created on Mon Jul 29 10:29:45 2019
 
 import ffermat
 #import pumpmodel
-import quad_mdl as mdl
+import quad_mdl2 as mdl
 
 graph=mdl.initialize()
 
-scenlist=ffermat.listinitfaults(graph, mdl.times)
+#scenlist=ffermat.listinitfaults(graph, mdl.times)
+
+ffermat.proponefault('CtlDOF', 'nom', mdl)
 
 #ffermat.proponefault('CtlDOF', 'noctl', mdl)
 #ffermat.proponefault('ConvEEtoMElr', 'short', mdl)
 
+ffermat.showgraph(graph)
 
-
-fullresults=ffermat.proplist(mdl)
+#fullresults=ffermat.proplist(mdl)
 
 #ffermat.proponefault('CtlDOF', 'nom', mdl, time=0)
 
