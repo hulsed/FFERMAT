@@ -4,6 +4,7 @@ Created on Tue Dec 11 09:38:35 2018
 
 @author: Daniel Hulse
 """
+import pydot
 import pprint
 import sys
 import networkx as nx
@@ -16,8 +17,13 @@ def showgraph(g):
         flows=list(g.get_edge_data(edge[0],edge[1]).keys())
         labels[edge[0],edge[1]]=flows
     
-    pos=nx.spring_layout(g)
-    nx.draw_networkx(g,pos)
+    
+    pos=nx.shell_layout(g)
+    #add ability to color failed nodes?
+    #also ability to color failed edges
+    #and ability to label modes/values
+    nx.draw_networkx(g,pos,node_size=2000,node_shape='s', node_color='g', \
+                     width=3, font_weight='bold')
     nx.draw_networkx_edge_labels(g,pos,edge_labels=labels)
     plt.show()
     

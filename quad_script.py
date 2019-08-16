@@ -11,6 +11,11 @@ import quad_mdl2 as mdl
 
 graph=mdl.initialize()
 
+import plotly.graph_objects as go
+
+
+
+
 #scenlist=ffermat.listinitfaults(graph, mdl.times)
 
 ffermat.proponefault('CtlDOF', 'nom', mdl)
@@ -20,7 +25,7 @@ ffermat.proponefault('CtlDOF', 'nom', mdl)
 
 ffermat.showgraph(graph)
 
-#fullresults=ffermat.proplist(mdl)
+fullresults=ffermat.proplist(mdl)
 
 #ffermat.proponefault('CtlDOF', 'nom', mdl, time=0)
 
