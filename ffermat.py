@@ -11,7 +11,7 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
-def showgraph(g):
+def showgraph(g, nomg=[]):
     labels=dict()
     for edge in g.edges:
         flows=list(g.get_edge_data(edge[0],edge[1]).keys())
@@ -23,17 +23,17 @@ def showgraph(g):
     #also ability to color failed edges
     #and ability to label modes/values
     
-    faults=findfaults(g)
     
-    
-    
-    faultflows,faultedges=findfaultflows(g)
     
     nx.draw_networkx(g,pos,node_size=2000,node_shape='s', node_color='g', \
                      width=3, font_weight='bold')
-    nx.draw_networkx_nodes(g, pos, nodelist=faults.keys(),node_color = 'r',\
-                           node_shape='s',width=3, font_weight='bold', node_size = 2000)
-    nx.draw_networkx_edges(g,pos,edgelist=faultedges.keys(), edge_color='r', width=2)
+    
+    if nomg:
+        faults=findfaults(g)   
+        faultflows,faultedges=findfaultflows(g, nomg)
+        nx.draw_networkx_nodes(g, pos, nodelist=faults.keys(),node_color = 'r',\
+                               node_shape='s',width=3, font_weight='bold', node_size = 2000)
+        nx.draw_networkx_edges(g,pos,edgelist=faultedges.keys(), edge_color='r', width=2)
     
     #nx.draw_networkx(g,pos,node_size=2000,node_shape='s', node_color='g', \
     #                 width=3, font_weight='bold')
@@ -41,7 +41,9 @@ def showgraph(g):
     #                 width=3, font_weight='bold')
     
     nx.draw_networkx_edge_labels(g,pos,edge_labels=labels)
-    nx.draw_networkx_edge_labels(g,pos,edge_labels=faultedges, font_color='r')
+    
+    if nomg:
+        nx.draw_networkx_edge_labels(g,pos,edge_labels=faultedges, font_color='r')
     plt.show()
     
 def constructnomscen(g):
@@ -57,9 +59,10 @@ def proponefault(fxnname, faultmode, mdl, time=0):
     scen=nomscen.copy()
     scen[fxnname]=faultmode
     
-    endflows,endfaults,endclass=runonefault(mdl, graph,scen, [time])
+    nomgraph=runnom(mdl,[time])
+    endflows,endfaults,endclass=runonefault(mdl, graph,nomgraph, scen, [time])
     
-    return endflows,endfaults,endclass,graph
+    return endflows,endfaults,endclass,graph,nomgraph
 
 def listinitfaults(g, times=[0]):
     faultlist=[]
@@ -87,21 +90,32 @@ def proplist(mdl):
     graph=mdl.initialize()
     times=mdl.times
     scenlist=listinitfaults(graph, times)
-    fullresults={}
+    fullresults={} 
     
     for [fxnname, mode, scen, timerange] in scenlist:
+        
+        nomgraph=runnom(mdl,timerange)
         graph=mdl.initialize()
         
-        endflows,endfaults,endclass=runonefault(mdl, graph,scen, timerange)
+        endflows,endfaults,endclass=runonefault(mdl, graph, nomgraph, scen, timerange)
                
         fullresults[fxnname, mode, timerange[0]]={'flow effects': endflows, 'faults':endfaults}
     return fullresults
 
-def runonefault(mdl, graph,scen, timerange=[0]):
+def runnom(mdl, timerange=[0]):
+    nomgraph=mdl.initialize()
+    nomscen=constructnomscen(nomgraph)
+    
+    for time in range(timerange[0], timerange[-1]+1):
+        propagate(nomgraph, nomscen, time)
+    
+    return nomgraph
+
+def runonefault(mdl, graph, nomgraph, scen, timerange=[0]):
     for time in range(timerange[0], timerange[-1]+1):
         propagate(graph, scen, time)
         
-    endflows=findfaultflows(graph)
+    endflows=findfaultflows(graph,nomgraph)
     endfaults=findfaults(graph)
     endclass=mdl.findclassification(graph)
     
@@ -156,15 +170,16 @@ def propagate(forward, scen, time):
     return
 
 #extract non-nominal flow paths
-def findfaultflows(g):
+def findfaultflows(g, nomg):
     endflows=dict()
     endedges=dict()
     for edge in g.edges:
         flows=g.get_edge_data(edge[0],edge[1])
+        nomflows=nomg.get_edge_data(edge[0],edge[1])
         #flows=list(g.get_edge_data(edge[0],edge[1]).keys())
         flowedges=[]
         for flow in flows:
-            if flows[flow].status()!=flows[flow].nominal:
+            if flows[flow].status()!=nomflows[flow].status():
                 endflows[flow]=flows[flow].status()
                 flowedges=flowedges+[flow]
         if flowedges:

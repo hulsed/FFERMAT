@@ -18,15 +18,20 @@ import plotly.graph_objects as go
 
 #scenlist=ffermat.listinitfaults(graph, mdl.times)
 
-endflows,endfaults,endclass,endgraph=ffermat.proponefault('CtlDOF', 'short', mdl)
+
+#Check various scenarios individually
+endflows,endfaults,endclass,endgraph,nomgraph=ffermat.proponefault('AffectDOF', 'RFshort', mdl)
+ffermat.showgraph(endgraph,nomgraph)
 
 ffermat.findfaults(endgraph)
-ffermat.findfaultflows(endgraph)
+ffermat.findfaultflows(endgraph, nomgraph)
+
+ffermat.showgraph(graph,graph)
 
 #ffermat.proponefault('CtlDOF', 'noctl', mdl)
 #ffermat.proponefault('ConvEEtoMElr', 'short', mdl)
 
-ffermat.showgraph(graph)
+
 
 #fullresults=ffermat.proplist(mdl)
 

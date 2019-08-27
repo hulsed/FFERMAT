@@ -19,11 +19,8 @@ class EE:
         self.name=name
         self.rate=1.0
         self.effort=1.0
-        self.int=1.0
-        self.act=1.0
-        self.nominal={'rate':1.0, 'effort':1.0,'int':1.0, 'act':1.0}
     def status(self):
-        status={'rate':self.rate, 'effort':self.effort, 'int':self.int, 'act': self.act}
+        status={'rate':self.rate, 'effort':self.effort}
         return status.copy() 
 
 class ME:
@@ -32,11 +29,9 @@ class ME:
         self.name=name
         self.rate=1.0
         self.effort=1.0
-        self.int=1.0
-        self.act=1.0
-        self.nominal={'rate':1.0, 'effort':1.0,'int':1.0, 'act':1.0}
+        self.nominal={'rate':1.0, 'effort':1.0}
     def status(self):
-        status={'rate':self.rate, 'effort':self.effort, 'int':self.int, 'act': self.act}
+        status={'rate':self.rate, 'effort':self.effort}
         return status.copy() 
 
 class Sig:
@@ -179,6 +174,7 @@ class distEE:
     def behavior(self, time):
         if self.faults.intersection(set(['short'])):
             self.ratestate=np.inf
+            self.effstate=0.0
         elif self.faults.intersection(set(['break'])):
             self.effstate=0.0
         elif self.faults.intersection(set(['degr'])):
@@ -187,7 +183,7 @@ class distEE:
         self.EEmot.effort=self.effstate*self.EEin.effort
         self.EEctl.effort=self.effstate*self.EEin.effort
         
-        self.EEin.rate=max(self.EEmot.rate,self.EEctl.rate)
+        self.EEin.rate=aux.m2to1([ self.EEin.effort, self.ratestate, max(self.EEmot.rate,self.EEctl.rate)])
         
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
         self.faults.update(faults)
@@ -215,6 +211,7 @@ class affectDOF:
         self.faults={'nom'}
     def behavior(self, time):
         Air={}
+        EEin={}
         #injects faults into lines
         for lin in self.lines:
             for fault in self.faults:
@@ -222,7 +219,14 @@ class affectDOF:
                     lin.faults.update([fault])
             lin.behavior(self.EEin.effort, self.Ctlin.int)
             Air[lin.name]=lin.Airout
-            #remember to add in way for EE to propogate back
+            EEin[lin.name]=lin.EE_in
+        
+        if any(value==np.inf for value in EEin.values()):
+            self.EEin.rate=np.inf
+        elif any(value!=0.0 for value in EEin.values()):
+            self.EEin.rate=np.max(list(EEin.values()))
+        else:
+            self.EEin.rate=0.0
         
         if all(value==1.0 for value in Air.values()):
             self.DOF.stab=1.0
@@ -290,7 +294,7 @@ class line:
             self.propstate=0.5
         
         self.Airout=aux.m2to1([EEin,self.elecstate,Ctlin,self.ctlstate,self.mechstate,self.propstate])
-        self.EE_in=self.elecstate_in     
+        self.EE_in=aux.m2to1([EEin,self.elecstate_in])     
     
 class ctlDOF:
     def __init__(self, name,EEin, Dir, Ctl, DOFs):
