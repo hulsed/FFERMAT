@@ -22,9 +22,26 @@ def showgraph(g):
     #add ability to color failed nodes?
     #also ability to color failed edges
     #and ability to label modes/values
+    
+    faults=findfaults(g)
+    
+    
+    
+    faultflows,faultedges=findfaultflows(g)
+    
     nx.draw_networkx(g,pos,node_size=2000,node_shape='s', node_color='g', \
                      width=3, font_weight='bold')
+    nx.draw_networkx_nodes(g, pos, nodelist=faults.keys(),node_color = 'r',\
+                           node_shape='s',width=3, font_weight='bold', node_size = 2000)
+    nx.draw_networkx_edges(g,pos,edgelist=faultedges.keys(), edge_color='r', width=2)
+    
+    #nx.draw_networkx(g,pos,node_size=2000,node_shape='s', node_color='g', \
+    #                 width=3, font_weight='bold')
+    #nx.draw_networkx(g,pos,node_size=2000,node_shape='s', node_color='g', \
+    #                 width=3, font_weight='bold')
+    
     nx.draw_networkx_edge_labels(g,pos,edge_labels=labels)
+    nx.draw_networkx_edge_labels(g,pos,edge_labels=faultedges, font_color='r')
     plt.show()
     
 def constructnomscen(g):
@@ -42,7 +59,7 @@ def proponefault(fxnname, faultmode, mdl, time=0):
     
     endflows,endfaults,endclass=runonefault(mdl, graph,scen, [time])
     
-    return endflows,endfaults,endclass
+    return endflows,endfaults,endclass,graph
 
 def listinitfaults(g, times=[0]):
     faultlist=[]
@@ -141,13 +158,19 @@ def propagate(forward, scen, time):
 #extract non-nominal flow paths
 def findfaultflows(g):
     endflows=dict()
+    endedges=dict()
     for edge in g.edges:
         flows=g.get_edge_data(edge[0],edge[1])
         #flows=list(g.get_edge_data(edge[0],edge[1]).keys())
+        flowedges=[]
         for flow in flows:
             if flows[flow].status()!=flows[flow].nominal:
                 endflows[flow]=flows[flow].status()
-    return endflows
+                flowedges=flowedges+[flow]
+        if flowedges:
+            endedges[edge]=flowedges
+            
+    return endflows, endedges
 
 #generates lists of faults present
 def findfaults(g):
