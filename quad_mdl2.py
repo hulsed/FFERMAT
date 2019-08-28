@@ -305,7 +305,7 @@ class line:
     
 class ctlDOF:
     def __init__(self, name,EEin, Dir, Ctl, DOFs):
-        self.type='classifier'
+        self.type='function'
         self.EEin=EEin
         self.Ctl=Ctl
         self.Dir=Dir
@@ -383,33 +383,36 @@ class planpath:
 
 class trajectory:
     def __init__(self, name, Env, DOF, Land, Dir):
-        self.type='dynamics'
+        self.type='environment'
         self.Env=Env
         self.DOF=DOF
         self.Land=Land
         self.Dir=Dir
         self.lasttime=0
-        self.faultmodes={'nom':{'rate':'common', 'rcost':'NA'}}
+        self.faultmodes={'nom':{'rate':'common', 'rcost':'NA'}, \
+                         'majorcrash':{'rate':'rare', 'rcost':'high'},\
+                         'minorcrash':{'rate':'rare', 'rcost':'high'}, \
+                         'degsafe_loc':{'rate':'rare', 'rcost':'high'}, \
+                         'degdang_loc':{'rate':'rare', 'rcost':'high'},\
+                         'degunsanc_loc':{'rate':'rare', 'rcost':'high'}}
         self.faults=set(['nom'])
     def condfaults(self):
         if self.Env.elev<=0:
             if  self.DOF.vertvel>5:
-                self.Land.status='majorcrash'
+                self.faults.add('majorcrash')
             elif self.DOF.planvel>5:
-                self.Land.status='majorcrash'
+                self.faults.add('majorcrash')
             elif self.DOF.stab<0.5:
-                self.Land.status='minorcrash'
-            else:
-                self.Land.status='landed'
+                self.faults.add('minorcrash')
             
             if  aux.inrange(self.Env.start_area, self.Env.x, self.Env.y):
-                self.Land.area='nominal'
+                a=1
             elif aux.inrange(self.Env.safe1_area, self.Env.x, self.Env.y) or aux.inrange(self.Env.safe2_area, self.Env.x, self.Env.y):
-                self.Land.area='nonnominal_safe'
+                self.faults.add('degsafe_loc')
             elif aux.inrange(self.Env.dang_area, self.Env.x, self.Env.y):
-                self.Land.area='nonnominal_dangerous'
+                self.faults.add('degdang_loc')
             else:
-                self.Land.area='nonnominal_unsanctioned'
+                self.faults.add('degunsanc_loc')
         else:
             self.Land.status='flying'
             self.Land.area='NA'
