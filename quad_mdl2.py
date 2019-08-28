@@ -465,8 +465,34 @@ def initialize():
 #def environment(DOF,t):
 #    if DOF.stab
     
-def findclassification(forwardgraph):
-    endclass=1.0
+def findclassification(g):
+    
+    #need to add means of giving fault
+    Trajectory.Land.status=1.0
+    Trajectory.Land.status=1.0
+    
+    if Trajectory.Land.status=='majorcrash':
+        land=1000
+    elif Trajectory.Land.status=='minorcrash':
+        land= 200
+    elif Trajectory.Land.status=='minorcrash':
+        land=1
+    else:
+        land=np.nan
+    
+    if Trajectory.Land.area=='nominal':
+        area=1
+    elif Trajectory.Land.area=='nonnominal_safe':
+        area=10
+    elif Trajectory.Land.area=='nonnominal_dangerous':
+        area=100
+    elif Trajectory.Land.area=='nonnominal_unsanctioned':
+        area=30
+    else:
+        area=np.nan
+        
+        
+    endclass=land*area
     
     
     return endclass

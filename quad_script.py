@@ -26,14 +26,12 @@ ffermat.showgraph(endgraph,nomgraph)
 ffermat.findfaults(endgraph)
 ffermat.findfaultflows(endgraph, nomgraph)
 
-ffermat.showgraph(graph,graph)
-
 #ffermat.proponefault('CtlDOF', 'noctl', mdl)
 #ffermat.proponefault('ConvEEtoMElr', 'short', mdl)
 
 
 
-#fullresults=ffermat.proplist(mdl)
+fullresults=ffermat.proplist(mdl)
 
 #ffermat.proponefault('CtlDOF', 'nom', mdl, time=0)
 
