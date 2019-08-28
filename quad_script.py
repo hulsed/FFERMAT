@@ -20,7 +20,10 @@ import plotly.graph_objects as go
 
 
 #Check various scenarios individually
-endflows,endfaults,endclass,endgraph,nomgraph=ffermat.proponefault('AffectDOF', 'RFshort', mdl)
+endflows, endfaults, endclass, endgraph, nomgraph=ffermat.proponefault('AffectDOF', 'RFpropbreak', mdl, time=1)
+ffermat.showgraph(endgraph,nomgraph)
+
+endflows, endfaults, endclass, endgraph, nomgraph=ffermat.proponefault('StoreEE', 'break', mdl, time=0)
 ffermat.showgraph(endgraph,nomgraph)
 
 ffermat.findfaults(endgraph)

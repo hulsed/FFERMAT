@@ -10,7 +10,8 @@ import numpy as np
 
 import auxfunctions as aux
 
-times=[0,10]
+#Declare time range to run model over
+times=[0,3, 5, 10]
 
 ##Define flows for model
 class EE:
@@ -237,6 +238,12 @@ class affectDOF:
         elif all(value==2.0 for value in Air.values()):
             self.DOF.stab=1.0
             self.DOF.vertacc=1.0
+        elif any(value==0.0 for value in Air.values()):
+            self.DOF.stab=0.0
+            self.DOF.vertacc=-0.5
+        elif any(value==2.0 for value in Air.values()):
+            self.DOF.stab=0.0
+            self.DOF.vertacc=0.5
         #need to expand on this, add directional velocity, etc
         return
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
@@ -410,6 +417,7 @@ class trajectory:
         if self.DOF.stab<0.5:
             self.DOF.vertvel=-10
             self.DOF.planvel=3
+        
         self.Env.elev=self.Env.elev+self.DOF.vertvel
         self.Env.x=self.Env.x*self.DOF.planvel*self.Dir.traj[0]
         self.Env.y=self.Env.y*self.DOF.planvel*self.Dir.traj[1]
@@ -457,7 +465,7 @@ def initialize():
     Land1=Land('Land')
     Trajectory=trajectory('Trajectory',Env1,DOFs,Land1,Dir1)
     g.add_node('Trajectory', obj=Trajectory)
-    g.add_edge('Trajectory','AffectDOF',DOFS=DOFs)
+    g.add_edge('Trajectory','AffectDOF',DOFs=DOFs)
     g.add_edge('Planpath', 'Trajectory', Dir1=Dir1, Env1=Env1)
     
     return g
@@ -468,30 +476,31 @@ def initialize():
 def findclassification(g):
     
     #need to add means of giving fault
-    Trajectory.Land.status=1.0
-    Trajectory.Land.status=1.0
+    #Trajectory.Land.status=1.0
+    #Trajectory.Land.status=1.0
     
-    if Trajectory.Land.status=='majorcrash':
-        land=1000
-    elif Trajectory.Land.status=='minorcrash':
-        land= 200
-    elif Trajectory.Land.status=='minorcrash':
-        land=1
-    else:
-        land=np.nan
-    
-    if Trajectory.Land.area=='nominal':
-        area=1
-    elif Trajectory.Land.area=='nonnominal_safe':
-        area=10
-    elif Trajectory.Land.area=='nonnominal_dangerous':
-        area=100
-    elif Trajectory.Land.area=='nonnominal_unsanctioned':
-        area=30
-    else:
-        area=np.nan
+#    if Trajectory.Land.status=='majorcrash':
+#        land=1000
+#    elif Trajectory.Land.status=='minorcrash':
+#        land= 200
+#    elif Trajectory.Land.status=='minorcrash':
+#        land=1
+#    else:
+#        land=np.nan
+#    
+#    if Trajectory.Land.area=='nominal':
+#        area=1
+#    elif Trajectory.Land.area=='nonnominal_safe':
+#        area=10
+#    elif Trajectory.Land.area=='nonnominal_dangerous':
+#        area=100
+#    elif Trajectory.Land.area=='nonnominal_unsanctioned':
+#        area=30
+#    else:
+#        area=np.nan
         
-        
+    land=1
+    area=1
     endclass=land*area
     
     
