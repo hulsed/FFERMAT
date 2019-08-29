@@ -11,13 +11,15 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
-def plotflowhist(flowhist, fault=''):
+def plotflowhist(flowhist, fault='', time=0):
     for flow in flowhist['faulty']:
         for var in flowhist['faulty'][flow]:
             plt.plot(flowhist['faulty'][flow][var], color='r')
             plt.plot(flowhist['nominal'][flow][var], color='b')
-            plt.legend(['faulty', 'nominal'])
+            plt.axvline(x=time, color='k')
+            plt.legend(['faulty', 'nominal', 'injection time'])
             plt.title('Dynamic Response of '+flow+' '+var+' to fault'+' '+fault)
+            plt.xlabel('Time')
             plt.show()
         
 

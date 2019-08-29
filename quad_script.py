@@ -21,7 +21,7 @@ graph=mdl.initialize()
 endflows, endfaults, endclass, endgraph, nomgraph, flowhist=ffermat.proponefault('StoreEE', 'short', mdl, time=3, track={'DOFs', 'Dir1'})
 ffermat.showgraph(endgraph,nomgraph)
 
-ffermat.plotflowhist(flowhist, 'StoreEE short')
+ffermat.plotflowhist(flowhist, 'StoreEE short', time=3)
 
 ffermat.findfaults(endgraph)
 ffermat.findfaultflows(endgraph, nomgraph)
