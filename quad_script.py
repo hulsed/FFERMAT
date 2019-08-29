@@ -21,7 +21,7 @@ ffermat.showgraph(endgraph,nomgraph)
 
 ffermat.plotflowhist(flowhist, 'StoreEE short', time=3)
 
-endflows, endfaults, endclass, endgraph, nomgraph, flowhist2=ffermat.proponefault('AffectDOF', 'RFpropbreak', mdl, time=5, track={'DOFs', 'Dir1'})
+endflows, endfaults, endclass, endgraph, nomgraph, flowhist2=ffermat.proponefault('AffectDOF', 'RFpropbreak', mdl, time=5, track={'DOFs', 'Env1'})
 ffermat.showgraph(endgraph,nomgraph)
 ffermat.plotflowhist(flowhist2, 'RFpropbreak', time=5)
 

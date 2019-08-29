@@ -11,7 +11,7 @@ import numpy as np
 import auxfunctions as aux
 
 #Declare time range to run model over
-times=[0,3, 5, 10]
+times=[0,3, 5, 50]
 
 ##Define flows for model
 class EE:
@@ -418,13 +418,12 @@ class trajectory:
         if self.DOF.stab<0.5:
             self.DOF.vertvel=-10
             self.DOF.planvel=3
-        elif self.Env.elev>1.0:
+        elif self.Env.elev>=0.0:
             sign=np.sign(self.DOF.vertacc+self.DOF.vertvel+0.001)
             self.DOF.vertvel=min(abs(x) for x in [sign*10.0, self.DOF.vertacc+self.DOF.vertvel])
         elif self.Env.elev==0.0:
             self.DOF.vertvel=0.0
-            
-            
+                
         if self.faults.intersection(set(['majorcrash', 'minorcrash'])):
             self.Env.elev=0.0
         else:
