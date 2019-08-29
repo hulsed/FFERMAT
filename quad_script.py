@@ -18,8 +18,10 @@ graph=mdl.initialize()
 #endflows, endfaults, endclass, endgraph, nomgraph=ffermat.proponefault('AffectDOF', 'RFpropbreak', mdl, time=5)
 #ffermat.showgraph(endgraph,nomgraph)
 
-endflows, endfaults, endclass, endgraph, nomgraph=ffermat.proponefault('StoreEE', 'short', mdl, time=3)
+endflows, endfaults, endclass, endgraph, nomgraph, flowhist=ffermat.proponefault('StoreEE', 'short', mdl, time=3, track={'DOFs', 'Dir1'})
 ffermat.showgraph(endgraph,nomgraph)
+
+ffermat.plotflowhist(flowhist, 'StoreEE short')
 
 ffermat.findfaults(endgraph)
 ffermat.findfaultflows(endgraph, nomgraph)

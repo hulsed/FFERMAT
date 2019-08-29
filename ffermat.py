@@ -11,6 +11,16 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
+def plotflowhist(flowhist, fault=''):
+    for flow in flowhist['faulty']:
+        for var in flowhist['faulty'][flow]:
+            plt.plot(flowhist['faulty'][flow][var], color='r')
+            plt.plot(flowhist['nominal'][flow][var], color='b')
+            plt.legend(['faulty', 'nominal'])
+            plt.title('Dynamic Response of '+flow+' '+var+' to fault'+' '+fault)
+            plt.show()
+        
+
 def showgraph(g, nomg=[]):
     labels=dict()
     for edge in g.edges:
@@ -44,15 +54,15 @@ def constructnomscen(g):
         nomscen[fxnname]='nom'
     return nomscen
 
-def proponefault(fxnname, faultmode, mdl, time=0):
+def proponefault(fxnname, faultmode, mdl, time=0, track={}):
     graph=mdl.initialize()
     nomscen=constructnomscen(graph)
     scen=nomscen.copy()
     scen[fxnname]=faultmode
     
-    endflows, endfaults, endclass,graph,nomgraph =runonefault(mdl, scen, time)
+    endflows, endfaults, endclass,graph,nomgraph, flowhist =runonefault(mdl, scen, time, track)
     
-    return endflows,endfaults,endclass,graph,nomgraph
+    return endflows,endfaults,endclass,graph,nomgraph, flowhist
 
 def listinitfaults(g, times=[0]):
     faultlist=[]
@@ -83,7 +93,7 @@ def proplist(mdl):
     
     for [fxnname, mode, scen, time] in scenlist:
         
-        endflows, endfaults, endclass, graph, nomgraph=runonefault(mdl, scen, time)
+        endflows, endfaults, endclass, graph, nomgraph, flowhist=runonefault(mdl, scen, time)
                
         fullresults[fxnname, mode, time]={'flow effects': endflows, 'faults':endfaults}
     return fullresults
@@ -94,11 +104,20 @@ def classifyresults(mdl,graph,nomgraph):
     endclass=mdl.findclassification(graph)
     return endflows, endfaults, endclass
 
-def runonefault(mdl, scen, time=0):
+def runonefault(mdl, scen, time=0, track={}):
     nomgraph=mdl.initialize()
     nomscen=constructnomscen(nomgraph)
     graph=mdl.initialize()
     timerange=mdl.times
+    flowhist={}
+    if track:
+        for runtype in ['nominal','faulty']:
+            flowhist[runtype]={}
+            for flow in track:
+                flowobj=getflow(flow, graph)
+                flowhist[runtype][flow]=flowobj.status()
+                for var in flowobj.status():
+                    flowhist[runtype][flow][var]=[]
     
     for rtime in range(timerange[0], timerange[-1]+1):
         propagate(nomgraph, nomscen, rtime)
@@ -106,9 +125,16 @@ def runonefault(mdl, scen, time=0):
             propagate(graph, scen, rtime)
         else:
             propagate(graph,nomscen,rtime)
+        if track:
+            for flow in track:
+                flowobj=getflow(flow, graph)
+                nomflowobj=getflow(flow, nomgraph)
+                for var in flowobj.status():
+                    flowhist['nominal'][flow][var]=flowhist['nominal'][flow][var]+[nomflowobj.status()[var]]
+                    flowhist['faulty'][flow][var]=flowhist['faulty'][flow][var]+[flowobj.status()[var]]
             
     endflows, endfaults, endclass = classifyresults(mdl,graph,nomgraph)
-    return endflows, endfaults, endclass, graph, nomgraph
+    return endflows, endfaults, endclass, graph, nomgraph, flowhist
 
 def propagate(forward, scen, time):
 
