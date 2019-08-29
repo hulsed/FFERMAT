@@ -11,7 +11,7 @@ import numpy as np
 import auxfunctions as aux
 
 #Declare time range to run model over
-times=[0,3, 5, 50]
+times=[0,3, 50]
 
 ##Define flows for model
 class EE:
@@ -39,11 +39,10 @@ class Sig:
     def __init__(self,name):
         self.flowtype='Sig'
         self.name=name
-        self.int=1.0
-        self.act=1.0
-        self.nominal={'int':1.0, 'act':1.0}
+        self.forward=0.0
+        self.upward=0.0
     def status(self):
-        status={'int':self.int, 'act':self.act}
+        status={'forward':self.forward, 'upward':self.upward}
         return status.copy() 
 
 class DOF:
@@ -53,9 +52,8 @@ class DOF:
         self.stab=1.0
         self.vertvel=1.0
         self.planvel=1.0
-        self.vertacc=0.0
     def status(self):
-        status={'stab':self.stab, 'vertvel':self.vertvel, 'planvel':self.planvel, 'vertacc':self.vertacc}
+        status={'stab':self.stab, 'vertvel':self.vertvel, 'planvel':self.planvel}
         return status.copy() 
 class Land:
     def __init__(self,name):
@@ -118,7 +116,7 @@ class storeEE:
         self.EEout=EEout
         self.effstate=1.0
         self.ratestate=1.0
-        self.soc=100
+        self.soc=2000
         self.faultmodes={'short':{'rate':'moderate', 'rcost':'major'}, \
                          'degr':{'rate':'moderate', 'rcost':'minor'}, \
                          'break':{'rate':'common', 'rcost':'moderate'}, \
@@ -128,7 +126,7 @@ class storeEE:
     def condfaults(self):
         if self.EEout.rate>2:
             self.faults.add('break')
-        if self.soc<10:
+        if self.soc<20:
             self.faults.add('lowcharge')
         if self.soc<1:
             self.faults.remove('lowcharge')
@@ -205,7 +203,8 @@ class affectDOF:
             LineLR=line('LR')
             LineRR=line('RR')
             self.lines=[LineRF,LineLF,LineLR, LineRR]
-        
+            self.upward=[1,1,1,1]
+            self.forward=[0.5,0.5,-0.5,-0.5]
         for lin in self.lines:
             self.faultmodes.update(lin.faultmodes)  
         self.faults={'nom'}
@@ -217,7 +216,10 @@ class affectDOF:
             for fault in self.faults:
                 if fault in lin.faultmodes:
                     lin.faults.update([fault])
-            lin.behavior(self.EEin.effort, self.Ctlin.int)
+            
+            ind=self.lines.index(lin)
+            cmds={'up':self.upward[ind], 'for':self.forward[ind]}
+            lin.behavior(self.EEin.effort, self.Ctlin, cmds)
             Air[lin.name]=lin.Airout
             EEin[lin.name]=lin.EE_in
         
@@ -228,21 +230,27 @@ class affectDOF:
         else:
             self.EEin.rate=0.0
         
+        velocity=5
+        
         if all(value==1.0 for value in Air.values()):
             self.DOF.stab=1.0
-            self.DOF.vertacc=0.0
-        elif all(value==0.0 for value in Air.values()):
+        elif all(value==0.5 for value in Air.values()):
             self.DOF.stab=1.0
-            self.DOF.vertacc=-1.0
         elif all(value==2.0 for value in Air.values()):
             self.DOF.stab=1.0
-            self.DOF.vertacc=1.0
+        elif all(value==0.0 for value in Air.values()):
+            self.DOF.stab=1.0
         elif any(value==0.0 for value in Air.values()):
             self.DOF.stab=0.0
-            self.DOF.vertacc=-0.5
-        elif any(value==2.0 for value in Air.values()):
+        elif any(value>2.5 for value in Air.values()):
             self.DOF.stab=0.0
-            self.DOF.vertacc=0.5
+        Airs=list(Air.values())
+        
+        self.DOF.vertvel=velocity*(np.round(np.mean(Airs))-1.0)
+        list1=Airs[:len(Airs)//2]
+        list2=Airs[len(Airs)//2:]
+        vect=np.array([list1,list2])
+        self.DOF.planvel=velocity*np.sum(vect[0]-vect[1])/3
         #need to expand on this, add directional velocity, etc
         return
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
@@ -272,7 +280,7 @@ class line:
                          name+'propbreak':{'rate':'veryrare', 'rcost':'replacement'}
                          }
         self.faults=set(['nominal'])
-    def behavior(self, EEin, Ctlin):
+    def behavior(self, EEin, Ctlin, cmds):
         if self.faults.intersection(set([self.name+'short'])):
             self.elecstate=0.0
             self.elecstate_in=np.inf
@@ -299,7 +307,7 @@ class line:
         elif self.faults.intersection(set([self.name+'propwarp'])):
             self.propstate=0.5
         
-        self.Airout=aux.m2to1([EEin,self.elecstate,Ctlin,self.ctlstate,self.mechstate,self.propstate])
+        self.Airout=aux.m2to1([EEin,self.elecstate,Ctlin.upward*cmds['up']+Ctlin.forward*cmds['for'],self.ctlstate,self.mechstate,self.propstate])
         self.EE_in=aux.m2to1([EEin,self.elecstate_in])     
     
 class ctlDOF:
@@ -328,13 +336,13 @@ class ctlDOF:
             upthrottle=0.5
             
         if self.Dir.traj[0]==0 and self.Dir.traj[1]==0:
-            forwardthrottle=1.0
+            forwardthrottle=0.0
         else:
-            forwardthrottle=2.0
+            forwardthrottle=1.0
         
         pwr=self.Dir.power
-        self.Ctl.int=upthrottle*forwardthrottle*pwr
-        self.Ctl.act=self.EEin.effort*self.ctlstate*upthrottle*forwardthrottle*pwr
+        self.Ctl.forward=self.EEin.effort*self.ctlstate*forwardthrottle*pwr
+        self.Ctl.upward=self.EEin.effort*self.ctlstate*upthrottle*pwr
 
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
         self.faults.update(faults)
@@ -397,9 +405,9 @@ class trajectory:
         self.faults=set(['nom'])
     def condfaults(self):
         if self.Env.elev<=0:
-            if  self.DOF.vertvel>5:
+            if  self.DOF.vertvel<-7:
                 self.faults.add('majorcrash')
-            elif self.DOF.planvel>5:
+            elif self.DOF.planvel<-7:
                 self.faults.add('majorcrash')
             elif self.DOF.stab<0.5:
                 self.faults.add('minorcrash')
@@ -419,15 +427,19 @@ class trajectory:
             self.DOF.vertvel=-10
             self.DOF.planvel=3
         elif self.Env.elev>=0.0:
-            sign=np.sign(self.DOF.vertacc+self.DOF.vertvel+0.001)
-            self.DOF.vertvel=min(abs(x) for x in [sign*10.0, self.DOF.vertacc+self.DOF.vertvel])
+            sign=np.sign(self.DOF.vertvel+0.001)
+            self.DOF.vertvel=sign*min(abs(x) for x in [sign*10.0, self.DOF.vertvel])
         elif self.Env.elev==0.0:
             self.DOF.vertvel=0.0
                 
         if self.faults.intersection(set(['majorcrash', 'minorcrash'])):
             self.Env.elev=0.0
         else:
-        
+            
+            if self.Env.elev<0.0:
+                self.DOF.vertvel=max([self.DOF.vertvel, 0.0])
+                self.Env.elev=0.0
+            
             self.Env.elev=self.Env.elev+self.DOF.vertvel
             self.Env.x=self.Env.x+self.DOF.planvel*self.Dir.traj[0]
             self.Env.y=self.Env.y+self.DOF.planvel*self.Dir.traj[1]
