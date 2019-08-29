@@ -54,9 +54,8 @@ class DOF:
         self.vertvel=1.0
         self.planvel=1.0
         self.vertacc=0.0
-        self.nominal={'stab':1.0, 'vertvel':1.0, 'planvel':1.0}
     def status(self):
-        status={'stab':self.stab, 'vertvel':self.vertvel, 'planvel':self.planvel}
+        status={'stab':self.stab, 'vertvel':self.vertvel, 'planvel':self.planvel, 'vertacc':self.vertacc}
         return status.copy() 
 class Land:
     def __init__(self,name):
@@ -412,18 +411,27 @@ class trajectory:
             elif aux.inrange(self.Env.dang_area, self.Env.x, self.Env.y):
                 self.faults.add('degdang_loc')
             else:
+                
                 self.faults.add('degunsanc_loc')
-        else:
-            self.Land.status='flying'
-            self.Land.area='NA'
+
     def behavior(self):
         if self.DOF.stab<0.5:
             self.DOF.vertvel=-10
             self.DOF.planvel=3
+        elif self.Env.elev>1.0:
+            sign=np.sign(self.DOF.vertacc+self.DOF.vertvel+0.001)
+            self.DOF.vertvel=min(abs(x) for x in [sign*10.0, self.DOF.vertacc+self.DOF.vertvel])
+        elif self.Env.elev==0.0:
+            self.DOF.vertvel=0.0
+            
+            
+        if self.faults.intersection(set(['majorcrash', 'minorcrash'])):
+            self.Env.elev=0.0
+        else:
         
-        self.Env.elev=self.Env.elev+self.DOF.vertvel
-        self.Env.x=self.Env.x*self.DOF.planvel*self.Dir.traj[0]
-        self.Env.y=self.Env.y*self.DOF.planvel*self.Dir.traj[1]
+            self.Env.elev=self.Env.elev+self.DOF.vertvel
+            self.Env.x=self.Env.x+self.DOF.planvel*self.Dir.traj[0]
+            self.Env.y=self.Env.y+self.DOF.planvel*self.Dir.traj[1]
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
         if time>self.lasttime:
             self.behavior()
