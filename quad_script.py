@@ -16,7 +16,7 @@ graph=mdl.initialize()
 
 #scenlist=ffermat.listinitfaults(graph, mdl.times)
 
-endflows, endfaults, endclass, endgraph, nomgraph, flowhist3=ffermat.proponefault('AffectDOF', 'nom', mdl, time=6, track={'DOFs','Dir1', 'Env1'})
+endflows, endfaults, endclass, endgraph, nomgraph, flowhist3=ffermat.proponefault('AffectDOF', 'nom', mdl, time=6, track={'DOFs','Dir1', 'Env1', 'Force_LG'})
 ffermat.showgraph(endgraph,nomgraph)
 ffermat.plotflowhist(flowhist3, 'N/A', time=0)
 
@@ -39,7 +39,7 @@ ffermat.showgraph(endgraph,nomgraph)
 
 ffermat.plotflowhist(flowhist, 'StoreEE short', time=5)
 
-endflows, endfaults, endclass, endgraph, nomgraph, flowhist2=ffermat.proponefault('AffectDOF', 'RFshort', mdl, time=13, track={'DOFs', 'Env1'})
+endflows, endfaults, endclass, endgraph, nomgraph, flowhist2=ffermat.proponefault('AffectDOF', 'RFshort', mdl, time=13, track={'DOFs', 'Env1', 'Force_LG'})
 ffermat.showgraph(endgraph,nomgraph)
 ffermat.plotflowhist(flowhist2, 'RFpropbreak', time=13)
 
