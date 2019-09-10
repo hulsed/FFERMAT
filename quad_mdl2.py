@@ -11,7 +11,7 @@ import numpy as np
 import auxfunctions as aux
 
 #Declare time range to run model over
-times=[0,3, 50]
+times=[0,3, 55]
 
 ##Define flows for model
 class EE:
@@ -122,9 +122,10 @@ class Direc:
         return status.copy()
 
 class storeEE:
-    def __init__(self, name,EEout):
+    def __init__(self, name,EEout, FS):
         self.type='function'
         self.EEout=EEout
+        self.FS=FS
         self.effstate=1.0
         self.ratestate=1.0
         self.soc=2000
@@ -135,6 +136,8 @@ class storeEE:
                          'lowcharge':{'rate':'moderate','rcost':'minor'}}
         self.faults=set(['nom'])
     def condfaults(self):
+        if self.FS.value<1.0:
+            self.faults.update(['break'])
         if self.EEout.rate>2:
             self.faults.add('break')
         if self.soc<20:
@@ -164,12 +167,13 @@ class storeEE:
         return 
 
 class distEE:
-    def __init__(self,EEin,EEmot,EEctl):
+    def __init__(self,EEin,EEmot,EEctl,FS):
         self.useprop=1.0
         self.type='function'
         self.EEin=EEin
         self.EEmot=EEmot
         self.EEctl=EEctl
+        self.FS=FS
         self.effstate=1.0
         self.ratestate=1.0
         self.faultmodes={'short':{'rate':'moderate', 'rcost':'major'}, \
@@ -177,7 +181,8 @@ class distEE:
                          'break':{'rate':'common', 'rcost':'moderate'}}
         self.faults=set(['nom'])
     def condfaults(self):
-        
+        if self.FS.value<0.5:
+            self.faults.update(['break'])
         if max(self.EEmot.rate,self.EEctl.rate)>2:
             self.faults.add('nov') 
     def behavior(self, time):
@@ -233,12 +238,13 @@ class engageLand:
         return 
 
 class holdPayload:
-    def __init__(self,name, Force_gr,Force_air):
+    def __init__(self,name, Force_gr,Force_air, Force_struct):
         self.name=name
         self.useprop=1.0
         self.type='function'
         self.FG=Force_gr
         self.FA=Force_air
+        self.FS=Force_struct
         self.fstate=1.0
         self.faultmodes={'break':{'rate':'moderate', 'rcost':'major'}, \
                          'deform':{'rate':'moderate', 'rcost':'minor'}, }
@@ -256,6 +262,7 @@ class holdPayload:
         else:
             self.fstate=1.0
         self.FA.value=self.fstate
+        self.FS.value=self.fstate
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
         self.faults.update(faults)
         self.condfaults()
@@ -387,29 +394,50 @@ class line:
         self.EE_in=aux.m2to1([EEin,self.elecstate_in])     
     
 class ctlDOF:
-    def __init__(self, name,EEin, Dir, Ctl, DOFs):
+    def __init__(self, name,EEin, Dir, Ctl, DOFs, FS):
         self.type='function'
         self.EEin=EEin
         self.Ctl=Ctl
         self.Dir=Dir
         self.DOFs=DOFs
+        self.FS=FS
+        self.vel=0.0
+        self.t1=0
         self.ctlstate=1.0
         self.faultmodes={'noctl':{'rate':'rare', 'rcost':'high'}, \
                          'degctl':{'rate':'rare', 'rcost':'high'}}
         self.faults=set(['nom'])
+    def condfaults(self):
+        if self.FS.value<0.5:
+            self.faults.update(['noctl'])
     def behavior(self, time):
         if self.faults.intersection(set(['noctl'])):
             self.ctlstate=0.0
         elif self.faults.intersection(set(['degctl'])):
             self.ctlstate=0.5
         
+        if time>self.t1:
+            self.vel=self.DOFs.vertvel
+            self.t1=time
+        
         upthrottle=1.0
+        
         if self.Dir.traj[2]>=1:
             upthrottle=1.5
+        elif self.Dir.traj[2]>0 and self.Dir.traj[2]>1:
+            upthrottle= 0.5 * self.Dir.traj[2] + 1.0
         elif self.Dir.traj[2]==0:
-            upthrottle=1.0
-        elif self.Dir.traj[2]<=1:
-            upthrottle=0.5
+            damp=np.sign(self.vel)
+            damp2=damp*min(1.0, np.power(self.vel, 2))
+            upthrottle=1.0-0.2*damp2
+        elif self.Dir.traj[2]<=0.0 and self.Dir.traj[2]>-1.0:
+            maxdesc=-0.5
+            damp=min(1.0, np.power(self.vel-maxdesc, 2))
+            upthrottle=0.75+0.4*damp
+        elif self.Dir.traj[2]<=-1.0:
+            maxdesc=-5.0
+            damp=min(0.75, np.power(self.vel-maxdesc, 2))
+            upthrottle=0.75+0.15*damp
             
         if self.Dir.traj[0]==0 and self.Dir.traj[1]==0:
             forwardthrottle=0.0
@@ -421,36 +449,70 @@ class ctlDOF:
         self.Ctl.upward=self.EEin.effort*self.ctlstate*upthrottle*pwr
 
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
+        self.condfaults()
         self.faults.update(faults)
         self.behavior(time)
 
 class planpath:
-    def __init__(self, name,EEin, Env, Dir):
+    def __init__(self, name,EEin, Env, Dir, FS):
         self.type='function'
         self.EEin=EEin
         self.Env=Env
         self.Dir=Dir
-
+        self.FS=FS
+        self.mode='taxi'
         self.faultmodes={'noloc':{'rate':'rare', 'rcost':'high'}, \
                          'degloc':{'rate':'rare', 'rcost':'high'}}
         self.faults=set(['nom'])
+    def condfaults(self):
+        if self.FS.value<0.5:
+            self.faults.update(['noloc'])
     def behavior(self, t):
+            
+        if t<1:
+            self.mode='taxi'
+        elif self.mode=='taxi' and t<2:
+            self.mode='climb'
+        elif self.mode=='climb' and self.Env.elev>=50:
+            self.mode='hover'
+        elif self.mode=='hover' and self.Env.y==0 and t<20:
+            self.mode='forward'
+        elif self.mode=='forward' and self.Env.y>50:
+            self.mode='hover'
+        elif self.mode=='hover' and self.Env.y>50:
+            self.mode='backward'
+        elif self.mode=='backward' and self.Env.y<0:
+            self.mode='hover'
+        elif self.mode=='hover' and self.Env.y<0:
+            self.mode='descend'
+        elif self.mode=='descend' and self.Env.elev<10:
+            self.mode='land'
+        elif self.mode=='land' and self.Env.elev<1:
+            self.mode='taxi'
         
-        if t>40:
-            self.Dir.power=0
-        elif t<1:
-            self.Dir.power=0
-        else:
-            self.Dir.power=1
-
-        if t>=30:
-            self.Dir.traj=[0,0,-1]
-        elif t>=20:
-            self.Dir.traj=[0,-1,0]
-        elif t>=10:
-            self.Dir.traj=[0,1,0]
-        elif t>=0:
+        if self.mode=='taxi':
+            self.Dir.power=0.0
+        elif self.mode=='takeoff':
+            self.Dir.power=1.0
             self.Dir.traj=[0,0,1]
+        elif self.mode=='climb':
+            self.Dir.power=1.0
+            self.Dir.traj=[0,0,1]
+        elif self.mode=='hover':
+            self.Dir.power=1.0
+            self.Dir.traj=[0,0,0]
+        elif self.mode=='forward':
+            self.Dir.power=1.0
+            self.Dir.traj=[0,1,0]
+        elif self.mode=='backward':
+            self.Dir.power=1.0
+            self.Dir.traj=[0,-1,0]
+        elif self.mode=='descend':
+            self.Dir.power=1.0
+            self.Dir.traj=[0,0,-1]
+        elif self.mode=='land':
+            self.Dir.power=1.0
+            self.Dir.traj=[0,0,-0.1]
             
         if self.faults.intersection(set(['noloc'])):
             self.Dir.traj=[0,0,0]
@@ -461,6 +523,7 @@ class planpath:
             self.Dir.traj=[0,0,0]
         
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
+        self.condfaults()
         self.faults.update(faults)
         self.behavior(time)
 
@@ -473,6 +536,7 @@ class trajectory:
         self.Dir=Dir
         self.Force_LG=Force_LG
         self.lasttime=0
+        self.t1=0.0
         self.faultmodes={'nom':{'rate':'common', 'rcost':'NA'}, }
                          #'majorcrash':{'rate':'rare', 'rcost':'high'},\
                          #'minorcrash':{'rate':'rare', 'rcost':'high'}, \
@@ -482,23 +546,7 @@ class trajectory:
         self.faults=set(['nom'])
     def condfaults(self):
         return 0
-        #if self.Env.elev<=0:
-            #if  self.DOF.vertvel<-7:
-            #    self.faults.add('majorcrash')
-            #elif self.DOF.planvel<-7:
-            #    self.faults.add('majorcrash')
-            #elif self.DOF.stab<0.5:
-            #    self.faults.add('minorcrash')
-            
-            #if  aux.inrange(self.Env.start_area, self.Env.x, self.Env.y):
-            #    a=1
-            #elif aux.inrange(self.Env.safe1_area, self.Env.x, self.Env.y) or aux.inrange(self.Env.safe2_area, self.Env.x, self.Env.y):
-            #    self.faults.add('degsafe_loc')
-            #elif aux.inrange(self.Env.dang_area, self.Env.x, self.Env.y):
-            #    self.faults.add('degdang_loc')
-            #else:
-            #    self.faults.add('degunsanc_loc')
-    def behavior(self):
+    def behavior(self, time):
         maxvel=20.0
         maxpvel=5.0
         
@@ -509,7 +557,16 @@ class trajectory:
             self.Force_LG.value=0.0
             flight=1.0
         
-        self.DOF.vertvel=maxvel*(self.DOF.uppwr-flight)
+        if time>self.t1:
+            sign=np.sign(self.DOF.vertvel)
+            damp=-0.02*sign*np.power(self.DOF.vertvel, 2)-0.1*self.DOF.vertvel
+            acc=10*(self.DOF.uppwr-flight)
+            self.DOF.vertvel=self.DOF.vertvel+acc+damp
+            if self.Env.elev<=0.0:
+                self.DOF.vertvel=max(0,self.DOF.vertvel)
+            self.t1=time
+
+        #self.DOF.vertvel=0.9*self.DOF.vertvel + 0.1*(maxvel*(self.DOF.uppwr-flight)-#
         
         self.DOF.planvel=flight*maxpvel*self.DOF.planpwr
                 
@@ -519,7 +576,7 @@ class trajectory:
         
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
         if time>self.lasttime:
-            self.behavior()
+            self.behavior(time)
             self.lasttime=time
         self.condfaults()
 
@@ -529,14 +586,15 @@ def initialize():
     #initialize graph
     g=nx.DiGraph()
     
+    Force_ST=Force('Force_ST')
     EE_1=EE('EE_1')
-    StoreEE=storeEE('StoreEE',EE_1)
+    StoreEE=storeEE('StoreEE',EE_1, Force_ST)
     g.add_node('StoreEE', obj=StoreEE)
     
     EEmot=EE('EEmot')
     EEctl=EE('EEctl')
     
-    DistEE=distEE(EE_1,EEmot,EEctl)
+    DistEE=distEE(EE_1,EEmot,EEctl, Force_ST)
     g.add_node('DistEE', obj=DistEE)
     g.add_edge('StoreEE','DistEE', EE_1=EE_1)
     
@@ -547,14 +605,14 @@ def initialize():
     AffectDOF=affectDOF('AffectDOF',EEmot,Ctl1,DOFs,Force_Air, 'quad')
     g.add_node('AffectDOF', obj=AffectDOF)
     Dir1=Direc('Dir1')
-    CtlDOF=ctlDOF('CtlDOF',EEctl, Dir1, Ctl1, DOFs)
+    CtlDOF=ctlDOF('CtlDOF',EEctl, Dir1, Ctl1, DOFs, Force_ST)
     g.add_node('CtlDOF', obj=CtlDOF)
     g.add_edge('DistEE','AffectDOF', EEmot=EEmot)
     g.add_edge('DistEE','CtlDOF', EEctl=EEctl)
     g.add_edge('CtlDOF','AffectDOF', Ctl1=Ctl1,DOFs=DOFs)
 
     Env1=Env('Env1')
-    Planpath=planpath('Planpath',EEctl, Env1,Dir1)
+    Planpath=planpath('Planpath',EEctl, Env1,Dir1, Force_ST)
     g.add_node('Planpath', obj=Planpath)
     g.add_edge('DistEE','Planpath', EEctl=EEctl)
     g.add_edge('Planpath','CtlDOF', Dir1=Dir1)
@@ -573,10 +631,14 @@ def initialize():
     g.add_edge('Trajectory', 'EngageLand', Force_GR=Force_GR)
     
     
-    HoldPayload=holdPayload('HoldPayload',Force_LG, Force_Air)
+    HoldPayload=holdPayload('HoldPayload',Force_LG, Force_Air, Force_ST)
     g.add_node('HoldPayload', obj=HoldPayload)
     g.add_edge('EngageLand','HoldPayload', Force_LG=Force_LG)
     g.add_edge('HoldPayload', 'AffectDOF', Force_Air=Force_Air)
+    g.add_edge('HoldPayload', 'StoreEE', Force_ST=Force_ST)
+    g.add_edge('HoldPayload', 'DistEE', Force_ST=Force_ST)
+    g.add_edge('HoldPayload', 'Planpath', Force_ST=Force_ST)
+    g.add_edge('HoldPayload', 'CtlDOF', Force_ST=Force_ST)
     
     return g
 
