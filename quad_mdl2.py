@@ -59,11 +59,12 @@ class DOF:
         self.flowtype='DOF'
         self.name=name
         self.stab=1.0
-        self.vertvel=1.0
-        self.nextvel=0.0
-        self.planvel=1.0
+        self.vertvel=0.0
+        self.planvel=0.0
+        self.uppwr=0.0
+        self.planpwr=0.0
     def status(self):
-        status={'stab':self.stab, 'vertvel':self.vertvel, 'nextvel':self.nextvel, 'planvel':self.planvel}
+        status={'stab':self.stab, 'vertvel':self.vertvel, 'planvel':self.planvel, 'planpwr':self.planpwr, 'uppwr':self.uppwr}
         return status.copy() 
 class Land:
     def __init__(self,name):
@@ -200,23 +201,21 @@ class distEE:
         return 
 
 class engageLand:
-    def __init__(self,name, DOF,env,Land, Force):
+    def __init__(self,name, Forcein, Forceout):
         self.useprop=1.0
         self.name=name
         self.type='function'
-        self.DOF=DOF
-        self.env=env
-        self.force=Force
+        self.forcein=Forcein
+        self.forceout=Forceout
         self.fstate=1.0
         self.faultmodes={'break':{'rate':'moderate', 'rcost':'major'}, \
                          'deform':{'rate':'moderate', 'rcost':'minor'}, }
         self.faults=set(['nom'])
     def condfaults(self):
-        if self.env.elev<=0.0:
-            if self.DOF.vertvel<-10 or self.force.value<-1.4:
-                self.faults.update(['break'])
-            elif self.DOF.vertvel<-7 or self.force.value<-1.2:
-                self.faults.update(['deform'])
+        if self.forceout.value<-1.4:
+            self.faults.update(['break'])
+        elif self.forceout.value<-1.2:
+            self.faults.update(['deform'])
     def behavior(self, time):
         if self.faults.intersection(set(['break'])):
             self.fstate=4.0
@@ -224,10 +223,9 @@ class engageLand:
             self.fstate=2.0
         else:
             self.fstate=1.0
-        if self.env.elev<=0.0:
-            self.force.value=self.fstate*min([-2.0,self.DOF.vertvel])*0.2
-        else:
-            self.force.value=0.0
+            
+        self.forceout.value=self.fstate*min([-2.0,self.forcein.value])*0.2
+            
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
         self.faults.update(faults)
         self.condfaults()
@@ -306,8 +304,6 @@ class affectDOF:
         else:
             self.EEin.rate=0.0
         
-        velocity=5
-        
         if all(value==1.0 for value in Air.values()):
             self.DOF.stab=1.0
         elif all(value==0.5 for value in Air.values()):
@@ -316,22 +312,21 @@ class affectDOF:
             self.DOF.stab=1.0
         elif all(value==0.0 for value in Air.values()):
             self.DOF.stab=1.0
-            unpowered=1
         elif any(value==0.0 for value in Air.values()):
             self.DOF.stab=0.0
         elif any(value>2.5 for value in Air.values()):
             self.DOF.stab=0.0
         Airs=list(Air.values())
+        #if not(self.Force.value==1.0):
+        #    self.DOF.stab=self.Force.value
         
-        if not(self.Force.value==1.0):
-            self.DOF.stab=self.Force.value
+        self.DOF.uppwr=np.mean(Airs)
         
-        #need to re-add acceleration or some way of achieving higher downward than upward velocity
-        self.DOF.nextvel=5.0*(np.round(np.mean(Airs))-1.0)
         list1=Airs[:len(Airs)//2]
         list2=Airs[len(Airs)//2:]
         vect=np.array([list1,list2])
-        self.DOF.planvel=velocity*np.sum(vect[0]-vect[1])/3
+        self.DOF.planpwr=np.sum(vect[0]-vect[1])/3
+        
         #need to expand on this, add directional velocity, etc
         return
     def updatefxn(self,faults=['nom'],opermode=[], time=0):
@@ -410,7 +405,7 @@ class ctlDOF:
         
         upthrottle=1.0
         if self.Dir.traj[2]>=1:
-            upthrottle=2.0
+            upthrottle=1.5
         elif self.Dir.traj[2]==0:
             upthrottle=1.0
         elif self.Dir.traj[2]<=1:
@@ -504,28 +499,21 @@ class trajectory:
             #else:
             #    self.faults.add('degunsanc_loc')
     def behavior(self):
-        termvel=20
-        vertvel=np.mean([self.DOF.vertvel,self.DOF.nextvel])
-        sign=np.sign(vertvel+0.001)
+        maxvel=20.0
+        maxpvel=5.0
         
         if self.Env.elev<=0.0:
-            self.Env.elev=0.0
-            self.Force_LG.value=min([-2.0,self.DOF.vertvel])*0.2
-        
-        if not(self.Force_LG.value):
-            if self.DOF.stab<0.5:
-                self.DOF.nextvel=-termvel
-                self.DOF.planvel=3
-                self.DOF.vertvel=-termvel
-            else:
-                self.DOF.vertvel=sign*min(abs(x) for x in [sign*termvel, vertvel])
+            self.Force_LG.value=min(-2.0, (self.DOF.vertvel-self.DOF.planvel)/3)
+            flight=0.0
         else:
-            if sign>=0:
-                self.DOF.vertvel=vertvel
-            else:
-                self.DOF.vertvel=0.0
+            self.Force_LG.value=0.0
+            flight=1.0
+        
+        self.DOF.vertvel=maxvel*(self.DOF.uppwr-flight)
+        
+        self.DOF.planvel=flight*maxpvel*self.DOF.planpwr
                 
-        self.Env.elev=self.Env.elev+self.DOF.vertvel
+        self.Env.elev=max(0.0, self.Env.elev+self.DOF.vertvel)
         self.Env.x=self.Env.x+self.DOF.planvel*self.Dir.traj[0]
         self.Env.y=self.Env.y+self.DOF.planvel*self.Dir.traj[1]
         
@@ -572,16 +560,17 @@ def initialize():
     g.add_edge('Planpath','CtlDOF', Dir1=Dir1)
     
     Land1=Land('Land')
+    Force_GR=Force('Force_GR')
     Force_LG=Force('Force_LG')
-    Trajectory=trajectory('Trajectory',Env1,DOFs,Land1,Dir1, Force_LG)
+    Trajectory=trajectory('Trajectory',Env1,DOFs,Land1,Dir1, Force_GR)
     g.add_node('Trajectory', obj=Trajectory)
     g.add_edge('Trajectory','AffectDOF',DOFs=DOFs)
     g.add_edge('Planpath', 'Trajectory', Dir1=Dir1, Env1=Env1)
     
     
-    EngageLand=engageLand('EngageLand',DOFs, Env1, Land1, Force_LG)
+    EngageLand=engageLand('EngageLand',Force_GR, Force_LG)
     g.add_node('EngageLand', obj=EngageLand)
-    g.add_edge('Trajectory', 'EngageLand', DOFs=DOFs, Env1=Env1, Land1=Land1)
+    g.add_edge('Trajectory', 'EngageLand', Force_GR=Force_GR)
     
     
     HoldPayload=holdPayload('HoldPayload',Force_LG, Force_Air)
