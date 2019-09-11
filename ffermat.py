@@ -58,9 +58,9 @@ def proponefault(fxnname, faultmode, mdl, time=0, track={}):
     scen=nomscen.copy()
     scen[fxnname]=faultmode
     
-    endflows, endfaults, endclass, resgraph, flowhist =runonefault(mdl, scen, time, track)
+    endresults, resgraph, flowhist =runonefault(mdl, scen, time, track)
     
-    return endflows,endfaults,endclass,resgraph, flowhist
+    return endresults,resgraph, flowhist
 
 def listinitfaults(g, times=[0]):
     faultlist=[]
@@ -91,9 +91,9 @@ def proplist(mdl):
     
     for [fxnname, mode, scen, time] in scenlist:
         
-        endflows, endfaults, endclass, graph, nomgraph, flowhist=runonefault(mdl, scen, time)
+        endresults, resgraph, flowhist=runonefault(mdl, scen, time)
                
-        fullresults[fxnname, mode, time]={'flow effects': endflows, 'faults':endfaults}
+        fullresults[fxnname, mode, time]=endresults
     return fullresults
 
 def classifyresults(mdl,resgraph):
@@ -133,7 +133,8 @@ def runonefault(mdl, scen, time=0, track={}):
     
     resgraph=makeresultsgraph(graph, nomgraph)        
     endflows, endfaults, endclass = classifyresults(mdl,resgraph)
-    return endflows, endfaults, endclass, resgraph, flowhist
+    endresults={'flows': endflows, 'faults': endfaults, 'classification':endclass}
+    return endresults, resgraph, flowhist
 
 def propagate(g, scen, time):
     fxnnames=list(g.nodes())

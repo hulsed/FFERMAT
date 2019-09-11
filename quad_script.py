@@ -16,7 +16,7 @@ graph=mdl.initialize()
 
 #scenlist=ffermat.listinitfaults(graph, mdl.times)
 
-endflows, endfaults, endclass, resgraph, flowhist3=ffermat.proponefault('AffectDOF', 'nom', mdl, time=6, track={'DOFs','Dir1', 'Env1', 'Force_LG'})
+endresults, resgraph, flowhist3=ffermat.proponefault('AffectDOF', 'nom', mdl, time=6, track={'DOFs','Dir1', 'Env1', 'Force_LG'})
 ffermat.showgraph(resgraph)
 ffermat.plotflowhist(flowhist3, 'N/A', time=0)
 
@@ -34,16 +34,14 @@ ffermat.plotflowhist(flowhist3, 'N/A', time=0)
 
 #Check various scenarios individually
 
-endflows, endfaults, endclass, resgraph, flowhist=ffermat.proponefault('DistEE', 'short', mdl, time=5, track={'EE_1', 'Env1'})
+endresults, resgraph, flowhist=ffermat.proponefault('DistEE', 'short', mdl, time=5, track={'EE_1', 'Env1'})
 ffermat.showgraph(resgraph)
 
 ffermat.plotflowhist(flowhist, 'StoreEE short', time=5)
 
-endflows, endfaults, endclass, resgraph, flowhist2=ffermat.proponefault('AffectDOF', 'RFshort', mdl, time=13, track={'DOFs', 'Env1', 'Dir1', 'Force_Air'})
+endresults, resgraph, flowhist2=ffermat.proponefault('AffectDOF', 'RFshort', mdl, time=13, track={'DOFs', 'Env1', 'Dir1', 'Force_Air'})
 ffermat.showgraph(resgraph)
 ffermat.plotflowhist(flowhist2, 'RFpropbreak', time=13)
-
-ffermat.listfaultsprops(endfaults, graph)
 
 xnom=flowhist2['nominal']['Env1']['x']
 ynom=flowhist2['nominal']['Env1']['y']
@@ -66,4 +64,4 @@ ax2.legend(['Nominal Flightpath','Faulty Flighpath'], loc=4)
 plt.show()
 plt.close()
 
-#fullresults=ffermat.proplist(mdl)
+fullresults=ffermat.proplist(mdl)
