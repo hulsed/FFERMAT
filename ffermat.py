@@ -22,7 +22,7 @@ def plotflowhist(flowhist, fault='', time=0):
             plt.xlabel('Time')
             plt.show()
 
-def showgraph(g, nomg=[]):
+def showgraph(g):
     labels=dict()
     for edge in g.edges:
         flows=list(g.get_edge_data(edge[0],edge[1]).keys())
@@ -34,17 +34,15 @@ def showgraph(g, nomg=[]):
     nx.draw_networkx(g,pos,node_size=2000,node_shape='s', node_color='g', \
                      width=3, font_weight='bold')
     
-    if nomg:
-        faults=findfaults(g)   
-        faultflows,faultedges=findfaultflows(g, nomg)
-        nx.draw_networkx_nodes(g, pos, nodelist=faults.keys(),node_color = 'r',\
-                               node_shape='s',width=3, font_weight='bold', node_size = 2000)
-        nx.draw_networkx_edges(g,pos,edgelist=faultedges.keys(), edge_color='r', width=2)
+    faults=findfaults(g)   
+    faultflows,faultedges=findfaultflows(g)
+    nx.draw_networkx_nodes(g, pos, nodelist=faults.keys(),node_color = 'r',\
+                          node_shape='s',width=3, font_weight='bold', node_size = 2000)
+    nx.draw_networkx_edges(g,pos,edgelist=faultedges.keys(), edge_color='r', width=2)
     
     nx.draw_networkx_edge_labels(g,pos,edge_labels=labels)
     
-    if nomg:
-        nx.draw_networkx_edge_labels(g,pos,edge_labels=faultedges, font_color='r')
+    nx.draw_networkx_edge_labels(g,pos,edge_labels=faultedges, font_color='r')
     plt.show()
     
 def constructnomscen(g):
@@ -60,9 +58,9 @@ def proponefault(fxnname, faultmode, mdl, time=0, track={}):
     scen=nomscen.copy()
     scen[fxnname]=faultmode
     
-    endflows, endfaults, endclass,graph,nomgraph, flowhist =runonefault(mdl, scen, time, track)
+    endflows, endfaults, endclass, resgraph, flowhist =runonefault(mdl, scen, time, track)
     
-    return endflows,endfaults,endclass,graph,nomgraph, flowhist
+    return endflows,endfaults,endclass,resgraph, flowhist
 
 def listinitfaults(g, times=[0]):
     faultlist=[]
@@ -72,7 +70,7 @@ def listinitfaults(g, times=[0]):
     try:
         for time in times:
             for fxnname in fxnnames:
-                fxn=g.nodes(data='obj')[fxnname]
+                fxn=getfxn(fxnname,g)
                 modes=fxn.faultmodes
                 
                 for mode in modes:
@@ -98,10 +96,10 @@ def proplist(mdl):
         fullresults[fxnname, mode, time]={'flow effects': endflows, 'faults':endfaults}
     return fullresults
 
-def classifyresults(mdl,graph,nomgraph):
-    endflows,endedges=findfaultflows(graph,nomgraph)
-    endfaults=findfaults(graph)
-    endclass=mdl.findclassification(graph, endfaults, endflows)
+def classifyresults(mdl,resgraph):
+    endflows,endedges=findfaultflows(resgraph)
+    endfaults=findfaults(resgraph)
+    endclass=mdl.findclassification(resgraph, endfaults, endflows)
     return endflows, endfaults, endclass
 
 def runonefault(mdl, scen, time=0, track={}):
@@ -132,9 +130,10 @@ def runonefault(mdl, scen, time=0, track={}):
                 for var in flowobj.status():
                     flowhist['nominal'][flow][var]=flowhist['nominal'][flow][var]+[nomflowobj.status()[var]]
                     flowhist['faulty'][flow][var]=flowhist['faulty'][flow][var]+[flowobj.status()[var]]
-            
-    endflows, endfaults, endclass = classifyresults(mdl,graph,nomgraph)
-    return endflows, endfaults, endclass, graph, nomgraph, flowhist
+    
+    resgraph=makeresultsgraph(graph, nomgraph)        
+    endflows, endfaults, endclass = classifyresults(mdl,resgraph)
+    return endflows, endfaults, endclass, resgraph, flowhist
 
 def propagate(g, scen, time):
     fxnnames=list(g.nodes())
@@ -183,21 +182,27 @@ def propagate(g, scen, time):
     return
 
 #extract non-nominal flow paths
-def findfaultflows(g, nomg):
+def findfaultflows(g, nomg=[]):
     endflows=dict()
     endedges=dict()
     for edge in g.edges:
         flows=g.get_edge_data(edge[0],edge[1])
-        nomflows=nomg.get_edge_data(edge[0],edge[1])
-        #flows=list(g.get_edge_data(edge[0],edge[1]).keys())
         flowedges=[]
-        for flow in flows:
-            if flows[flow].status()!=nomflows[flow].status():
-                endflows[flow]=flows[flow].status()
-                flowedges=flowedges+[flow]
+        #if comparing a nominal with a non-nominal
+        if nomg:
+            nomflows=nomg.get_edge_data(edge[0],edge[1])
+            for flow in flows:
+                if flows[flow].status()!=nomflows[flow].status():
+                    endflows[flow]=flows[flow].status()
+                    flowedges=flowedges+[flow]
+        #if results are already in the graph structure
+        else:
+            for flow in flows:
+                if flows[flow]['status']=='Degraded':
+                    endflows[flow]=flows[flow]['values']
+                    flowedges=flowedges+[flow]
         if flowedges:
-            endedges[edge]=flowedges
-            
+                endedges[edge]=flowedges    
     return endflows, endedges
 #generates full list of faults, with properties
 def listfaultsprops(endfaults,g, prop='all'):
@@ -216,16 +221,22 @@ def findfaults(g):
     fxnnames=list(g.nodes)
     #extract list of faults present
     for fxnname in fxnnames:
-        fxn=g.nodes(data='obj')[fxnname]
+        faults=findfault(fxnname, g)
+        if len(faults) > 0:
+            endfaults[fxnname]=faults
+    return endfaults
+#find a fault in a given function
+def findfault(fxnname, g):
+    if 'faults' in g.nodes[fxnname]:
+        faults=g.nodes[fxnname]['faults']
+    else:
+        fxn=getfxn(fxnname, g)
         faults=fxn.faults.copy()
-        
         if faults.issuperset({'nom'}):
             faults.remove('nom')
         if faults.issuperset({'nominal'}):
             faults.remove('nominal')
-        if len(faults) > 0:
-            endfaults[fxnname]=faults
-    return endfaults
+    return faults
 
 def getfxn(fxnname, graph):
     fxn=graph.nodes(data='obj')[fxnname]
@@ -236,8 +247,11 @@ def getflow(flowname, g):
         flows=g.get_edge_data(edge[0],edge[1])
         #flows=list(g.get_edge_data(edge[0],edge[1]).keys())
         for flow in flows:
-            if flows[flow].name==flowname:
-                flowobj=flows[flow]
+            if flow==flowname:
+                if type(flows[flow]) is dict:
+                    flowobj=flows[flow]['obj']
+                else:
+                    flowobj=flows[flow]
     return flowobj
 #gets defined properties of a fault
 def getfaultprops(fxnname, faultname, g, prop='all'):
@@ -247,5 +261,22 @@ def getfaultprops(fxnname, faultname, g, prop='all'):
     else:
         faultprops=fxn.faultmodes[faultname][prop]
     return faultprops
+
+def makeresultsgraph(g, nomg):
+    rg=g.copy() 
+    for edge in g.edges:
+        for flow in list(g.edges[edge].keys()):
+            flowobj=g.edges[edge][flow]
+            nomflowobj=nomg.edges[edge][flow]
+            
+            if flowobj.status()!=nomflowobj.status():
+                status='Degraded'
+            else:
+                status='Nominal'
+            rg.edges[edge][flow]={'values':flowobj.status(),'status':status, 'obj':flowobj}
+    for node in g.nodes:
+        faults=findfault(node, g)
+        rg.nodes[node]['faults']=faults
+    return rg
             
 
