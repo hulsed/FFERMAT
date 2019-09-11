@@ -9,6 +9,7 @@ import networkx as nx
 import numpy as np
 
 import auxfunctions as aux
+import ffermat as ff
 
 #Declare time range to run model over
 times=[0,3, 55]
@@ -371,8 +372,6 @@ class line:
         elif Force<=0.5:
             self.faults.update([self.name+'mechfriction'])
             
-        
-        
         if self.faults.intersection(set([self.name+'short'])):
             self.elecstate=0.0
             self.elecstate_in=np.inf
@@ -547,11 +546,6 @@ class trajectory:
         self.lasttime=0
         self.t1=0.0
         self.faultmodes={'nom':{'rate':'common', 'rcost':'NA'}, }
-                         #'majorcrash':{'rate':'rare', 'rcost':'high'},\
-                         #'minorcrash':{'rate':'rare', 'rcost':'high'}, \
-                         #'degsafe_loc':{'rate':'rare', 'rcost':'high'}, \
-                         #'degdang_loc':{'rate':'rare', 'rcost':'high'},\
-                         #'degunsanc_loc':{'rate':'rare', 'rcost':'high'}}
         self.faults=set(['nom'])
     def condfaults(self):
         return 0
@@ -574,8 +568,6 @@ class trajectory:
             if self.Env.elev<=0.0:
                 self.DOF.vertvel=max(0,self.DOF.vertvel)
             self.t1=time
-
-        #self.DOF.vertvel=0.9*self.DOF.vertvel + 0.1*(maxvel*(self.DOF.uppwr-flight)-#
         
         self.DOF.planvel=flight*maxpvel*self.DOF.planpwr
                 
@@ -656,6 +648,21 @@ def initialize():
     
 def findclassification(g):
     
+    Env=ff.getflow('Env1', g)
+    
+    if  aux.inrange(Env.start_area, Env.x, Env.y):
+        landloc='nominal'
+        land=1
+    elif aux.inrange(Env.safe1_area, Env.x, Env.y) or aux.inrange(Env.safe2_area, Env.x, Env.y):
+        landloc='emsafe'
+        land=10
+    elif aux.inrange(Env.dang_area, Env.x, Env.y):
+        landloc='emdang'
+        land=1000
+    else:
+        landloc='emunsanc'
+        land=100
+    
     #need to add means of giving fault
     #Trajectory.Land.status=1.0
     #Trajectory.Land.status=1.0
@@ -682,7 +689,6 @@ def findclassification(g):
 #    else:
 #        area=np.nan
         
-    land=1
     area=1
     endclass=land*area
     
