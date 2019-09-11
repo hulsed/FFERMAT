@@ -22,7 +22,12 @@ def plotflowhist(flowhist, fault='', time=0):
             plt.xlabel('Time')
             plt.show()
 
-def showgraph(g):
+def plotghist(ghist,faultscen=[]):
+    for time in ghist:
+        graph=ghist[time]
+        showgraph(graph, faultscen, time)
+
+def showgraph(g, faultscen=[], time=[]):
     labels=dict()
     for edge in g.edges:
         flows=list(g.get_edge_data(edge[0],edge[1]).keys())
@@ -43,6 +48,10 @@ def showgraph(g):
     nx.draw_networkx_edge_labels(g,pos,edge_labels=labels)
     
     nx.draw_networkx_edge_labels(g,pos,edge_labels=faultedges, font_color='r')
+    
+    if faultscen:
+        plt.title('Propagation of faults to '+faultscen+' at t='+str(time))
+    
     plt.show()
     
 def constructnomscen(g):
@@ -52,15 +61,15 @@ def constructnomscen(g):
         nomscen[fxnname]='nom'
     return nomscen
 
-def proponefault(fxnname, faultmode, mdl, time=0, track={}):
+def proponefault(fxnname, faultmode, mdl, time=0, track={}, gtrack={}):
     graph=mdl.initialize()
     nomscen=constructnomscen(graph)
     scen=nomscen.copy()
     scen[fxnname]=faultmode
     
-    endresults, resgraph, flowhist =runonefault(mdl, scen, time, track)
+    endresults, resgraph, flowhist, graphhist =runonefault(mdl, scen, time, track, gtrack)
     
-    return endresults,resgraph, flowhist
+    return endresults,resgraph, flowhist, graphhist
 
 def listinitfaults(g, times=[0]):
     faultlist=[]
@@ -102,12 +111,13 @@ def classifyresults(mdl,resgraph):
     endclass=mdl.findclassification(resgraph, endfaults, endflows)
     return endflows, endfaults, endclass
 
-def runonefault(mdl, scen, time=0, track={}):
+def runonefault(mdl, scen, time=0, track={}, gtrack={}):
     nomgraph=mdl.initialize()
     nomscen=constructnomscen(nomgraph)
     graph=mdl.initialize()
     timerange=mdl.times
     flowhist={}
+    graphhist={}
     if track:
         for runtype in ['nominal','faulty']:
             flowhist[runtype]={}
@@ -130,11 +140,14 @@ def runonefault(mdl, scen, time=0, track={}):
                 for var in flowobj.status():
                     flowhist['nominal'][flow][var]=flowhist['nominal'][flow][var]+[nomflowobj.status()[var]]
                     flowhist['faulty'][flow][var]=flowhist['faulty'][flow][var]+[flowobj.status()[var]]
-    
+        if rtime in gtrack:
+            rgraph=makeresultsgraph(graph,nomgraph)
+            graphhist[rtime]=rgraph
+            
     resgraph=makeresultsgraph(graph, nomgraph)        
     endflows, endfaults, endclass = classifyresults(mdl,resgraph)
     endresults={'flows': endflows, 'faults': endfaults, 'classification':endclass}
-    return endresults, resgraph, flowhist
+    return endresults, resgraph, flowhist, graphhist
 
 def propagate(g, scen, time):
     fxnnames=list(g.nodes())
