@@ -39,9 +39,13 @@ ffermat.showgraph(endgraph,nomgraph)
 
 ffermat.plotflowhist(flowhist, 'StoreEE short', time=5)
 
+
+
 endflows, endfaults, endclass, endgraph, nomgraph, flowhist2=ffermat.proponefault('AffectDOF', 'RFshort', mdl, time=13, track={'DOFs', 'Env1', 'Dir1', 'Force_Air'})
 ffermat.showgraph(endgraph,nomgraph)
 ffermat.plotflowhist(flowhist2, 'RFpropbreak', time=13)
+
+ffermat.listfaultsprops(endfaults, graph)
 
 xnom=flowhist2['nominal']['Env1']['x']
 ynom=flowhist2['nominal']['Env1']['y']

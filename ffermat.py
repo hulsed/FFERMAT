@@ -101,9 +101,9 @@ def proplist(mdl):
     return fullresults
 
 def classifyresults(mdl,graph,nomgraph):
-    endflows=findfaultflows(graph,nomgraph)
+    endflows,endedges=findfaultflows(graph,nomgraph)
     endfaults=findfaults(graph)
-    endclass=mdl.findclassification(graph)
+    endclass=mdl.findclassification(graph, endfaults, endflows)
     return endflows, endfaults, endclass
 
 def runonefault(mdl, scen, time=0, track={}):
@@ -203,6 +203,16 @@ def findfaultflows(g, nomg):
             endedges[edge]=flowedges
             
     return endflows, endedges
+#generates full list of faults, with properties
+def listfaultsprops(endfaults,g, prop='all'):
+    faultlist=dict()
+    for fxnname in endfaults:
+        for faultname in endfaults[fxnname]:
+            if prop==all:
+                faultlist[fxnname+' '+faultname]=getfaultprops(fxnname,faultname,g)
+            else:
+                faultlist[fxnname+' '+faultname]=getfaultprops(fxnname,faultname,g, prop)
+    return faultlist
 
 #generates lists of faults present
 def findfaults(g):
@@ -211,12 +221,14 @@ def findfaults(g):
     #extract list of faults present
     for fxnname in fxnnames:
         fxn=g.nodes(data='obj')[fxnname]
-        if fxn.faults.issuperset({'nom'}):
-            fxn.faults.remove('nom')
-        if fxn.faults.issuperset({'nominal'}):
-            fxn.faults.remove('nominal')
-        if len(fxn.faults) > 0:
-            endfaults[fxnname]=fxn.faults
+        faults=fxn.faults.copy()
+        
+        if faults.issuperset({'nom'}):
+            faults.remove('nom')
+        if faults.issuperset({'nominal'}):
+            faults.remove('nominal')
+        if len(faults) > 0:
+            endfaults[fxnname]=faults
     return endfaults
 
 def getfxn(fxnname, graph):
@@ -231,5 +243,13 @@ def getflow(flowname, g):
             if flows[flow].name==flowname:
                 flowobj=flows[flow]
     return flowobj
+#gets defined properties of a fault
+def getfaultprops(fxnname, faultname, g, prop='all'):
+    fxn=getfxn(fxnname, g)
+    if prop=='all':
+        faultprops=fxn.faultmodes[faultname]
+    else:
+        faultprops=fxn.faultmodes[faultname][prop]
+    return faultprops
             
 

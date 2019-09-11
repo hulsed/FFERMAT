@@ -185,7 +185,7 @@ class distEE:
         if self.FS.value<0.5:
             self.faults.update(['break'])
         if max(self.EEmot.rate,self.EEctl.rate)>2:
-            self.faults.add('nov') 
+            self.faults.add('break') 
     def behavior(self, time):
         if self.faults.intersection(set(['short'])):
             self.ratestate=np.inf
@@ -646,51 +646,38 @@ def initialize():
 #def environment(DOF,t):
 #    if DOF.stab
     
-def findclassification(g):
+def findclassification(g, endfaults, endflows):
     
     Env=ff.getflow('Env1', g)
     
+    
     if  aux.inrange(Env.start_area, Env.x, Env.y):
         landloc='nominal'
-        land=1
+        area=1
     elif aux.inrange(Env.safe1_area, Env.x, Env.y) or aux.inrange(Env.safe2_area, Env.x, Env.y):
         landloc='emsafe'
-        land=10
+        area=1000
     elif aux.inrange(Env.dang_area, Env.x, Env.y):
         landloc='emdang'
-        land=1000
+        area=100000
     else:
         landloc='emunsanc'
-        land=100
-    
-    #need to add means of giving fault
-    #Trajectory.Land.status=1.0
-    #Trajectory.Land.status=1.0
-    
-    #Add classification for damage/repair of faults
-    
-#    if Trajectory.Land.status=='majorcrash':
-#        land=1000
-#    elif Trajectory.Land.status=='minorcrash':
-#        land= 200
-#    elif Trajectory.Land.status=='minorcrash':
-#        land=1
-#    else:
-#        land=np.nan
-#    
-#    if Trajectory.Land.area=='nominal':
-#        area=1
-#    elif Trajectory.Land.area=='nonnominal_safe':
-#        area=10
-#    elif Trajectory.Land.area=='nonnominal_dangerous':
-#        area=100
-#    elif Trajectory.Land.area=='nonnominal_unsanctioned':
-#        area=30
-#    else:
-#        area=np.nan
+        area=10000
         
-    area=1
-    endclass=land*area
+    repaircosts=ff.listfaultsprops(endfaults, g, 'rcost')
+    maxcost=aux.textmax(repaircosts.values())
     
+    if maxcost=='major':
+        repcost=10000
+    elif maxcost=='moderate':
+        repcost=3000
+    elif maxcost=='minor':
+        repcost=500
+    elif maxcost=='replacement':
+        repcost=250
+    else:
+        repcost=0
+
+    totcost=repcost+area
     
-    return endclass
+    return totcost, maxcost, landloc

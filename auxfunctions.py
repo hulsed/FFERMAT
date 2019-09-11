@@ -67,4 +67,18 @@ def inrange(area, x, y):
     polygon=Polygon(area)
     return polygon.contains(point)
 
+def textmax(texts):
+    if 'major' in texts:
+        maxt='major'
+    elif 'moderate' in texts:
+        maxt='moderate'
+    elif 'minor' in texts:
+        maxt='minor'
+    elif 'replacement' in texts:
+        maxt='replacement'
+    else:
+        maxt='none'
+    return maxt
+    
+
 
