@@ -213,6 +213,8 @@ def findfaults(g):
         fxn=g.nodes(data='obj')[fxnname]
         if fxn.faults.issuperset({'nom'}):
             fxn.faults.remove('nom')
+        if fxn.faults.issuperset({'nominal'}):
+            fxn.faults.remove('nominal')
         if len(fxn.faults) > 0:
             endfaults[fxnname]=fxn.faults
     return endfaults

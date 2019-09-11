@@ -300,7 +300,8 @@ class affectDOF:
             
             ind=self.lines.index(lin)
             cmds={'up':self.upward[ind], 'for':self.forward[ind]}
-            lin.behavior(self.EEin.effort, self.Ctlin, cmds)
+            lin.behavior(self.EEin.effort, self.Ctlin, cmds, self.Force.value)
+            self.faults.update(lin.faults)  
             Air[lin.name]=lin.Airout
             EEin[lin.name]=lin.EE_in
         
@@ -362,8 +363,16 @@ class line:
                          name+'propstuck':{'rate':'veryrare', 'rcost':'replacement'}, \
                          name+'propbreak':{'rate':'veryrare', 'rcost':'replacement'}
                          }
-        self.faults=set(['nominal'])
-    def behavior(self, EEin, Ctlin, cmds):
+        self.faults=set(['nom'])
+    def behavior(self, EEin, Ctlin, cmds, Force):
+        
+        if Force<=0.0:
+            self.faults.update([self.name+'mechbreak', self.name+'propbreak'])
+        elif Force<=0.5:
+            self.faults.update([self.name+'mechfriction'])
+            
+        
+        
         if self.faults.intersection(set([self.name+'short'])):
             self.elecstate=0.0
             self.elecstate_in=np.inf
@@ -650,6 +659,8 @@ def findclassification(g):
     #need to add means of giving fault
     #Trajectory.Land.status=1.0
     #Trajectory.Land.status=1.0
+    
+    #Add classification for damage/repair of faults
     
 #    if Trajectory.Land.status=='majorcrash':
 #        land=1000
