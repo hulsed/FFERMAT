@@ -21,14 +21,12 @@ def plotflowhist(flowhist, fault='', time=0):
             plt.title('Dynamic Response of '+flow+' '+var+' to fault'+' '+fault)
             plt.xlabel('Time')
             plt.show()
-        
 
 def showgraph(g, nomg=[]):
     labels=dict()
     for edge in g.edges:
         flows=list(g.get_edge_data(edge[0],edge[1]).keys())
         labels[edge[0],edge[1]]=flows
-    
     
     pos=nx.shell_layout(g)
     #Add ability to label modes/values
@@ -138,44 +136,42 @@ def runonefault(mdl, scen, time=0, track={}):
     endflows, endfaults, endclass = classifyresults(mdl,graph,nomgraph)
     return endflows, endfaults, endclass, graph, nomgraph, flowhist
 
-def propagate(forward, scen, time):
-
-    fxnnames=list(forward.nodes())
+def propagate(g, scen, time):
+    fxnnames=list(g.nodes())
     activefxns=set(fxnnames)
-
     #set up history of flows to see if any has changed
     tests={}
     flowhist={}
     for fxnname in fxnnames:
         tests[fxnname]=0
-        edges=list(forward.in_edges(fxnname))+list(forward.out_edges(fxnname))
+        edges=list(g.in_edges(fxnname))+list(g.out_edges(fxnname))
         for big, end in edges:
-            flows=forward.edges[big,end]
+            flows=g.edges[big,end]
             for flow in flows:
-                flowhist[big, end,flow]=forward.edges[big, end][flow].status()
+                flowhist[big, end,flow]=g.edges[big, end][flow].status()
                 tests[fxnname]+=1
      #initialize fault           
     for fxnname in scen:
         if scen[fxnname]!='nom':
-            fxnobj=forward.nodes(data='obj')[fxnname]
-            fxnobj.updatefxn(faults=[scen[fxnname]], time=time)
+            fxn=getfxn(fxnname, g)
+            fxn.updatefxn(faults=[scen[fxnname]], time=time)
     n=0
     while activefxns:
         funclist=list(activefxns).copy()
         for fxnname in funclist:
-            fxn=forward.nodes(data='obj')[fxnname]
+            fxn=getfxn(fxnname, g)
             fxn.updatefxn(time=time)
             test=0
-            edges=list(forward.in_edges(fxnname))+list(forward.out_edges(fxnname))
+            edges=list(g.in_edges(fxnname))+list(g.out_edges(fxnname))
             for big, end in edges:
-                flows=forward.edges[big,end]
+                flows=g.edges[big,end]
                 for flow in flows:
-                    if forward.edges[big, end][flow].status()!=flowhist[big, end, flow]:
+                    if g.edges[big, end][flow].status()!=flowhist[big, end, flow]:
                         activefxns.add(big)
                         activefxns.add(end)
                     else:
                         test+=1
-                    flowhist[big, end, flow]=forward.edges[big, end][flow].status()
+                    flowhist[big, end, flow]=g.edges[big, end][flow].status()
                 if test>=tests[fxnname]:
                     activefxns.discard(fxnname)
         n+=1
