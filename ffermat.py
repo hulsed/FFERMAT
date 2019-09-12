@@ -16,17 +16,16 @@ def plotflowhist(flowhist, fault='', time=0):
         fig = plt.figure()
         plots=len(flowhist['faulty'][flow])
         fig.add_subplot(np.ceil((plots+1)/2),2,plots)
+        plt.tight_layout(pad=2.5, w_pad=2.5, h_pad=2.5, rect=[0, 0.03, 1, 0.95])
         n=1
-        
         for var in flowhist['faulty'][flow]:
             plt.subplot(np.ceil((plots+1)/2),2,n)
             n+=1
             a, =plt.plot(flowhist['faulty'][flow][var], color='r')
             b, =plt.plot(flowhist['nominal'][flow][var], color='b')
             c =plt.axvline(x=time, color='k')
-            plt.xlabel('Time')
-            plt.ylabel(var)
-        plt.subplot(np.ceil((plots+1)/2),2,n+1)
+            plt.title(var)
+        plt.subplot(np.ceil((plots+1)/2),2,n)
         plt.legend([a,b],['faulty', 'nominal'])
         fig.suptitle('Dynamic Response of '+flow+' to fault'+' '+fault)
         plt.show()
