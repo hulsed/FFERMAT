@@ -13,14 +13,23 @@ import matplotlib.pyplot as plt
 
 def plotflowhist(flowhist, fault='', time=0):
     for flow in flowhist['faulty']:
+        fig = plt.figure()
+        plots=len(flowhist['faulty'][flow])
+        fig.add_subplot(np.ceil((plots+1)/2),2,plots)
+        n=1
+        
         for var in flowhist['faulty'][flow]:
-            plt.plot(flowhist['faulty'][flow][var], color='r')
-            plt.plot(flowhist['nominal'][flow][var], color='b')
-            plt.axvline(x=time, color='k')
-            plt.legend(['faulty', 'nominal', 'injection time'])
-            plt.title('Dynamic Response of '+flow+' '+var+' to fault'+' '+fault)
+            plt.subplot(np.ceil((plots+1)/2),2,n)
+            n+=1
+            a, =plt.plot(flowhist['faulty'][flow][var], color='r')
+            b, =plt.plot(flowhist['nominal'][flow][var], color='b')
+            c =plt.axvline(x=time, color='k')
             plt.xlabel('Time')
-            plt.show()
+            plt.ylabel(var)
+        plt.subplot(np.ceil((plots+1)/2),2,n+1)
+        plt.legend([a,b],['faulty', 'nominal'])
+        fig.suptitle('Dynamic Response of '+flow+' to fault'+' '+fault)
+        plt.show()
 
 def plotghist(ghist,faultscen=[]):
     for time in ghist:
