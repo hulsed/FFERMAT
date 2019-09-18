@@ -4,7 +4,6 @@ Created on Tue Dec 11 09:38:35 2018
 
 @author: Daniel Hulse
 """
-import pydot
 import pprint
 import sys
 import networkx as nx
