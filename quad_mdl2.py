@@ -17,8 +17,6 @@ times=[0,3, 55]
 ##Define flows for model
 class EE:
     def __init__(self,name):
-        self.flowtype='EE'
-        self.name=name
         self.rate=1.0
         self.effort=1.0
     def status(self):
@@ -646,7 +644,7 @@ def initialize():
 #def environment(DOF,t):
 #    if DOF.stab
     
-def findclassification(g, endfaults, endflows):
+def findclassification(g, endfaults, endflows, scen):
     
     Env=ff.getflow('Env1', g)
     

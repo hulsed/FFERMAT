@@ -68,6 +68,15 @@ def constructnomscen(g):
         nomscen[fxnname]='nom'
     return nomscen
 
+def runnominal(mdl, track={}, gtrack={}):
+    graph=mdl.initialize()
+    nomscen=constructnomscen(graph)
+    scen=nomscen.copy()
+    time=0
+    endresults, resgraph, flowhist, graphhist =runonefault(mdl, scen, time, track, gtrack)
+    
+    return endresults,resgraph, flowhist, graphhist
+
 def proponefault(fxnname, faultmode, mdl, time=0, track={}, gtrack={}):
     graph=mdl.initialize()
     nomscen=constructnomscen(graph)
@@ -107,15 +116,15 @@ def proplist(mdl):
     
     for [fxnname, mode, scen, time] in scenlist:
         
-        endresults, resgraph, flowhist=runonefault(mdl, scen, time)
+        endresults, resgraph, flowhist, graphhist=runonefault(mdl, scen, time)
                
         fullresults[fxnname, mode, time]=endresults
     return fullresults
 
-def classifyresults(mdl,resgraph):
+def classifyresults(mdl,resgraph, scen):
     endflows,endedges=findfaultflows(resgraph)
     endfaults=findfaults(resgraph)
-    endclass=mdl.findclassification(resgraph, endfaults, endflows)
+    endclass=mdl.findclassification(resgraph, endfaults, endflows, scen)
     return endflows, endfaults, endclass
 
 def runonefault(mdl, scen, time=0, track={}, gtrack={}):
@@ -152,7 +161,7 @@ def runonefault(mdl, scen, time=0, track={}, gtrack={}):
             graphhist[rtime]=rgraph
             
     resgraph=makeresultsgraph(graph, nomgraph)        
-    endflows, endfaults, endclass = classifyresults(mdl,resgraph)
+    endflows, endfaults, endclass = classifyresults(mdl,resgraph, scen)
     endresults={'flows': endflows, 'faults': endfaults, 'classification':endclass}
     return endresults, resgraph, flowhist, graphhist
 
