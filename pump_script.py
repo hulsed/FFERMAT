@@ -25,17 +25,19 @@ ffermat.showgraph(resgraph)
 ffermat.plotflowhist(flowhist, 'Nominal')
 
 #We might further query the faults to see what happens to the various states
-endresults, resgraph, flowhist, ghist=ffermat.proponefault('Move Water', 'short', mdl, time=10, track={'Wat_1','Wat_2', 'EE_1', 'Sig_1'})
+endresults, resgraph, flowhist, ghist=ffermat.proponefault(mdl, 'Move Water', 'short', time=10, track={'Wat_1','Wat_2', 'EE_1', 'Sig_1'})
 ffermat.showgraph(resgraph)
 ffermat.plotflowhist(flowhist, 'short', time=10)
+ffermat.printresult('Move Water', 'short', 10, endresults)
 #in addition to these visualizations, we can also look at the final results 
 #to see which specific faults were caused, as well as the flow states
-print(endresults)
+#print(endresults)
 
 #we can also look at other faults
-endresults, resgraph, flowhist, ghist=ffermat.proponefault('Export Water', 'block', mdl, time=10, track={'Wat_1','Wat_2', 'EE_1', 'Sig_1'})
+endresults, resgraph, flowhist, ghist=ffermat.proponefault(mdl, 'Export Water', 'block', time=10, track={'Wat_1','Wat_2', 'EE_1', 'Sig_1'})
 ffermat.showgraph(resgraph)
 ffermat.plotflowhist(flowhist, 'blockage', time=10)
+ffermat.printresult('Export Water', 'block', 10, endresults)
 print(endresults)
 
 #finally, to get the results of all of the scenarios, we can go through the list

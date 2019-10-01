@@ -34,12 +34,12 @@ ffermat.plotflowhist(flowhist3, 'N/A', time=0)
 
 #Check various scenarios individually
 
-endresults, resgraph, flowhist, ghist=ffermat.proponefault('DistEE', 'short', mdl, time=5, track={'EE_1', 'Env1'})
+endresults, resgraph, flowhist, ghist=ffermat.proponefault(mdl, 'DistEE', 'short', time=5, track={'EE_1', 'Env1'})
 ffermat.showgraph(resgraph)
 
 ffermat.plotflowhist(flowhist, 'StoreEE short', time=5)
 
-endresults, resgraph, flowhist2, ghist2=ffermat.proponefault('AffectDOF', 'RFshort', mdl, time=13, track={'DOFs', 'Env1', 'Dir1', 'Force_Air'}, gtrack=[10,13,20,40])
+endresults, resgraph, flowhist2, ghist2=ffermat.proponefault(mdl, 'AffectDOF', 'RFshort', time=13, track={'DOFs', 'Env1', 'Dir1', 'Force_Air'}, gtrack=[10,13,20,40])
 ffermat.showgraph(resgraph)
 ffermat.plotflowhist(flowhist2, 'RFshort', time=13)
 ffermat.plotghist(ghist2, 't=13 RFshort')

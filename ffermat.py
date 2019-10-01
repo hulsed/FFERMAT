@@ -10,6 +10,8 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
+from astropy.table import Table, Column
+
 def plotflowhist(flowhist, fault='', time=0):
     for flow in flowhist['faulty']:
         fig = plt.figure()
@@ -78,7 +80,7 @@ def runnominal(mdl, track={}, gtrack={}):
     
     return endresults,resgraph, flowhist, graphhist
 
-def proponefault(fxnname, faultmode, mdl, time=0, track={}, gtrack={}):
+def proponefault(mdl, fxnname, faultmode, time=0, track={}, gtrack={}):
     graph=mdl.initialize()
     nomscen=constructnomscen(graph)
     scen=nomscen.copy()
@@ -318,4 +320,16 @@ def makeresultsgraph(g, nomg):
         rg.nodes[node]['faults']=faults
     return rg
             
-
+def printresult(function, mode, time, endresult):
+    
+    #FUNCTION  | MODE  | TIME  | EFFECTS  |  RATE  |  COST  |  EXP COST
+    vals=  [[function],[mode],[time],\
+            [str(list(endresult['flows'].keys())+list(endresult['faults'].keys()))],\
+            [endresult['classification']['rate']], \
+            [endresult['classification']['cost']],[endresult['classification']['expected cost']]]
+    cnames=['Function', 'Mode', 'Time', 'Effects', 'Rate', 'Cost', 'Expected Cost']
+    t = Table(vals, names=cnames)
+                                
+    return t
+    
+    
