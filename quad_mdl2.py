@@ -648,7 +648,7 @@ def findclassification(g, endfaults, endflows, scen):
     
     Env=ff.getflow('Env1', g)
     
-    
+    #may need to redo this
     if  aux.inrange(Env.start_area, Env.x, Env.y):
         landloc='nominal'
         area=1
@@ -678,4 +678,8 @@ def findclassification(g, endfaults, endflows, scen):
 
     totcost=repcost+area
     
-    return totcost, maxcost, landloc
+    rate=1e-6
+    
+    expcost=totcost*rate*1e5
+    
+    return {'rate':rate, 'cost': totcost, 'expected cost': expcost}

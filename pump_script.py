@@ -50,3 +50,4 @@ print(t)
 # t=15 and t=15
 resultsdict, resultstab=ffermat.proplist(mdl)
 print(resultstab)
+# resultstab.write('tab.ecsv', overwrite=True)
