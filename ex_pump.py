@@ -282,19 +282,12 @@ def findclassification(resgraph, endfaults, endflows, scen):
     
     life=100
     
-    initfxn=''
-    for fxn in scen:
-        pfault=scen[fxn]
-        if pfault != 'nom':
-            initfxn=fxn
-            initfault=pfault
-    
-    if initfxn:
-        qualrate=ff.getfaultprops(initfxn, initfault, resgraph, prop='rate')
+    if scen['properties']['type']=='nominal':
+        rate=1.0
+    else:
+        qualrate=scen['properties']['rate']
         ratekey={'rare': 1e-7, 'moderate': 1e-5}
         rate=ratekey[qualrate]
-    else:
-        rate=1.0
     
     life=1e5
     

@@ -63,17 +63,18 @@ def showgraph(g, faultscen=[], time=[]):
     
 def constructnomscen(g):
     fxnnames=list(g.nodes)
-    nomscen={}
+    nomscen={'faults':{},'properties':{}}
     for fxnname in fxnnames:
-        nomscen[fxnname]='nom'
+        nomscen['faults'][fxnname]='nom'
+    nomscen['properties']['time']=0.0
+    nomscen['properties']['type']='nominal'
     return nomscen
 
 def runnominal(mdl, track={}, gtrack={}):
     graph=mdl.initialize()
     nomscen=constructnomscen(graph)
     scen=nomscen.copy()
-    time=0
-    endresults, resgraph, flowhist, graphhist =runonefault(mdl, scen, time, track, gtrack)
+    endresults, resgraph, flowhist, graphhist =runonefault(mdl, scen, track, gtrack)
     
     return endresults,resgraph, flowhist, graphhist
 
@@ -81,9 +82,14 @@ def proponefault(fxnname, faultmode, mdl, time=0, track={}, gtrack={}):
     graph=mdl.initialize()
     nomscen=constructnomscen(graph)
     scen=nomscen.copy()
-    scen[fxnname]=faultmode
+    scen['faults'][fxnname]=faultmode
+    scen['properties']['type']='single fault'
+    scen['properties']['function']=fxnname
+    scen['properties']['fault']=faultmode
+    scen['properties']['rate']=getfaultprops(fxnname, faultmode, graph, prop='rate')
+    scen['properties']['time']=time
     
-    endresults, resgraph, flowhist, graphhist =runonefault(mdl, scen, time, track, gtrack)
+    endresults, resgraph, flowhist, graphhist =runonefault(mdl, scen, track, gtrack)
     
     return endresults,resgraph, flowhist, graphhist
 
@@ -100,8 +106,10 @@ def listinitfaults(g, times=[0]):
                 
                 for mode in modes:
                     newscen=nomscen.copy()
-                    newscen[fxnname]=mode
-                    faultlist.append([fxnname,mode, newscen, time])
+                    newscen['faults'][fxnname]=mode
+                    rate=getfaultprops(fxnname, mode, g, prop='rate')
+                    newscen['properties']={'type': 'single-fault', 'function': fxnname, 'fault': mode, 'rate': rate, 'time': time}
+                    faultlist.append(newscen)
     except: 
         print('Incomplete Function Definition, function: '+fxnname)
     return faultlist
@@ -114,11 +122,11 @@ def proplist(mdl):
     scenlist=listinitfaults(graph, times)
     fullresults={} 
     
-    for [fxnname, mode, scen, time] in scenlist:
+    for scen in scenlist:
         
-        endresults, resgraph, flowhist, graphhist=runonefault(mdl, scen, time)
+        endresults, resgraph, flowhist, graphhist=runonefault(mdl, scen)
                
-        fullresults[fxnname, mode, time]=endresults
+        fullresults[scen['properties']['function'],scen['properties']['fault'], scen['properties']['time']]=endresults
     return fullresults
 
 def classifyresults(mdl,resgraph, scen):
@@ -127,13 +135,14 @@ def classifyresults(mdl,resgraph, scen):
     endclass=mdl.findclassification(resgraph, endfaults, endflows, scen)
     return endflows, endfaults, endclass
 
-def runonefault(mdl, scen, time=0, track={}, gtrack={}):
+def runonefault(mdl, scen, track={}, gtrack={}):
     nomgraph=mdl.initialize()
     nomscen=constructnomscen(nomgraph)
     graph=mdl.initialize()
     timerange=mdl.times
     flowhist={}
     graphhist={}
+    time=scen['properties']['time']
     if track:
         for runtype in ['nominal','faulty']:
             flowhist[runtype]={}
@@ -144,11 +153,11 @@ def runonefault(mdl, scen, time=0, track={}, gtrack={}):
                     flowhist[runtype][flow][var]=[]
     
     for rtime in range(timerange[0], timerange[-1]+1):
-        propagate(nomgraph, nomscen, rtime)
+        propagate(nomgraph, nomscen['faults'], rtime)
         if rtime==time:
-            propagate(graph, scen, rtime)
+            propagate(graph, scen['faults'], rtime)
         else:
-            propagate(graph,nomscen,rtime)
+            propagate(graph,nomscen['faults'],rtime)
         if track:
             for flow in track:
                 flowobj=getflow(flow, graph)
@@ -165,7 +174,7 @@ def runonefault(mdl, scen, time=0, track={}, gtrack={}):
     endresults={'flows': endflows, 'faults': endfaults, 'classification':endclass}
     return endresults, resgraph, flowhist, graphhist
 
-def propagate(g, scen, time):
+def propagate(g, initfaults, time):
     fxnnames=list(g.nodes())
     activefxns=set(fxnnames)
     #set up history of flows to see if any has changed
@@ -180,10 +189,10 @@ def propagate(g, scen, time):
                 flowhist[big, end,flow]=g.edges[big, end][flow].status()
                 tests[fxnname]+=1
      #initialize fault           
-    for fxnname in scen:
-        if scen[fxnname]!='nom':
+    for fxnname in initfaults:
+        if initfaults[fxnname]!='nom':
             fxn=getfxn(fxnname, g)
-            fxn.updatefxn(faults=[scen[fxnname]], time=time)
+            fxn.updatefxn(faults=[initfaults[fxnname]], time=time)
     n=0
     while activefxns:
         funclist=list(activefxns).copy()
@@ -206,7 +215,7 @@ def propagate(g, scen, time):
         n+=1
         if n>1000:
             print("Undesired looping in function")
-            print(scen)
+            print(initfaults)
             print(fxnname)
             break
     return

@@ -16,7 +16,7 @@ graph=mdl.initialize()
 
 #scenlist=ffermat.listinitfaults(graph, mdl.times)
 
-endresults, resgraph, flowhist3, ghist3=ffermat.proponefault('AffectDOF', 'nom', mdl, time=6, track={'DOFs','Dir1', 'Env1', 'Force_LG'})
+endresults, resgraph, flowhist3, ghist3=ffermat.runnominal(mdl, track={'DOFs','Dir1', 'Env1', 'Force_LG'})
 ffermat.showgraph(resgraph)
 ffermat.plotflowhist(flowhist3, 'N/A', time=0)
 
