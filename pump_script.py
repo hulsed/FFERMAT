@@ -28,7 +28,8 @@ ffermat.plotflowhist(flowhist, 'Nominal')
 endresults, resgraph, flowhist, ghist=ffermat.proponefault(mdl, 'Move Water', 'short', time=10, track={'Wat_1','Wat_2', 'EE_1', 'Sig_1'})
 ffermat.showgraph(resgraph)
 ffermat.plotflowhist(flowhist, 'short', time=10)
-ffermat.printresult('Move Water', 'short', 10, endresults)
+t=ffermat.printresult('Move Water', 'short', 10, endresults)
+print(t)
 #in addition to these visualizations, we can also look at the final results 
 #to see which specific faults were caused, as well as the flow states
 #print(endresults)
@@ -37,12 +38,15 @@ ffermat.printresult('Move Water', 'short', 10, endresults)
 endresults, resgraph, flowhist, ghist=ffermat.proponefault(mdl, 'Export Water', 'block', time=10, track={'Wat_1','Wat_2', 'EE_1', 'Sig_1'})
 ffermat.showgraph(resgraph)
 ffermat.plotflowhist(flowhist, 'blockage', time=10)
-ffermat.printresult('Export Water', 'block', 10, endresults)
-print(endresults)
+t=ffermat.printresult('Export Water', 'block', 10, endresults)
+print(t)
+#you can save to a csv this with:
+#t.write('tab.ecsv', overwrite=True)
+
 
 #finally, to get the results of all of the scenarios, we can go through the list
 #note that this will propogate faults based on the times vector put in the model,
 # e.g. times=[0,3,15,55] will propogate the faults at the begining, end, and at
 # t=15 and t=15
-fullresults=ffermat.proplist(mdl)
-print(fullresults)
+resultsdict, resultstab=ffermat.proplist(mdl)
+print(resultstab)

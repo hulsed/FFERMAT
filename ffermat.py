@@ -98,7 +98,6 @@ def proponefault(mdl, fxnname, faultmode, time=0, track={}, gtrack={}):
 def listinitfaults(g, times=[0]):
     faultlist=[]
     fxnnames=list(g.nodes)
-    nomscen=constructnomscen(g)
         
     try:
         for time in times:
@@ -107,6 +106,7 @@ def listinitfaults(g, times=[0]):
                 modes=fxn.faultmodes
                 
                 for mode in modes:
+                    nomscen=constructnomscen(g)
                     newscen=nomscen.copy()
                     newscen['faults'][fxnname]=mode
                     rate=getfaultprops(fxnname, mode, g, prop='rate')
@@ -122,14 +122,37 @@ def proplist(mdl):
     graph=mdl.initialize()
     times=mdl.times
     scenlist=listinitfaults(graph, times)
-    fullresults={} 
+    resultsdict={} 
     
-    for scen in scenlist:
+    numofscens=len(scenlist)
+    
+    fxns=np.zeros(numofscens, dtype='S25')
+    modes=np.zeros(numofscens, dtype='S25')
+    times=np.zeros(numofscens, dtype=int)
+    effects=['']*numofscens
+    rates=np.zeros(numofscens, dtype=float)
+    costs=np.zeros(numofscens, dtype=float)
+    expcosts=np.zeros(numofscens, dtype=float)
+
+    for i, scen in enumerate(scenlist):
         
         endresults, resgraph, flowhist, graphhist=runonefault(mdl, scen)
-               
-        fullresults[scen['properties']['function'],scen['properties']['fault'], scen['properties']['time']]=endresults
-    return fullresults
+        
+        resultsdict[scen['properties']['function'],scen['properties']['fault'], scen['properties']['time']]=endresults
+        
+        fxns[i]=scen['properties']['function']
+        modes[i]=scen['properties']['fault']
+        times[i]=scen['properties']['time']
+        effects[i]=str(endresults['flows'])+str(endresults['faults'])        
+        rates[i]=endresults['classification']['rate']
+        costs[i]=endresults['classification']['cost']
+        expcosts[i]=endresults['classification']['expected cost']
+    
+    vals=[fxns, modes, times, effects, rates, costs, expcosts]
+    cnames=['Function', 'Mode', 'Time', 'Effects', 'Rate', 'Cost', 'Expected Cost']
+    resultstab = Table(vals, names=cnames)
+    
+    return resultsdict, resultstab
 
 def classifyresults(mdl,resgraph, scen):
     endflows,endedges=findfaultflows(resgraph)
@@ -329,7 +352,9 @@ def printresult(function, mode, time, endresult):
             [endresult['classification']['cost']],[endresult['classification']['expected cost']]]
     cnames=['Function', 'Mode', 'Time', 'Effects', 'Rate', 'Cost', 'Expected Cost']
     t = Table(vals, names=cnames)
-                                
     return t
+
+    
+    
     
     
