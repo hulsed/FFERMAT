@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Dec 11 09:38:35 2018
+File name: faultprop.py
+Author: Daniel Hulse
+Created: December 2018
+Forked from the IBFM toolkit, original author Matthew McIntire
 
-@author: Daniel Hulse
+Description: functions to propagate faults through a user-defined fault model
 """
-import pprint
-import sys
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt

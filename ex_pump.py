@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-ex_pump.py: A simple model for explaining fault model definition
+File name: ex_pump.py
+Author: Daniel Hulse
+Created: October 2019
+Description: A simple model for explaining fault model definition
 
 This model constitudes an extremely simple functional model of an electric-powered pump.
 
@@ -23,7 +26,7 @@ import networkx as nx
 import numpy as np
 
 import auxfunctions as aux
-import ffermat as ff
+import faultprop as fp
 
 #Declare time range to run model over
 times=[0,3, 55]
@@ -272,7 +275,7 @@ def initialize():
 def findclassification(resgraph, endfaults, endflows, scen):
     
     #get fault costs and rates
-    repcosts=ff.listfaultsprops(endfaults, resgraph, 'rcost')
+    repcosts=fp.listfaultsprops(endfaults, resgraph, 'rcost')
     costs=repcosts.values()
     costkey={'major': 10000, 'minor': 1000}
     totcost=0.0

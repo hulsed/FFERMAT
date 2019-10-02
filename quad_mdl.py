@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jul 29 10:30:03 2019
-
-@author: dhulse
+File name: quad_mdl.py
+Author: Daniel Hulse
+Created: June 2019
+Description: A fault model of a multi-rotor drone.
 """
 
 import networkx as nx
 import numpy as np
 
 import auxfunctions as aux
-import ffermat as ff
+import faultprop as fp
 
 #Declare time range to run model over
 times=[0,3, 55]
@@ -646,7 +647,7 @@ def initialize():
     
 def findclassification(g, endfaults, endflows, scen):
     
-    Env=ff.getflow('Env1', g)
+    Env=fp.getflow('Env1', g)
     
     #may need to redo this
     if  aux.inrange(Env.start_area, Env.x, Env.y):
@@ -662,7 +663,7 @@ def findclassification(g, endfaults, endflows, scen):
         landloc='emunsanc'
         area=10000
         
-    repaircosts=ff.listfaultsprops(endfaults, g, 'rcost')
+    repaircosts=fp.listfaultsprops(endfaults, g, 'rcost')
     maxcost=aux.textmax(repaircosts.values())
     
     if maxcost=='major':

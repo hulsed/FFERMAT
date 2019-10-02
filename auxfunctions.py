@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Dec 11 10:18:54 2018
-
-@author: Daniel Hulse
+File name: auxfunctions.py
+Author: Daniel Hulse
+Created: December 2018
+Description: Misc functions for model definition
 """
 
 

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jul 29 10:29:45 2019
-
-@author: dhulse
+File name: quad_script.py
+Author: Daniel Hulse
+Created: June 2019
+Description: I/O with the quadrotor model defined in quad_mdl.py
 """
 
-import ffermat
-import auxfunctions as aux
+import faultprop as fp
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -14,11 +14,11 @@ import quad_mdl as mdl
 
 graph=mdl.initialize()
 
-#scenlist=ffermat.listinitfaults(graph, mdl.times)
+#scenlist=fp.listinitfaults(graph, mdl.times)
 
-endresults, resgraph, flowhist3, ghist3=ffermat.runnominal(mdl, track={'DOFs','Dir1', 'Env1', 'Force_LG'})
-ffermat.showgraph(resgraph)
-ffermat.plotflowhist(flowhist3, 'N/A', time=0)
+endresults, resgraph, flowhist3, ghist3=fp.runnominal(mdl, track={'DOFs','Dir1', 'Env1', 'Force_LG'})
+fp.showgraph(resgraph)
+fp.plotflowhist(flowhist3, 'N/A', time=0)
 
 #x=flowhist3['nominal']['Env1']['x']
 #y=flowhist3['nominal']['Env1']['y']
@@ -34,15 +34,15 @@ ffermat.plotflowhist(flowhist3, 'N/A', time=0)
 
 #Check various scenarios individually
 
-endresults, resgraph, flowhist, ghist=ffermat.proponefault(mdl, 'DistEE', 'short', time=5, track={'EE_1', 'Env1'})
-ffermat.showgraph(resgraph)
+endresults, resgraph, flowhist, ghist=fp.proponefault(mdl, 'DistEE', 'short', time=5, track={'EE_1', 'Env1'})
+fp.showgraph(resgraph)
 
-ffermat.plotflowhist(flowhist, 'StoreEE short', time=5)
+fp.plotflowhist(flowhist, 'StoreEE short', time=5)
 
-endresults, resgraph, flowhist2, ghist2=ffermat.proponefault(mdl, 'AffectDOF', 'RFshort', time=13, track={'DOFs', 'Env1', 'Dir1', 'Force_Air'}, gtrack=[10,13,20,40])
-ffermat.showgraph(resgraph)
-ffermat.plotflowhist(flowhist2, 'RFshort', time=13)
-ffermat.plotghist(ghist2, 't=13 RFshort')
+endresults, resgraph, flowhist2, ghist2=fp.proponefault(mdl, 'AffectDOF', 'RFshort', time=13, track={'DOFs', 'Env1', 'Dir1', 'Force_Air'}, gtrack=[10,13,20,40])
+fp.showgraph(resgraph)
+fp.plotflowhist(flowhist2, 'RFshort', time=13)
+fp.plotghist(ghist2, 't=13 RFshort')
 
 xnom=flowhist2['nominal']['Env1']['x']
 ynom=flowhist2['nominal']['Env1']['y']
@@ -65,6 +65,6 @@ ax2.legend(['Nominal Flightpath','Faulty Flighpath'], loc=4)
 plt.show()
 plt.close()
 
-#fullresults, resultstab=ffermat.proplist(mdl)
+#fullresults, resultstab=fp.proplist(mdl)
 #print(resultstab)
 # resultstab.write('tab.ecsv', overwrite=True)
