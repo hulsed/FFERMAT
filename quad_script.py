@@ -10,7 +10,7 @@ import auxfunctions as aux
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-import quad_mdl2 as mdl
+import quad_mdl as mdl
 
 graph=mdl.initialize()
 
