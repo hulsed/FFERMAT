@@ -65,6 +65,6 @@ ax2.legend(['Nominal Flightpath','Faulty Flighpath'], loc=4)
 plt.show()
 plt.close()
 
-fullresults, resultstab=ffermat.proplist(mdl)
-print(resultstab)
+#fullresults, resultstab=ffermat.proplist(mdl)
+#print(resultstab)
 # resultstab.write('tab.ecsv', overwrite=True)

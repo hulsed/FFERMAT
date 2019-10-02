@@ -7,9 +7,11 @@ Created on Tue Dec 11 10:18:54 2018
 
 
 import numpy as np
-##BASIC OPERATIONS
+##MISC OPERATIONS TO USE IN MODEL DEFINITION
 
-#x1 takes precedence over x2 in deciding if num is inf or zero
+#m2to1
+# multiplies a list of numbers which may take on the values infinity or zero
+# in deciding if num is inf or zero, the earlier values take precedence
 def m2to1(x):
     if np.size(x)>2:
         x=[x[0], m2to1(x[1:])]
@@ -23,7 +25,9 @@ def m2to1(x):
     else:
         y=x[0]*x[1]
     return y
-#truncates value to 2 (useful if behavior unchanged by increases)
+
+#trunc
+# truncates a value to 2 (useful if behavior unchanged by increases)
 def trunc(x):
     if x>2.0:
         y=2.0
@@ -31,6 +35,8 @@ def trunc(x):
         y=x
     return y
 
+#truncn
+# truncates a value to n (useful if behavior unchanged by increases)
 def truncn(x, n):
     if x>n:
         y=n
@@ -38,10 +44,12 @@ def truncn(x, n):
         y=x
     return y
 
+#not sure what this function is for
 def dev(x):
     y=abs(abs(x-1.0)-1.0)
     return y
 
+#translates L, R, and C into Left, Right, and Center
 def rlc(x):
     y='NA'
     if x=='R':
@@ -52,6 +60,7 @@ def rlc(x):
         y='Center'
     return y
 
+# creates list of corner coordinates for a square, given a center, xwidth, and ywidth
 def square(center,xw,yw):
     square=[[center[0]-xw/2,center[1]-yw/2],\
             [center[0]+xw/2,center[1]-yw/2], \
@@ -62,11 +71,13 @@ def square(center,xw,yw):
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 
+#checks to see if a point with x-y coordinates is in the area a
 def inrange(area, x, y):
     point=Point(x,y)
     polygon=Polygon(area)
     return polygon.contains(point)
 
+#takes the maximum of a variety of classifications given a list of strings
 def textmax(texts):
     if 'major' in texts:
         maxt='major'
