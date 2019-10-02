@@ -2,7 +2,7 @@
 
 FFERMAT is a toolkit to enable the modelling and design of systems in the early design phase. With it, one can model the dynamic effects of a fault over time in an engineered system and and then design the system to be more resilient based on rate and severity information. 
 
-#####Features include:
+##### Features include:
 
 - graph-based fault propagation enabling forward and backward degradation of model flows
 - propagation of faults in a timeless sense or over time
@@ -19,7 +19,7 @@ WARNING: This is a research code and is currently under development. Some featur
 ----
 ## Getting Started
 
-###Prerequisites
+### Prerequisites
 
 FFERMAT requires Python 3 to run. 
 
@@ -35,7 +35,7 @@ so make sure to install (e.g. using `pip install packagename`) them before runni
 
 One of the example scripts is provided in Jupyter Notebook, so install it if you would like to use that.
 
-###Examples
+### Examples
 
 A simple example model is provided in `ex_pump.py` and an example of setting up the model, propagating single faults and a list of faults, and displaying results with that model is provided in `pump_script.py`.
 
