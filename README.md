@@ -48,7 +48,7 @@ Daniel Hulse
 ----
 ## License
 
-????
+MIT
 
 ----
 ## Acknowledgements
